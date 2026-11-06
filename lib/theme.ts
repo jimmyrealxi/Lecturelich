@@ -21,6 +21,7 @@ export const color = {
   gameSub: "#AFB9CC",
   brass: "#C9A24A",
   hp: "#C0392B",
+  bossLine: "#6B2A2A", // กรอบบอส + ป้าย D-day
 } as const;
 
 // สีความหายาก (รางวัล ความสำเร็จ หัวข้อที่ทวนครบรอบ)

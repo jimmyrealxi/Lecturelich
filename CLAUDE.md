@@ -29,9 +29,9 @@
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
 ## สถานะล่าสุด (9 พ.ย. 2569)
-- branch: `main` (ขั้น 0) → `feat/stage1-core` → `feat/stage2-notes` → `feat/stage3-grades` (push แล้ว) → `feat/stage4-xp` (ขั้น 4 เขียนครบ **ยังไม่ commit**) · ยังไม่มี PR
-- **ยังไม่เคยรันกับ Supabase จริง** — ทำตาม `docs/DEPLOY_PWA.md` แล้วรัน migration 4 ไฟล์ตามลำดับ (ขั้น 2 แก้ YOUR-PROJECT-REF ก่อน) แล้วเทสทีละขั้น
-- ขั้น 3: `grade_components`/`scores` + `components/GradesPanel` ในหน้าวิชา · mockup `docs/mockups/stage3.html` **ยังไม่ได้อนุมัติ**
-- ขั้น 4: `xp_events` ให้ XP ด้วย trigger ใน DB เท่านั้น (เช็กชื่อ/จดโน้ต/ส่งงาน · ยกเลิก = คืน XP · unique กันซ้ำ · เพดานต่อวิชาต่อวันเวลาไทย) · ค่า XP ฝั่ง DB = `xp_value()` มีเทสต์เทียบกับ `lib/xp.ts` · RPC `xp_overview()` · หน้าเกม + `components/game/XpPop` (เด้งเมื่อ XP จาก DB เพิ่ม — ช้ากว่ากดราว 1 รอบเน็ต) · เทสต์ 26 ข้อผ่าน
-- ค้าง/ต้องถาม: `dailyCapPerSubject` = 60 ยังเดา · XP ทวน (`review`, เพดาน 30/วัน) ยังไม่ต่อ trigger → ขั้น 5 · ชิป LV บนหน้าวันนี้ยังไม่ทำ · sprite ยังเป็นกล่อง placeholder
-- ถัดไป: ขั้น 5 ทวนและบอส (`lib/review.ts` มีแล้ว) · ไอคอนแอปยังเป็น placeholder
+- branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → `feat/stage2-notes` → `feat/stage3-grades` → `feat/stage4-xp` (push แล้ว) → `feat/stage5-review` (ขั้น 5 เขียนครบ **ยังไม่ commit**) · ยังไม่มี PR
+- **ยังไม่เคยรันกับ Supabase จริง** — ทำตาม `docs/DEPLOY_PWA.md` แล้วรัน migration 5 ไฟล์ตามลำดับ (ขั้น 2 แก้ YOUR-PROJECT-REF ก่อน) แล้วเทสทีละขั้น
+- mockup ที่**ยังไม่ได้อนุมัติ**: `stage3.html` (คะแนน) · `stage5.html` (วันสอบ ปุ่มทวนแล้ว เลือกวิชาของ tree)
+- ขั้น 4: XP ให้ด้วย trigger ใน DB เท่านั้น (`xp_value()` มีเทสต์เทียบ `lib/xp.ts`) · RPC `xp_overview()` · `components/game/XpPop`
+- ขั้น 5: ตาราง `exams` + RPC `review_topic()` (ทวนได้เฉพาะหัวข้อที่ถึงรอบ · XP ทวน ≤ 30/วัน/วิชา · รอบทวนมีเทสต์เทียบ `REVIEW_DAYS`) · `components/ExamDatesCard` ในหน้าวิชา · `components/game/Review` (บอส ปุ่มทวน passive tree) · หัวข้อไม่ติดป้าย → เข้าบอสตามวันที่จดเทียบวันสอบกลางภาค (`examOf`) · เทสต์ 29 ข้อผ่าน
+- ค้าง/ต้องถาม: `dailyCapPerSubject` = 60 ยังเดา · ชิป LV บนหน้าวันนี้ · sprite placeholder · ไอคอนแอป · ถัดไป: ขั้น 6 ห้องร่วม (ต้องถามก่อนว่าใครแก้/ลบงานในห้องได้)

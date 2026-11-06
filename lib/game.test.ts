@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { grantXp, levelFromXp, submitXp, XP_CONFIG } from "./xp.ts";
-import { afterReview, bossStatus, isMastered, nodeState, type Topic } from "./review.ts";
+import { afterReview, bossStatus, daysUntil, examOf, isMastered, nodeState, REVIEW_DAYS, upcomingExams, type Topic } from "./review.ts";
 
 test("levelFromXp: ขึ้นเลเวลถัดไปใช้ 50 × เลเวลปัจจุบัน", () => {
   assert.deepEqual(levelFromXp(0), { level: 1, into: 0, need: 50 });
@@ -78,4 +78,29 @@ test("สูตรเลเวลแบบปิดของ xp_level() (SQL) �
     const lv = Math.floor((1 + Math.sqrt(1 + (8 * xp) / step)) / 2);
     assert.deepEqual({ level: lv, into: xp - (step * lv * (lv - 1)) / 2, need: step * lv }, levelFromXp(xp), `xp=${xp}`);
   }
+});
+
+test("examOf: ป้ายมาก่อน · ไม่มีป้ายดูวันที่จดเทียบวันสอบกลางภาค", () => {
+  assert.equal(examOf("final", "2026-11-01", "2026-12-20"), "final");
+  assert.equal(examOf(null, "2026-12-20", "2026-12-20"), "midterm");
+  assert.equal(examOf(null, "2026-12-21", "2026-12-20"), "final");
+  assert.equal(examOf(null, "2026-11-01", null), "final");
+});
+
+test("upcomingExams + daysUntil", () => {
+  const ex = [
+    { subject_id: "a", kind: "final" as const, date: "2027-03-01" },
+    { subject_id: "b", kind: "midterm" as const, date: "2026-11-21" },
+    { subject_id: "c", kind: "midterm" as const, date: "2026-11-01" },
+  ];
+  assert.deepEqual(upcomingExams(ex, "2026-11-09").map((e) => e.subject_id), ["b", "a"]);
+  assert.equal(daysUntil("2026-11-21", "2026-11-09"), 12);
+  assert.equal(daysUntil("2026-11-09", "2026-11-09"), 0);
+});
+
+test("รอบทวนฝั่ง DB (review_topic ใน migration ขั้น 5) ตรงกับ REVIEW_DAYS", async () => {
+  const { readFileSync } = await import("node:fs");
+  const sql = readFileSync(new URL("../supabase/migrations/20261111090000_stage5_review.sql", import.meta.url), "utf8");
+  const m = /array\[([\d, ]+)\]/.exec(sql);
+  assert.deepEqual(m![1].split(",").map(Number), [...REVIEW_DAYS]);
 });

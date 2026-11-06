@@ -117,6 +117,7 @@ export function useSaveNote() {
       qc.invalidateQueries({ queryKey: noteKeys.day(n.date) });
       qc.invalidateQueries({ queryKey: noteKeys.subject(n.subject_id) });
       qc.invalidateQueries({ queryKey: noteKeys.one(n.slot_id, n.date) });
+      qc.invalidateQueries({ queryKey: ["topics"] }); // หัวข้อใช้กับบอส/ทวน (ขั้น 5)
     },
   });
 }

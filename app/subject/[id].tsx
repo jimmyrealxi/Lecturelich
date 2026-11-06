@@ -5,6 +5,8 @@ import { Card, Section, Skeleton, T } from "@/components/ui";
 import { TaskRow } from "@/components/TaskRow";
 import { NotesTimeline } from "@/components/NotesTimeline";
 import { GradesPanel } from "@/components/GradesPanel";
+import { ExamDatesCard } from "@/components/ExamDatesCard";
+import { useExams } from "@/lib/queries/review";
 import { useAssignments, useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
 import { useProfile } from "@/lib/queries/setup";
 import { attendanceStats, bangkokNow, countSessions } from "@/lib/schedule";
@@ -31,7 +33,9 @@ export default function SubjectScreen() {
     const rows = (attendance.data ?? []).filter((r) => r.subject_id === id);
     return attendanceStats(rows.map((r) => r.status), countSessions(mySlots, term.data), minPct);
   }, [attendance.data, id, mySlots, term.data, minPct]);
-  const myTasks = (tasks.data ?? []).filter((a) => a.subject_id === id);
+  const exams = useExams(term.data?.id);
+  const myExams = (exams.data ?? []).filter((e) => e.subject_id === id);
+  const myTasks =(tasks.data ?? []).filter((a) => a.subject_id === id);
   const absentKeys = useMemo(
     () => new Set((attendance.data ?? []).filter((r) => r.status === "absent").map((r) => `${r.slot_id}:${r.date}`)),
     [attendance.data],
@@ -87,6 +91,14 @@ export default function SubjectScreen() {
 
         {subject && term.data && (
           <>
+            <Section>วันสอบ (บอส)</Section>
+            {exams.data ? (
+              <ExamDatesCard key={myExams.map((e) => e.kind + e.date).join()} subjectId={subject.id} termId={term.data.id}
+                exams={myExams} today={today} />
+            ) : (
+              <Skeleton height={120} />
+            )}
+
             <Section>คะแนนและเกรด</Section>
             <GradesPanel subject={subject} termId={term.data.id} />
           </>
