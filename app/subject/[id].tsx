@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Card, Section, Skeleton, T } from "@/components/ui";
 import { TaskRow } from "@/components/TaskRow";
 import { useAssignments, useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
+import { useProfile } from "@/lib/queries/setup";
 import { attendanceStats, bangkokNow, countSessions } from "@/lib/schedule";
 import { hhmm } from "@/lib/format";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
@@ -19,14 +20,15 @@ export default function SubjectScreen() {
   const attendance = useAttendance(term.data);
   const tasks = useAssignments();
   const today = bangkokNow().date;
+  const minPct = useProfile().data?.min_attendance_pct ?? 80;
 
   const subject = subjects.data?.find((s) => s.id === id);
   const mySlots = useMemo(() => (slots.data ?? []).filter((s) => s.subject_id === id), [slots.data, id]);
   const stats = useMemo(() => {
     if (!term.data) return null;
     const rows = (attendance.data ?? []).filter((r) => r.subject_id === id);
-    return attendanceStats(rows.map((r) => r.status), countSessions(mySlots, term.data));
-  }, [attendance.data, id, mySlots, term.data]);
+    return attendanceStats(rows.map((r) => r.status), countSessions(mySlots, term.data), minPct);
+  }, [attendance.data, id, mySlots, term.data, minPct]);
   const myTasks = (tasks.data ?? []).filter((a) => a.subject_id === id);
 
   const links = [
@@ -41,6 +43,9 @@ export default function SubjectScreen() {
         <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/subjects"))} style={s.back}
           accessibilityRole="button" accessibilityLabel="ย้อนกลับ">
           <Text style={s.backText}>‹ กลับ</Text>
+        </Pressable>
+        <Pressable onPress={() => router.push({ pathname: "/subject/edit", params: { id } })} style={s.edit} accessibilityRole="button">
+          <Text style={s.backText}>แก้ไข</Text>
         </Pressable>
         <Text style={s.title}>{subject ? `${subject.code ? subject.code + " · " : ""}${subject.name}` : "…"}</Text>
         <Text style={s.topSub}>
@@ -90,6 +95,7 @@ export default function SubjectScreen() {
 const s = StyleSheet.create({
   top: { backgroundColor: color.blue, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.lg },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
+  edit: { position: "absolute", right: space.lg, top: space.md, minHeight: minTouch, minWidth: minTouch, alignItems: "flex-end", justifyContent: "center" },
   backText: { fontFamily: font.body, fontSize: 14, color: color.white },
   title: { fontFamily: font.heading, fontSize: 20, color: color.white },
   topSub: { fontFamily: font.body, fontSize: 13, color: color.white, opacity: 0.85, marginTop: 2 },

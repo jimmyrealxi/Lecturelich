@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from "react-native";
+import { Alert, Platform, Pressable, StyleSheet, Text, TextInput, View, type StyleProp, type TextInputProps, type ViewStyle } from "react-native";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 
 // ชิ้นส่วนพื้นฐานที่ใช้ร่วมทุกหน้า (หน้าตาตาม docs/mockups/stage0.html)
@@ -59,4 +59,34 @@ const s = StyleSheet.create({
   btnText: { fontFamily: font.body, fontSize: 14, color: color.ink },
   btnTextFilled: { color: color.white, fontFamily: font.bodyBold },
   skeleton: { backgroundColor: color.line, borderRadius: radius.lg, marginBottom: space.md, opacity: 0.6 },
+});
+
+/** ช่องกรอกพร้อมป้ายชื่อ · error = ข้อความแดงใต้ช่อง */
+export function Field({ label, error, style, ...input }: TextInputProps & { label: string; error?: string | null }) {
+  return (
+    <View style={[{ flex: 1 }, style as StyleProp<ViewStyle>]}>
+      <Text style={f.label}>{label}</Text>
+      <TextInput placeholderTextColor={color.sub} accessibilityLabel={label} {...input}
+        style={[f.input, !!error && { borderColor: color.danger }]} />
+      {!!error && <Text style={f.error}>{error}</Text>}
+    </View>
+  );
+}
+
+/** ถามยืนยันก่อนทำสิ่งที่ย้อนไม่ได้ (เว็บใช้ confirm ของเบราว์เซอร์ เพราะ Alert ปุ่มเดียวบนเว็บ) */
+export function confirmAction(message: string, onYes: () => void) {
+  if (Platform.OS === "web") {
+    if (window.confirm(message)) onYes();
+    return;
+  }
+  Alert.alert("ยืนยัน", message, [{ text: "ยกเลิก", style: "cancel" }, { text: "ตกลง", style: "destructive", onPress: onYes }]);
+}
+
+const f = StyleSheet.create({
+  label: { fontFamily: font.body, fontSize: 13, color: color.sub, marginTop: space.md, marginBottom: 6 },
+  input: {
+    minHeight: minTouch, borderWidth: 1, borderColor: color.line, borderRadius: radius.md, paddingHorizontal: space.md,
+    fontFamily: font.body, fontSize: 16, color: color.ink, backgroundColor: color.white,
+  },
+  error: { fontFamily: font.body, fontSize: 12, color: color.danger, marginTop: 4 },
 });

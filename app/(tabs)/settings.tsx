@@ -1,5 +1,112 @@
-import { Placeholder } from "@/components/Placeholder";
+import { useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Btn, Card, Field, Section, Skeleton, T } from "@/components/ui";
+import { useCurrentTerm, type CurrentTerm } from "@/lib/queries/core";
+import { useProfile, useSaveTerm, useSetMinAttendance } from "@/lib/queries/setup";
+import { signOut, useSession } from "@/lib/auth";
+import { isDate } from "@/lib/input";
+import { thaiDate } from "@/lib/format";
+import { color, font, space } from "@/lib/theme";
+
+const weeks = (a: string, b: string) => Math.ceil((Date.parse(b) - Date.parse(a) + 86_400_000) / (7 * 86_400_000));
 
 export default function Settings() {
-  return <Placeholder title="ตั้งค่า" />;
+  const session = useSession();
+  const term = useCurrentTerm();
+  const profile = useProfile();
+  const setMin = useSetMinAttendance();
+  const [creating, setCreating] = useState(false);
+
+  const pct = profile.data?.min_attendance_pct ?? 80;
+  // ฟอร์มสร้างใหม่ตาม key → ค่าเริ่มต้นเปลี่ยนตามเทอมที่แก้ โดยไม่ต้อง setState ใน effect
+  const formTerm = creating ? null : term.data ?? null;
+
+  return (
+    <ScrollView contentContainerStyle={s.page}>
+      <Section>เทอมปัจจุบัน</Section>
+      {term.isPending ? (
+        <Skeleton />
+      ) : term.data ? (
+        <Card>
+          <View style={s.between}>
+            <Text style={T.h3}>{term.data.name}</Text>
+            <Btn label={creating ? "แก้เทอมนี้" : "เทอมใหม่"} onPress={() => setCreating(!creating)} style={{ flex: 0 }} />
+          </View>
+          <Text style={T.muted}>
+            {thaiDate(term.data.start_date)} – {thaiDate(term.data.end_date)} · {weeks(term.data.start_date, term.data.end_date)} สัปดาห์
+          </Text>
+        </Card>
+      ) : (
+        <Text style={[T.muted, { marginBottom: space.sm }]}>ยังไม่มีเทอม เริ่มจากเพิ่มเทอมด้านล่าง</Text>
+      )}
+
+      {!term.isPending && (
+        <TermForm key={formTerm?.id ?? "new"} term={formTerm} onSaved={() => setCreating(false)} />
+      )}
+
+      <Section>การเข้าเรียน</Section>
+      <Card>
+        <View style={s.between}>
+          <Text style={[T.body, { flex: 1 }]}>เกณฑ์ต้องเข้าเรียน</Text>
+          <Btn label="−" onPress={() => setMin.mutate(Math.max(50, pct - 5))} style={s.step} />
+          <Text style={s.pct}>{pct}%</Text>
+          <Btn label="+" onPress={() => setMin.mutate(Math.min(100, pct + 5))} style={s.step} />
+        </View>
+      </Card>
+
+      <Section>บัญชี</Section>
+      <Card>
+        <View style={s.between}>
+          <Text style={[T.body, { flex: 1 }]} numberOfLines={1}>{session?.user.email ?? ""}</Text>
+          <Btn label="ออกจากระบบ" onPress={() => signOut()} style={{ flex: 0 }} />
+        </View>
+      </Card>
+    </ScrollView>
+  );
 }
+
+function TermForm({ term, onSaved }: { term: CurrentTerm | null; onSaved: () => void }) {
+  const saveTerm = useSaveTerm();
+  const [name, setName] = useState(term?.name ?? "");
+  const [start, setStart] = useState(term?.start_date ?? "");
+  const [end, setEnd] = useState(term?.end_date ?? "");
+  const [tried, setTried] = useState(false);
+
+  const errName = !name.trim() ? "ใส่ชื่อเทอม" : null;
+  const errStart = !isDate(start) ? "รูปแบบ ปปปป-ดด-วว เช่น 2026-11-09" : null;
+  const errEnd = !isDate(end) ? "รูปแบบ ปปปป-ดด-วว" : !errStart && end < start ? "ต้องไม่ก่อนวันเปิดเทอม" : null;
+
+  const onSave = () => {
+    setTried(true);
+    if (errName || errStart || errEnd) return;
+    saveTerm.mutate({ id: term?.id, name: name.trim(), start_date: start, end_date: end }, { onSuccess: onSaved });
+  };
+
+  return (
+    <Card>
+      <Text style={T.h3}>{term ? "แก้เทอม" : "เพิ่มเทอม"}</Text>
+      <Field label="ชื่อเทอม" value={name} onChangeText={setName} placeholder="เทอม 2/2569" maxLength={60}
+        error={tried ? errName : null} />
+      <View style={s.two}>
+        <Field label="วันเปิดเทอม" value={start} onChangeText={setStart} placeholder="2026-11-09"
+          error={tried ? errStart : null} />
+        <Field label="วันปิดเทอม" value={end} onChangeText={setEnd} placeholder="2027-03-07"
+          error={tried ? errEnd : null} />
+      </View>
+      {saveTerm.error && <Text style={s.error}>บันทึกไม่สำเร็จ: {saveTerm.error.message}</Text>}
+      <View style={s.row}>
+        <Btn kind="primary" label={saveTerm.isPending ? "กำลังบันทึก…" : "บันทึกเป็นเทอมปัจจุบัน"} onPress={onSave} />
+      </View>
+    </Card>
+  );
+}
+
+const s = StyleSheet.create({
+  page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
+  between: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.sm },
+  two: { flexDirection: "row", gap: space.sm },
+  row: { flexDirection: "row", marginTop: space.md },
+  step: { flex: 0, width: 44 },
+  pct: { fontFamily: font.bodyBold, fontSize: 16, color: color.ink, minWidth: 48, textAlign: "center" },
+  error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
+});
