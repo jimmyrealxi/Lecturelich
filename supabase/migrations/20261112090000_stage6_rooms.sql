@@ -1,14 +1,14 @@
 -- ขั้น 6: ห้องร่วม (แชร์ "งานและกำหนดส่ง" เท่านั้น) · เจ้าของรันเองใน Supabase SQL Editor (หลัง migration ขั้น 1–5)
--- ⚠️ ค่าเริ่มต้นตาม PLAN (ยังรอเจ้าของยืนยัน): งานในห้องแก้/ลบได้เฉพาะคนสร้างกับเจ้าของห้อง
+-- งานในห้องแก้/ลบได้เฉพาะคนสร้างกับเจ้าของห้อง
 -- สถานะส่งงาน (assignment_status) ยังเป็นของแต่ละคน · ข้อมูลอื่นทั้งหมดยังส่วนตัวตาม RLS เดิม
 
 -- ---------- rooms ----------
 -- โค้ดชวน 8 ตัว (ตัด 0 O 1 I ที่อ่านสับสน) · DEFAULT ใช้ subquery ไม่ได้จึงแยกเป็นฟังก์ชัน
 create or replace function public._room_code() returns text
-language sql volatile set search_path = '' as $
+language sql volatile set search_path = '' as $$
   select string_agg(substr('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', 1 + floor(random() * 32)::int, 1), '')
   from generate_series(1, 8)
-$;
+$$;
 
 create table public.rooms (
   id uuid primary key default gen_random_uuid(),

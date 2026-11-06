@@ -1,10 +1,12 @@
-import { ScrollViewStyleReset } from "expo-router/html";
+import { ScrollViewStyleReset, useServerDocumentContext } from "expo-router/html";
 import type { PropsWithChildren } from "react";
 
 // โครงหน้า HTML ของเวอร์ชันเว็บ (เว็บเท่านั้น) · PWA: manifest / ไอคอน / theme-color อยู่ที่นี่
 export default function Root({ children }: PropsWithChildren) {
+  // SDK 58: สคริปต์แอป/CSS/ฟอนต์ ส่งมาทาง context นี้ ต้องวางเอง ไม่งั้นหน้าเว็บว่าง (ไม่มี JS)
+  const { bodyAttributes, bodyNodes, htmlAttributes, headNodes } = useServerDocumentContext();
   return (
-    <html lang="th">
+    <html lang="th" {...htmlAttributes}>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -20,8 +22,12 @@ export default function Root({ children }: PropsWithChildren) {
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <ScrollViewStyleReset />
         <style dangerouslySetInnerHTML={{ __html: webAppCss }} />
+        {headNodes}
       </head>
-      <body>{children}</body>
+      <body {...bodyAttributes}>
+        {children}
+        {bodyNodes}
+      </body>
     </html>
   );
 }

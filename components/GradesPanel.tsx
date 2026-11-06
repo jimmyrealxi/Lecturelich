@@ -144,7 +144,9 @@ function ComponentCard({ subjectId, comp, sum, onEdit }: {
       <View style={s.between}>
         <Text style={T.h3}>{comp.name}{comp.is_final ? "  · ปลายภาค" : ""}</Text>
         <Text style={T.muted}>
-          {fmt(Number(comp.weight))}% · {sum == null ? "ยังไม่มีคะแนน" : `${fmt(sum)}/${fmt(Number(comp.max_score))}`}
+          {fmt(Number(comp.weight))}% · {sum == null ? "ยังไม่มีคะแนน"
+            : `${fmt(comp.scores.reduce((t, x) => t + Number(x.score), 0))}/${fmt(comp.scores.reduce((t, x) => t + Number(x.max_score), 0))}`
+              + ` → ${fmt(sum)}/${fmt(Number(comp.max_score))}`}
         </Text>
       </View>
       {comp.scores.map((x) => (
@@ -183,12 +185,13 @@ function ComponentForm({ subjectId, existing, sort, onDone }: {
   const errName = !name.trim() ? "ใส่ชื่อ" : null;
   const w = num(weight);
   const errWeight = !(w > 0 && w <= 100) ? "1–100" : null;
-  const errMax = !(num(max) > 0) ? "มากกว่า 0" : null;
+  const errMax = max.trim() && !(num(max) > 0) ? "มากกว่า 0" : null; // ว่าง = ใช้ค่าสัดส่วน
 
   const onSave = () => {
     setTried(true);
     if (errName || errWeight || errMax) return;
-    save.mutate([{ id: existing?.id, name: name.trim(), weight: w, max_score: num(max), is_final: isFinal, sort }], { onSuccess: onDone });
+    const maxScore = max.trim() ? num(max) : w;
+    save.mutate([{ id: existing?.id, name: name.trim(), weight: w, max_score: maxScore, is_final: isFinal, sort }], { onSuccess: onDone });
   };
 
   return (
@@ -197,8 +200,12 @@ function ComponentForm({ subjectId, existing, sort, onDone }: {
       <Field label="ชื่อ" value={name} onChangeText={setName} placeholder="กลางภาค" maxLength={40} error={tried ? errName : null} />
       <View style={s.row}>
         <Field label="สัดส่วน (%)" value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={6} error={tried ? errWeight : null} />
-        <Field label="คะแนนเต็ม" value={max} onChangeText={setMax} keyboardType="decimal-pad" maxLength={6} error={tried ? errMax : null} />
+        <Field label="คะแนนเต็ม (ไม่รู้ก็เว้นว่าง)" value={max} onChangeText={setMax} keyboardType="decimal-pad" maxLength={6}
+          placeholder={weight || "30"} error={tried ? errMax : null} />
       </View>
+      <Text style={[T.muted, { fontSize: 12, marginTop: 4 }]}>
+        กรอกคะแนนทีละงานตามที่อาจารย์ให้ (เช่น 8/10) แอปจะแปลงเป็นสัดส่วนของส่วนนี้เอง
+      </Text>
       <Text style={s.label}>ใช้คำนวณ &quot;ปลายภาคต้องได้เท่าไหร่&quot;</Text>
       <View style={s.row}>
         <Btn label="ใช่ ส่วนนี้คือปลายภาค" selected={isFinal} onPress={() => setIsFinal(true)} />

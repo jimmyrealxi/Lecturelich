@@ -55,19 +55,21 @@ export type ComponentRow = {
 };
 
 /**
- * แถวจาก DB → Component · คะแนนส่วน = ผลรวมคะแนนที่ได้ (ไม่เกินคะแนนเต็มของส่วน)
- * รายการที่ยังไม่ได้กรอกนับเป็น 0 (ไม่คาดเดาจาก % ที่ได้ไปแล้ว) · ยังไม่มีสักรายการ = null
+ * แถวจาก DB → Component · คิดตามสัดส่วนของรายการที่กรอกแล้ว: (ได้รวม / เต็มรวม) × คะแนนเต็มของส่วน
+ * เช่น งาน 5 ชิ้น ชิ้นละ 10 ในส่วน 30 คะแนน → ได้ 45/50 = 27/30 (ไม่ต้องรู้ล่วงหน้าว่ามีกี่ชิ้น)
+ * งานที่ยังไม่ได้กรอกไม่นับ (= เฉลี่ยจากที่มี) · ล้นเต็มได้แค่เต็ม · ยังไม่มีสักรายการ = null
  * Number(): numeric จาก PostgREST อาจมาเป็น string
  */
 export function toComponents(rows: ComponentRow[]): Component[] {
   return rows.map((r) => {
     const max = Number(r.max_score);
-    const sum = r.scores.reduce((t, x) => t + Number(x.score), 0);
+    const got = r.scores.reduce((t, x) => t + Number(x.score), 0);
+    const full = r.scores.reduce((t, x) => t + Number(x.max_score), 0);
     return {
       name: r.name,
       weight: Number(r.weight),
       max,
-      score: r.scores.length ? Math.min(sum, max) : null,
+      score: full > 0 ? round2(Math.min(got / full, 1) * max) : null,
       isFinal: r.is_final,
     };
   });

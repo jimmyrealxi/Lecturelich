@@ -24,3 +24,9 @@ export function normUrl(s: string): string | null | undefined {
 
 /** วันที่ + เวลา ตามเวลาไทย → ISO สำหรับ timestamptz */
 export const bangkokIso = (date: string, time: string) => new Date(`${date}T${time}:00+07:00`).toISOString();
+
+/** ISO → { date: "YYYY-MM-DD", time: "HH:MM" } ตามเวลาไทย (กลับด้านของ bangkokIso ใช้เติมฟอร์มแก้ไข) */
+export function bangkokParts(iso: string) {
+  const t = new Date(Date.parse(iso) + 7 * 3600_000).toISOString(); // ไทยไม่มี DST
+  return { date: t.slice(0, 10), time: t.slice(11, 16) };
+}

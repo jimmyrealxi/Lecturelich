@@ -50,7 +50,7 @@ test("needOnFinal: นับส่วนที่ยังไม่มีคะ�
   assert.equal(needOnFinal(oop, "Z"), null);
 });
 
-test("toComponents: รวมคะแนนในส่วน ไม่เกินเต็ม · ไม่มีรายการ = null", () => {
+test("toComponents: คิดตามสัดส่วนรายการที่กรอก ไม่เกินเต็ม · ไม่มีรายการ = null", () => {
   const c = toComponents([
     { name: "เก็บ", weight: 30, max_score: 30, is_final: false, scores: [{ score: 9, max_score: 10 }, { score: 15, max_score: 20 }] },
     { name: "กลาง", weight: 30, max_score: 30, is_final: false, scores: [{ score: "18" as unknown as number, max_score: 30 }] },
@@ -58,6 +58,15 @@ test("toComponents: รวมคะแนนในส่วน ไม่เก�
     { name: "ปลาย", weight: 40, max_score: 40, is_final: true, scores: [] },
   ]);
   assert.deepEqual(c.map((x) => x.score), [24, 18, 10, null]);
+  // งาน 5 ชิ้น ชิ้นละ 10 ในส่วน 30 คะแนน: ได้ 45/50 → 27 · กรอกแค่ 2 ชิ้น 8+7 → 15/20 → 22.5
+  const five = Array.from({ length: 5 }, () => ({ score: 9, max_score: 10 }));
+  const part = [{ score: 8, max_score: 10 }, { score: 7, max_score: 10 }];
+  const [a, b] = toComponents([
+    { name: "งาน", weight: 30, max_score: 30, is_final: false, scores: five },
+    { name: "งาน", weight: 30, max_score: 30, is_final: false, scores: part },
+  ]);
+  assert.equal(a.score, 27);
+  assert.equal(b.score, 22.5);
   assert.equal(c[3].isFinal, true);
   assert.equal(weightedTotal(c.slice(0, 2)), 42);
 });

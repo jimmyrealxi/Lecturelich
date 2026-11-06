@@ -27,6 +27,7 @@ export type Assignment = {
   source: "classroom" | "class" | "line";
   link: string | null;
   room_id: string | null; // null = งานส่วนตัว
+  created_by: string;
   done: boolean;
 };
 
@@ -131,7 +132,7 @@ export function useAssignments() {
       const [rows, mine] = await Promise.all([
         supabase
           .from("assignments")
-          .select("id,subject_id,course_code,title,due_at,source,link,room_id,assignment_status(done)")
+          .select("id,subject_id,course_code,title,due_at,source,link,room_id,created_by,assignment_status(done)")
           .order("due_at", { ascending: true, nullsFirst: false })
           .then(must),
         supabase.from("subjects").select("id,code").then(must),
@@ -182,7 +183,48 @@ export function useAddAssignment() {
     onMutate: async (a) => {
       await qc.cancelQueries({ queryKey: keys.assignments });
       const prev = qc.getQueryData<Assignment[]>(keys.assignments);
-      qc.setQueryData<Assignment[]>(keys.assignments, (old = []) => [...old, { ...a, id: "temp-" + Date.now(), done: false }]);
+      qc.setQueryData<Assignment[]>(keys.assignments, (old = []) => [...old, { ...a, id: "temp-" + Date.now(), created_by: "", done: false }]);
+      return { prev };
+    },
+    onError: (_e, _v, ctx) => qc.setQueryData(keys.assignments, ctx?.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: keys.assignments }),
+  });
+}
+
+/** เปลี่ยนวิชา → ส่ง course_code: null ด้วย ให้ trigger เติมรหัสวิชาใหม่ (ไม่งั้นเพื่อนในห้องจับคู่วิชาเก่า) */
+export type AssignmentPatch = Partial<Pick<Assignment, "subject_id" | "title" | "due_at" | "source" | "link">>;
+
+export function useUpdateAssignment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, patch }: { id: string; patch: AssignmentPatch }) =>
+      must(
+        await supabase
+          .from("assignments")
+          .update("subject_id" in patch ? { ...patch, course_code: null } : patch)
+          .eq("id", id)
+          .select("id")
+          .single(), // RLS ไม่ให้แก้ = 0 แถว → error → ย้อนค่าเดิม
+      ),
+    onMutate: async ({ id, patch }) => {
+      await qc.cancelQueries({ queryKey: keys.assignments });
+      const prev = qc.getQueryData<Assignment[]>(keys.assignments);
+      qc.setQueryData<Assignment[]>(keys.assignments, (old = []) => old.map((a) => (a.id === id ? { ...a, ...patch } : a)));
+      return { prev };
+    },
+    onError: (_e, _v, ctx) => qc.setQueryData(keys.assignments, ctx?.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: keys.assignments }),
+  });
+}
+
+export function useDeleteAssignment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => must(await supabase.from("assignments").delete().eq("id", id).select("id").single()),
+    onMutate: async (id) => {
+      await qc.cancelQueries({ queryKey: keys.assignments });
+      const prev = qc.getQueryData<Assignment[]>(keys.assignments);
+      qc.setQueryData<Assignment[]>(keys.assignments, (old = []) => old.filter((a) => a.id !== id));
       return { prev };
     },
     onError: (_e, _v, ctx) => qc.setQueryData(keys.assignments, ctx?.prev),

@@ -114,7 +114,7 @@ language plpgsql security definer set search_path = public as $$
 begin
   if exists (select 1 from public.push_subscriptions where user_id = new.user_id) then
     perform net.http_post(
-      url := 'https://YOUR-PROJECT-REF.supabase.co/functions/v1/send-push',
+      url := 'https://zuwmygzqoezgosyetahc.supabase.co/functions/v1/send-push',
       body := jsonb_build_object('id', new.id),
       headers := '{"Content-Type": "application/json"}'::jsonb,
       timeout_milliseconds := 5000

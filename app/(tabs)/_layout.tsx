@@ -1,5 +1,6 @@
 import { Redirect, Tabs } from "expo-router";
 import { useSession } from "@/lib/auth";
+import { LvChip } from "@/components/game/LvChip";
 import { color, font } from "@/lib/theme";
 
 export default function TabsLayout() {
@@ -19,7 +20,7 @@ export default function TabsLayout() {
         sceneStyle: { backgroundColor: color.cream },
       }}
     >
-      <Tabs.Screen name="today" options={{ title: "วันนี้" }} />
+      <Tabs.Screen name="today" options={{ title: "วันนี้", headerRight: () => <LvChip /> }} />
       <Tabs.Screen name="subjects" options={{ title: "วิชา" }} />
       <Tabs.Screen name="tasks" options={{ title: "งาน" }} />
       <Tabs.Screen name="game" options={{ title: "เกม", headerStyle: { backgroundColor: color.gameBg }, headerTintColor: color.brass }} />

@@ -17,19 +17,20 @@ export function Btn({
 }: {
   label: string;
   onPress: () => void;
-  kind?: "plain" | "primary";
+  kind?: "plain" | "primary" | "danger" | "dangerFill";
   selected?: boolean;
   style?: StyleProp<ViewStyle>;
 }) {
-  const filled = kind === "primary" || selected;
+  const filled = kind === "primary" || kind === "dangerFill" || selected;
+  const red = kind === "danger" || kind === "dangerFill";
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      style={({ pressed }) => [s.btn, filled && s.btnFilled, pressed && { opacity: 0.8 }, style]}
+      style={({ pressed }) => [s.btn, filled && s.btnFilled, red && s.btnRed, kind === "dangerFill" && s.btnRedFill, pressed && { opacity: 0.8 }, style]}
     >
-      <Text style={[s.btnText, filled && s.btnTextFilled]}>{label}</Text>
+      <Text style={[s.btnText, filled && s.btnTextFilled, kind === "danger" && { color: color.danger }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -56,6 +57,8 @@ const s = StyleSheet.create({
     backgroundColor: color.white, alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,
   },
   btnFilled: { backgroundColor: color.blue, borderColor: color.blue },
+  btnRed: { borderColor: color.danger },
+  btnRedFill: { backgroundColor: color.danger },
   btnText: { fontFamily: font.body, fontSize: 14, color: color.ink },
   btnTextFilled: { color: color.white, fontFamily: font.bodyBold },
   skeleton: { backgroundColor: color.line, borderRadius: radius.lg, marginBottom: space.md, opacity: 0.6 },
