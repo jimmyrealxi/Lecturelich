@@ -1,0 +1,177 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import type { AttendanceStatus, Slot, Term } from "@/lib/schedule";
+
+// ข้อมูลหลักของขั้น 1 · select เฉพาะคอลัมน์ที่ใช้ · การกดที่ใช้บ่อย = optimistic (เปลี่ยนจอก่อน ล้มเหลวค่อยย้อน)
+
+export type CurrentTerm = Term & { id: string; name: string };
+export type Subject = {
+  id: string;
+  code: string | null;
+  name: string;
+  color: string;
+  classroom_url: string | null;
+  line_url: string | null;
+  notebooklm_url: string | null;
+};
+export type AttendanceRow = { slot_id: string; subject_id: string; date: string; status: AttendanceStatus };
+export type Assignment = {
+  id: string;
+  subject_id: string | null;
+  title: string;
+  due_at: string | null;
+  source: "classroom" | "class" | "line";
+  link: string | null;
+  done: boolean;
+};
+
+const must = <T,>(r: { data: T | null; error: unknown }): T => {
+  if (r.error) throw r.error;
+  return r.data as T;
+};
+
+export const keys = {
+  term: ["term"] as const,
+  subjects: (termId: string) => ["subjects", termId] as const,
+  slots: (termId: string) => ["slots", termId] as const,
+  attendance: (termId: string) => ["attendance", termId] as const,
+  assignments: ["assignments"] as const,
+};
+
+export function useCurrentTerm() {
+  return useQuery({
+    queryKey: keys.term,
+    queryFn: async () =>
+      must(
+        await supabase.from("terms").select("id,name,start_date,end_date").eq("is_current", true).maybeSingle(),
+      ) as CurrentTerm | null,
+  });
+}
+
+export function useSubjects(termId: string | undefined) {
+  return useQuery({
+    queryKey: keys.subjects(termId ?? ""),
+    enabled: !!termId,
+    queryFn: async () =>
+      must(
+        await supabase
+          .from("subjects")
+          .select("id,code,name,color,classroom_url,line_url,notebooklm_url")
+          .eq("term_id", termId!)
+          .order("name"),
+      ) as Subject[],
+  });
+}
+
+export function useSlots(termId: string | undefined) {
+  return useQuery({
+    queryKey: keys.slots(termId ?? ""),
+    enabled: !!termId,
+    queryFn: async () =>
+      must(
+        await supabase
+          .from("class_slots")
+          .select("id,subject_id,weekday,start_time,end_time,room,subjects!inner(term_id)")
+          .eq("subjects.term_id", termId!),
+      ).map(({ subjects: _s, ...slot }: Slot & { subjects: unknown }) => slot) as Slot[],
+  });
+}
+
+/** เช็กชื่อทั้งเทอม (แถวเฉพาะคาบที่เช็กแล้ว — ใช้ทั้งหน้าวันนี้และ % เข้าเรียน) */
+export function useAttendance(term: CurrentTerm | null | undefined) {
+  return useQuery({
+    queryKey: keys.attendance(term?.id ?? ""),
+    enabled: !!term,
+    queryFn: async () =>
+      must(
+        await supabase
+          .from("attendance")
+          .select("slot_id,subject_id,date,status")
+          .gte("date", term!.start_date)
+          .lte("date", term!.end_date),
+      ) as AttendanceRow[],
+  });
+}
+
+export function useSetAttendance(termId: string) {
+  const qc = useQueryClient();
+  const key = keys.attendance(termId);
+  return useMutation({
+    mutationFn: async (row: AttendanceRow) =>
+      must(
+        await supabase
+          .from("attendance")
+          .upsert({ ...row, updated_at: new Date().toISOString() }, { onConflict: "user_id,slot_id,date" })
+          .select("slot_id"),
+      ),
+    onMutate: async (row) => {
+      await qc.cancelQueries({ queryKey: key });
+      const prev = qc.getQueryData<AttendanceRow[]>(key);
+      qc.setQueryData<AttendanceRow[]>(key, (old = []) => [
+        ...old.filter((r) => !(r.slot_id === row.slot_id && r.date === row.date)),
+        row,
+      ]);
+      return { prev };
+    },
+    onError: (_e, _row, ctx) => qc.setQueryData(key, ctx?.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: key }),
+  });
+}
+
+/** งานที่ยังไม่ส่ง + ส่งแล้วใน 7 วันล่าสุด เรียงตามกำหนดส่ง */
+export function useAssignments() {
+  return useQuery({
+    queryKey: keys.assignments,
+    queryFn: async () => {
+      const rows = must(
+        await supabase
+          .from("assignments")
+          .select("id,subject_id,title,due_at,source,link,assignment_status(done)")
+          .order("due_at", { ascending: true, nullsFirst: false }),
+      ) as (Omit<Assignment, "done"> & { assignment_status: { done: boolean }[] })[];
+      return rows.map(({ assignment_status, ...a }) => ({ ...a, done: assignment_status[0]?.done ?? false }));
+    },
+  });
+}
+
+export function useToggleDone() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, done }: { id: string; done: boolean }) =>
+      must(
+        await supabase
+          .from("assignment_status")
+          .upsert(
+            { assignment_id: id, done, submitted_at: done ? new Date().toISOString() : null },
+            { onConflict: "user_id,assignment_id" },
+          )
+          .select("assignment_id"),
+      ),
+    onMutate: async ({ id, done }) => {
+      await qc.cancelQueries({ queryKey: keys.assignments });
+      const prev = qc.getQueryData<Assignment[]>(keys.assignments);
+      qc.setQueryData<Assignment[]>(keys.assignments, (old = []) => old.map((a) => (a.id === id ? { ...a, done } : a)));
+      return { prev };
+    },
+    onError: (_e, _v, ctx) => qc.setQueryData(keys.assignments, ctx?.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: keys.assignments }),
+  });
+}
+
+export type NewAssignment = Pick<Assignment, "subject_id" | "title" | "due_at" | "source" | "link">;
+
+export function useAddAssignment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (a: NewAssignment) =>
+      must(await supabase.from("assignments").insert(a).select("id").single()),
+    onMutate: async (a) => {
+      await qc.cancelQueries({ queryKey: keys.assignments });
+      const prev = qc.getQueryData<Assignment[]>(keys.assignments);
+      qc.setQueryData<Assignment[]>(keys.assignments, (old = []) => [...old, { ...a, id: "temp-" + Date.now(), done: false }]);
+      return { prev };
+    },
+    onError: (_e, _v, ctx) => qc.setQueryData(keys.assignments, ctx?.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: keys.assignments }),
+  });
+}

@@ -1,7 +1,12 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
+import { useSession } from "@/lib/auth";
 import { color, font } from "@/lib/theme";
 
 export default function TabsLayout() {
+  const session = useSession();
+  if (session === undefined) return null; // อ่าน session จากเครื่อง (เร็วมาก)
+  if (!session) return <Redirect href="/login" />;
+
   return (
     <Tabs
       screenOptions={{

@@ -3,6 +3,8 @@ import { Platform } from "react-native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Kanit_600SemiBold } from "@expo-google-fonts/kanit";
 import {
   IBMPlexSansThai_400Regular,
@@ -10,6 +12,7 @@ import {
 } from "@expo-google-fonts/ibm-plex-sans-thai";
 import { Silkscreen_400Regular } from "@expo-google-fonts/silkscreen";
 import { registerServiceWorker } from "@/lib/web/serviceWorker";
+import { CACHE_BUSTER, persister, queryClient } from "@/lib/queryClient";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -24,10 +27,17 @@ export default function RootLayout() {
   }, []);
 
   if (!loaded) return null;
-  return (
+  const app = (
     <>
       <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false }} />
     </>
+  );
+  return persister ? (
+    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, buster: CACHE_BUSTER }}>
+      {app}
+    </PersistQueryClientProvider>
+  ) : (
+    <QueryClientProvider client={queryClient}>{app}</QueryClientProvider>
   );
 }
