@@ -3,6 +3,7 @@ import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-na
 import { router, useLocalSearchParams } from "expo-router";
 import { Card, Section, Skeleton, T } from "@/components/ui";
 import { TaskRow } from "@/components/TaskRow";
+import { NotesTimeline } from "@/components/NotesTimeline";
 import { useAssignments, useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
 import { useProfile } from "@/lib/queries/setup";
 import { attendanceStats, bangkokNow, countSessions } from "@/lib/schedule";
@@ -11,7 +12,7 @@ import { color, font, minTouch, radius, space } from "@/lib/theme";
 
 const DAY = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
 
-// หน้าวิชา (ขั้น 1): ลิงก์ · การเข้าเรียน · งานของวิชา — คะแนน (ขั้น 3) และไทม์ไลน์โน้ต (ขั้น 2) จะเพิ่มทีหลัง
+// หน้าวิชา: ลิงก์ · การเข้าเรียน · ไทม์ไลน์โน้ต · งานของวิชา — คะแนน (ขั้น 3) จะเพิ่มทีหลัง
 export default function SubjectScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const term = useCurrentTerm();
@@ -30,6 +31,10 @@ export default function SubjectScreen() {
     return attendanceStats(rows.map((r) => r.status), countSessions(mySlots, term.data), minPct);
   }, [attendance.data, id, mySlots, term.data, minPct]);
   const myTasks = (tasks.data ?? []).filter((a) => a.subject_id === id);
+  const absentKeys = useMemo(
+    () => new Set((attendance.data ?? []).filter((r) => r.status === "absent").map((r) => `${r.slot_id}:${r.date}`)),
+    [attendance.data],
+  );
 
   const links = [
     { label: "Classroom", url: subject?.classroom_url },
@@ -78,6 +83,9 @@ export default function SubjectScreen() {
             </Card>
           )
         )}
+
+        <Section>โน้ตแต่ละคาบ</Section>
+        <NotesTimeline subjectId={id} absentKeys={absentKeys} />
 
         <Section>งานของวิชา</Section>
         <Card>

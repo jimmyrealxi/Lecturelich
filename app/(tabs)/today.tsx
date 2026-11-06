@@ -7,7 +7,10 @@ import {
   useAssignments, useAttendance, useCurrentTerm, useSetAttendance, useSlots, useSubjects,
   type AttendanceRow,
 } from "@/lib/queries/core";
-import { bangkokNow, classState, currentOrNext, slotsOn, toMinutes, type AttendanceStatus, type Slot } from "@/lib/schedule";
+import { useNotedSlots } from "@/lib/queries/notes";
+import {
+  bangkokNow, classState, currentOrNext, endedWithoutNote, slotsOn, toMinutes, type AttendanceStatus, type Slot,
+} from "@/lib/schedule";
 import { hhmm, thaiDate } from "@/lib/format";
 import { color, radius, space } from "@/lib/theme";
 
@@ -42,7 +45,11 @@ export default function Today() {
     () => new Map((attendance.data ?? []).filter((r) => r.date === now.date).map((r) => [r.slot_id, r.status])),
     [attendance.data, now.date],
   );
+  const noted = useNotedSlots(now.date);
   const focus = currentOrNext(today, now.minutes);
+  const notedSet = useMemo(() => new Set(noted.data ?? []), [noted.data]);
+  // ยังโหลดไม่เสร็จ = ยังไม่โชว์การ์ด (กันการ์ดแวบขึ้นแล้วหาย)
+  const unnoted = noted.data ? endedWithoutNote(today, now.minutes, notedSet, statusToday) : [];
   const upcomingTasks = (tasks.data ?? []).filter((a) => !a.done).slice(0, 5);
 
   const check = (slot: Slot, status: AttendanceStatus) =>
@@ -91,6 +98,20 @@ export default function Today() {
               )}
             </Card>
           )}
+
+          {unnoted.map((slot) => (
+            <Card key={slot.id} style={s.unnoted}>
+              <Text style={T.h3}>คาบนี้จบแล้ว ยังไม่ได้จด</Text>
+              <Text style={T.muted}>
+                {subjectById.get(slot.subject_id)?.name ?? "วิชา"} · {hhmm(slot.start_time)}–{hhmm(slot.end_time)}
+              </Text>
+              <View style={s.row}>
+                <Btn kind="primary" label="✎ จดเลย"
+                  onPress={() => router.push({ pathname: "/note/[slotId]", params: { slotId: slot.id, date: now.date } })} />
+                <Btn label="ไม่มีเรียน" onPress={() => check(slot, "no_class")} style={{ flex: 0.6 }} />
+              </View>
+            </Card>
+          ))}
 
           <Section>คาบวันนี้</Section>
           <Card>
@@ -144,6 +165,7 @@ export default function Today() {
 const s = StyleSheet.create({
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   now: { borderColor: color.blue, borderWidth: 1.5 },
+  unnoted: { borderStyle: "dashed", borderColor: color.blue, borderWidth: 1.5, backgroundColor: "#EEF2FA" },
   between: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.sm },
   row: { flexDirection: "row", gap: space.sm, marginTop: space.sm },
   tag: { backgroundColor: color.cream, borderRadius: radius.pill, paddingHorizontal: space.sm, paddingVertical: 2 },
