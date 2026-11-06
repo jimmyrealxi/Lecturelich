@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Card, Section, Skeleton, T } from "@/components/ui";
 import { TaskRow } from "@/components/TaskRow";
 import { NotesTimeline } from "@/components/NotesTimeline";
+import { GradesPanel } from "@/components/GradesPanel";
 import { useAssignments, useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
 import { useProfile } from "@/lib/queries/setup";
 import { attendanceStats, bangkokNow, countSessions } from "@/lib/schedule";
@@ -12,7 +13,7 @@ import { color, font, minTouch, radius, space } from "@/lib/theme";
 
 const DAY = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
 
-// หน้าวิชา: ลิงก์ · การเข้าเรียน · ไทม์ไลน์โน้ต · งานของวิชา — คะแนน (ขั้น 3) จะเพิ่มทีหลัง
+// หน้าวิชา: ลิงก์ · การเข้าเรียน · คะแนนและเกรด · ไทม์ไลน์โน้ต · งานของวิชา
 export default function SubjectScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const term = useCurrentTerm();
@@ -82,6 +83,13 @@ export default function SubjectScreen() {
               <View style={s.bar}><View style={[s.barFill, { width: `${stats.pct}%` }]} /></View>
             </Card>
           )
+        )}
+
+        {subject && term.data && (
+          <>
+            <Section>คะแนนและเกรด</Section>
+            <GradesPanel subject={subject} termId={term.data.id} />
+          </>
         )}
 
         <Section>โน้ตแต่ละคาบ</Section>

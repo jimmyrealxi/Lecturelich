@@ -62,7 +62,7 @@ export function useSaveTerm() {
 }
 
 export type SlotInput = Omit<Slot, "id" | "subject_id"> & { id?: string };
-export type SubjectInput = Omit<Subject, "id"> & { id?: string; slots: SlotInput[] };
+export type SubjectInput = Omit<Subject, "id" | "grade_cutoffs" | "target_grade"> & { id?: string; slots: SlotInput[] };
 
 /**
  * บันทึกวิชา + ช่วงเวลา: แก้ช่วงเดิมตาม id / เพิ่มช่วงใหม่ / ลบเฉพาะช่วงที่เอาออก

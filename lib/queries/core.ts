@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import type { AttendanceStatus, Slot, Term } from "@/lib/schedule";
+import type { Cutoffs } from "@/lib/grades";
 
 // ข้อมูลหลักของขั้น 1 · select เฉพาะคอลัมน์ที่ใช้ · การกดที่ใช้บ่อย = optimistic (เปลี่ยนจอก่อน ล้มเหลวค่อยย้อน)
 
@@ -13,6 +14,8 @@ export type Subject = {
   classroom_url: string | null;
   line_url: string | null;
   notebooklm_url: string | null;
+  grade_cutoffs: Cutoffs;
+  target_grade: string;
 };
 export type AttendanceRow = { slot_id: string; subject_id: string; date: string; status: AttendanceStatus };
 export type Assignment = {
@@ -56,7 +59,7 @@ export function useSubjects(termId: string | undefined) {
       must(
         await supabase
           .from("subjects")
-          .select("id,code,name,color,classroom_url,line_url,notebooklm_url")
+          .select("id,code,name,color,classroom_url,line_url,notebooklm_url,grade_cutoffs,target_grade")
           .eq("term_id", termId!)
           .order("name"),
       ) as Subject[],

@@ -45,3 +45,42 @@ export function needOnFinal(components: Component[], target: string, cutoffs: Cu
     unscoredOthers: others.filter((c) => c.score == null).length,
   };
 }
+
+export type ComponentRow = {
+  name: string;
+  weight: number;
+  max_score: number;
+  is_final: boolean;
+  scores: { score: number; max_score: number }[];
+};
+
+/**
+ * แถวจาก DB → Component · คะแนนส่วน = ผลรวมคะแนนที่ได้ (ไม่เกินคะแนนเต็มของส่วน)
+ * รายการที่ยังไม่ได้กรอกนับเป็น 0 (ไม่คาดเดาจาก % ที่ได้ไปแล้ว) · ยังไม่มีสักรายการ = null
+ * Number(): numeric จาก PostgREST อาจมาเป็น string
+ */
+export function toComponents(rows: ComponentRow[]): Component[] {
+  return rows.map((r) => {
+    const max = Number(r.max_score);
+    const sum = r.scores.reduce((t, x) => t + Number(x.score), 0);
+    return {
+      name: r.name,
+      weight: Number(r.weight),
+      max,
+      score: r.scores.length ? Math.min(sum, max) : null,
+      isFinal: r.is_final,
+    };
+  });
+}
+
+/** เกณฑ์ต้องเป็นตัวเลข 0–100 และเรียงลดลงตามลำดับเกรด → คืนข้อความผิดพลาด หรือ null */
+export function cutoffError(cutoffs: Cutoffs, order: string[] = Object.keys(DEFAULT_CUTOFFS)): string | null {
+  let prev = Infinity;
+  for (const g of order) {
+    const v = cutoffs[g];
+    if (!Number.isFinite(v) || v < 0 || v > 100) return `เกณฑ์ ${g} ต้องเป็นตัวเลข 0–100`;
+    if (v >= prev) return `เกณฑ์ ${g} ต้องน้อยกว่าเกรดก่อนหน้า`;
+    prev = v;
+  }
+  return null;
+}

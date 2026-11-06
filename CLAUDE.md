@@ -28,10 +28,9 @@
 ## จดงานทุกครั้ง
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
-## สถานะล่าสุด (8 พ.ย. 2569 เช้า)
-- branch: `setup/stage0` = `main` (ขั้น 0) → `feat/stage1-core` (ขั้น 1 ครบ) → `feat/stage2-notes` (ขั้น 2 ครบ แตกจากขั้น 1) · push ขึ้น parnppk/StudyQuest แล้ว · **ยังไม่มี PR** (เปิดหลังเจ้าของเทสผ่านทีละขั้น)
-- **ยังไม่เคยรันกับ Supabase จริงเลย** — เจ้าของทำตาม `docs/DEPLOY_PWA.md` (สร้างโปรเจกต์สิงคโปร์, Google, รัน 2 migration — แก้ YOUR-PROJECT-REF ก่อน, VAPID, deploy send-push) แล้วเทสขั้น 1 → ขั้น 2
-- ขั้น 1: ตั้งค่าเทอม/เกณฑ์ขาด, แท็บวิชา + `app/subject/edit.tsx`, หน้าวันนี้ (เช็กชื่อ optimistic), หน้าวิชา, แท็บงาน + `components/AddTaskForm` · วันที่/เวลาพิมพ์เป็นตัวอักษร (ยังไม่มี date picker)
-- ขั้น 2: `app/note/[slotId].tsx` (ข้อความ รูปย่อ หัวข้อ ★ กลาง/ปลายภาค เพิ่มงาน), การ์ดยังไม่ได้จด, `components/NotesTimeline`, `components/PushCard` + `app/install.tsx` (mockup `docs/mockups/stage2.html` ทำโดยไม่ได้รออนุมัติ — เจ้าของสั่งทำต่อเอง), cron `send_due_reminders()` ทุก 5 นาที · ค่าเตือนเริ่มต้น 10 นาที/24 ชม. (ตั้งได้ในหน้าตั้งค่า)
-- logic ล่วงหน้า: `lib/grades.ts` (ขั้น 3), `lib/xp.ts` (ขั้น 4 · `dailyCapPerSubject` = 60 เดาไว้ ต้องถาม), `lib/review.ts` (ขั้น 5) · เทสต์รวม 22 ข้อผ่าน
-- ถัดไป: ขั้น 3 คะแนนและเกรด (ต้องทำ mockup แท็บคะแนนในหน้าวิชาก่อน) · ไอคอนแอปยังเป็น placeholder ของ Expo
+## สถานะล่าสุด (9 พ.ย. 2569)
+- branch: `main` (ขั้น 0) → `feat/stage1-core` → `feat/stage2-notes` (push แล้ว) → `feat/stage3-grades` (ขั้น 3 เขียนครบ **ยังไม่ commit** — เจ้าของ commit/push เอง) · ยังไม่มี PR
+- **ยังไม่เคยรันกับ Supabase จริง** — ทำตาม `docs/DEPLOY_PWA.md` แล้วรัน migration 3 ไฟล์ตามลำดับ (ขั้น 2 แก้ YOUR-PROJECT-REF ก่อน) แล้วเทสขั้น 1 → 2 → 3
+- ขั้น 1–2: เทอม วิชา ตาราง เช็กชื่อ งาน · จดหลังคาบ รูป หัวข้อ ★ push cron (รายละเอียดดู git log)
+- ขั้น 3: migration `20261109090000_stage3_grades.sql` (grade_components, scores + RLS) · `components/GradesPanel` ในหน้าวิชา · `lib/grades.ts` เพิ่ม toComponents/cutoffError · mockup `docs/mockups/stage3.html` **ยังไม่ได้อนุมัติ** · คะแนนส่วน = ผลรวมคะแนนที่ได้ (ไม่เกินเต็มของส่วน) รายการที่ยังไม่กรอกนับ 0 · เทสต์ 24 ข้อผ่าน
+- ถัดไป: ขั้น 4 XP (`xp_events` + RPC, `lib/xp.ts` — `dailyCapPerSubject` = 60 ยังต้องถาม) แตก branch จากขั้น 3 หลัง commit · ไอคอนแอปยังเป็น placeholder

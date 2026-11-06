@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { gradeFor, needOnFinal, weightedTotal, type Component } from "./grades.ts";
+import { cutoffError, DEFAULT_CUTOFFS, gradeFor, needOnFinal, toComponents, weightedTotal, type Component } from "./grades.ts";
 
 // ตัวอย่างจาก mockup: เก็บ 30 (ได้ 24/30) กลางภาค 30 (ได้ 18/30) ปลายภาค 40 (เต็ม 40)
 const oop: Component[] = [
@@ -48,4 +48,23 @@ test("needOnFinal: นับส่วนที่ยังไม่มีคะ�
   assert.equal(needOnFinal(pending, "A")?.unscoredOthers, 1);
   assert.equal(needOnFinal(oop.slice(0, 2), "A"), null);
   assert.equal(needOnFinal(oop, "Z"), null);
+});
+
+test("toComponents: รวมคะแนนในส่วน ไม่เกินเต็ม · ไม่มีรายการ = null", () => {
+  const c = toComponents([
+    { name: "เก็บ", weight: 30, max_score: 30, is_final: false, scores: [{ score: 9, max_score: 10 }, { score: 15, max_score: 20 }] },
+    { name: "กลาง", weight: 30, max_score: 30, is_final: false, scores: [{ score: "18" as unknown as number, max_score: 30 }] },
+    { name: "โบนัสล้น", weight: 10, max_score: 10, is_final: false, scores: [{ score: 12, max_score: 10 }] },
+    { name: "ปลาย", weight: 40, max_score: 40, is_final: true, scores: [] },
+  ]);
+  assert.deepEqual(c.map((x) => x.score), [24, 18, 10, null]);
+  assert.equal(c[3].isFinal, true);
+  assert.equal(weightedTotal(c.slice(0, 2)), 42);
+});
+
+test("cutoffError: ต้องเรียงลดลงและอยู่ใน 0–100", () => {
+  assert.equal(cutoffError(DEFAULT_CUTOFFS), null);
+  assert.match(cutoffError({ ...DEFAULT_CUTOFFS, B: 76 })!, /B/);
+  assert.match(cutoffError({ ...DEFAULT_CUTOFFS, A: 101 })!, /A/);
+  assert.match(cutoffError({ ...DEFAULT_CUTOFFS, D: NaN })!, /D/);
 });
