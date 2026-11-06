@@ -12,6 +12,7 @@ import {
 } from "@expo-google-fonts/ibm-plex-sans-thai";
 import { Silkscreen_400Regular } from "@expo-google-fonts/silkscreen";
 import { registerServiceWorker } from "@/lib/web/webPush";
+import { XpPop } from "@/components/game/XpPop";
 import { CACHE_BUSTER, persister, queryClient } from "@/lib/queryClient";
 
 export default function RootLayout() {
@@ -31,6 +32,7 @@ export default function RootLayout() {
     <>
       <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false }} />
+      <XpPop />
     </>
   );
   return persister ? (

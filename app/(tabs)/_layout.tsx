@@ -22,7 +22,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="today" options={{ title: "วันนี้" }} />
       <Tabs.Screen name="subjects" options={{ title: "วิชา" }} />
       <Tabs.Screen name="tasks" options={{ title: "งาน" }} />
-      <Tabs.Screen name="game" options={{ title: "เกม" }} />
+      <Tabs.Screen name="game" options={{ title: "เกม", headerStyle: { backgroundColor: color.gameBg }, headerTintColor: color.brass }} />
       <Tabs.Screen name="settings" options={{ title: "ตั้งค่า" }} />
     </Tabs>
   );

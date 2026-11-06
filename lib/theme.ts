@@ -14,6 +14,7 @@ export const color = {
 
   // หน้าเกม (มืด)
   gameBg: "#0E1E3A",
+  gameDeep: "#0A1630", // ช่องแถบ XP / กรอบตัวละคร
   gamePanel: "#16294A",
   gameLine: "#2A3F66",
   gameText: "#E9EDF5",

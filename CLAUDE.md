@@ -29,8 +29,9 @@
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
 ## สถานะล่าสุด (9 พ.ย. 2569)
-- branch: `main` (ขั้น 0) → `feat/stage1-core` → `feat/stage2-notes` (push แล้ว) → `feat/stage3-grades` (ขั้น 3 เขียนครบ **ยังไม่ commit** — เจ้าของ commit/push เอง) · ยังไม่มี PR
-- **ยังไม่เคยรันกับ Supabase จริง** — ทำตาม `docs/DEPLOY_PWA.md` แล้วรัน migration 3 ไฟล์ตามลำดับ (ขั้น 2 แก้ YOUR-PROJECT-REF ก่อน) แล้วเทสขั้น 1 → 2 → 3
-- ขั้น 1–2: เทอม วิชา ตาราง เช็กชื่อ งาน · จดหลังคาบ รูป หัวข้อ ★ push cron (รายละเอียดดู git log)
-- ขั้น 3: migration `20261109090000_stage3_grades.sql` (grade_components, scores + RLS) · `components/GradesPanel` ในหน้าวิชา · `lib/grades.ts` เพิ่ม toComponents/cutoffError · mockup `docs/mockups/stage3.html` **ยังไม่ได้อนุมัติ** · คะแนนส่วน = ผลรวมคะแนนที่ได้ (ไม่เกินเต็มของส่วน) รายการที่ยังไม่กรอกนับ 0 · เทสต์ 24 ข้อผ่าน
-- ถัดไป: ขั้น 4 XP (`xp_events` + RPC, `lib/xp.ts` — `dailyCapPerSubject` = 60 ยังต้องถาม) แตก branch จากขั้น 3 หลัง commit · ไอคอนแอปยังเป็น placeholder
+- branch: `main` (ขั้น 0) → `feat/stage1-core` → `feat/stage2-notes` → `feat/stage3-grades` (push แล้ว) → `feat/stage4-xp` (ขั้น 4 เขียนครบ **ยังไม่ commit**) · ยังไม่มี PR
+- **ยังไม่เคยรันกับ Supabase จริง** — ทำตาม `docs/DEPLOY_PWA.md` แล้วรัน migration 4 ไฟล์ตามลำดับ (ขั้น 2 แก้ YOUR-PROJECT-REF ก่อน) แล้วเทสทีละขั้น
+- ขั้น 3: `grade_components`/`scores` + `components/GradesPanel` ในหน้าวิชา · mockup `docs/mockups/stage3.html` **ยังไม่ได้อนุมัติ**
+- ขั้น 4: `xp_events` ให้ XP ด้วย trigger ใน DB เท่านั้น (เช็กชื่อ/จดโน้ต/ส่งงาน · ยกเลิก = คืน XP · unique กันซ้ำ · เพดานต่อวิชาต่อวันเวลาไทย) · ค่า XP ฝั่ง DB = `xp_value()` มีเทสต์เทียบกับ `lib/xp.ts` · RPC `xp_overview()` · หน้าเกม + `components/game/XpPop` (เด้งเมื่อ XP จาก DB เพิ่ม — ช้ากว่ากดราว 1 รอบเน็ต) · เทสต์ 26 ข้อผ่าน
+- ค้าง/ต้องถาม: `dailyCapPerSubject` = 60 ยังเดา · XP ทวน (`review`, เพดาน 30/วัน) ยังไม่ต่อ trigger → ขั้น 5 · ชิป LV บนหน้าวันนี้ยังไม่ทำ · sprite ยังเป็นกล่อง placeholder
+- ถัดไป: ขั้น 5 ทวนและบอส (`lib/review.ts` มีแล้ว) · ไอคอนแอปยังเป็น placeholder

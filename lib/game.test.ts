@@ -64,3 +64,18 @@ test("isMastered: ทวนครบ 4 รอบและยังไม่เ�
   assert.equal(isMastered(topic("m", false, 4, day(20)), day(21)), false);
   assert.equal(isMastered(topic("m", false, 3, day(20)), day(10)), false);
 });
+
+test("ค่า XP ฝั่ง DB (xp_value ใน migration ขั้น 4) ตรงกับ XP_CONFIG", async () => {
+  const { readFileSync } = await import("node:fs");
+  const sql = readFileSync(new URL("../supabase/migrations/20261110090000_stage4_xp.sql", import.meta.url), "utf8");
+  const db = Object.fromEntries([...sql.matchAll(/when '(\w+)' then (\d+)/g)].map((m) => [m[1], Number(m[2])]));
+  assert.deepEqual(db, { ...XP_CONFIG });
+});
+
+test("สูตรเลเวลแบบปิดของ xp_level() (SQL) ให้ผลเท่า levelFromXp", () => {
+  const step = XP_CONFIG.levelStep;
+  for (let xp = 0; xp <= 20000; xp++) {
+    const lv = Math.floor((1 + Math.sqrt(1 + (8 * xp) / step)) / 2);
+    assert.deepEqual({ level: lv, into: xp - (step * lv * (lv - 1)) / 2, need: step * lv }, levelFromXp(xp), `xp=${xp}`);
+  }
+});
