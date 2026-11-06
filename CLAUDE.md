@@ -29,9 +29,9 @@
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
 ## สถานะล่าสุด (9 พ.ย. 2569)
-- branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → `feat/stage2-notes` → `feat/stage3-grades` → `feat/stage4-xp` (push แล้ว) → `feat/stage5-review` (ขั้น 5 เขียนครบ **ยังไม่ commit**) · ยังไม่มี PR
-- **ยังไม่เคยรันกับ Supabase จริง** — ทำตาม `docs/DEPLOY_PWA.md` แล้วรัน migration 5 ไฟล์ตามลำดับ (ขั้น 2 แก้ YOUR-PROJECT-REF ก่อน) แล้วเทสทีละขั้น
-- mockup ที่**ยังไม่ได้อนุมัติ**: `stage3.html` (คะแนน) · `stage5.html` (วันสอบ ปุ่มทวนแล้ว เลือกวิชาของ tree)
-- ขั้น 4: XP ให้ด้วย trigger ใน DB เท่านั้น (`xp_value()` มีเทสต์เทียบ `lib/xp.ts`) · RPC `xp_overview()` · `components/game/XpPop`
-- ขั้น 5: ตาราง `exams` + RPC `review_topic()` (ทวนได้เฉพาะหัวข้อที่ถึงรอบ · XP ทวน ≤ 30/วัน/วิชา · รอบทวนมีเทสต์เทียบ `REVIEW_DAYS`) · `components/ExamDatesCard` ในหน้าวิชา · `components/game/Review` (บอส ปุ่มทวน passive tree) · หัวข้อไม่ติดป้าย → เข้าบอสตามวันที่จดเทียบวันสอบกลางภาค (`examOf`) · เทสต์ 29 ข้อผ่าน
-- ค้าง/ต้องถาม: `dailyCapPerSubject` = 60 ยังเดา · ชิป LV บนหน้าวันนี้ · sprite placeholder · ไอคอนแอป · ถัดไป: ขั้น 6 ห้องร่วม (ต้องถามก่อนว่าใครแก้/ลบงานในห้องได้)
+- branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → … → `feat/stage5-review` (push แล้ว) → `feat/stage6-rooms` (ขั้น 6 เขียนครบ **ยังไม่ commit**) · ยังไม่มี PR
+- **ยังไม่เคยรันกับ Supabase จริง** — ทำตาม `docs/DEPLOY_PWA.md` แล้วรัน migration 6 ไฟล์ตามลำดับ (ขั้น 2 แก้ YOUR-PROJECT-REF ก่อน) แล้วเทสทีละขั้น · ขั้น 6 ทดสอบ 2 บัญชีตาม `docs/TEST_ROOMS.md`
+- mockup ที่**ยังไม่ได้อนุมัติ**: `stage3.html` (คะแนน) · `stage5.html` (วันสอบ ทวน) · `stage6.html` (ห้องร่วม)
+- ขั้น 4–5: XP ด้วย trigger ใน DB (`xp_value()`) · `xp_overview()` · `exams` + `review_topic()` · บอส/tree ใน `components/game/Review`
+- ขั้น 6: `rooms`/`room_members` + `is_room_member/owner()` (security definer กัน RLS วน) · `join_room(code)` · RLS งาน: เห็น = เจ้าของ/สมาชิกห้อง · **แก้/ลบ = คนสร้าง/เจ้าของห้อง (ค่าเริ่มต้นตาม PLAN ยังรอเจ้าของยืนยัน)** · จับคู่วิชาด้วย `course_code` (`lib/rooms.ts` mySubjectId) · push งานใหม่ในห้อง + เตือนใกล้ส่งถึงสมาชิกทุกคน · `components/RoomsCard` ในตั้งค่า · `app/room/[code].tsx` · เลือกห้องใน AddTaskForm · เทสต์ 31 ข้อผ่าน
+- ค้าง/ต้องถาม: ใครแก้/ลบงานในห้อง · `dailyCapPerSubject` = 60 · ยังไม่มีปุ่มแก้/ลบงานในแอป · ชิป LV หน้าวันนี้ · sprite/ไอคอน placeholder · ถัดไป: ขั้น 7 (ต่อยอด) ต้องคุยกับเจ้าของก่อน

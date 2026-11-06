@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import type { AttendanceStatus, Slot, Term } from "@/lib/schedule";
 import type { Cutoffs } from "@/lib/grades";
+import { mySubjectId } from "@/lib/rooms";
 
 // ข้อมูลหลักของขั้น 1 · select เฉพาะคอลัมน์ที่ใช้ · การกดที่ใช้บ่อย = optimistic (เปลี่ยนจอก่อน ล้มเหลวค่อยย้อน)
 
@@ -25,6 +26,7 @@ export type Assignment = {
   due_at: string | null;
   source: "classroom" | "class" | "line";
   link: string | null;
+  room_id: string | null; // null = งานส่วนตัว
   done: boolean;
 };
 
@@ -121,18 +123,27 @@ export function useSetAttendance(termId: string) {
   });
 }
 
-/** งานที่ยังไม่ส่ง + ส่งแล้วใน 7 วันล่าสุด เรียงตามกำหนดส่ง */
+/** งานส่วนตัว + งานในห้องที่เป็นสมาชิก เรียงตามกำหนดส่ง · subject_id ถูกแปลงเป็นวิชาของเราเอง (งานในห้องอาจผูกวิชาของเพื่อน) */
 export function useAssignments() {
   return useQuery({
     queryKey: keys.assignments,
     queryFn: async () => {
-      const rows = must(
-        await supabase
+      const [rows, mine] = await Promise.all([
+        supabase
           .from("assignments")
-          .select("id,subject_id,title,due_at,source,link,assignment_status(done)")
-          .order("due_at", { ascending: true, nullsFirst: false }),
-      ) as (Omit<Assignment, "done"> & { assignment_status: { done: boolean }[] })[];
-      return rows.map(({ assignment_status, ...a }) => ({ ...a, done: assignment_status[0]?.done ?? false }));
+          .select("id,subject_id,course_code,title,due_at,source,link,room_id,assignment_status(done)")
+          .order("due_at", { ascending: true, nullsFirst: false })
+          .then(must),
+        supabase.from("subjects").select("id,code").then(must),
+      ]);
+      // assignment_status RLS = ของเราเท่านั้น → มีได้แถวเดียว
+      return (rows as (Omit<Assignment, "done"> & { course_code: string | null; assignment_status: { done: boolean }[] })[]).map(
+        ({ assignment_status, course_code, ...a }) => ({
+          ...a,
+          subject_id: mySubjectId({ subject_id: a.subject_id, course_code }, mine as { id: string; code: string | null }[]),
+          done: assignment_status[0]?.done ?? false,
+        }),
+      );
     },
   });
 }
@@ -161,7 +172,7 @@ export function useToggleDone() {
   });
 }
 
-export type NewAssignment = Pick<Assignment, "subject_id" | "title" | "due_at" | "source" | "link">;
+export type NewAssignment = Pick<Assignment, "subject_id" | "title" | "due_at" | "source" | "link" | "room_id">;
 
 export function useAddAssignment() {
   const qc = useQueryClient();

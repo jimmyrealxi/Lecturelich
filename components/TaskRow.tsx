@@ -25,7 +25,7 @@ export function TaskRow({ task, subjectName, today, first }: {
       </Pressable>
       <Pressable style={{ flex: 1 }} disabled={!task.link} onPress={() => task.link && Linking.openURL(task.link)}>
         <Text style={[T.body, task.done && s.doneText]}>{task.title}</Text>
-        <Text style={[T.muted, { fontSize: 12 }]}>{[subjectName, SOURCE[task.source]].filter(Boolean).join(" · ")}</Text>
+        <Text style={[T.muted, { fontSize: 12 }]}>{[subjectName, SOURCE[task.source], task.room_id && "ห้องร่วม"].filter(Boolean).join(" · ")}</Text>
       </Pressable>
       {task.due_at && (
         <Text style={[s.due, soon && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Btn, Field, T } from "@/components/ui";
 import { useAddAssignment, type Assignment } from "@/lib/queries/core";
+import { useRooms } from "@/lib/queries/rooms";
 import { bangkokIso, isDate, normTime, normUrl } from "@/lib/input";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 
@@ -20,6 +21,8 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
   defaultSource?: Assignment["source"];
 }) {
   const add = useAddAssignment();
+  const rooms = useRooms().data ?? [];
+  const [roomId, setRoomId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [subjectId, setSubjectId] = useState<string | null>(defaultSubjectId ?? null);
   const [date, setDate] = useState("");
@@ -37,7 +40,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
     setTried(true);
     if (errTitle || errDate || errTime || url === undefined) return;
     add.mutate({
-      title: title.trim(), subject_id: subjectId, source, link: url ?? null,
+      title: title.trim(), subject_id: subjectId, source, link: url ?? null, room_id: roomId,
       due_at: date ? bangkokIso(date, normTime(time)!) : null,
     });
     onDone(); // optimistic: งานโผล่ในรายการทันที ถ้าล้มเหลวจะหายเอง
@@ -60,6 +63,20 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
         ))}
         {subjects.length === 0 && <Text style={T.muted}>ยังไม่มีวิชา (เพิ่มได้ในแท็บวิชา)</Text>}
       </View>
+
+      {rooms.length > 0 && (
+        <>
+          <Text style={s.label}>แชร์ไปที่ (เพื่อนในห้องเห็นงานนี้ · สถานะส่งยังเป็นของแต่ละคน)</Text>
+          <View style={s.chips}>
+            {[{ id: null, name: "ส่วนตัว" }, ...rooms].map((r) => (
+              <Pressable key={r.id ?? "me"} onPress={() => setRoomId(r.id)} style={[s.chip, roomId === r.id && s.chipOn]}
+                accessibilityRole="radio" accessibilityState={{ selected: roomId === r.id }}>
+                <Text style={[s.chipText, roomId === r.id && { color: color.white }]}>{r.name}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </>
+      )}
 
       <View style={s.two}>
         <Field label="กำหนดส่ง (ไม่ใส่ก็ได้)" value={date} onChangeText={setDate} placeholder={today} error={tried ? errDate : null} />

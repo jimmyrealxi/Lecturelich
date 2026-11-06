@@ -15,11 +15,12 @@ export function useSession(): Session | null | undefined {
 }
 
 // shortcut: ล็อกอิน Google รองรับแค่เว็บ (แอปเป็น PWA) — ถ้าทำแอปมือถือจริง ให้ยกแบบ deep link จาก lib/googleAuth.ts ของ LabHub
-export async function signInWithGoogle() {
+/** next = path ที่จะกลับมาหลังล็อกอิน (เช่น /room/CODE) · ต้องอยู่ใน Redirect URLs ของ Supabase (ใส่ /** ไว้แล้ว) */
+export async function signInWithGoogle(next = "") {
   if (Platform.OS !== "web") throw new Error("ตอนนี้ล็อกอินได้บนเว็บเท่านั้น");
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: window.location.origin, queryParams: { prompt: "select_account" } },
+    options: { redirectTo: window.location.origin + next, queryParams: { prompt: "select_account" } },
   });
   if (error) throw error;
 }
