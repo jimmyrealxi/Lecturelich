@@ -28,7 +28,8 @@
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
 ## สถานะล่าสุด (7 พ.ย. 2569)
-- ขั้น 0 เสร็จ (รอเจ้าของทดสอบ) · branch `setup/stage0` · mockup อนุมัติแล้ว
-- มีแล้ว: Expo 58 + expo-router 5 แท็บ (หน้า placeholder), `lib/theme.ts`, `docs/DESIGN.md`, PWA (manifest, `public/sw.js` เฉพาะ cache, `app/+html.tsx`, `vercel.json`), CI tsc+lint · `tsc` / `lint` / `expo export -p web` ผ่าน
-- ไอคอนแอปยังเป็นของ template Expo (placeholder) · ยังไม่มี Supabase / TanStack Query / ระบบเทสต์ (เพิ่มในขั้น 1)
-- ถัดไป: ขั้น 1 แกนหลักส่วนตัว (ต้องสร้างโปรเจกต์ Supabase สิงคโปร์ก่อน)
+- ขั้น 0 commit แล้ว (`setup/stage0`) · ขั้น 1 กำลังทำบน `feat/stage1-core` (แตกจาก setup/stage0)
+- ขั้น 1 มีแล้ว: `lib/schedule.ts` + เทสต์ (`npm test` = node --test), migration `20261107120000_stage1_core.sql` (**ยังไม่ได้รัน**), `lib/supabase.ts` (.env), ล็อกอิน Google (เว็บ), TanStack Query + แคช localStorage, หน้าวันนี้, `app/subject/[id].tsx`, `components/TaskRow` (optimistic)
+- **รออนุมัติ mockup** `docs/mockups/stage1.html`: ตั้งค่าเทอม · แท็บวิชา · ฟอร์มวิชา+ตารางเรียน · แท็บงาน+เพิ่มงาน → อนุมัติแล้วค่อยเขียน (แท็บ วิชา/งาน/ตั้งค่า ยังเป็น placeholder)
+- เจ้าของต้องทำ: สร้าง Supabase สิงคโปร์ → เปิด Google provider → รัน migration → ใส่ `.env` (ดู `.env.example`)
+- ไอคอนแอปยังเป็นของ template Expo (placeholder)
