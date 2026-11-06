@@ -28,12 +28,10 @@
 ## จดงานทุกครั้ง
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
-## สถานะล่าสุด (7 พ.ย. 2569)
-- ขั้น 0 commit แล้ว (`setup/stage0`) · ขั้น 1 กำลังทำบน `feat/stage1-core` (แตกจาก setup/stage0)
-- ขั้น 1 มีแล้ว: `lib/schedule.ts` + เทสต์ (`npm test` = node --test), migration `20261107120000_stage1_core.sql` (**ยังไม่ได้รัน**), `lib/supabase.ts` (.env), ล็อกอิน Google (เว็บ), TanStack Query + แคช localStorage, หน้าวันนี้, `app/subject/[id].tsx`, `components/TaskRow` (optimistic)
-- mockup ขั้น 1 อนุมัติแล้ว → ทำครบ: ตั้งค่า (เทอม, เกณฑ์ขาด, ออกจากระบบ), แท็บวิชา, `app/subject/edit.tsx` (เพิ่ม/แก้/ลบวิชา + ช่วงเวลา), แท็บงาน + `AddTaskForm` (ใช้ซ้ำได้ในขั้น 2) · query ตั้งค่าอยู่ `lib/queries/setup.ts` · ตรวจค่ากรอก `lib/input.ts`
-- วันที่/เวลากรอกเป็นตัวอักษร (ปปปป-ดด-วว / HH:MM) — shortcut ยังไม่มี date picker
-- **ขั้น 1 รอเจ้าของทดสอบจริง** (ยังไม่เคยรันกับ DB จริง) แล้วค่อยไปขั้น 2
-- เจ้าของต้องทำ: สร้าง Supabase สิงคโปร์ → เปิด Google provider → รัน migration → ใส่ `.env` (ดู `.env.example`)
-- logic ล่วงหน้า (ยังไม่มี UI/DB): `lib/grades.ts` (ขั้น 3), `lib/xp.ts` (ขั้น 4 · `dailyCapPerSubject` = 60 เดาไว้ ต้องถาม), `lib/review.ts` (ขั้น 5) · เทสต์รวม 18 ข้อผ่าน
-- ไอคอนแอปยังเป็นของ template Expo (placeholder)
+## สถานะล่าสุด (8 พ.ย. 2569 เช้า)
+- branch: `setup/stage0` = `main` (ขั้น 0) → `feat/stage1-core` (ขั้น 1 ครบ) → `feat/stage2-notes` (ขั้น 2 ครบ แตกจากขั้น 1) · push ขึ้น parnppk/StudyQuest แล้ว · **ยังไม่มี PR** (เปิดหลังเจ้าของเทสผ่านทีละขั้น)
+- **ยังไม่เคยรันกับ Supabase จริงเลย** — เจ้าของทำตาม `docs/DEPLOY_PWA.md` (สร้างโปรเจกต์สิงคโปร์, Google, รัน 2 migration — แก้ YOUR-PROJECT-REF ก่อน, VAPID, deploy send-push) แล้วเทสขั้น 1 → ขั้น 2
+- ขั้น 1: ตั้งค่าเทอม/เกณฑ์ขาด, แท็บวิชา + `app/subject/edit.tsx`, หน้าวันนี้ (เช็กชื่อ optimistic), หน้าวิชา, แท็บงาน + `components/AddTaskForm` · วันที่/เวลาพิมพ์เป็นตัวอักษร (ยังไม่มี date picker)
+- ขั้น 2: `app/note/[slotId].tsx` (ข้อความ รูปย่อ หัวข้อ ★ กลาง/ปลายภาค เพิ่มงาน), การ์ดยังไม่ได้จด, `components/NotesTimeline`, `components/PushCard` + `app/install.tsx` (mockup `docs/mockups/stage2.html` ทำโดยไม่ได้รออนุมัติ — เจ้าของสั่งทำต่อเอง), cron `send_due_reminders()` ทุก 5 นาที · ค่าเตือนเริ่มต้น 10 นาที/24 ชม. (ตั้งได้ในหน้าตั้งค่า)
+- logic ล่วงหน้า: `lib/grades.ts` (ขั้น 3), `lib/xp.ts` (ขั้น 4 · `dailyCapPerSubject` = 60 เดาไว้ ต้องถาม), `lib/review.ts` (ขั้น 5) · เทสต์รวม 22 ข้อผ่าน
+- ถัดไป: ขั้น 3 คะแนนและเกรด (ต้องทำ mockup แท็บคะแนนในหน้าวิชาก่อน) · ไอคอนแอปยังเป็น placeholder ของ Expo

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyQuest ขั้น 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=IBM+Plex+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#1F4E9C;--ink:#0E1E3A;--yellow:#F2C230;--line:#D9DCE1;--cream:#F4F1E8;--sub:#3D4A63;--red:#B3261E}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#C9CDD4;font-family:"IBM Plex Sans Thai",sans-serif;color:var(--ink);padding:24px 16px}
+h1.page{font-family:Kanit;font-size:22px;margin-bottom:4px}
+p.note{color:var(--sub);font-size:14px;margin-bottom:20px;max-width:900px}
+.wrap{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.label{font-family:Kanit;font-size:15px;margin-bottom:8px}
+.phone{width:360px;max-width:100%;height:740px;background:var(--cream);border-radius:28px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);display:flex;flex-direction:column;border:6px solid #111}
+.top{background:var(--blue);color:#fff;padding:14px 16px 12px}
+.top h2{font-family:Kanit;font-size:20px}
+.top small{opacity:.85;font-size:13px}
+.scroll{flex:1;overflow-y:auto;padding:12px 14px 16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+h3{font-family:Kanit;font-size:15px;margin-bottom:4px}
+.muted{color:var(--sub);font-size:13px}
+.section{font-family:Kanit;font-size:14px;color:var(--sub);margin:14px 2px 8px}
+.between{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.row{display:flex;gap:8px;align-items:center}
+.btn{min-height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font:inherit;font-size:14px;color:var(--ink);
+  flex:1;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.step:first-child{border-top:0}
+.num{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+.ok{display:inline-block;background:#E3F1E8;color:#1E7A46;font-weight:600;font-size:13px;padding:3px 10px;border-radius:999px}
+.warnbox{background:#EEF2FA;border:1.5px dashed var(--blue)}
+.tabs{display:flex;background:#fff;border-top:1px solid var(--line)}
+.tabs a{flex:1;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--sub);gap:2px}
+.tabs a b{font-size:18px;line-height:1}
+.tabs a.on{color:var(--blue);font-weight:600}
+.tabs a.on b{border-bottom:3px solid var(--yellow);padding-bottom:2px}
+</style>
+</head>
+<body>
+<h1 class="page">StudyQuest — mockup ขั้น 2 (หน้าที่ไม่มีใน mockup ขั้น 0)</h1>
+<p class="note">ส่วนแจ้งเตือนในหน้าตั้งค่า (3 สถานะ) · หน้าแนะนำติดตั้งบน iPhone — หน้าจดหลังคาบ/การ์ดยังไม่ได้จด ใช้แบบขั้น 0</p>
+<div class="wrap">
+
+<div><div class="label">1. ตั้งค่า → แจ้งเตือน (ยังไม่เปิด)</div>
+<div class="phone">
+  <div class="top"><h2>ตั้งค่า</h2></div>
+  <div class="scroll">
+    <div class="section">แจ้งเตือนบนเครื่องนี้</div>
+    <div class="card">
+      <h3>รับแจ้งเตือน</h3>
+      <div class="muted">เตือนให้จดหลังเลิกคาบ และเตือนก่อนถึงกำหนดส่งงาน</div>
+      <div class="row" style="margin-top:10px"><button class="btn primary">เปิดการแจ้งเตือน</button></div>
+    </div>
+    <div class="card">
+      <div class="between"><span>เตือนจดหลังเลิกคาบ</span><span class="row"><button class="btn" style="flex:none;width:44px">−</button><b>10 นาที</b><button class="btn" style="flex:none;width:44px">+</button></span></div>
+      <div class="between" style="margin-top:8px"><span>เตือนก่อนส่งงาน</span><span class="row"><button class="btn" style="flex:none;width:44px">−</button><b>24 ชม.</b><button class="btn" style="flex:none;width:44px">+</button></span></div>
+    </div>
+    <div class="section">การเข้าเรียน</div>
+    <div class="card muted">… (เหมือนเดิม)</div>
+  </div>
+  <nav class="tabs"><a><b>◉</b>วันนี้</a><a><b>▤</b>วิชา</a><a><b>☑</b>งาน</a><a><b>⚔</b>เกม</a><a class="on"><b>⚙</b>ตั้งค่า</a></nav>
+</div></div>
+
+<div><div class="label">2. iPhone ใน Safari (ยังไม่ติดตั้ง) / เปิดแล้ว</div>
+<div class="phone">
+  <div class="top"><h2>ตั้งค่า</h2></div>
+  <div class="scroll">
+    <div class="section">แจ้งเตือนบนเครื่องนี้</div>
+    <div class="card warnbox">
+      <h3>iPhone ต้องติดตั้งแอปก่อน</h3>
+      <div class="muted">Safari รับแจ้งเตือนได้เฉพาะแอปที่เพิ่มไปยังหน้าจอโฮมแล้ว</div>
+      <div class="row" style="margin-top:10px"><button class="btn primary">ดูวิธีติดตั้ง</button></div>
+    </div>
+    <div class="section">(เมื่อเปิดแล้ว)</div>
+    <div class="card">
+      <div class="between"><h3>รับแจ้งเตือน</h3><span class="ok">เปิดอยู่</span></div>
+      <div class="row" style="margin-top:10px"><button class="btn">ปิดบนเครื่องนี้</button></div>
+    </div>
+  </div>
+  <nav class="tabs"><a><b>◉</b>วันนี้</a><a><b>▤</b>วิชา</a><a><b>☑</b>งาน</a><a><b>⚔</b>เกม</a><a class="on"><b>⚙</b>ตั้งค่า</a></nav>
+</div></div>
+
+<div><div class="label">3. หน้าแนะนำติดตั้ง (/install)</div>
+<div class="phone">
+  <div class="top"><small>‹ กลับ</small><h2>ติดตั้ง StudyQuest</h2></div>
+  <div class="scroll">
+    <div class="card">
+      <h3>iPhone / iPad (Safari)</h3>
+      <div class="step"><span class="num">1</span><div>เปิดเว็บนี้ใน <b>Safari</b> (แอปอื่นติดตั้งไม่ได้)</div></div>
+      <div class="step"><span class="num">2</span><div>แตะปุ่ม <b>แชร์</b> (สี่เหลี่ยมมีลูกศรขึ้น) ด้านล่างจอ</div></div>
+      <div class="step"><span class="num">3</span><div>เลือก <b>เพิ่มไปยังหน้าจอโฮม</b> → เพิ่ม</div></div>
+      <div class="step"><span class="num">4</span><div>เปิดแอปจาก<b>ไอคอนบนหน้าจอโฮม</b> ล็อกอินอีกครั้ง แล้วไปตั้งค่า → เปิดการแจ้งเตือน</div></div>
+    </div>
+    <div class="card">
+      <h3>Android (Chrome)</h3>
+      <div class="step"><span class="num">1</span><div>เมนู ⋮ → <b>ติดตั้งแอป</b> หรือ เพิ่มลงในหน้าจอหลัก</div></div>
+      <div class="step"><span class="num">2</span><div>ตั้งค่า → เปิดการแจ้งเตือน → อนุญาต</div></div>
+    </div>
+    <div class="card"><h3>คอม (Chrome / Edge)</h3><div class="muted">ใช้ผ่านเบราว์เซอร์ได้เลย กดไอคอนติดตั้งในแถบที่อยู่ถ้าอยากได้เป็นหน้าต่างแยก</div></div>
+  </div>
+</div></div>
+
+</div>
+</body>
+</html>

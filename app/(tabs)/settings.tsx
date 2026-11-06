@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Btn, Card, Field, Section, Skeleton, T } from "@/components/ui";
 import { useCurrentTerm, type CurrentTerm } from "@/lib/queries/core";
-import { useProfile, useSaveTerm, useSetMinAttendance } from "@/lib/queries/setup";
+import { useProfile, useSaveTerm, useUpdateProfile } from "@/lib/queries/setup";
+import { PushCard } from "@/components/PushCard";
 import { signOut, useSession } from "@/lib/auth";
 import { isDate } from "@/lib/input";
 import { thaiDate } from "@/lib/format";
@@ -14,10 +15,12 @@ export default function Settings() {
   const session = useSession();
   const term = useCurrentTerm();
   const profile = useProfile();
-  const setMin = useSetMinAttendance();
+  const update = useUpdateProfile();
   const [creating, setCreating] = useState(false);
 
   const pct = profile.data?.min_attendance_pct ?? 80;
+  const afterMin = profile.data?.remind_after_class_min ?? 10;
+  const dueHours = profile.data?.remind_due_hours ?? 24;
   // ฟอร์มสร้างใหม่ตาม key → ค่าเริ่มต้นเปลี่ยนตามเทอมที่แก้ โดยไม่ต้อง setState ใน effect
   const formTerm = creating ? null : term.data ?? null;
 
@@ -44,14 +47,22 @@ export default function Settings() {
         <TermForm key={formTerm?.id ?? "new"} term={formTerm} onSaved={() => setCreating(false)} />
       )}
 
+      <Section>แจ้งเตือนบนเครื่องนี้</Section>
+      <PushCard />
+      <Card>
+        <Stepper label="เตือนจดหลังเลิกคาบ" value={`${afterMin} นาที`}
+          onMinus={() => update.mutate({ remind_after_class_min: Math.max(0, afterMin - 5) })}
+          onPlus={() => update.mutate({ remind_after_class_min: Math.min(180, afterMin + 5) })} />
+        <Stepper label="เตือนก่อนส่งงาน" value={`${dueHours} ชม.`}
+          onMinus={() => update.mutate({ remind_due_hours: Math.max(1, dueHours - (dueHours > 24 ? 24 : 6)) })}
+          onPlus={() => update.mutate({ remind_due_hours: Math.min(168, dueHours + (dueHours >= 24 ? 24 : 6)) })} />
+      </Card>
+
       <Section>การเข้าเรียน</Section>
       <Card>
-        <View style={s.between}>
-          <Text style={[T.body, { flex: 1 }]}>เกณฑ์ต้องเข้าเรียน</Text>
-          <Btn label="−" onPress={() => setMin.mutate(Math.max(50, pct - 5))} style={s.step} />
-          <Text style={s.pct}>{pct}%</Text>
-          <Btn label="+" onPress={() => setMin.mutate(Math.min(100, pct + 5))} style={s.step} />
-        </View>
+        <Stepper label="เกณฑ์ต้องเข้าเรียน" value={`${pct}%`}
+          onMinus={() => update.mutate({ min_attendance_pct: Math.max(50, pct - 5) })}
+          onPlus={() => update.mutate({ min_attendance_pct: Math.min(100, pct + 5) })} />
       </Card>
 
       <Section>บัญชี</Section>
@@ -62,6 +73,17 @@ export default function Settings() {
         </View>
       </Card>
     </ScrollView>
+  );
+}
+
+function Stepper({ label, value, onMinus, onPlus }: { label: string; value: string; onMinus: () => void; onPlus: () => void }) {
+  return (
+    <View style={[s.between, { paddingVertical: 4 }]}>
+      <Text style={[T.body, { flex: 1 }]}>{label}</Text>
+      <Btn label="−" onPress={onMinus} style={s.step} />
+      <Text style={s.pct} accessibilityLiveRegion="polite">{value}</Text>
+      <Btn label="+" onPress={onPlus} style={s.step} />
+    </View>
   );
 }
 
@@ -107,6 +129,6 @@ const s = StyleSheet.create({
   two: { flexDirection: "row", gap: space.sm },
   row: { flexDirection: "row", marginTop: space.md },
   step: { flex: 0, width: 44 },
-  pct: { fontFamily: font.bodyBold, fontSize: 16, color: color.ink, minWidth: 48, textAlign: "center" },
+  pct: { fontFamily: font.bodyBold, fontSize: 16, color: color.ink, minWidth: 64, textAlign: "center" },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });

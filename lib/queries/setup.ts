@@ -15,21 +15,29 @@ export function useProfile() {
     queryKey: ["profile"],
     queryFn: async () => {
       const id = await currentUserId();
-      return check(await supabase.from("profiles").select("min_attendance_pct").eq("id", id).maybeSingle()) as
-        | { min_attendance_pct: number }
-        | null;
+      return check(
+        await supabase.from("profiles").select("min_attendance_pct,remind_after_class_min,remind_due_hours").eq("id", id).maybeSingle(),
+      ) as Profile | null;
     },
   });
 }
 
-export function useSetMinAttendance() {
+export type Profile = { min_attendance_pct: number; remind_after_class_min: number; remind_due_hours: number };
+
+/** แก้ค่าตั้งในโปรไฟล์ (optimistic — ตัวเลขเปลี่ยนทันทีตอนกด +/−) */
+export function useUpdateProfile() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (pct: number) => {
+    mutationFn: async (patch: Partial<Profile>) => {
       const id = await currentUserId();
-      check(await supabase.from("profiles").update({ min_attendance_pct: pct }).eq("id", id).select("id"));
+      check(await supabase.from("profiles").update(patch).eq("id", id).select("id"));
     },
-    onMutate: (pct) => qc.setQueryData(["profile"], { min_attendance_pct: pct }),
+    onMutate: (patch) => {
+      const prev = qc.getQueryData<Profile>(["profile"]);
+      if (prev) qc.setQueryData(["profile"], { ...prev, ...patch });
+      return { prev };
+    },
+    onError: (_e, _p, ctx) => qc.setQueryData(["profile"], ctx?.prev),
     onSettled: () => qc.invalidateQueries({ queryKey: ["profile"] }),
   });
 }
