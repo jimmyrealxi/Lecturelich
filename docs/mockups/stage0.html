@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyQuest Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1F4E9C; --ink:#0E1E3A; --yellow:#F2C230; --line:#D9DCE1; --cream:#F4F1E8; --sub:#3D4A63; --white:#fff;
+  --red:#B3261E; --green:#1E7A46;
+  --brass:#C9A24A; --g-panel:#16294A; --g-line:#2A3F66;
+  --r-normal:#E8E8E8; --r-magic:#7FA8FF; --r-rare:#F2C230; --r-unique:#EE8A3C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#C9CDD4;font-family:"IBM Plex Sans Thai",sans-serif;color:var(--ink);padding:24px 16px}
+h1.page{font-family:Kanit;font-size:22px;margin-bottom:4px}
+p.note{color:var(--sub);font-size:14px;margin-bottom:20px;max-width:900px}
+.wrap{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.screen-label{font-family:Kanit;font-size:15px;margin-bottom:8px}
+.phone{width:360px;max-width:100%;height:740px;background:var(--cream);border-radius:28px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(14,30,58,.25);display:flex;flex-direction:column;border:6px solid #111}
+.scroll{flex:1;overflow-y:auto;padding:12px 14px 16px}
+.px{font-family:Silkscreen,monospace;letter-spacing:.5px}
+h2,h3{font-family:Kanit;font-weight:600}
+
+/* top bar */
+.top{background:var(--blue);color:#fff;padding:14px 16px 12px}
+.top .row{display:flex;justify-content:space-between;align-items:center}
+.top h2{font-size:20px}
+.top small{opacity:.85;font-size:13px}
+.lvchip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border-radius:999px;padding:4px 10px;font-size:12px}
+.xpmini{width:46px;height:6px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden}
+.xpmini i{display:block;height:100%;width:62%;background:var(--yellow)}
+
+/* cards */
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+.card h3{font-size:15px;margin-bottom:6px}
+.muted{color:var(--sub);font-size:13px}
+.section{font-family:Kanit;font-size:14px;color:var(--sub);margin:14px 2px 8px}
+.now{border:1.5px solid var(--blue)}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--cream);color:var(--sub);border:1px solid var(--line)}
+.tag.live{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btnrow{display:flex;gap:8px;margin-top:10px}
+.btn{min-height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font:inherit;font-size:14px;color:var(--ink);
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.btn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn.accent{background:var(--yellow);border-color:var(--yellow);color:var(--ink);font-weight:600}
+.warn{border:1.5px dashed var(--blue);background:#EEF2FA}
+.slot{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.slot:first-child{border-top:0}
+.slot .time{width:74px;font-size:13px;color:var(--sub)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.slot.done{opacity:.55}
+.task{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
+.check{width:26px;height:26px;border:2px solid var(--blue);border-radius:7px;flex:none}
+.due{margin-left:auto;font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;background:#FBE9E7;color:var(--red);white-space:nowrap}
+.due.ok{background:var(--cream);color:var(--sub)}
+.src{font-size:12px;color:var(--sub)}
+
+/* tabs */
+.tabs{display:flex;background:#fff;border-top:1px solid var(--line)}
+.tabs a{flex:1;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--sub);text-decoration:none;gap:2px}
+.tabs a b{font-size:18px;line-height:1}
+.tabs a.on{color:var(--blue);font-weight:600}
+.tabs a.on b{border-bottom:3px solid var(--yellow);padding-bottom:2px}
+
+/* subject */
+.subj-top{background:var(--blue);color:#fff;padding:12px 16px 16px}
+.back{font-size:13px;opacity:.85}
+.links{display:flex;gap:8px;margin-top:12px}
+.links a{flex:1;min-height:44px;border-radius:10px;background:rgba(255,255,255,.14);color:#fff;text-decoration:none;font-size:12px;
+  display:flex;align-items:center;justify-content:center;gap:4px;border:1px solid rgba(255,255,255,.25)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+.stat .big{font-family:Kanit;font-size:22px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--blue)}
+.need{grid-column:1/-1;background:var(--ink);color:#fff;border:0}
+.need .big{color:var(--yellow)}
+.seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;margin-bottom:12px}
+.seg span{flex:1;text-align:center;min-height:38px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:14px;color:var(--sub)}
+.seg span.on{background:var(--blue);color:#fff;font-weight:600}
+.tl{position:relative;padding-left:18px}
+.tl:before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl .item{position:relative;margin-bottom:12px}
+.tl .item:before{content:"";position:absolute;left:-18px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--blue);border:2px solid var(--cream)}
+.tl .item.absent:before{background:var(--red)}
+.topic{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:2px 7px;margin:4px 4px 0 0}
+.topic.star{border-color:var(--ink);font-weight:600}
+.star-ic{color:var(--ink)}
+.thumb{width:56px;height:42px;border-radius:6px;background:repeating-linear-gradient(45deg,#E3E6EB 0 6px,#D3D7DE 6px 12px);display:inline-block;margin-top:6px}
+
+/* note form */
+label.f{display:block;font-size:13px;color:var(--sub);margin:10px 0 6px}
+textarea,input.t{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:14px;background:#fff;color:var(--ink)}
+textarea{height:84px;resize:none}
+.photos{display:flex;gap:8px}
+.addph{width:72px;height:56px;border:1.5px dashed var(--sub);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--sub)}
+.photos .thumb{width:72px;height:56px;margin:0}
+.trow{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 4px 4px 10px;margin-bottom:6px}
+.trow span.n{flex:1;font-size:14px}
+.sbtn{width:44px;height:44px;border-radius:8px;border:0;background:transparent;font-size:20px;color:#9AA3B2;cursor:pointer}
+.sbtn.on{color:var(--ink);background:var(--yellow)}
+.exam{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;color:var(--sub)}
+.addtask{border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px}
+.foot{padding:10px 14px 14px;background:var(--cream);border-top:1px solid var(--line);position:relative}
+.xp-pop{position:absolute;right:28px;top:-8px;color:var(--blue);font-size:16px;font-weight:700;animation:pop 1.6s ease-out infinite}
+@keyframes pop{0%{transform:translateY(8px);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
+
+/* game */
+.game{background:var(--ink);color:#E9EDF5;border-color:#111}
+.game .scroll{padding-top:14px}
+.game h3{color:#fff}
+.gpanel{background:var(--g-panel);border:1px solid var(--g-line);border-radius:4px;padding:12px;margin-bottom:12px}
+.hero{display:flex;gap:12px;align-items:center}
+.sprite{width:72px;height:72px;background:#0A1630;border:2px solid var(--brass);image-rendering:pixelated;display:flex;align-items:center;justify-content:center}
+.sprite svg{width:64px;height:64px}
+.lv{color:var(--brass);font-size:20px}
+.gbar{height:10px;background:#0A1630;border:1px solid var(--g-line);margin-top:6px;position:relative}
+.gbar i{display:block;height:100%;background:var(--brass);transform-origin:left}
+.gbar.hp i{background:#C0392B}
+.gsmall{font-size:12px;color:#AFB9CC}
+.gtitle{font-family:Kanit;font-size:14px;color:var(--brass);margin:4px 2px 8px;letter-spacing:.3px}
+.boss{border-color:#6B2A2A}
+.boss .row{display:flex;justify-content:space-between;align-items:baseline}
+.dcount{color:#fff;background:#6B2A2A;padding:2px 8px;font-size:13px}
+.ready{display:flex;align-items:center;gap:10px;margin-top:10px}
+.ready .pct{font-size:22px;color:var(--brass)}
+.miss{margin-top:8px;font-size:13px}
+.miss li{list-style:none;padding:6px 0;border-top:1px solid var(--g-line);display:flex;gap:6px;align-items:center}
+.r-rare{color:var(--r-rare)} .r-magic{color:var(--r-magic)} .r-unique{color:var(--r-unique)} .r-normal{color:var(--r-normal)}
+.subjs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.subjs .gpanel{margin:0;padding:10px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px}
+.legend span:before{content:"■ "}
+.game .tabs{background:#0A1630;border-top-color:var(--g-line)}
+.game .tabs a{color:#AFB9CC}
+.game .tabs a.on{color:var(--brass)}
+.game .tabs a.on b{border-bottom-color:var(--brass)}
+.tree svg{width:100%;height:auto;display:block}
+@media (prefers-reduced-motion:reduce){.xp-pop{animation:none}}
+</style>
+</head>
+<body>
+<h1 class="page">StudyQuest — mockup ขั้น 0</h1>
+<p class="note">4 หน้า: วันนี้ · หน้าวิชา · จดหลังคาบ · หน้าเกม — ข้อมูลเป็นตัวอย่าง (จันทร์ 9 พ.ย. 2569 เวลา 11:20) · ฟอนต์พิกเซลใช้กับ LV/XP/HP/ตัวเลขเท่านั้น · ตัวละครเป็น placeholder</p>
+
+<div class="wrap">
+
+<!-- ========== 1. วันนี้ ========== -->
+<div>
+<div class="screen-label">1. หน้าวันนี้</div>
+<div class="phone">
+  <div class="top">
+    <div class="row">
+      <div><h2>วันนี้</h2><small>จันทร์ 9 พ.ย. · สัปดาห์ที่ 1 ของเทอม 2</small></div>
+      <div class="lvchip"><span class="px">LV 7</span><div class="xpmini"><i></i></div></div>
+    </div>
+  </div>
+  <div class="scroll">
+    <div class="card now">
+      <div class="row" style="display:flex;justify-content:space-between;align-items:center">
+        <span class="tag live">กำลังเรียน · เหลือ 40 นาที</span><span class="muted">SC9-604</span>
+      </div>
+      <h3 style="margin-top:8px">OOP · การเขียนโปรแกรมเชิงวัตถุ</h3>
+      <div class="muted">10:00–12:00</div>
+      <div class="btnrow">
+        <button class="btn on">✓ มาเรียน</button>
+        <button class="btn">ขาด</button>
+        <button class="btn">ไม่มีเรียน</button>
+      </div>
+    </div>
+
+    <div class="card warn">
+      <h3>คาบนี้จบแล้ว ยังไม่ได้จด</h3>
+      <div class="muted">คณิตศาสตร์ดิสครีต · 08:00–10:00</div>
+      <div class="btnrow"><button class="btn primary">✎ จดเลย</button><button class="btn" style="flex:.55">ไว้ทีหลัง</button></div>
+    </div>
+
+    <div class="section">คาบวันนี้</div>
+    <div class="card">
+      <div class="slot done"><div class="time">08:00–10:00</div><span class="dot" style="background:#7A5AA6"></span><div>คณิตศาสตร์ดิสครีต<div class="muted">SC9-301</div></div></div>
+      <div class="slot"><div class="time"><b>10:00–12:00</b></div><span class="dot" style="background:var(--blue)"></span><div><b>OOP</b><div class="muted">SC9-604</div></div></div>
+      <div class="slot"><div class="time">13:00–16:00</div><span class="dot" style="background:#1E7A46"></span><div>เครือข่ายคอมพิวเตอร์<div class="muted">SC9-512 · แล็บ</div></div></div>
+    </div>
+
+    <div class="section">งานใกล้ส่ง</div>
+    <div class="card">
+      <div class="task"><span class="check"></span><div>Lab 5 Inheritance<div class="src">OOP · Classroom</div></div><span class="due">พรุ่งนี้ 23:59</span></div>
+      <div class="task"><span class="check"></span><div>แบบฝึกหัดบทที่ 3<div class="src">ดิสครีต · ในคาบ</div></div><span class="due ok">พฤ. 12 พ.ย.</span></div>
+      <div class="task"><span class="check"></span><div>รายงานกลุ่ม Subnet<div class="src">เครือข่าย · ไลน์ · ห้องร่วม</div></div><span class="due ok">จ. 16 พ.ย.</span></div>
+    </div>
+  </div>
+  <nav class="tabs"><a class="on"><b>◉</b>วันนี้</a><a><b>▤</b>วิชา</a><a><b>☑</b>งาน</a><a><b>⚔</b>เกม</a><a><b>⚙</b>ตั้งค่า</a></nav>
+</div>
+</div>
+
+<!-- ========== 2. หน้าวิชา ========== -->
+<div>
+<div class="screen-label">2. หน้าวิชา</div>
+<div class="phone">
+  <div class="subj-top">
+    <div class="back">‹ วิชา</div>
+    <h2 style="font-size:20px;margin-top:4px">OOP · การเขียนโปรแกรมเชิงวัตถุ</h2>
+    <small style="opacity:.85">CP352001 · จ. 10:00–12:00 · พฤ. 13:00–15:00</small>
+    <div class="links"><a>Classroom ↗</a><a>กลุ่มไลน์ ↗</a><a>NotebookLM ↗</a></div>
+  </div>
+  <div class="scroll">
+    <div class="stats">
+      <div class="stat"><div class="muted">เข้าเรียน</div><div class="big">93%</div><div class="muted">ขาด 1 ครั้ง · ขาดได้อีก 2</div><div class="bar"><i style="width:93%"></i></div></div>
+      <div class="stat"><div class="muted">คะแนนตอนนี้</div><div class="big">42<span class="muted" style="font-size:14px"> / 60</span></div><div class="muted">เก็บ 24/30 · กลาง 18/30</div><div class="bar"><i style="width:70%"></i></div></div>
+      <div class="stat need"><div style="font-size:13px;opacity:.85">อยากได้เกรด A (≥ 80) ปลายภาคต้องได้อย่างน้อย</div><div class="big">38 <span style="font-size:14px;color:#fff;opacity:.85">/ 40 คะแนน</span></div><div style="font-size:12px;opacity:.75">ได้ B+ ต้อง 33 · ได้ B ต้อง 28</div></div>
+    </div>
+
+    <div class="seg"><span class="on">โน้ต</span><span>งาน (3)</span><span>คะแนน</span></div>
+
+    <div class="tl">
+      <div class="item"><div class="card" style="margin:0">
+        <div class="muted">พฤ. 5 พ.ย. · คาบที่ 8</div>
+        <div style="font-size:14px;margin-top:4px">อาจารย์ย้ำ abstract class ต่างจาก interface ยังไง ทำ lab ต่อ</div>
+        <span class="topic star"><span class="star-ic">★</span>Abstract class</span><span class="topic star"><span class="star-ic">★</span>Interface</span><span class="topic">UML</span>
+        <div><span class="thumb"></span> <span class="thumb"></span></div>
+      </div></div>
+      <div class="item absent"><div class="card" style="margin:0">
+        <div class="muted">จ. 2 พ.ย. · คาบที่ 7 · <b style="color:var(--red)">ขาด</b></div>
+        <div style="font-size:14px;margin-top:4px">ยืมโน้ตเพื่อน: Polymorphism</div>
+        <span class="topic">Polymorphism</span>
+      </div></div>
+      <div class="item"><div class="card" style="margin:0">
+        <div class="muted">พฤ. 29 ต.ค. · คาบที่ 6</div>
+        <span class="topic star"><span class="star-ic">★</span>Inheritance</span><span class="topic">super()</span>
+      </div></div>
+    </div>
+  </div>
+  <nav class="tabs"><a><b>◉</b>วันนี้</a><a class="on"><b>▤</b>วิชา</a><a><b>☑</b>งาน</a><a><b>⚔</b>เกม</a><a><b>⚙</b>ตั้งค่า</a></nav>
+</div>
+</div>
+
+<!-- ========== 3. จดหลังคาบ ========== -->
+<div>
+<div class="screen-label">3. จดหลังคาบ</div>
+<div class="phone">
+  <div class="top">
+    <div class="back" style="font-size:13px;opacity:.85">‹ ปิด</div>
+    <h2 style="margin-top:4px">จดหลังคาบ</h2>
+    <small>คณิตศาสตร์ดิสครีต · จ. 9 พ.ย. 08:00–10:00</small>
+  </div>
+  <div class="scroll">
+    <label class="f">วันนี้เรียนอะไร (สั้น ๆ)</label>
+    <textarea>Graph เบื้องต้น, degree, handshaking lemma อาจารย์บอกออกสอบแน่</textarea>
+
+    <label class="f">รูปกระดาน (ย่อรูปให้อัตโนมัติ)</label>
+    <div class="photos"><span class="thumb"></span><span class="thumb"></span><div class="addph">+ ถ่ายรูป</div></div>
+
+    <label class="f">หัวข้อที่เรียน · กด ★ = อาจารย์บอกออกสอบ</label>
+    <div class="trow"><span class="n">Handshaking lemma</span><select class="exam"><option>กลางภาค</option></select><button class="sbtn on" aria-label="ออกสอบ">★</button></div>
+    <div class="trow"><span class="n">Degree ของจุดยอด</span><select class="exam"><option>กลางภาค</option></select><button class="sbtn" aria-label="ออกสอบ">☆</button></div>
+    <div class="trow" style="border-style:dashed"><span class="n muted">+ เพิ่มหัวข้อ</span></div>
+
+    <label class="f">มีงานสั่งไหม</label>
+    <div class="addtask">
+      <input class="t" value="แบบฝึกหัดบทที่ 4 ข้อ 1–10">
+      <div class="btnrow" style="margin-top:8px">
+        <button class="btn">ส่ง พฤ. 12 พ.ย.</button><button class="btn on">ในคาบ</button><button class="btn">Classroom</button><button class="btn">ไลน์</button>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="xp-pop px">+15 XP</span>
+    <button class="btn primary" style="width:100%">บันทึก</button>
+    <div class="muted" style="text-align:center;margin-top:6px;font-size:12px">จด +10 · มีรูป +5</div>
+  </div>
+</div>
+</div>
+
+<!-- ========== 4. เกม ========== -->
+<div>
+<div class="screen-label">4. หน้าเกม</div>
+<div class="phone game">
+  <div class="scroll">
+    <div class="gpanel hero">
+      <div class="sprite"><svg id="hero" viewBox="0 0 16 16" shape-rendering="crispEdges"></svg></div>
+      <div style="flex:1">
+        <div class="px lv">LV 7</div>
+        <div class="gsmall">นักเรียนฝึกหัด · ชุดระดับ 2/5</div>
+        <div class="gbar"><i style="width:62%"></i></div>
+        <div class="gsmall px" style="margin-top:4px">XP 217 / 350</div>
+      </div>
+    </div>
+
+    <div class="gtitle">บอสที่ใกล้ที่สุด</div>
+    <div class="gpanel boss">
+      <div class="row"><h3 style="font-size:16px">บอสกลางภาค · OOP</h3><span class="dcount px">D-12</span></div>
+      <div class="gsmall">สอบ ส. 21 พ.ย. · 9 หัวข้อ (★ นับ 2 เท่า)</div>
+      <div class="gbar hp" style="height:12px"><i style="width:36%"></i></div>
+      <div class="gsmall px" style="margin-top:4px">HP 5 / 14 · +2 ฟื้นคืน (ไม่ได้ทวนตามรอบ)</div>
+      <div class="ready"><span class="pct px">64%</span><span class="gsmall">พร้อมสอบ</span><button class="btn" style="margin-left:auto;flex:none;padding:0 14px;background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:600">ทวนเลย</button></div>
+      <ul class="miss">
+        <li><span class="r-rare">★</span>Interface <span class="gsmall" style="margin-left:auto">ยังไม่ทวน</span></li>
+        <li><span class="r-rare">★</span>Abstract class <span class="gsmall" style="margin-left:auto">ครบรอบทวน 3 วัน</span></li>
+        <li><span class="r-normal">•</span>Polymorphism <span class="gsmall" style="margin-left:auto">ยังไม่ทวน</span></li>
+      </ul>
+    </div>
+
+    <div class="gtitle">Passive tree · OOP</div>
+    <div class="gpanel tree">
+      <svg viewBox="0 0 320 120">
+        <g stroke="#2A3F66" stroke-width="3" fill="none">
+          <path d="M20 90 L70 60 L120 80 L170 40 L220 70 L270 30 L300 60"/>
+          <path d="M120 80 L150 105"/><path d="M220 70 L240 102"/>
+        </g>
+        <g stroke="#C9A24A" stroke-width="3" fill="none"><path d="M20 90 L70 60 L120 80 L170 40"/></g>
+        <circle cx="20" cy="90" r="7" fill="#C9A24A"/>
+        <circle cx="70" cy="60" r="7" fill="#C9A24A"/>
+        <circle cx="120" cy="80" r="12" fill="#F2C230" stroke="#fff" stroke-width="2"/>
+        <circle cx="150" cy="105" r="7" fill="#C9A24A" opacity=".45"/>
+        <circle cx="170" cy="40" r="12" fill="#F2C230" opacity=".5" stroke="#fff" stroke-width="2"/>
+        <circle cx="220" cy="70" r="7" fill="#0A1630" stroke="#3B5280" stroke-width="2"/>
+        <circle cx="240" cy="102" r="7" fill="#0A1630" stroke="#3B5280" stroke-width="2"/>
+        <circle cx="270" cy="30" r="12" fill="#0A1630" stroke="#3B5280" stroke-width="2"/>
+        <circle cx="300" cy="60" r="7" fill="#0A1630" stroke="#3B5280" stroke-width="2"/>
+      </svg>
+      <div class="gsmall" style="margin-top:6px">สว่าง = ทวนแล้ว · จาง = เลยรอบทวน · มืด = ยังไม่ทวน · วงใหญ่ = หัวข้อ ★</div>
+    </div>
+
+    <div class="gtitle">วิชา · ซีซั่นเทอม 2/2569</div>
+    <div class="subjs">
+      <div class="gpanel"><div style="font-size:13px">OOP</div><div class="px lv" style="font-size:16px">LV 4</div><div class="gbar"><i style="width:55%"></i></div></div>
+      <div class="gpanel"><div style="font-size:13px">ดิสครีต</div><div class="px lv" style="font-size:16px">LV 3</div><div class="gbar"><i style="width:20%"></i></div></div>
+      <div class="gpanel"><div style="font-size:13px">เครือข่าย</div><div class="px lv" style="font-size:16px">LV 2</div><div class="gbar"><i style="width:80%"></i></div></div>
+      <div class="gpanel"><div style="font-size:13px">อังกฤษ 2</div><div class="px lv" style="font-size:16px">LV 1</div><div class="gbar"><i style="width:10%"></i></div></div>
+    </div>
+
+    <div class="gtitle" style="margin-top:14px">สีความหายาก</div>
+    <div class="legend"><span class="r-normal">ปกติ</span><span class="r-magic">magic</span><span class="r-rare">rare</span><span class="r-unique">unique</span></div>
+  </div>
+  <nav class="tabs"><a><b>◉</b>วันนี้</a><a><b>▤</b>วิชา</a><a><b>☑</b>งาน</a><a class="on"><b>⚔</b>เกม</a><a><b>⚙</b>ตั้งค่า</a></nav>
+</div>
+</div>
+
+</div>
+
+<script>
+// placeholder sprite 16x16 (วาดเอง): . = ว่าง, h ผม, s ผิว, c เสื้อ, b ทองเหลือง, p กางเกง, k ดำ
+const map = [
+"................",
+".....hhhhhh.....",
+"....hhhhhhhh....",
+"....hssssssh....",
+"....sksssksh....",
+"....ssssssss....",
+".....ssssss.....",
+"....bccccccb....",
+"...scccbbcccs...",
+"...sccccccccs...",
+"...s.cccccc.s...",
+".....pppppp.....",
+".....pp..pp.....",
+".....pp..pp.....",
+"....kkk..kkk....",
+"................"];
+const col = {h:"#5A3A22",s:"#E8B98A",c:"#1F4E9C",b:"#C9A24A",p:"#2A3F66",k:"#111"};
+const svg = document.getElementById("hero");
+map.forEach((row,y)=>[...row].forEach((ch,x)=>{
+  if(!col[ch]) return;
+  const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
+  r.setAttribute("x",x);r.setAttribute("y",y);r.setAttribute("width",1);r.setAttribute("height",1);r.setAttribute("fill",col[ch]);
+  svg.appendChild(r);
+}));
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# CI = GitHub ตรวจโค้ดอัตโนมัติทุก push / PR · เขียว = ผ่าน · แดง = กดดูว่าพังขั้นไหน
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: tsc + lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: ตรวจ TypeScript
+        run: npx tsc --noEmit
+      - name: ตรวจรูปแบบโค้ด
+        run: npm run lint
