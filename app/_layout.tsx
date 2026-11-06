@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Platform } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ import {
   IBMPlexSansThai_600SemiBold,
 } from "@expo-google-fonts/ibm-plex-sans-thai";
 import { Silkscreen_400Regular } from "@expo-google-fonts/silkscreen";
-import { registerServiceWorker } from "@/lib/web/serviceWorker";
+import { registerServiceWorker } from "@/lib/web/webPush";
 import { CACHE_BUSTER, persister, queryClient } from "@/lib/queryClient";
 
 export default function RootLayout() {
@@ -23,7 +23,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (Platform.OS === "web") registerServiceWorker();
+    if (Platform.OS === "web") registerServiceWorker((path) => router.push(path as never));
   }, []);
 
   if (!loaded) return null;
