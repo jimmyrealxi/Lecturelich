@@ -1,10 +1,12 @@
 /// <reference types="node" />
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { dueInfo, dur, shortDate, thaiDate } from "./format.ts";
+import { dueInfo, dur, shortDate, thaiDate, typedDate, weekdayName } from "./format.ts";
 
 test("วันที่แบบไทย", () => {
   assert.equal(thaiDate("2026-11-07"), "เสาร์ 7 พ.ย.");
+  assert.equal(weekdayName("2026-11-07"), "วันเสาร์");
+  assert.equal(typedDate("2026-11-07"), "07 พ.ย. 2569");
   assert.equal(shortDate("2026-11-10"), "อ. 10 พ.ย.");
 });
 

@@ -3,7 +3,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "@/lib/auth";
 import { useAssignments } from "@/lib/queries/core";
 import { TabIcon } from "@/components/TabIcon";
-import { color, font } from "@/lib/theme";
+import { Platform } from "react-native";
+import { color, font, PAPER_INSET } from "@/lib/theme";
 
 export default function TabsLayout() {
   const session = useSession();
@@ -16,10 +17,11 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go },
+        // หัวแบบสมุด: โปร่งบนกระดาษ หัว Chonburi เส้นคู่ใต้หัว
+        headerStyle: { backgroundColor: "transparent", borderBottomWidth: 3, borderBottomColor: "rgba(42,33,24,0.75)", borderStyle: "double" as "solid" },
         headerShadowVisible: false,
-        headerTintColor: color.onNavy,
-        headerTitleStyle: { fontFamily: font.title, fontSize: 20, color: color.go },
+        headerTintColor: color.paper,
+        headerTitleStyle: { fontFamily: font.title, fontSize: 24, color: color.paper },
         // แผงหมึกเข้ม (ธีม A) · เหลืองใช้ได้เพราะอยู่บนพื้นเข้ม
         tabBarActiveTintColor: color.go,
         tabBarInactiveTintColor: color.onMuted,
@@ -34,7 +36,7 @@ export default function TabsLayout() {
           fontFamily: font.typeBold, fontSize: 12, lineHeight: 17, color: color.paper, backgroundColor: color.go,
           borderRadius: 2, minWidth: 18, height: 17, paddingHorizontal: 4,
         },
-        sceneStyle: { backgroundColor: color.ink },
+        sceneStyle: { backgroundColor: "transparent", paddingLeft: Platform.OS === "web" ? PAPER_INSET : 0 },
       }}
     >
       <Tabs.Screen name="today" options={{
@@ -50,7 +52,7 @@ export default function TabsLayout() {
         tabBarIcon: ({ focused }) => <TabIcon name="tasks" focused={focused} />,
       }} />
       <Tabs.Screen name="game" options={{
-        title: "เกม", headerStyle: { backgroundColor: color.cave, borderBottomWidth: 1, borderBottomColor: color.seam },
+        title: "เกม", sceneStyle: { backgroundColor: color.cave }, headerStyle: { backgroundColor: color.cave, borderBottomWidth: 1, borderBottomColor: color.seam },
         headerTintColor: color.gold, tabBarActiveTintColor: color.gold, headerTitleStyle: { fontFamily: font.title, fontSize: 20, color: color.gold },
         tabBarIcon: ({ focused }) => <TabIcon name="game" focused={focused} accent={color.gold} />,
       }} />

@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { useXp } from "@/lib/queries/xp";
 import { color, font } from "@/lib/theme";
 
-/** LV + ช่อง XP 10 ช่อง มุมขวาของหัวหน้าวันนี้ (mockup retro-theme.html) กดไปหน้าเกม */
+/** LV + ช่อง XP 10 ช่อง มุมขวาของหัวหน้าวันนี้ (บนกระดาษ ธีม A) กดไปหน้าเกม */
 export function LvChip() {
   const q = useXp();
   if (!q.data) return null; // ยังโหลด/ออฟไลน์ = ไม่โชว์ ไม่ดันหัวเพจ
@@ -22,8 +22,8 @@ export function LvChip() {
 
 const s = StyleSheet.create({
   chip: { minHeight: 44, alignItems: "flex-end", justifyContent: "flex-end", paddingLeft: 8 },
-  lv: { fontFamily: font.pixel, fontSize: 11, color: color.go },
+  lv: { fontFamily: font.typeBold, fontSize: 13, color: color.paper },
   cells: { flexDirection: "row", gap: 3, marginTop: 6 },
-  cell: { width: 9, height: 12, backgroundColor: color.navyRule },
-  on: { backgroundColor: color.go },
+  cell: { width: 7, height: 10, borderWidth: 1, borderColor: color.rule2 },
+  on: { backgroundColor: color.pen, borderColor: color.pen },
 });

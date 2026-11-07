@@ -13,6 +13,9 @@ import { Silkscreen_400Regular } from "@expo-google-fonts/silkscreen";
 import { registerServiceWorker } from "@/lib/web/webPush";
 import { XpPop } from "@/components/game/XpPop";
 import { CACHE_BUSTER, persister, queryClient } from "@/lib/queryClient";
+import { PAPER_INSET } from "@/lib/theme";
+
+const inset = Platform.OS === "web" ? PAPER_INSET : 0;
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -33,8 +36,11 @@ export default function RootLayout() {
   if (!loaded) return null;
   const app = (
     <>
-      <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false }} />
+      <StatusBar style="dark" />
+      {/* โปร่งให้เห็นกระดาษที่ body · แท็บเว้นซ้ายเองใน (tabs)/_layout (แถบแท็บต้องเต็มกว้าง) */}
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "transparent", paddingLeft: inset } }}>
+        <Stack.Screen name="(tabs)" options={{ contentStyle: { backgroundColor: "transparent" } }} />
+      </Stack>
       <XpPop />
     </>
   );

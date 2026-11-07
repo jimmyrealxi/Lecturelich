@@ -14,6 +14,13 @@ export const thaiDate = (date: string) => {
   return `${WD[d.getUTCDay()]} ${d.getUTCDate()} ${MON[d.getUTCMonth()]}`;
 };
 
+/** หัวหน้าวันนี้: "วันเสาร์" + "07 พ.ย. 2569" (พ.ศ. แบบพิมพ์ดีด) */
+export const weekdayName = (date: string) => "วัน" + WD[ymd(date).getUTCDay()];
+export const typedDate = (date: string) => {
+  const d = ymd(date);
+  return `${String(d.getUTCDate()).padStart(2, "0")} ${MON[d.getUTCMonth()]} ${d.getUTCFullYear() + 543}`;
+};
+
 /** "อ. 11 พ.ย." */
 export const shortDate = (date: string) => {
   const d = ymd(date);

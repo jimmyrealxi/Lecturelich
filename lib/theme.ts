@@ -66,3 +66,5 @@ export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 } as const;
 // มุมเหลี่ยมทั้งแอป (เทอร์มินัล) · pill เหลือไว้ให้จุดกลม
 export const radius = { sm: 0, md: 0, lg: 0, pill: 999 } as const;
 export const minTouch = 44;
+// เว้นซ้ายให้รูเข้าเล่ม+เส้นกั้นแดงของกระดาษ (วาดที่ body ใน app/+html.tsx · เว็บเท่านั้น)
+export const PAPER_INSET = 26;
