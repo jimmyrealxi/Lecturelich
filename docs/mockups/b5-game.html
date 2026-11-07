@@ -35,6 +35,15 @@ p.note{color:#B9BFBA;font-size:14px;max-width:860px;margin-bottom:12px}
 .in{padding:12px 14px}
 .small{font-size:13px;color:var(--ash)}
 /* Pap-Boy บนสุด */
+.scene{position:relative;border-bottom:1px solid var(--seam);background:#140F0D}
+.scene canvas{display:block;width:100%;aspect-ratio:128/72;image-rendering:pixelated}
+.bossbar{position:absolute;left:10px;right:10px;top:8px;z-index:1}
+.bossbar .bn{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font:700 13px "Chakra Petch";color:#F0C8C2;text-shadow:0 1px 0 #000}
+.bossbar .bn .vt{font-size:18px;color:#FF8A7E}
+.bossbar .hp{height:8px;margin-top:3px}
+.bossbar .hp .ph{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--bone)}
+.bossbar .st2{font-size:11px;color:#F0A096;margin-top:2px;text-shadow:0 1px 0 #000}
+.skill{position:absolute;z-index:1;left:10px;bottom:6px;font:600 11px "Chakra Petch";color:var(--gold);background:rgba(6,5,4,.75);padding:2px 8px}
 .stage{position:relative;background:#120F0D;border-bottom:1px solid var(--seam)}
 .stage canvas{display:block;width:200px;max-width:56%;aspect-ratio:1;image-rendering:pixelated;margin:0 auto;padding-top:6px}
 .stage .glowfloor{position:absolute;left:0;right:0;bottom:0;height:40px;background:radial-gradient(60% 100% at 50% 100%,rgba(201,162,91,.18),transparent)}
@@ -115,20 +124,25 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 </head>
 <body>
 <h1>ชุด 5 · หน้าเกม "อีกโลก" (มืด แนว PoE)</h1>
-<p class="note">ข้อมูลเท่าหน้าเดิม: ตัวละคร+LV+XP · บอสที่ใกล้สุด (HP · พร้อมสอบ% · หัวข้อที่ยังไม่ทวน + ปุ่มทวนแล้ว · บอสถัดไป) · passive tree เลือกวิชา · LV แต่ละวิชา · ได้ XP จาก · สีความหายาก · <b>ที่เปลี่ยน/เพิ่ม</b>: กล่องตัวละครเดิม (placeholder) → <b>Pap-Boy v1</b> บนสุด + ฉายา · ปุ่ม "แต่งตัว" (ไปตู้ของ papboy-v1) และ "เปิดกล่อง" (ชุด 6) · ใต้ tree บอกวันทวนรอบถัดไป · "ได้วันนี้" (ของเสริมขั้น 7 — ยังไม่ทำจนกว่าส่วนใช้งานเสร็จ) · <b>ไม่มีฉากสู้บอส</b> ตามที่ตกลง · ห้ามภาพ/ไอคอน/ชื่อ/ฟอนต์ของ PoE — กรอบหินและเส้นประดับวาดเอง</p>
+<p class="note">ข้อมูลเท่าหน้าเดิม: ตัวละคร+LV+XP · บอสที่ใกล้สุด (HP · พร้อมสอบ% · หัวข้อที่ยังไม่ทวน + ปุ่มทวนแล้ว · บอสถัดไป) · passive tree เลือกวิชา · LV แต่ละวิชา · ได้ XP จาก · สีความหายาก · <b>ที่เปลี่ยน/เพิ่ม</b>: กล่องตัวละครเดิม (placeholder) → <b>Pap-Boy v1</b> บนสุด + ฉายา · ปุ่ม "แต่งตัว" (ไปตู้ของ papboy-v1) และ "เปิดกล่อง" (ชุด 6) · ใต้ tree บอกวันทวนรอบถัดไป · "ได้วันนี้" (ของเสริมขั้น 7 — ยังไม่ทำจนกว่าส่วนใช้งานเสร็จ) · <b>ฉากสู้บอสประจำเทอม</b>: Pap-Boy ยิงสกิลใส่บอสเองตลอด (ไม่ต้องกด) สกิลโตตามช่วงเทอม/เลเวล สีตามของที่ใส่ · เลือดบอสลดตามที่เรียน (XP) มีขีดเฟสหลังสอบกลางภาค · ตายวันสอบปลายภาควิชาสุดท้าย → กล่องทอง · แผงบอสสอบรายวิชาเดิมเปลี่ยนชื่อเป็น "สอบที่ใกล้ที่สุด" ข้อมูลเท่าเดิม · กดปุ่มด้านล่างดูช่วงต่าง ๆ · ห้ามภาพ/ไอคอน/ชื่อ/ฟอนต์ของ PoE — กรอบหินและเส้นประดับวาดเอง</p>
+<div class="wsw" role="group" aria-label="ดูตัวอย่างตามช่วงเทอม"><button data-stage="start" onclick="setStage('start')">ต้นเทอม</button><button data-stage="mid" aria-pressed="true" onclick="setStage('mid')">กลางเทอม</button><button data-stage="end" onclick="setStage('end')">ใกล้ปลายภาค</button><button data-stage="dead" onclick="setStage('dead')">สอบครบ บอสตาย</button></div>
 <div class="wsw" role="radiogroup" aria-label="ความกว้างจอ"><button aria-pressed="true" onclick="setW(this,360)">จอ 360</button><button onclick="setW(this,390)">จอ 390</button></div>
 <div class="wrap">
 
 <template id="game">
-  <div class="stage"><canvas class="pb" width="64" height="64" role="img" aria-label="Pap-Boy ชุดกลางเทอม"></canvas><div class="glowfloor"></div></div>
+  <div class="scene"><canvas class="sc" width="128" height="72" role="img" aria-label="Pap-Boy ยิงสกิลใส่บอสประจำเทอม"></canvas>
+    <div class="bossbar"><div class="bn"><span>อสูรกองข้อสอบ · เทอม 2/2569</span><span class="vt bpct">58%</span></div>
+      <div class="hp" role="meter" aria-label="เลือดบอสประจำเทอม"><i class="bhp" style="width:58%"></i><span class="ph" style="left:50%" title="เฟส 2: หลังสอบกลางภาค"></span></div>
+      <div class="st2 bstate">ตายเมื่อสอบปลายภาคครบทุกวิชา</div></div>
+    <div class="skill">สกิล: ดินสอนำวิถี ×3</div></div>
   <div class="who">
-    <div class="lvl"><small>LV</small>14</div>
-    <div class="nm"><b>Pap-Boy</b><span class="xpn">XP 230/400</span></div>
-    <div><div class="title">ฉายา: ผู้มาเรียนสม่ำเสมอ</div><div class="bar"><i style="width:57%"></i></div></div>
+    <div class="lvl"><small>LV</small><span class="lvnum">14</span></div>
+    <div class="nm"><b>Pap-Boy</b><span class="xpn pbxp">XP 230/400</span></div>
+    <div><div class="title pbtitle">ฉายา: ผู้มาเรียนสม่ำเสมอ</div><div class="bar"><i class="pbbar" style="width:57%"></i></div></div>
   </div>
   <div class="acts"><button class="btn">แต่งตัว</button><button class="btn gold">เปิดกล่อง<span class="boxbadge">1</span></button></div>
 
-  <div class="h"><i></i>บอสที่ใกล้ที่สุด<i></i></div>
+  <div class="h"><i></i>สอบที่ใกล้ที่สุด<i></i></div>
   <div class="frame boss"><div class="in">
     <div class="bh"><b>บอสกลางภาค · คณิตศาสตร์ 2</b><span class="dd">D-38</span></div>
     <div class="small">สอบ อ. 15 ธ.ค. · 9 หัวข้อ (★ 3 นับ 2 เท่า)</div>
@@ -351,11 +365,114 @@ let f=0;const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function frame(){c.clearRect(0,0,64,64);const b=(f%12<6)?0:1;drawBg(f);drawBack(f);drawWings(f,b);drawGround(f);drawBody(f,b);drawFront(f);c.globalAlpha=1}
 
 st={...PRESETS.mid};
-// ฉากหลังโลกมืด: ผนังหิน + พื้นแผ่นหิน (แทนห้องน้ำเงินของ v1)
-drawBg=function(f){R(0,0,64,64,'#140F0D');for(let y=0;y<56;y+=6)for(let x=(y/6%2)*5;x<64;x+=10)R(x,y,1,6,'#1C1612');for(let y=5;y<56;y+=6)R(0,y,64,1,'#1C1612');
-  R(0,56,64,8,'#1E1714');for(let x=0;x<64;x+=11)R(x,56,1,8,'#2C221B');R(0,56,64,1,'#3B3027')};
-const pbs=[...document.querySelectorAll('.pb')];
-function frame2(){frame();pbs.forEach(p=>{const x=p.getContext('2d');x.imageSmoothingEnabled=false;x.clearRect(0,0,64,64);x.drawImage(cv,0,0)})}
+// ===== ฉากสู้บอส (วาดเอง 128×72) · Pap-Boy ยิงสกิลใส่บอสเอง ไม่ต้องกด · ขนาดสกิลตามความก้าวหน้า สีตามของที่ใส่ =====
+const STAGES={
+  start:{lv:3,preset:"start",hp:.94,title:["นักเรียนฝึกหัด","n"],xp:"40/100",bar:40},
+  mid:{lv:14,preset:"mid",hp:.58,title:["ผู้มาเรียนสม่ำเสมอ","m"],xp:"230/400",bar:57},
+  end:{lv:24,preset:"end",hp:.09,title:["ผู้พิชิตบอสปลายภาค","u"],xp:"610/700",bar:87},
+  dead:{lv:26,preset:"end",hp:0,title:["ผู้พิชิตบอสปลายภาค","u"],xp:"20/750",bar:3},
+};
+let stage="mid";
+drawBg=function(){}; // ฉากวาดพื้นหลังเอง
+const pbOff=document.createElement("canvas");pbOff.width=pbOff.height=64;
+let shots=[],sparks=[],nums=[],hit=0,beam=0,shake=0;
+const HAND=[36,52],BOSS=[98,39];
+function sR(S,x,y,w,h,col,a=1){S.globalAlpha=a;S.fillStyle=col;S.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function sCirc(S,cx,cy,r,col,a=1){for(let y=-r;y<=r;y++)for(let x=-r;x<=r;x++)if(x*x+y*y<=r*r+r*.6)sR(S,cx+x,cy+y,1,1,col,a)}
+
+function drawRoom(S){
+  sR(S,0,0,128,72,"#140F0D");
+  for(let y=0;y<60;y+=6){for(let x=((y/6)%2)*6;x<128;x+=12)sR(S,x,y,1,6,"#1C1612");sR(S,0,y+5,128,1,"#1C1612")}
+  sR(S,0,60,128,12,"#1E1714");for(let x=0;x<128;x+=11)sR(S,x,60,1,12,"#2C221B");sR(S,0,60,128,1,"#3B3027");
+  // คบไฟผนัง (วาดเอง)
+  [[62,32]].forEach(([x,y])=>{sR(S,x,y,2,6,"#54443A");const fl=f%6<3;sR(S,x-1,y-3,4,3,"#EE8A3C",.9);sR(S,x,y-4-(fl?1:0),2,2,"#FFE680");sCirc(S,x+1,y-2,6,"#EE8A3C",.06)});
+}
+// บอส "อสูรกองข้อสอบ" — กองกระดาษลอยมีตาเดียว (ออกแบบเอง)
+function drawBoss(S,dead){
+  const [cx,cy0]=BOSS;
+  if(dead){ // ร่วงเป็นเศษกระดาษบนพื้น + กล่องทองลำแสง
+    for(let i=0;i<14;i++){const x=78+((i*37)%40),y=62+(i%3);sR(S,x,y,4,2,i%4?"#D9CFBE":"#C2372C",.8)}
+    for(let y=0;y<60;y++)sR(S,95,y,6,1,"#F2C230",.05+.25*(y/60));
+    sR(S,92,52,12,9,"#2A2118");sR(S,92,52,12,1,"#C9A25B");sR(S,92,55,12,1,"#C9A25B");sR(S,97,55,2,3,"#FFE680");
+    if(f%10<6){sR(S,90,48,1,1,"#FFE680");sR(S,106,46,1,1,"#FFE680");sR(S,98,44,1,1,"#FFF6C8")}
+    return}
+  const cy=cy0+(f%16<8?0:1);
+  // เงา
+  for(let x=-12;x<=12;x++)sR(S,cx+x,62,1,1,"#000",.35*(1-Math.abs(x)/13));
+  // เศษกระดาษโคจร
+  for(let i=0;i<5;i++){const a=f*.07+i*1.26,x=cx+Math.cos(a)*21,y=cy+Math.sin(a)*9;sR(S,x,y,3,2,"#D9CFBE",.85);sR(S,x,y,3,1,"#9C8E7A",.85)}
+  // แขนกระดาษ
+  const w=f%10<5?0:1;
+  sR(S,cx-19,cy+2+w,6,3,"#2A211B");sR(S,cx-18,cy+3+w,5,1,"#D9CFBE");sR(S,cx+13,cy+2-w,6,3,"#2A211B");sR(S,cx+14,cy+3-w,5,1,"#D9CFBE");
+  // ตัว: 3 แผ่นซ้อน
+  sR(S,cx-13,cy-15,26,32,"#2A211B");sR(S,cx-12,cy-14,24,30,"#BFB29C");
+  sR(S,cx-11,cy-16,24,30,"#2A211B");sR(S,cx-10,cy-15,22,28,"#D9CFBE");
+  for(let y=cy-11;y<cy+12;y+=3)sR(S,cx-8,y,18,1,"#9C8E7A",.8);
+  sR(S,cx+3,cy-13,6,1,"#C2372C");sR(S,cx+6,cy-12,1,3,"#C2372C");sR(S,cx-8,cy+8,7,1,"#C2372C");sR(S,cx-7,cy+10,10,1,"#C2372C",.8);
+  // ตาเดียว
+  sCirc(S,cx+1,cy-1,6,"#2A211B");sCirc(S,cx+1,cy-1,5,"#120F0D");
+  const blink=f%50>46;
+  if(blink)sR(S,cx-3,cy-1,9,1,"#E5392C");else{sCirc(S,cx-1,cy,2,"#E5392C");sR(S,cx-2,cy-1,1,1,"#FFB4AB")}
+  sCirc(S,cx+1,cy-1,9,"#C2372C",.05);
+  if(hit>0){sR(S,cx-12,cy-15,24,29,"#FFFFFF",.35*hit/4);}
+}
+function spawn(){
+  const g=GLOW[st.glow];
+  if(stage==="start"){if(f%14===0)shots.push({t:0,v:.07,k:"bolt",c:g,s:2})}
+  if(stage==="mid"){if(f%16===0)for(let i=0;i<3;i++)shots.push({t:-i*.12,v:.055,k:"missile",c:i%2?"#8AB0FF":g,s:3,arc:(i-1)*8})}
+  if(stage==="end"){if(f%9===0)shots.push({t:0,v:.08,k:"bolt",c:"#FFE680",s:3,arc:(f%18?6:-6)});if(f%44===0)beam=16}
+}
+function step(){
+  spawn();
+  shots.forEach(s=>s.t+=s.v);
+  shots=shots.filter(s=>{if(s.t>=1){impact(s.c,s.k==="missile"?5:3,s.k==="missile"?2:1);return false}return true});
+  if(beam>0){beam--;if(beam%3===0)impact("#EE8A3C",6,4);shake=beam>0?1:0}
+  sparks.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.life--});sparks=sparks.filter(p=>p.life>0);
+  nums.forEach(n=>{n.y-=.4;n.life--});nums=nums.filter(n=>n.life>0);
+  if(hit>0)hit--;
+}
+function impact(col,n,dmg){hit=4;for(let i=0;i<n;i++){const a=Math.random()*6.28,v=.4+Math.random()*.9;sparks.push({x:BOSS[0]-6,y:BOSS[1]+Math.random()*10-5,vx:Math.cos(a)*v,vy:Math.sin(a)*v-.3,life:10+Math.random()*8|0,c:col})}
+  if(Math.random()<.5)nums.push({x:BOSS[0]+4+Math.random()*12,y:BOSS[1]-14,life:22,v:dmg})}
+function pos(s){const [x0,y0]=HAND,[x1,y1]=BOSS;const t=Math.max(0,s.t);return[x0+(x1-6-x0)*t,y0+(y1-y0)*t-Math.sin(t*Math.PI)*(s.arc||0)]}
+function drawFx(S){
+  if(stage==="end"){ // วงเวทใต้เท้า
+    for(let a=0;a<6.28;a+=.08){const x=26+Math.cos(a+f*.05)*16,y=63+Math.sin(a+f*.05)*3;sR(S,x,y,1,1,"#EE8A3C",.7)}}
+  shots.forEach(s=>{if(s.t<0)return;const [x,y]=pos(s);
+    for(let k=1;k<=(s.k==="missile"?5:3);k++){const [tx,ty]=pos({...s,t:s.t-k*.03});sR(S,tx,ty,s.s,s.s,s.c,.5-k*.08)}
+    sR(S,x-1,y-1,s.s+2,s.s+2,s.c,.35);sR(S,x,y,s.s,s.s,"#FFFFFF")});
+  if(beam>0){const [x0,y0]=HAND,x1=BOSS[0]-6,y1=BOSS[1];const n=Math.ceil(x1-x0);
+    for(let i=0;i<=n;i++){const t=i/n,x=x0+(x1-x0)*t,y=y0+(y1-y0)*t,wob=Math.sin(i*.6+f)*1;
+      sR(S,x,y-3+wob,1,7,"#EE8A3C",.35);sR(S,x,y-2+wob,1,5,"#F2C230",.7);sR(S,x,y-1+wob,1,2,"#FFFFFF")}
+    sCirc(S,x0,y0,4,"#FFE680",.5)}
+  sparks.forEach(p=>sR(S,p.x,p.y,1,1,p.c,p.life/14));
+  S.globalAlpha=1;S.font="8px VT323";S.textBaseline="top";
+  nums.forEach(n=>{S.globalAlpha=Math.min(1,n.life/10);S.fillStyle="#000";S.fillText(n.v,n.x+1,n.y+1);S.fillStyle="#FFE680";S.fillText(n.v,n.x,n.y)});
+  S.globalAlpha=1;
+}
+function drawPapBoy(S){
+  const oc=c;c=pbOff.getContext("2d");c.clearRect(0,0,64,64);const b=(f%12<6)?0:1;
+  drawBack(f);drawWings(f,b);drawGround(f);drawBody(f,b);drawFront(f);c.globalAlpha=1;c=oc;
+  S.globalAlpha=1;S.drawImage(pbOff,-6,8);
+}
+const scenes=[];
+function render(){
+  const dead=stage==="dead";
+  scenes.forEach(cv2=>{const S=cv2.getContext("2d");S.imageSmoothingEnabled=false;S.save();
+    if(shake&&f%2)S.translate(1,0);
+    drawRoom(S);drawBoss(S,dead);drawPapBoy(S);if(!dead)drawFx(S);S.restore()});
+}
+function setStage(k){stage=k;const d=STAGES[k];st={...PRESETS[d.preset]};shots=[];sparks=[];nums=[];beam=0;
+  document.querySelectorAll(".lvnum").forEach(e=>e.textContent=d.lv);
+  document.querySelectorAll(".pbtitle").forEach(e=>{e.textContent="ฉายา: "+d.title[0];e.style.color=RC[d.title[1]]});
+  document.querySelectorAll(".pbxp").forEach(e=>e.textContent="XP "+d.xp);
+  document.querySelectorAll(".pbbar").forEach(e=>e.style.width=d.bar+"%");
+  document.querySelectorAll(".bhp").forEach(e=>e.style.width=(d.hp*100)+"%");
+  document.querySelectorAll(".bpct").forEach(e=>e.textContent=Math.round(d.hp*100)+"%");
+  document.querySelectorAll(".bstate").forEach(e=>e.textContent=k==="dead"?"ล้มแล้ว · ได้กล่องทอง":k==="end"?"ใกล้ตาย · สอบปลายภาคเหลือ 1 วิชา":"ตายเมื่อสอบปลายภาคครบทุกวิชา");
+  document.querySelectorAll(".skill").forEach(e=>e.textContent={start:"สกิล: ลูกไฟจิ๋ว",mid:"สกิล: ดินสอนำวิถี ×3",end:"สกิล: ลำแสงปลายภาค + วงเวท",dead:"เทอมนี้จบแล้ว"}[k]);
+  document.querySelectorAll("[data-stage]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.stage===k));
+  render()}
+
 </script>
 <script>
 document.querySelectorAll('[data-fill]').forEach(el=>{const t=document.getElementById(el.dataset.fill).content.cloneNode(true);if(el.dataset.fill==='dock')el.replaceWith(t);else el.appendChild(t)});
@@ -363,8 +480,8 @@ document.querySelectorAll('[data-scroll]').forEach(el=>{const k=el.querySelector
 function setW(b,w){document.documentElement.style.setProperty('--w',w+'px');b.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))}
 </script>
 <script>
-pbs.push(...document.querySelectorAll('.pb'));
-frame2();if(!reduce)setInterval(()=>{f++;frame2()},85);
+scenes.push(...document.querySelectorAll('.sc'));
+setStage('mid');if(!reduce)setInterval(()=>{f++;step();render()},85);
 </script>
 </body>
 </html>
