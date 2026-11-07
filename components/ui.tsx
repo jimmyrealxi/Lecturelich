@@ -169,7 +169,7 @@ export function Field({ label, error, style, ...input }: TextInputProps & { labe
   return (
     <View style={[{ flex: 1 }, style as StyleProp<ViewStyle>]}>
       <Text style={f.label}>{label}</Text>
-      <TextInput placeholderTextColor={color.faint} accessibilityLabel={label} {...input}
+      <TextInput placeholderTextColor={color.placeholder} accessibilityLabel={label} {...input}
         style={[f.input, !!error && { borderColor: color.danger }]} />
       {!!error && <Text style={f.error}>{error}</Text>}
     </View>

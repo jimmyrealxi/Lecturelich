@@ -114,7 +114,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
       <ScrollView contentContainerStyle={s.page} keyboardShouldPersistTaps="handled">
         <Text style={s.label}>วันนี้เรียนอะไร (สั้น ๆ)</Text>
         <TextInput value={text} onChangeText={setText} multiline maxLength={2000} style={s.textarea}
-          placeholder="เช่น Graph เบื้องต้น, degree อาจารย์บอกออกสอบ" placeholderTextColor={color.faint} accessibilityLabel="วันนี้เรียนอะไร" />
+          placeholder="เช่น Graph เบื้องต้น, degree อาจารย์บอกออกสอบ" placeholderTextColor={color.placeholder} accessibilityLabel="วันนี้เรียนอะไร" />
 
         <Text style={s.label}>รูปกระดาน (ย่อรูปให้อัตโนมัติ · สูงสุด {MAX_PHOTOS} รูป)</Text>
         <View style={s.photos}>
@@ -164,7 +164,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
         ))}
         <View style={s.trow}>
           <TextInput value={topicDraft} onChangeText={setTopicDraft} onSubmitEditing={addTopic} placeholder="+ เพิ่มหัวข้อ"
-            placeholderTextColor={color.faint} maxLength={120} style={[T.body, s.topicInput]} returnKeyType="done" accessibilityLabel="เพิ่มหัวข้อ" />
+            placeholderTextColor={color.placeholder} maxLength={120} style={[T.body, s.topicInput]} returnKeyType="done" accessibilityLabel="เพิ่มหัวข้อ" />
           {!!topicDraft.trim() && <Btn label="เพิ่ม" onPress={addTopic} style={{ flexGrow: 0, flexShrink: 0, flexBasis: "auto" }} />}
         </View>
 

@@ -98,7 +98,7 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
       </View>
 
       <ScrollView contentContainerStyle={s.page} keyboardShouldPersistTaps="handled">
-        <View style={s.two}>
+        <View>
           <Field label="รหัสวิชา" value={code} onChangeText={setCode} placeholder="CP352001" maxLength={20} autoCapitalize="characters" />
           <View style={{ flex: 1 }}>
             <Text style={s.label}>สี</Text>
@@ -129,13 +129,14 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
             <View style={s.slotRow}>
               <Field label="เริ่ม" value={d.start} onChangeText={(v) => patch(i, { start: v })} placeholder="10:00" maxLength={5} />
               <Field label="จบ" value={d.end} onChangeText={(v) => patch(i, { end: v })} placeholder="12:00" maxLength={5} />
-              <Field label="ห้อง" value={d.room} onChangeText={(v) => patch(i, { room: v })} placeholder="SC9-604" maxLength={40} />
               {drafts.length > 1 && (
                 <Pressable onPress={() => removeSlot(i)} style={s.x} accessibilityRole="button" accessibilityLabel="ลบช่วงเวลานี้">
                   <Text style={{ color: color.danger, fontSize: 18 }}>✕</Text>
                 </Pressable>
               )}
             </View>
+            {/* ห้องแถวของตัวเอง (mockup) · 360px ช่องห้องในแถวเดียวกับเวลาแคบจนชื่อห้องโดนตัด */}
+            <Field label="ห้อง" value={d.room} onChangeText={(v) => patch(i, { room: v })} placeholder="SC9-604" maxLength={40} />
             {tried && slotError(d) && <Text style={s.error}>{slotError(d)}</Text>}
           </View>
         ))}
@@ -163,9 +164,8 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
 const s = StyleSheet.create({
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  two: { flexDirection: "row", gap: space.sm },
   label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
-  swatches: { flexDirection: "row", flexWrap: "wrap", gap: 2 },
+  swatches: { flexDirection: "row", flexWrap: "wrap", gap: 4 }, // 6 สีแถวเดียวที่ 360 (6×44 + 5×4 = 284)
   // พื้นที่กด 44 · สีข้างใน 30 · ที่เลือก = วงหมึก
   sw: { width: minTouch, height: minTouch, borderRadius: 22, borderWidth: 2, borderColor: "transparent", alignItems: "center", justifyContent: "center" },
   swOn: { borderColor: color.paper },
