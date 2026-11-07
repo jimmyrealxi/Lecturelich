@@ -29,7 +29,8 @@
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
 ## สถานะล่าสุด (8 พ.ย. 2569)
-- **ธีม A ลงโค้ด + ไล่ดูทุกหน้าใน dev server ครบแล้ว (8 พ.ย.)** บน `feat/stage6-rooms` **ยังไม่ push** · เทสใน Expo (localhost:8081) จนใกล้เสร็จ ค่อยขึ้น Vercel รอบเดียว (เสนอเจ้าของ: ตั้ง Production Branch ใน Vercel กลับเป็น `main` แล้ว push ได้เป็น preview) · เหลือ: iPhone PWA จริง + อาการตัวหนังสือซ้อนที่เจ้าของเห็น (รอภาพ) → `docs/HANDOFF_THEME.md` "เทสธีม A" · Pap-Boy ยังไม่ใส่
+- **ขั้น 7 หน้าเกมลงโค้ดแล้ว (คืน 8 พ.ย. อัตโนมัติ · 4 commit ยังไม่ push · ยังไม่ได้เปิดดูในเบราว์เซอร์)** ฉากบอส+Pap-Boy+กล่อง+แต่งตัว · เจ้าของต้องรัน `20261113090000_stage7_loot.sql` + ตัดสินสูตรเลือดบอส/กล่องเงิน-ทอง/แลกเศษชอล์ก → `docs/HANDOFF_THEME.md` "ขั้น 7 หน้าเกม"
+- **ธีม A ลงโค้ด + ไล่ดูทุกหน้าใน dev server ครบแล้ว (8 พ.ย.)** บน `feat/stage6-rooms` **ยังไม่ push** · เทสใน Expo (localhost:8081) จนใกล้เสร็จ ค่อยขึ้น Vercel รอบเดียว (เสนอเจ้าของ: ตั้ง Production Branch ใน Vercel กลับเป็น `main` แล้ว push ได้เป็น preview) · เหลือ: iPhone PWA จริง + อาการตัวหนังสือซ้อนที่เจ้าของเห็น (รอภาพ) → `docs/HANDOFF_THEME.md` "เทสธีม A" · Pap-Boy หน้าวันนี้ยังไม่ใส่
 - **ชื่อแอปใหม่ Lecturelich** (เปลี่ยนตอนลงธีม) · หน้าเกม = โลกมืดแนว PoE + ฉากสู้บอสประจำเทอม · ระบบ Pap-Boy/ของดรอป/class-ascendancy ใน `docs/LOOT_PLAN.md` · **ส่วนใช้งานมาก่อน**
 - branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → … → `feat/stage6-rooms` (push แล้ว = Vercel production) · ยังไม่มี PR (ขั้น 1–5 แก้ไขต่อบน stage6 → คุยเรื่องเปิด PR ก่อน)
 - iPhone PWA ล็อกอิน+แถบแท็บใช้ได้ (Supabase Site URL = โดเมน Vercel) · ห้าม `viewport-fit=cover`
