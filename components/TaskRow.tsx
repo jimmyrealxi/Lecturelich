@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { Btn, T, Tape, Tick } from "@/components/ui";
+import { Btn, Stamp, T, Tape, Tick } from "@/components/ui";
 import { AddTaskForm } from "@/components/AddTaskForm";
 import { useSession } from "@/lib/auth";
 import { useCurrentTerm, useSubjects, useToggleDone, type Assignment } from "@/lib/queries/core";
@@ -12,8 +12,9 @@ import { color, font, minTouch, radius, space } from "@/lib/theme";
 const SOURCE = { classroom: "Classroom", class: "ในคาบ", line: "ไลน์" } as const;
 
 /** แถวงาน 1 ชิ้น: กดช่องสี่เหลี่ยม = ติ๊กส่งแล้ว (optimistic) · กดชื่อ = เปิดลิงก์ (ถ้ามี) · ⋯ = แก้/ลบ */
-export function TaskRow({ task, subjectName, today, first }: {
-  task: Assignment; subjectName?: string; today: string; first?: boolean;
+/** stamp = ตรายาง "เลยกำหนด" (ผู้เรียกส่งให้แถวเลยกำหนดแถวแรกแถวเดียว · จุดเดียวต่อจอ) */
+export function TaskRow({ task, subjectName, today, first, stamp }: {
+  task: Assignment; subjectName?: string; today: string; first?: boolean; stamp?: boolean;
 }) {
   const toggle = useToggleDone();
   const [open, setOpen] = useState(false);
@@ -36,7 +37,10 @@ export function TaskRow({ task, subjectName, today, first }: {
         <Text style={[T.muted, { fontSize: 12 }]}>{meta}</Text>
       </Pressable>
       {task.due_at && (
-        <Text style={[s.due, soon && !task.done && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>
+        <View style={{ alignItems: "flex-end", gap: 4 }}>
+          {stamp && <Stamp>เลยกำหนด</Stamp>}
+          <Text style={[s.due, soon && !task.done && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>
+        </View>
       )}
       <Pressable onPress={() => !temp && setOpen(true)} style={s.hit} accessibilityRole="button"
         accessibilityLabel={`ตัวเลือกงาน ${task.title}`}>

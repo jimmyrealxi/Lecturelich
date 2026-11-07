@@ -24,6 +24,8 @@ export default function Tasks() {
     const soonLimit = Date.parse(today + "T00:00:00+07:00") + WEEK_MS; // ภายใน 7 วันนับจากต้นวันนี้
     return {
       todoCount: todo.length,
+      // ตรายาง "เลยกำหนด" แค่แถวแรกที่เลยกำหนด (แท็บยังไม่ส่ง) · shortcut: เทียบเวลาตอนคำนวณ งานที่เพิ่งเลยกำหนดขณะเปิดหน้าค้างจะขึ้นตอนข้อมูลรีเฟรช
+      lateId: tab === "todo" ? todo.find((a) => a.due_at && Date.parse(a.due_at) < Date.now())?.id : undefined,
       sections:
         tab === "done"
           ? [{ title: "ส่งแล้ว", items: all.filter((a) => a.done) }]
@@ -61,7 +63,7 @@ export default function Tasks() {
               <Section>{g.title}</Section>
               <View style={s.list}>
                 {g.items.map((a, i) => (
-                  <TaskRow key={a.id} task={a} today={today} first={i === 0}
+                  <TaskRow key={a.id} task={a} today={today} first={i === 0} stamp={a.id === groups.lateId}
                     subjectName={a.subject_id ? names.get(a.subject_id) : undefined} />
                 ))}
               </View>
