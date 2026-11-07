@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
-import { Card, head, T } from "@/components/ui";
+import { head, T } from "@/components/ui";
 import { color, font, minTouch, space } from "@/lib/theme";
 
 const STEPS: { title: string; steps: string[] }[] = [
@@ -35,15 +35,15 @@ export default function Install() {
       </View>
       <ScrollView contentContainerStyle={s.page}>
         {STEPS.map((g) => (
-          <Card key={g.title}>
-            <Text style={T.h3}>{g.title}</Text>
+          <View key={g.title} style={s.group}>
+            <Text style={[T.h3, { marginBottom: 6 }]}>{g.title}</Text>
             {g.steps.map((st, i) => (
-              <View key={i} style={[s.step, i > 0 && s.divider]}>
+              <View key={i} style={[s.step, i === g.steps.length - 1 && s.last]}>
                 <View style={s.num}><Text style={s.numText}>{i + 1}</Text></View>
                 <Text style={[T.body, { flex: 1 }]}>{st}</Text>
               </View>
             ))}
-          </Card>
+          </View>
         ))}
       </ScrollView>
     </View>
@@ -53,8 +53,10 @@ export default function Install() {
 const s = StyleSheet.create({
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  step: { flexDirection: "row", gap: space.md, alignItems: "flex-start", paddingVertical: space.sm },
-  divider: { borderTopWidth: 1, borderTopColor: color.rule },
+  // แถวบนกระดาษมีเส้นบรรทัดคั่น (mockup a-settings จอ 6) ไม่ใช้การ์ด
+  group: { marginBottom: space.xl },
+  step: { flexDirection: "row", gap: space.md, alignItems: "flex-start", paddingVertical: 10, borderTopWidth: 1, borderTopColor: color.rule },
+  last: { borderBottomWidth: 1, borderBottomColor: color.rule },
   // เลขขั้น = วงหมึก ตัว Courier
   num: { width: 28, height: 28, borderRadius: 14, borderWidth: 2, borderColor: color.paper, alignItems: "center", justifyContent: "center" },
   numText: { fontFamily: font.typeBold, fontSize: 15, color: color.paper },
