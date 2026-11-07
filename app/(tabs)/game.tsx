@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { BossScene } from "@/components/game/BossScene";
 import { Bar, Frame, H } from "@/components/game/Frame";
 import { BossPanel, PassiveTree, ReviewRow } from "@/components/game/Review";
+import { termBoss } from "@/lib/boss";
+import { DEFAULT_LOOK } from "@/lib/papboy";
 import { useCurrentTerm } from "@/lib/queries/core";
 import { useExams, useTopics } from "@/lib/queries/review";
 import { useXp, useXpToday } from "@/lib/queries/xp";
@@ -47,10 +50,24 @@ export default function Game() {
     );
   }
 
+  const finals = exams.filter((e) => e.kind === "final").map((e) => e.date).sort();
+  const mids = exams.filter((e) => e.kind === "midterm").map((e) => e.date).sort();
+  const look = DEFAULT_LOOK;
+  const tb = term.data
+    ? termBoss({
+        start: term.data.start_date, lastExam: finals.at(-1) ?? term.data.end_date, midterm: mids.at(-1) ?? null, today,
+        termXp: d.subjects.reduce((n, x) => n + x.xp, 0),
+      })
+    : null;
+  const finalsLeft = finals.filter((x) => x >= today).length;
   const tier = TIERS[Math.min(4, Math.floor((d.total.level - 1) / 5))];
 
   return (
     <ScrollView style={s.page} contentContainerStyle={s.content}>
+      {tb && term.data && (
+        <BossScene look={look} stage={tb.stage} title={`อสูรกองข้อสอบ · ${term.data.name}`} pct={tb.pct} phase={tb.phase}
+          note={tb.dead ? "ล้มแล้ว · เทอมนี้สอบครบ" : tb.stage === "end" && finalsLeft > 0 ? `ใกล้ตาย · สอบปลายภาคเหลือ ${finalsLeft} วิชา` : "ตายเมื่อสอบปลายภาคครบทุกวิชา"} />
+      )}
       <View style={s.who}>
         <View>
           <Text style={s.lvSmall}>LV</Text>
