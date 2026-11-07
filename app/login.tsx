@@ -14,7 +14,7 @@ export default function Login() {
 
   return (
     <View style={s.wrap}>
-      <Text style={s.title}>StudyQuest</Text>
+      <Text style={s.title}>Lecturelich</Text>
       <Text style={s.sub}>ผู้ช่วยเรียนส่วนตัว · ตาราง งาน โน้ต และทวนสอบแบบเกม</Text>
       {supabaseConfigured ? (
         <Pressable style={s.btn} onPress={onPress} accessibilityRole="button">
@@ -29,13 +29,14 @@ export default function Login() {
 }
 
 const s = StyleSheet.create({
-  wrap: { flex: 1, backgroundColor: color.ink, alignItems: "center", justifyContent: "center", padding: space.xl },
-  title: { fontFamily: font.bodyBold, fontSize: 32, color: color.navy },
+  wrap: { flex: 1, alignItems: "center", justifyContent: "center", padding: space.xl },
+  title: { fontFamily: font.title, fontSize: 40, lineHeight: 52, color: color.paper },
   sub: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.sm, textAlign: "center" },
   btn: {
     marginTop: space.xl, minHeight: minTouch, paddingHorizontal: space.xl, borderRadius: radius.md,
-    backgroundColor: color.go, alignItems: "center", justifyContent: "center", alignSelf: "stretch", maxWidth: 360,
+    backgroundColor: color.paper, alignItems: "center", justifyContent: "center", alignSelf: "stretch", maxWidth: 360,
+    boxShadow: `2px 2px 0 ${color.rule2}`,
   },
-  btnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
+  btnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.deck },
   error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.lg, textAlign: "center" },
 });

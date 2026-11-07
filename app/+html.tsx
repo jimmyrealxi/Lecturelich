@@ -14,12 +14,12 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#E9DDBF" />
-        <meta name="application-name" content="StudyQuest" />
+        <meta name="application-name" content="Lecturelich" />
         <meta name="mobile-web-app-capable" content="yes" />
         {/* iOS: "เพิ่มไปยังหน้าจอโฮม" เปิดเต็มจอแบบแอป (จำเป็นสำหรับ Web Push บน iPhone) */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="StudyQuest" />
+        <meta name="apple-mobile-web-app-title" content="Lecturelich" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <ScrollViewStyleReset />
         <style dangerouslySetInnerHTML={{ __html: webAppCss }} />

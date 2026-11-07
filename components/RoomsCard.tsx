@@ -9,7 +9,7 @@ import { color, font, space } from "@/lib/theme";
 
 async function shareRoom(r: Room) {
   const url = roomLink(r.code);
-  const message = `เข้าห้อง "${r.name}" ใน StudyQuest: ${url} (โค้ด ${r.code})`;
+  const message = `เข้าห้อง "${r.name}" ใน Lecturelich: ${url} (โค้ด ${r.code})`;
   if (Platform.OS !== "web") return Share.share({ message });
   if (navigator.share) return navigator.share({ text: message }).catch(() => {});
   await navigator.clipboard?.writeText(message);
@@ -79,6 +79,9 @@ export function RoomsCard() {
 const s = StyleSheet.create({
   row: { flexDirection: "row", gap: space.sm },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
-  code: { fontFamily: font.pixel, fontSize: 14, color: color.navy, letterSpacing: 1 },
+  code: {
+    fontFamily: font.typeBold, fontSize: 15, color: color.paper, letterSpacing: 1,
+    borderWidth: 1.5, borderColor: color.paper, borderRadius: 2, paddingHorizontal: 6, paddingVertical: 1,
+  },
   err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });

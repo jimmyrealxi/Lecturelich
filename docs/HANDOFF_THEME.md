@@ -19,6 +19,16 @@
 - เนื้อหาเว้นซ้าย 26px ให้รูเข้าเล่ม (แท็บล่างเต็มกว้าง)
 - เส้นแถว = `rule` (ฟ้าโปร่ง 30%) แบบสมุด
 
+## เทสธีม A (ลงโค้ดครบ 8 พ.ย. · ยังไม่มีใครเปิดดูของจริง)
+commit: 2a79778 แท็บ · 0efebf3 วันนี้+พื้นกระดาษ · ef1ede2 วิชา · 8864a55 งาน+จด · ถัดไป ตั้งค่า/login/ห้อง+เปลี่ยนชื่อ
+- พื้นกระดาษวาดที่ `body` (app/+html.tsx) · ทุกหน้าโปร่ง + เว้นซ้าย `PAPER_INSET` 26 (Stack contentStyle / Tabs sceneStyle) → ถ้าเห็นพื้นเรียบไม่มีลาย = มี View ทึบบังอยู่ (เช่น theme ของ react-navigation) ต้องไล่หาตัวที่ทึบ
+- หัวแท็บ/หัวหน้า Stack ใช้ `borderStyle: "double"` (เว็บได้ native ไม่ได้)
+- เงาแข็งใช้ `boxShadow` string (RN 0.76+/เว็บ)
+- จอเขียว `Crt` ใน components/ui.tsx: เส้นสแกน = View 1px ทุก 3px (120 เส้น) · เทปไม่มีขอบหยัก (RN ไม่มี mask)
+- สีวิชาเก่าใน DB แมปด้วย `inkColor()` · แก้วิชาแล้วกดบันทึก = เก็บสีชุดใหม่
+- ข้ามไว้: ตรายาง "เลยกำหนด" หน้างาน (TaskRow ไม่รู้ว่าแถวไหนแรก → ใช้ตัวแดงแทน) · D-38 ป้ายนูนหน้ารายละเอียดวิชา · หน้าเกมเปลี่ยนแค่ฟอนต์ (ฉากบอส = ขั้น 7)
+- ปุ่ม ✕/★/☆ ยังเป็นตัวอักษร ไม่ใช่ไอคอน SVG
+
 ## เปลี่ยนชื่อแอปเป็น Lecturelich (ทำตอนลงธีม · เจ้าของสั่ง 7 พ.ย.)
 - แก้: `app.json` name · `public/manifest.webmanifest` name/short_name · `app/+html.tsx` application-name + apple-mobile-web-app-title · `app/login.tsx` · `app/install.tsx` · `components/RoomsCard.tsx` ข้อความชวน · `public/sw.js` หัวแจ้งเตือน · CLAUDE.md หัวไฟล์
 - ไม่แก้: slug/scheme · ชื่องาน cron ใน migration · package.json · repo/โดเมน Vercel/โฟลเดอร์ (เจ้าของทำเองถ้าต้องการ)

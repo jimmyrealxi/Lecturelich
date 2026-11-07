@@ -1,4 +1,4 @@
-// Service worker ของ StudyQuest (เว็บ/PWA เท่านั้น) — แพตเทิร์นจาก LabHub
+// Service worker ของ Lecturelich (เว็บ/PWA เท่านั้น) — แพตเทิร์นจาก LabHub
 //   หน้าเว็บ = เน็ตก่อน (ออฟไลน์ค่อยใช้ของเก่า) / ไฟล์ที่ชื่อมี hash + ไอคอน = cache ก่อน
 //   ไม่ยุ่งกับคำขอไป Supabase (คนละโดเมน) → ข้อมูลสดเสมอ (แคชข้อมูลเป็นหน้าที่ TanStack Query)
 //   รับ Web Push จาก Edge Function send-push (ท้ายไฟล์)
@@ -56,7 +56,7 @@ self.addEventListener("push", (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch { data = { body: event.data && event.data.text() }; }
   event.waitUntil(
-    self.registration.showNotification(data.title || "StudyQuest", {
+    self.registration.showNotification(data.title || "Lecturelich", {
       body: data.body || "",
       icon: "/icons/icon-192.png",
       tag: data.tag || undefined,

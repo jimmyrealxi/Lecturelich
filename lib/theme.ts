@@ -23,14 +23,6 @@ export const color = {
   crtOn: "#9EF0B4", // จอเขียว: ตัวหลัก
   crtDim: "#73C48B", // จอเขียว: ตัวรอง
 
-  // ชื่อจากธีม B ที่หน้าเก่ายังใช้ — ย้ายไปชื่อข้างบนตอนแก้หน้านั้น (ขั้น 3–4) แล้วลบทิ้ง
-  navy: "#2B4A8A",
-  navyDeep: "#2A2118",
-  navyRule: "#8C7B60",
-  onNavy: "#F3EAD2",
-  onNavyMuted: "#CDBE9E",
-  onNavyFaint: "#CDBE9E",
-
   // หน้าเกม "อีกโลก" (หิน ทองหม่น)
   cave: "#0F0D0C",
   gameDeep: "#060504", // ช่องแถบ XP/HP

@@ -62,12 +62,13 @@ export function PushCard() {
 }
 
 const s = StyleSheet.create({
-  warn: { backgroundColor: color.deck, borderColor: color.navy, borderStyle: "dashed", borderWidth: 1.5 },
+  warn: { backgroundColor: color.deck, borderColor: color.paper, borderStyle: "dashed", borderWidth: 1.5 },
   row: { flexDirection: "row", marginTop: space.md },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  // ตรายางน้ำเงิน "เปิดอยู่" (จุดเดียวของหน้าตั้งค่า)
   ok: {
-    fontFamily: font.bodyBold, fontSize: 13, color: color.navy, backgroundColor: color.ink,
-    paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill, overflow: "hidden",
+    fontFamily: font.bodyBold, fontSize: 13, color: color.pen, borderWidth: 2, borderColor: color.pen, borderRadius: 4,
+    paddingHorizontal: 9, paddingVertical: 1, transform: [{ rotate: "-6deg" }], opacity: 0.92,
   },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { Btn, Card, T } from "@/components/ui";
+import { Btn, Card, Crt, T } from "@/components/ui";
 import { signInWithGoogle, useSession } from "@/lib/auth";
 import { useJoinRoom } from "@/lib/queries/rooms";
 import { normRoomCode } from "@/lib/rooms";
@@ -17,10 +17,10 @@ export default function JoinRoom() {
     <View style={s.wrap}>
       <Card style={s.card}>
         <Text style={T.h3}>เข้าห้องร่วม</Text>
-        <Text style={s.code}>{code ?? "โค้ดไม่ถูกต้อง"}</Text>
+        {code ? <Crt style={{ marginVertical: space.md }}><Text style={s.code}>{code}</Text></Crt> : <Text style={s.err}>โค้ดไม่ถูกต้อง</Text>}
         <Text style={T.muted}>ในห้องจะเห็น &quot;งานและกำหนดส่ง&quot; ร่วมกัน · โน้ต คะแนน เช็กชื่อ และสถานะส่งงานยังเป็นของคุณคนเดียว</Text>
         {join.isError && <Text style={s.err}>ไม่พบห้องนี้ หรือเข้าไม่สำเร็จ</Text>}
-        {join.isSuccess && <Text style={[T.body, { marginTop: space.sm }]}>เข้าห้อง &quot;{join.data.name}&quot; แล้ว ✓</Text>}
+        {join.isSuccess && <Text style={[T.body, { marginTop: space.sm }]}>เข้าห้อง &quot;{join.data.name}&quot; แล้ว</Text>}
         <View style={s.row}>
           {session === undefined ? null : !session ? (
             <Btn kind="primary" label="เข้าสู่ระบบด้วย Google" onPress={() => void signInWithGoogle("/room/" + (code ?? ""))} />
@@ -40,9 +40,10 @@ export default function JoinRoom() {
 }
 
 const s = StyleSheet.create({
-  wrap: { flex: 1, backgroundColor: color.ink, justifyContent: "center", padding: space.lg },
+  wrap: { flex: 1, justifyContent: "center", padding: space.lg },
   card: { width: "100%", maxWidth: 420, alignSelf: "center" },
-  code: { fontFamily: font.pixel, fontSize: 24, color: color.navy, marginVertical: space.sm, letterSpacing: 2 },
+  // โค้ดห้องบนจอเขียว (ตัวอังกฤษ/ตัวเลข letter-spacing ได้)
+  code: { fontFamily: font.num, fontSize: 36, lineHeight: 40, color: color.crtOn, letterSpacing: 4, textAlign: "center" },
   row: { flexDirection: "row", gap: space.sm, marginTop: space.md },
   err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });

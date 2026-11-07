@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
-import { Card, T } from "@/components/ui";
+import { Card, head, T } from "@/components/ui";
 import { color, font, minTouch, space } from "@/lib/theme";
 
 const STEPS: { title: string; steps: string[] }[] = [
@@ -26,12 +26,12 @@ const STEPS: { title: string; steps: string[] }[] = [
 /** หน้าแนะนำติดตั้ง PWA (iPhone ต้องติดตั้งก่อนถึงจะรับ push ได้) */
 export default function Install() {
   return (
-    <View style={{ flex: 1, backgroundColor: color.ink }}>
-      <View style={s.top}>
+    <View style={{ flex: 1 }}>
+      <View style={head.top}>
         <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/settings"))} style={s.back} accessibilityRole="button">
-          <Text style={s.backText}>‹ กลับ</Text>
+          <Text style={head.back}>‹ กลับ</Text>
         </Pressable>
-        <Text style={s.title}>ติดตั้ง StudyQuest</Text>
+        <Text style={head.title} accessibilityRole="header">ติดตั้ง Lecturelich</Text>
       </View>
       <ScrollView contentContainerStyle={s.page}>
         {STEPS.map((g) => (
@@ -51,13 +51,11 @@ export default function Install() {
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
-  title: { fontFamily: font.title, fontSize: 20, color: color.go },
-  page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
+  page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   step: { flexDirection: "row", gap: space.md, alignItems: "flex-start", paddingVertical: space.sm },
   divider: { borderTopWidth: 1, borderTopColor: color.rule },
-  num: { width: 28, height: 28, borderRadius: 14, backgroundColor: color.go, alignItems: "center", justifyContent: "center" },
-  numText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
+  // เลขขั้น = วงหมึก ตัว Courier
+  num: { width: 28, height: 28, borderRadius: 14, borderWidth: 2, borderColor: color.paper, alignItems: "center", justifyContent: "center" },
+  numText: { fontFamily: font.typeBold, fontSize: 15, color: color.paper },
 });
