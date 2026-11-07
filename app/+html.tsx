@@ -10,7 +10,8 @@ export default function Root({ children }: PropsWithChildren) {
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        {/* viewport-fit=cover: ให้ env(safe-area-inset-*) มีค่า → แถบแท็บล่างหลบขีด Home ของ iPhone */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#1F4E9C" />
         <meta name="application-name" content="StudyQuest" />
