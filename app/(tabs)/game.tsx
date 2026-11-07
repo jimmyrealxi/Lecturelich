@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { router } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { BossScene } from "@/components/game/BossScene";
 import { Bar, Frame, H } from "@/components/game/Frame";
 import { BossPanel, PassiveTree, ReviewRow } from "@/components/game/Review";
 import { termBoss } from "@/lib/boss";
-import { DEFAULT_LOOK } from "@/lib/papboy";
+import { DEFAULT_LOOK, itemById, RARITY_COLOR } from "@/lib/papboy";
+import { useLoot } from "@/lib/queries/loot";
 import { useCurrentTerm } from "@/lib/queries/core";
 import { useExams, useTopics } from "@/lib/queries/review";
 import { useXp, useXpToday } from "@/lib/queries/xp";
@@ -31,6 +33,7 @@ export default function Game() {
   const [picked, setPicked] = useState<string | null>(null);
   const today = bangkokNow().date;
   const xpToday = useXpToday(today).data;
+  const loot = useLoot().data; // undefined = ยังไม่รัน migration ขั้น 7 / ออฟไลน์ → ซ่อนส่วนกล่อง
 
   const next = upcomingExams(exams, today);
   const boss = next[0];
@@ -52,7 +55,7 @@ export default function Game() {
 
   const finals = exams.filter((e) => e.kind === "final").map((e) => e.date).sort();
   const mids = exams.filter((e) => e.kind === "midterm").map((e) => e.date).sort();
-  const look = DEFAULT_LOOK;
+  const look = loot?.look ?? DEFAULT_LOOK;
   const tb = term.data
     ? termBoss({
         start: term.data.start_date, lastExam: finals.at(-1) ?? term.data.end_date, midterm: mids.at(-1) ?? null, today,
@@ -82,6 +85,19 @@ export default function Game() {
           <Bar value={d.total.into / d.total.need} />
         </View>
       </View>
+
+      {loot && (
+        <View style={s.acts}>
+          <Pressable style={s.btn} onPress={() => router.push("/wardrobe" as never)} accessibilityRole="button">
+            <Text style={s.btnT}>แต่งตัว</Text>
+          </Pressable>
+          <Pressable style={[s.btn, s.gold]} onPress={() => router.push("/lootbox" as never)} accessibilityRole="button"
+            accessibilityLabel={`เปิดกล่อง รอเปิด ${loot.boxes.length} กล่อง`}>
+            <Text style={[s.btnT, { color: color.gold }]}>เปิดกล่อง</Text>
+            {loot.boxes.length > 0 && <Text style={s.badge}>{loot.boxes.length}</Text>}
+          </Pressable>
+        </View>
+      )}
 
       {term.data && (
         <>
@@ -138,6 +154,30 @@ export default function Game() {
           <Text style={[s.body, { flex: 1 }]}>XP วันนี้</Text>
           <Text style={s.lootN}>{xpToday ? `+${xpToday.xp}` : "—"}</Text>
         </View>
+        {!!loot?.today_boxes && (
+          <View style={[s.loot, s.sep]}>
+            <Text style={[s.ic, { color: color.gold, borderColor: color.gold }]}>▣</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={s.body}>กล่องเหล็ก</Text>
+              <Text style={s.small}>ครบทุก 50 XP</Text>
+            </View>
+            <Text style={s.lootN}>×{loot.today_boxes}</Text>
+          </View>
+        )}
+        {loot?.today_items.map((id) => {
+          const it = itemById(id);
+          if (!it) return null;
+          const c = RARITY_COLOR[it.r];
+          return (
+            <View key={id} style={[s.loot, s.sep]}>
+              <Text style={[s.ic, { color: c, borderColor: c }]}>◆</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={[s.body, { color: c }]}>{it.name}</Text>
+                <Text style={s.small}>{it.slot}{loot.look[it.k] === it.v ? " · ใส่อยู่" : ""}</Text>
+              </View>
+            </View>
+          );
+        })}
       </Frame>
 
       <H>วิชา · ซีซั่นเทอมนี้</H>
@@ -199,6 +239,12 @@ const s = StyleSheet.create({
   chip: { minHeight: minTouch, paddingHorizontal: space.md, borderWidth: 1, borderColor: color.seam2, justifyContent: "center" },
   chipOn: { borderColor: color.gold, backgroundColor: color.gamePanel },
   chipT: { fontFamily: font.bodyMedium, fontSize: 13, color: color.bone },
+  sep: { borderTopWidth: 1, borderTopColor: color.seam },
+  acts: { flexDirection: "row", gap: space.sm, paddingTop: space.md, paddingHorizontal: space.lg },
+  btn: { flex: 1, flexDirection: "row", gap: 6, minHeight: minTouch, borderWidth: 1, borderColor: color.seam2, alignItems: "center", justifyContent: "center", paddingHorizontal: 14 },
+  gold: { borderColor: color.gold, backgroundColor: color.gamePanel },
+  btnT: { fontFamily: font.bodyBold, fontSize: 14, color: color.bone },
+  badge: { minWidth: 22, paddingHorizontal: 5, textAlign: "center", backgroundColor: color.gold, color: color.gameDeep, fontFamily: font.pixel, fontSize: 13, lineHeight: 20 },
   loot: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10, paddingHorizontal: 14, minHeight: 52 },
   ic: { width: 26, height: 26, borderWidth: 1, textAlign: "center", lineHeight: 24, fontFamily: font.pixel, fontSize: 14 },
   lootN: { fontFamily: font.pixel, fontSize: 15, color: color.gold },

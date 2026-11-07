@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from "react-native";
 import { color, font, space } from "@/lib/theme";
 
 // ชิ้นส่วนหน้าเกม (b5-game.html): หัวข้อเส้นประดับ + กรอบหิน (ขอบนอก seam2 + ขอบในเข้ม) · วาดเอง ไม่ใช้ภาพของเกมใด
@@ -29,7 +29,25 @@ export function Bar({ value, tint = color.gold, line = color.seam, height = 8 }:
   );
 }
 
+/** แถบบนหน้ากล่อง/ตู้แต่งตัว: ‹ กลับ · ชื่อ · ค่าทางขวา */
+export function TopBar({ back, title, onBack, right }: { back: string; title: string; onBack: () => void; right?: ReactNode }) {
+  return (
+    <View style={s.top}>
+      <Pressable onPress={onBack} style={s.backBtn} accessibilityRole="button" accessibilityLabel={`กลับ${back}`}>
+        <Text style={s.back}>‹ {back}</Text>
+      </Pressable>
+      <Text style={s.topT} accessibilityRole="header">{title}</Text>
+      <View style={s.right}>{right}</View>
+    </View>
+  );
+}
+
 const s = StyleSheet.create({
+  top: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: space.sm, paddingVertical: 4, borderBottomWidth: 1, borderBottomColor: color.seam, backgroundColor: color.cave },
+  backBtn: { minHeight: 44, minWidth: 44, justifyContent: "center", paddingHorizontal: space.sm },
+  back: { fontFamily: font.bodyMedium, fontSize: 14, color: color.bone },
+  topT: { fontFamily: font.bodyBold, fontSize: 17, color: color.gold },
+  right: { minWidth: 88, alignItems: "flex-end", paddingRight: space.sm },
   h: { flexDirection: "row", alignItems: "center", gap: 10, paddingTop: 22, paddingBottom: 10, paddingHorizontal: space.lg },
   line: { flex: 1, height: 1, backgroundColor: color.seam2 },
   dia: { width: 6, height: 6, backgroundColor: color.gold, transform: [{ rotate: "45deg" }] },
