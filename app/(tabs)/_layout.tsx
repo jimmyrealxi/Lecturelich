@@ -1,10 +1,12 @@
 import { Redirect, Tabs } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "@/lib/auth";
 import { LvChip } from "@/components/game/LvChip";
 import { color, font } from "@/lib/theme";
 
 export default function TabsLayout() {
   const session = useSession();
+  const insets = useSafeAreaInsets();
   if (session === undefined) return null; // อ่าน session จากเครื่อง (เร็วมาก)
   if (!session) return <Redirect href="/login" />;
 
@@ -16,7 +18,10 @@ export default function TabsLayout() {
         headerTitleStyle: { fontFamily: font.heading },
         tabBarActiveTintColor: color.blue,
         tabBarInactiveTintColor: color.sub,
-        tabBarLabelStyle: { fontFamily: font.body, fontSize: 12 },
+        // ค่าเดิม 49 ไม่พอสำหรับไอคอน+ป้ายไทย · padding ล่างตาม insets ไลบรารีใส่ให้เอง
+        tabBarStyle: { height: 56 + insets.bottom },
+        // ฟอนต์ไทยสูงกว่าละติน: ห้ามป้ายหด ไม่งั้นโดนบีบเหลือ ~10px แล้วตัวหนังสือขาด
+        tabBarLabelStyle: { fontFamily: font.body, fontSize: 12, lineHeight: 18, flexShrink: 0 },
         sceneStyle: { backgroundColor: color.cream },
       }}
     >

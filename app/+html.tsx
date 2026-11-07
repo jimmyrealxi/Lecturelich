@@ -18,8 +18,7 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="mobile-web-app-capable" content="yes" />
         {/* iOS: "เพิ่มไปยังหน้าจอโฮม" เปิดเต็มจอแบบแอป (จำเป็นสำหรับ Web Push บน iPhone) */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        {/* black-translucent: เว็บกินเต็มจอจริง ขอบบน/ล่างให้ safe area จัด (default ทำให้ความสูงเกินจอ แถบล่างโดนตัด) */}
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="StudyQuest" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <ScrollViewStyleReset />
