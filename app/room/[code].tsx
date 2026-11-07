@@ -17,7 +17,7 @@ export default function JoinRoom() {
     <View style={s.wrap}>
       <Card style={s.card}>
         <Text style={T.h3}>เข้าห้องร่วม</Text>
-        {code ? <Crt style={{ marginVertical: space.md }}><Text style={s.code}>{code}</Text></Crt> : <Text style={s.err}>โค้ดไม่ถูกต้อง</Text>}
+        {code ? <Crt style={{ marginTop: space.xl, marginBottom: space.md }}><Text style={s.code}>{code}</Text></Crt> : <Text style={s.err}>โค้ดไม่ถูกต้อง</Text>}
         <Text style={T.muted}>ในห้องจะเห็น &quot;งานและกำหนดส่ง&quot; ร่วมกัน · โน้ต คะแนน เช็กชื่อ และสถานะส่งงานยังเป็นของคุณคนเดียว</Text>
         {join.isError && <Text style={s.err}>ไม่พบห้องนี้ หรือเข้าไม่สำเร็จ</Text>}
         {join.isSuccess && <Text style={[T.body, { marginTop: space.sm }]}>เข้าห้อง &quot;{join.data.name}&quot; แล้ว</Text>}
