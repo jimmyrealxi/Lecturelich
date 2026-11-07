@@ -3,207 +3,248 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>StudyQuest แอนิเมชันตอบสนอง</title>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Silkscreen&family=VT323&display=swap" rel="stylesheet">
+<title>Lecturelich แอนิเมชันตอบสนอง</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
 <style>
-/* v1 — แอนิเมชันตอบสนอง (แรงบันดาลใจ: จอเครื่องที่แขนในซีรีส์ · ไม่ใช้ตัวการ์ตูน/ชื่อ/รูปทรง/ฟอนต์จากเกม) · สีแบบ B */
-:root{
-  --ink:#E6E9EE;--deck:#F3F5F8;--rule:#C7CDD6;--rule2:#B5BDC9;--paper:#14213A;--muted:#4A5873;--faint:#5C6982;
-  --go:#F2C230;--warn:#A84B0C;--navy:#1E3D74;--navyDeep:#173162;--navyRule:#34558F;--on:#F4F6FA;--onMuted:#C2CDE0;--onFaint:#A9B8D2;
-}
+/* ชุด 7 · แอนิเมชันตอบสนอง (v2 ธีม A) · Pap-Boy v1 วาดเอง (โค้ดจาก papboy-v1.html) + ท่าทาง 5 แบบ
+   แรงบันดาลใจ: "จอที่แขน" ในซีรีส์ — ยืมแค่ความรู้สึก ไม่ใช้ตัวการ์ตูน/ชื่อเครื่อง/รูปทรง/ฟอนต์/ท่าชูนิ้วโป้งจากเกม */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#574735;--faint:#64523F;
+  --pen:#2B4A8A;--red:#A0281D;--go:#F2C94C;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#2A2E2B;font:15px/1.5 "IBM Plex Sans Thai",sans-serif;color:#E4E6E2;padding:28px 16px}
-.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums}
-h1{font:700 22px/1.3 "Chakra Petch",sans-serif;color:#fff;margin-bottom:6px}
-p.note{color:#B9BFBA;font-size:14px;max-width:820px;margin-bottom:24px}
+body{background:#222;font:15px/1.5 Anuphan,sans-serif;color:#E4E2DC;padding:28px 16px}
+h1{font:400 24px/1.3 Chonburi,serif;color:#fff;margin-bottom:6px}
+p.note{color:#BDB8AE;font-size:14px;max-width:860px;margin-bottom:24px}
 .wrap{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
-.cap{font:600 15px "Chakra Petch",sans-serif;color:#fff;margin-bottom:10px}
-.phone{width:360px;max-width:100%;height:760px;border-radius:32px;overflow:hidden;position:relative;border:6px solid #060606;
-  display:flex;flex-direction:column;background:var(--ink);color:var(--paper);box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
-.sb{height:30px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:600 13px "IBM Plex Sans Thai";background:var(--navyDeep);color:var(--on)}
-/* จอที่เปลี่ยนตามแท็บ */
-.screen{flex:1;overflow:hidden;position:relative;transform-origin:50% 50%}
-.screen.on{animation:crt .26s linear}
-@keyframes crt{
-  0%{transform:scale(.55,.006);opacity:.3}
-  35%{transform:scale(1,.006);opacity:1}
-  65%{transform:scale(1,1);opacity:.55}
-  78%{opacity:1}86%{opacity:.8}100%{transform:none;opacity:1}
-}
-.masthead{padding:12px 20px 12px;display:flex;align-items:flex-end;justify-content:space-between;background:var(--navyDeep);border-bottom:3px solid var(--go)}
-.masthead h2{font:700 28px/1.1 "Chakra Petch",sans-serif;color:var(--go)}
-.meta{color:var(--onMuted);font-size:14px;margin-top:4px}
-.lv{text-align:right}
-.lv .px{font:11px Silkscreen,monospace;color:var(--go)}
-/* ตัวนับ XP แบบหมุน: แต่ละหลักเป็นแถบ 0–9 เลื่อนด้วย transform */
-.odo{display:inline-flex;font:400 24px/1 VT323,monospace;color:var(--on);height:24px;overflow:hidden;vertical-align:bottom}
+.cap{font:600 15px Anuphan;color:#fff;margin-bottom:10px}
+.wsw{display:flex;gap:6px;margin-bottom:12px}
+.wsw button{min-height:44px;padding:0 16px;background:transparent;border:1px solid #5A554C;color:#E4E2DC;font:600 14px Anuphan;cursor:pointer}
+.wsw button[aria-pressed=true]{background:var(--go);border-color:var(--go);color:var(--paper)}
+.phone{--w:360px;width:var(--w);max-width:100%;height:780px;border-radius:32px;overflow:hidden;position:relative;border:6px solid #050505;display:flex;flex-direction:column;
+  padding-left:26px;color:var(--paper);box-shadow:0 18px 40px -12px rgba(0,0,0,.6);
+  background:radial-gradient(circle at 6px 6px,#3a3128 4px,transparent 5px) 6px 70px/12px 56px repeat-y,
+    linear-gradient(90deg,transparent 22px,rgba(180,50,40,.45) 22px 24px,transparent 24px) 0 0/100% 100% no-repeat,
+    var(--grain),radial-gradient(140% 100% at 50% 40%,transparent 60%,rgba(110,70,20,.28) 100%),var(--ink)}
+.sb{height:30px;flex:none;display:flex;justify-content:space-between;align-items:center;margin-left:-26px;padding:0 22px 0 36px;font:700 13px "Courier Prime",monospace}
+/* จอติดแบบ CRT ตอนเปลี่ยนแท็บ (transform/opacity เท่านั้น) */
+.view{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:4px 16px 18px 20px;transform-origin:50% 40%}
+.view::-webkit-scrollbar{display:none}
+.view.on{animation:crt .26s linear}
+@keyframes crt{0%{transform:scale(.55,.006);opacity:.3}35%{transform:scale(1,.006);opacity:1}65%{transform:scale(1,1);opacity:.55}78%{opacity:1}86%{opacity:.8}100%{transform:none;opacity:1}}
+.row{display:flex;align-items:center;gap:10px}.grow{flex:1;min-width:0}
+.sub{font-size:13px;color:var(--muted)}
+.top{display:flex;align-items:flex-start;gap:6px;position:relative}
+.title{font:400 30px/1.15 Chonburi,serif;margin-top:6px}
+.date{font:700 15px "Courier Prime",Anuphan,monospace}
+/* Pap-Boy มุมขวาบน · 48×48 พิกเซล ขยาย 2 เท่า */
+.buddy{width:96px;height:96px;image-rendering:pixelated;flex:none;margin:-4px -6px 0 0}
+.bubble{position:absolute;right:86px;top:6px;background:var(--field);border:1.5px solid var(--paper);border-radius:3px;font:600 13px Anuphan;padding:3px 10px;
+  opacity:0;transform:translateY(4px) rotate(-2deg);transition:opacity .15s,transform .15s;pointer-events:none;white-space:nowrap}
+.bubble.show{opacity:1;transform:rotate(-2deg)}
+.dymo{display:inline-block;background:#1A1A1A;color:#F2F2F2;font:700 13px "Courier Prime",Anuphan,monospace;padding:3px 10px;border-radius:2px;text-shadow:0 -1px 0 #000,0 1px 0 rgba(255,255,255,.25)}
+.dymo.en{letter-spacing:2px}
+/* จอเขียวแปะเทป = คาบตอนนี้ (VT323 เฉพาะที่นี่) */
+.screen{background:var(--crt);color:var(--crtOn);position:relative;border-radius:14px/18px;margin:18px 0 0 -6px;padding:14px;
+  box-shadow:inset 0 0 0 2px #0F2717,inset 0 0 28px rgba(0,0,0,.85),0 3px 0 #2B2117}
+.screen::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:repeating-linear-gradient(180deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+.screen .dim{color:var(--crtDim)}.screen .n{font:400 18px VT323,monospace}
+.tape{position:absolute;width:74px;height:22px;background:rgba(214,196,146,.88);box-shadow:0 1px 2px rgba(0,0,0,.2);z-index:3;
+  -webkit-mask:linear-gradient(90deg,transparent 0 2px,#000 2px calc(100% - 2px),transparent calc(100% - 2px)),repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 4px)}
+.btns{display:flex;gap:6px;margin-top:12px;position:relative;z-index:1}
+.btns button{flex:1;min-height:44px;font:600 15px Anuphan;cursor:pointer;background:transparent;color:var(--crtOn);border:1px solid #2F6B42}
+.btns button[aria-pressed=true]{background:var(--crtOn);color:var(--crt)}
+.h{font:400 19px Chonburi,serif;margin:20px 0 2px;display:flex;align-items:baseline;gap:8px}
+.h small{font:400 13px "Courier Prime",Anuphan,monospace;color:var(--muted)}
+.item{display:flex;align-items:center;gap:10px;min-height:56px;padding:4px 0}
+.item+.item{border-top:1px solid var(--rule)}
+.item b{display:block;font-weight:600;line-height:1.35}
+.tick{width:44px;height:44px;flex:none;display:grid;place-items:center;background:none;border:0;cursor:pointer;margin:0 -6px 0 -10px;color:var(--pen);font:700 17px Anuphan}
+.tick i{width:22px;height:22px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px;display:grid;place-items:center;font-style:normal}
+.done b{text-decoration:line-through;color:var(--muted)}
+.act{min-height:44px;padding:0 16px;border:1.5px solid var(--paper);background:transparent;color:var(--paper);font:600 14px Anuphan;border-radius:3px;cursor:pointer}
+.stamp{display:inline-block;font:700 12px Anuphan;padding:1px 7px;border:2px solid currentColor;border-radius:4px;transform:rotate(-6deg);color:var(--red);white-space:nowrap}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.qa button{min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:600 13px Anuphan;cursor:pointer;
+  background:var(--deck);border:1.5px solid var(--paper);color:var(--paper);border-radius:3px;box-shadow:2px 2px 0 var(--paper)}
+.qa button:active{transform:translate(2px,2px);box-shadow:none}
+.qa svg{width:20px;height:20px}
+.xp{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+/* ตัวเลข XP หมุนทีละหลัก (Courier Prime เพราะไม่ได้อยู่บนจอเขียว) */
+.odo{display:inline-flex;height:18px;overflow:hidden;vertical-align:-3px;font:700 17px/18px "Courier Prime",monospace}
 .odo .d{display:flex;flex-direction:column;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
-.odo .d span{height:24px;display:block}
-.now{padding:16px 20px 18px;background:var(--navy);color:var(--on);position:relative}
-.state{display:flex;align-items:center;gap:8px;color:var(--go);font-size:13px;font-weight:600}
-.state::before{content:"";width:8px;height:8px;background:var(--go)}
-.clock{font:400 58px/.9 VT323,monospace;margin:10px 0 4px;color:#fff}
-.clock small{font-size:28px;color:var(--onMuted)}
-.subject{font:600 21px/1.25 "Chakra Petch",sans-serif}
-.where{color:var(--onMuted);font-size:14px}
-/* ตัวละครพิกเซลของเราเอง มุมขวาบนแผง */
-.buddy{position:absolute;right:14px;top:14px;width:96px;height:96px;image-rendering:pixelated}
-.bubble{position:absolute;right:104px;top:20px;background:var(--on);color:var(--paper);font:600 13px "Chakra Petch";padding:6px 12px;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s}
-.bubble.show{opacity:1;transform:none}
-.seg{display:flex;margin-top:14px;border:1px solid var(--navyRule)}
-.seg button{flex:1;min-height:46px;background:transparent;border:0;border-left:1px solid var(--navyRule);color:var(--on);font:600 15px "Chakra Petch";cursor:pointer}
-.seg button:first-child{border-left:0}
-.seg button[aria-pressed=true]{background:var(--go);color:var(--paper)}
-button:focus-visible{outline:2px solid var(--go);outline-offset:-2px}
-.h{display:flex;justify-content:space-between;align-items:baseline;padding:18px 20px 8px}
-.h b{font:600 16px "Chakra Petch"}.h span{color:var(--faint);font-size:13px}
-.entry{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:start;padding:12px 20px;border-top:1px solid var(--rule)}
-.entry:last-of-type{border-bottom:1px solid var(--rule)}
-.t{color:var(--warn);font:19px/1.2 VT323}
-.what{font-weight:500}.sub{color:var(--muted);font-size:13px}
-.act{min-height:44px;padding:0 16px;border:1px solid var(--warn);background:transparent;color:var(--warn);font:600 14px "Chakra Petch";cursor:pointer}
-.tick{width:44px;height:44px;margin:-11px 0 -11px -11px;display:grid;place-items:center;background:none;border:0;cursor:pointer}
-.tick span{width:22px;height:22px;border:2px solid var(--muted)}
-.tick.done span{background:var(--go);border-color:var(--navy)}
-.done .what{text-decoration:line-through;color:var(--muted)}
-.due{text-align:right;font:600 15px/1.2 "Chakra Petch";color:var(--warn)}
-.due small{display:block;font:400 16px VT323;color:var(--faint)}
-.page2{padding:20px;color:var(--muted)}
-.page2 h3{font:700 22px "Chakra Petch";color:var(--paper);margin-bottom:8px}
-.dock{flex:none;display:flex;border-top:1px solid var(--navyRule);background:var(--navy);padding:0 6px 12px}
-.dock button{flex:1;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:0;
-  color:var(--onFaint);font:500 12px "Chakra Petch";position:relative;cursor:pointer}
+.odo .d span{height:18px;display:block}
+.page2{padding-top:10px;color:var(--muted)}
+.dock{flex:none;display:flex;height:62px;margin-left:-26px;background:var(--paper)}
+.dock button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:0;color:#CDBE9E;font:500 12px Anuphan;position:relative;cursor:pointer}
 .dock svg{width:22px;height:22px}
-.dock button[aria-current=page]{color:var(--on)}
-.dock button[aria-current=page]::before{content:"";position:absolute;top:-1px;left:26%;right:26%;height:3px;background:var(--go)}
-.side{max-width:440px}
-.side h2{font:700 17px "Chakra Petch";color:#fff;margin:0 0 6px}
-.side p,.side li{color:#C9CEC9;font-size:14px}
+.dock button[aria-current=page]{color:var(--go)}
+.dock button[aria-current=page]::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;background:var(--go)}
+button:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+.screen button:focus-visible,.dock button:focus-visible{outline-color:var(--go)}
+/* ด้านข้าง */
+.side{max-width:460px}
+.side h2{font:400 18px Chonburi,serif;color:#fff;margin:0 0 6px}
+.side li{color:#CFCAC0;font-size:14px}
 .side ul{padding-left:18px;margin-bottom:18px}
-.sheet{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 22px}
-.sheet figure{background:var(--navy);padding:12px;text-align:center}
-.sheet canvas{width:96px;height:96px;image-rendering:pixelated;display:block}
-.sheet figcaption{font:500 12px "Chakra Petch";color:var(--onMuted);margin-top:4px}
+.sheet{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 18px}
+.sheet figure{background:var(--grain),var(--ink);padding:8px 8px 6px;text-align:center;border-radius:3px;width:116px}
+.sheet canvas{width:96px;height:96px;image-rendering:pixelated;display:block;margin:0 auto}
+.sheet figcaption{font:600 12px/1.3 Anuphan;color:var(--paper);margin-top:2px}
 .ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-.ctrl button{min-height:44px;padding:0 14px;background:var(--go);color:var(--paper);border:0;font:600 14px "Chakra Petch";cursor:pointer}
-@media (prefers-reduced-motion:reduce){.screen.on{animation:none}.odo .d{transition:none}}
+.ctrl button{min-height:44px;padding:0 14px;background:var(--deck);color:var(--paper);border:0;border-radius:3px;font:600 14px Anuphan;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.view.on{animation:none}.odo .d,.bubble{transition:none}}
 </style>
 </head>
 <body>
-<h1>StudyQuest — แอนิเมชันตอบสนอง (mockup v1)</h1>
-<p class="note">
-  แรงบันดาลใจจาก "จอที่แขน" ในซีรีส์: ทำอะไรเสร็จแล้วจอตอบสนอง · <b>ของเราเองทั้งหมด</b> ตัวละครวาดใหม่ (ผมดำ แว่นกลม เสื้อฮู้ดเทา) ไม่ใช้ตัวการ์ตูน ชื่อ รูปทรงเครื่อง ฟอนต์ หรือท่าชูนิ้วจากเกม ·
-  <b>ลองกดในจอได้เลย</b>: เปลี่ยนแท็บ = จอติดแบบ CRT · ติ๊กงาน = ตัวละครดีใจ + XP หมุนขึ้น · กด "จด" = เขียน · เช็กชื่อ = ยกมือ · ทิ้งไว้ = นั่งอ่านหนังสือ
-</p>
+<h1>ชุด 7 · แอนิเมชันตอบสนอง + Pap-Boy (ธีม A)</h1>
+<p class="note">หน้าวันนี้ธีม A (จาก e2 แบบ A) · Pap-Boy v1 ตัวเดียวกับหน้าเกม (หมวกนิรภัยหน้าจอ ฮู้ดส้ม ถุงมือขาว) ยืนมุมขวาบน เปลี่ยนท่าตามสิ่งที่ทำ · <b>กดในจอได้เลย</b>: ติ๊กงาน = ดีใจ + XP หมุนขึ้น · กด "จด" = เขียน · กด "มาเรียน" = ยกมือ · เปิดหน้า/กดตัวละคร = แบห้านิ้ว (ท่าประจำตัว) · ทิ้งไว้ = นั่งอ่านหนังสือ · เปลี่ยนแท็บ = จอติดแบบ CRT</p>
 <div class="wrap">
 <div>
-  <div class="cap">หน้าวันนี้ (กดเล่นได้)</div>
-  <div class="phone">
+  <div class="wsw" role="radiogroup" aria-label="ความกว้างจอ"><button aria-pressed="true" data-w="360">จอ 360</button><button data-w="390">จอ 390</button></div>
+  <div class="phone" id="phone">
     <div class="sb"><span>11:46</span><span>79%</span></div>
-    <div class="screen on" id="screen"></div>
+    <div class="view on" id="view"></div>
     <nav class="dock" aria-label="เมนูหลัก" id="dock"></nav>
   </div>
 </div>
 <div class="side">
-  <h2>1 · จอติดตอนเปลี่ยนแท็บ</h2>
-  <ul><li>เส้นบางกลางจอ → ขยายเต็ม → กะพริบ 2 ที รวม 0.26 วิ</li><li>ใช้แค่ <code>transform</code>/<code>opacity</code> · ตั้งลดการเคลื่อนไหว = ข้าม</li></ul>
-  <h2>2 · Pap-Boy ตัวละครประจำแอป (พิกเซล 16×16)</h2>
+  <h2>1 · Pap-Boy 5 ท่า (พิกเซล 48×48 ท่าละ 2 เฟรม)</h2>
   <div class="sheet" id="sheet"></div>
-  <ul><li>ท่าประจำตัว = แบห้านิ้ว (ไม่ใช่ชูนิ้วโป้ง) ใช้ตอนเปิดแอป และตอนเตือน "พักก่อน" เมื่อทำงานติดกันนาน</li><li>อยู่มุมขวาบนแผงคาบ · ท่าละ 2 เฟรม สลับทุก 0.4 วิ · ท่าพิเศษเล่น ~1.6 วิ แล้วกลับไปอ่านหนังสือ</li><li>ในแอปจริงทำเป็นรูป PNG แผ่นเดียว (sprite sheet) · ชุดเปลี่ยนตามเลเวลได้ภายหลัง (ขั้น 7)</li></ul>
-  <h2>3 · XP หมุนขึ้นทีละหลัก</h2>
-  <ul><li>แทนป้ายเด้ง · แต่ละหลักเลื่อนขึ้นเหมือนมาตรวัด 0.7 วิ</li></ul>
-  <div class="ctrl"><button id="replay">เล่นจอติดอีกครั้ง</button><button id="plus">+20 XP</button></div>
+  <ul>
+    <li>ท่าประจำตัว = <b>แบห้านิ้วโบก</b> (ไม่ใช่ชูนิ้วโป้ง) ใช้ตอนเปิดแอป และเตือน "พักก่อน" เมื่อใช้งานติดกันนาน</li>
+    <li>ท่าพิเศษเล่น ~1.6 วิ แล้วกลับไปนั่งอ่าน · สลับเฟรมทุก 0.4 วิ · ลดการเคลื่อนไหว = ภาพนิ่งเฟรมแรก</li>
+    <li>ชุดที่ใส่ตามหน้าเกมได้ (ใช้ตัววาดเดียวกัน) · ในแอปจริงส่งออกเป็น sprite sheet PNG (ตาม HANDOFF "ลงโค้ดส่วนเกมให้ลื่น")</li>
+    <li>ลูกเล่นในหน้านี้: ป้ายนูน (ชื่อแอป + XP) · จอเขียวแปะเทป (คาบตอนนี้) · ตรายาง (ส่งพรุ่งนี้) อย่างละจุดเดียว</li>
+  </ul>
+  <h2>2 · จอติดตอนเปลี่ยนแท็บ + XP หมุน</h2>
+  <ul><li>เส้นบางกลางจอ → ขยายเต็ม → กะพริบ 2 ที รวม 0.26 วิ · ใช้แค่ transform/opacity</li><li>XP แต่ละหลักเลื่อนขึ้นแบบมาตรวัด 0.7 วิ แทนป้ายเด้ง</li></ul>
+  <div class="ctrl"><button id="replay">เล่นจอติดอีกครั้ง</button><button id="plus">+20 XP</button><button id="wave">ทักทาย</button></div>
 </div>
 </div>
 
 <script>
-// ===== ตัวละครพิกเซล (วาดเอง) =====
-const PAL={H:"#2B2B3A",S:"#F2C9A0",G:"#14213A",M:"#A8473A",W:"#DDE2EA",w:"#AEB6C4",P:"#2E3A55",K:"#14213A",B:"#A84B0C",b:"#F3F5F8",Y:"#F2C230",s:"#C98F62"};
-const head=["     HHHHH","    HHHHHHH","   HHHHHHHHH","   HSSSSSSSH","   SGGSSSGGS","   SGGSSSGGS","   SSSSSSSSS"];
-const legs=["   PPPPPPPPP","   PPP   PPP","   KKK   KKK"];
-const POSES={
-  read:[[...head,"    SSSSSSS","   WWWWWWWWW","  WWBBBBBBBWW","  SWBbbbbbBWS","   WBbbbbbBW","   WBBBBBBBW",...legs],
-        [...head,"    SSSSSSS","   WWWWWWWWW","  WWBBBBBBBWW","  SWBbbbBbBWS","   WBbbbBbBW","   WBBBBBBBW",...legs]],
-  cheer:[["  S  HHHHH  S","  S HHHHHHH S","  WHHHHHHHHHW","  WHSSSSSSSHW","  WSGGSSSGGSW","  WSGGSSSGGSW","   SSSSSSSSS","    SSMMMSS","   WWWWWWWWW","   WWWWWWWWW","   WWWwWwWWW","   WWWWWWWWW",...legs],
-         ["","  S  HHHHH  S","  S HHHHHHH S","  WHHHHHHHHHW","  WHSSSSSSSHW","  WSGGSSSGGSW","  WSGGSSSGGSW","   SSSSSSSSS","    SSMMMSS","   WWWWWWWWW","   WWWWWWWWW","   WWWwWwWWW","   WWWWWWWWW","   PPPPPPPPP","   PP     PP","  KKK     KKK"]],
-  write:[[...head,"    SSSSSSS","   WWWWWWWWW","  WWWWWWWWWSY","  bbbbbbbbbbY","  bwbwbwbbbb","   WWWWWWWWW",...legs],
-         [...head,"    SSSSSSS","   WWWWWWWWW","  WWWWWWWWSY","  bbbbbbbbbYb","  bwbwbwbwbb","   WWWWWWWWW",...legs]],
-  hand:[["            S","     HHHHH  S","    HHHHHHH W","   HHHHHHHHHW","   HSSSSSSSHW","   SGGSSSGGSW","   SGGSSSGGSW","   SSSSSSSSW","    SSSMSSSW","  WWWWWWWWWW","  SWWWWWWWW","   WWWWWWWW",...legs],
-        ["             S","     HHHHH  S","    HHHHHHH W","   HHHHHHHHHW","   HSSSSSSSHW","   SGGSSSGGSW","   SGGSSSGGSW","   SSSSSSSSW","    SSSMSSSW","  WWWWWWWWWW","  SWWWWWWWW","   WWWWWWWW",...legs]],
-  // ท่าประจำตัว: ยกมือแบห้านิ้ว (เหมือนบอก "หยุด/พักก่อน") · นิ้วแยกด้วยสีผิวเข้มสลับ
-  palm:[["          SsSsS","   HHHHH  SsSsS","  HHHHHHH SsSsS"," HHHHHHHHSSSSSS"," HSSSSSSH SSSSS"," SGGSGGSS  WWW"," SGGSGGSS  WW"," SSSSSSSS  WW","  SSMMSS  WW","  WWWWWWWWWW"," WWWWWWWWW"," SWWWWWWW","  WWWWWWW","  PPPPPPP","  PPP PPP","  KKK KKK"],
-        ["","          SsSsS","   HHHHH  SsSsS","  HHHHHHH SsSsS"," HHHHHHHHSSSSSS"," HSSSSSSH SSSSS"," SGGSGGSS  WWW"," SGGSGGSS  WW"," SSSSSSSS  WW","  SSSMSS  WW","  WWWWWWWWWW"," WWWWWWWWW"," SWWWWWWW","  WWWWWWW","  PPPPPPP","  PPP PPP"]],
-};
-function draw(cv,rows){
-  const c=cv.getContext("2d");c.clearRect(0,0,16,16);
-  rows.forEach((r,y)=>[...r].forEach((ch,x)=>{if(PAL[ch]){c.fillStyle=PAL[ch];c.fillRect(x+1,y,1,1)}}));
+// ===== Pap-Boy v1 (โค้ดวาดจาก papboy-v1.html · ชุดต้นเทอม) + ท่าทาง =====
+let c;
+const OUT="#2A2118",HELM="#EEF1F5",SHIRT="#E07A3F",SHADE="#B85A26",GLOVE="#F4F6FA",LEG="#2E3A55",SHOE="#2B2B3A",GLOW="#F2C230";
+function P(x,y,col,a=1){c.globalAlpha=a;c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),1,1)}
+function R(x,y,w,h,col,a=1){c.globalAlpha=a;c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function disc(cx,cy,r,col,a=1){for(let y=-r;y<=r;y++)for(let x=-r;x<=r;x++)if(x*x+y*y<=r*r+r*.6)P(cx+x,cy+y,col,a)}
+function ell(cx,cy,rx,ry,col,a=1){for(let y=-ry;y<=ry;y++)for(let x=-rx;x<=rx;x++)if(x*x/(rx*rx)+y*y/(ry*ry)<=1)P(cx+x,cy+y,col,a)}
+// หลายชิ้นขอบรวมเป็นเงาเดียว: ขอบก่อน แล้วเติมสี (ช่องระหว่างนิ้ว = สีขอบ)
+function shapes(list){
+  for(const s of list)s.k==="d"?disc(s.x,s.y,s.r+1,OUT):R(s.x-1,s.y-1,s.w+2,s.h+2,OUT);
+  for(const s of list)s.k==="d"?disc(s.x,s.y,s.r,s.c):R(s.x,s.y,s.w,s.h,s.c);
 }
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const r=(x,y,w,h,col)=>({k:"r",x,y,w,h,c:col});
+const S=(x,y,w=3,h=3)=>r(x,y,w,h,SHIRT), G=(x,y,w=3,h=3)=>r(x,y,w,h,GLOVE);
 
-// แผ่นท่าทางทั้งหมดด้านข้าง
-const NAMES={palm:"ประจำตัว · แบห้านิ้ว",read:"ว่าง · อ่านหนังสือ",cheer:"ส่งงาน · ดีใจ",write:"จดโน้ต · เขียน",hand:"เช็กชื่อ · ยกมือ"};
-const sheet=document.getElementById("sheet");const sheetCvs=[];
-for(const k in POSES){const f=document.createElement("figure");const cv=document.createElement("canvas");cv.width=cv.height=16;
-  f.append(cv);const cap=document.createElement("figcaption");cap.textContent=NAMES[k];f.append(cap);sheet.append(f);sheetCvs.push([cv,k]);}
+// แขน/ของประกอบแต่ละท่า · t = เฟรม 0/1 · u = เลื่อนแนวตั้งของตัวบน
+const ARMS={
+  // แบห้านิ้วโบก: แขนขวาเฉียงขึ้น ฝ่ามือ 4 นิ้ว + นิ้วโป้ง
+  palm:(t,u)=>{const d=t;return{back:[G(22,45+u,3,2),S(22,39+u,3,6)],
+    front:[S(40,37+u),S(41,35+u),S(42,33+u),S(43,30+u,3,4),G(41+d,24+u,7,6),G(41+d,21+u,1,4),G(43+d,20+u,1,5),G(45+d,20+u,1,5),G(47+d,21+u,1,4),G(39+d,27+u,2,2)]}},
+  // ยกมือเช็กชื่อ: แขนขวาตรงขึ้นข้างหัว
+  hand:(t,u)=>({back:[G(22,45+u,3,2),S(22,39+u,3,6),S(39,36+u),S(41,33+u),S(43,29+u,3,5),S(44,22+u-t,3,8),G(44,18+u-t,3,4)],front:[]}),
+  // ดีใจ: สองแขนชูเป็นรูปตัว V
+  cheer:(t,u)=>({back:[S(22,36+u),S(20,33+u),S(18,30+u),G(16,27+u),S(39,36+u),S(41,33+u),S(43,30+u),G(45,27+u)],front:[]}),
+  // อ่าน: สองมือถือหนังสือหน้าอก
+  read:(t,u)=>({back:[S(22,39+u,3,4),S(39,39+u,3,4)],front:[r(25,40+u,14,7,"#F3EAD2"),G(22,42+u),G(39,42+u)]}),
+  // เขียน: มือซ้ายถือสมุด มือขวาจับดินสอขยับ
+  write:(t,u)=>({back:[S(22,39+u,3,4),S(39,39+u,3,4)],front:[r(23,40+u,10,8,"#FBF5E6"),G(22,44+u),S(37,43+u,3,2),G(33+t*2,43+u)]}),
+};
 
-// ===== ตัวนับ XP =====
-let xp=30;
-function odoHTML(){return `<span class="odo" aria-live="polite" aria-label="${xp} XP">${String(xp).padStart(3,"0").split("").map(()=>`<span class="d">${[...Array(10)].map((_,i)=>`<span>${i}</span>`).join("")}</span>`).join("")}</span>`}
-function odoSet(){document.querySelectorAll(".odo").forEach(o=>{o.setAttribute("aria-label",xp+" XP");[...String(xp).padStart(3,"0")].forEach((n,i)=>o.children[i].style.transform=`translateY(${-24*n}px)`)})}
+function pb(ctx,pose,t){
+  c=ctx;c.clearRect(0,0,48,48);c.save();c.translate(-8,-8);
+  const jump=pose==="cheer"&&t?-2:0, sit=pose==="read"?2:0, u=jump+sit;
+  ell(32,55,pose==="cheer"&&t?9:11,2,"#000",.18);
+  if(pose==="read")shapes([r(21,52,22,3,"#8A5A2B"),r(23,50,18,2,"#2B4A8A")]); // นั่งบนกองหนังสือ
+  const arms=ARMS[pose](t,u);
+  shapes([
+    ...(pose==="read"?[r(27,48,3,3,LEG),r(34,48,3,3,LEG),r(26,50,4,2,SHOE),r(34,50,4,2,SHOE)]
+      :[r(27,47+jump,3,6,LEG),r(34,47+jump,3,6,LEG),r(26,52+jump,4,2,SHOE),r(34,52+jump,4,2,SHOE)]),
+    ...arms.back, r(25,37+u,14,12,SHIRT), {k:"d",x:32,y:26+u,r:11,c:HELM}]);
+  // ฮู้ด + หมวกนิรภัย
+  R(28,44+u,8,3,SHADE);P(30,38+u,"#F3F5F8");P(30,39+u,"#F3F5F8");P(33,38+u,"#F3F5F8");P(33,39+u,"#F3F5F8");
+  for(let x=24;x<=40;x++)P(x,35+u,"#C9D0DB");P(25,19+u,"#FFF");P(26,18+u,"#FFF");P(27,18+u,"#FFF");
+  // จอหน้า: ตา/ปากเรืองแสงเปลี่ยนตามอารมณ์
+  R(24,21+u,17,11,"#0E1A2E");for(let y=22;y<31;y+=2)R(25,y+u,15,1,GLOW,.06);
+  const down=pose==="read"||pose==="write", happy=pose==="cheer"||pose==="palm";
+  if(happy)[[0,1],[1,0],[2,1]].forEach(([dx,dy])=>{P(26+dx,24+dy+u,GLOW);P(35+dx,24+dy+u,GLOW)});
+  else if(down){R(27,26+u,2,2,GLOW);R(36,26+u,2,2,GLOW)}
+  else{R(27,24+u,2,3,GLOW);R(36,24+u,2,3,GLOW);P(27,24+u,"#FFF",.7);P(36,24+u,"#FFF",.7)}
+  if(pose==="cheer"||pose==="hand")R(30,28+u,4,2,GLOW);
+  else if(down)R(30,29+u,4,1,GLOW);
+  else{P(29,28+u,GLOW);R(30,29+u,4,1,GLOW);P(34,28+u,GLOW)}
+  shapes(arms.front);
+  // รายละเอียดของประกอบ
+  if(pose==="read"){R(31,40+u,2,7,"#8C7B60");for(let y=42;y<46;y+=2){R(26,y+u,4,1,"#B9A985");R(34,y+u,4-(t&&y===44?2:0),1,"#B9A985")}}
+  if(pose==="write"){for(let y=42;y<47;y+=2)R(24,y+u,8,1,"#8FA6CC");const px=35+t*2;for(let i=0;i<5;i++)P(px+i,43+u-i,i<4?"#F2C230":"#FF8FC8");P(px-1,44+u,OUT)}
+  if(pose==="cheer"&&t)[[14,22],[50,22],[12,30],[52,30]].forEach(([x,y])=>{P(x,y,"#F2C230");P(x-1,y,"#F2C230",.6);P(x+1,y,"#F2C230",.6);P(x,y-1,"#F2C230",.6);P(x,y+1,"#F2C230",.6)});
+  c.restore();c.globalAlpha=1;
+}
+
+// ===== แผ่นท่าทางด้านข้าง =====
+const NAMES={palm:"ประจำตัว · แบห้านิ้ว",read:"ว่าง · นั่งอ่าน",cheer:"ติ๊กงาน · ดีใจ",write:"จดโน้ต · เขียน",hand:"เช็กชื่อ · ยกมือ"};
+const sheetCvs=Object.keys(NAMES).map(k=>{const f=document.createElement("figure"),cv=document.createElement("canvas");cv.width=cv.height=48;
+  cv.setAttribute("role","img");cv.setAttribute("aria-label","Pap-Boy ท่า"+NAMES[k]);const cap=document.createElement("figcaption");cap.textContent=NAMES[k];
+  f.append(cv,cap);document.getElementById("sheet").append(f);return[cv,k]});
+
+// ===== XP หมุน =====
+let xp=20;
+const odoHTML=()=>`<span class="odo" aria-live="polite" aria-label="${xp} XP">${"000".split("").map(()=>`<span class="d">${[...Array(10)].map((_,i)=>`<span>${i}</span>`).join("")}</span>`).join("")}</span>`;
+function odoSet(){document.querySelectorAll(".odo").forEach(o=>{o.setAttribute("aria-label",xp+" XP");[...String(xp).padStart(3,"0")].forEach((n,i)=>o.children[i].style.transform=`translateY(${-18*n}px)`)})}
 function addXp(n){xp+=n;odoSet()}
 
 // ===== หน้าในจอ =====
-const ICON={
- today:'<rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
- subjects:'<path d="M4 5h6l2 2v13l-2-2H4zM20 5h-6l-2 2v13l2-2h6z"/>',
- tasks:'<rect x="4" y="4" width="16" height="16"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
- game:'<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v8M9 11h6"/>',
+const ICON={today:'<rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',subjects:'<path d="M4 5h6l2 2v13l-2-2H4zM20 5h-6l-2 2v13l2-2h6z"/>',
+ tasks:'<rect x="4" y="4" width="16" height="16"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',game:'<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v8M9 11h6"/>',
  settings:'<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><rect x="14" y="5" width="4" height="4"/><rect x="8" y="15" width="4" height="4"/>'};
+const svg=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square">${p}</svg>`;
 const TABS=[["today","วันนี้"],["subjects","วิชา"],["tasks","งาน"],["game","เกม"],["settings","ตั้งค่า"]];
 let tab="today";
 const today=()=>`
- <header class="masthead"><div><h2>วันนี้</h2><div class="meta">เสาร์ 7 พ.ย. · เทอม 2/2569</div></div>
-  <div class="lv"><span class="px">LV 1</span><div>${odoHTML()} <span style="font:11px Silkscreen;color:var(--go)">XP</span></div></div></header>
- <section class="now">
-  <canvas class="buddy" id="buddy" width="16" height="16" aria-label="Pap-Boy"></canvas>
-  <div class="bubble" id="bubble"></div>
-  <div class="state">กำลังเรียน</div>
-  <div class="clock vt">11:00<small>–13:00</small></div>
-  <div class="subject">คณิตศาสตร์ 2</div><div class="where">SCB0123 · ห้อง SC9-604</div>
-  <div class="seg" role="group" aria-label="เช็กชื่อ"><button aria-pressed="false" data-act="hand">มาเรียน</button><button aria-pressed="false">ขาด</button></div>
- </section>
- <div class="h"><b>ค้างอยู่</b><span>3 เรื่อง</span></div>
- <div class="entry"><span class="t">09:00</span><div><div class="what">ฟิสิกส์จบแล้ว ยังไม่ได้จด</div><div class="sub">จดวันนี้ +10 XP</div></div><button class="act" data-act="write">จด</button></div>
- <div class="entry"><button class="tick" data-act="cheer" aria-label="ส่งแล้ว: แบบฝึกหัดบทที่ 3"><span></span></button><div><div class="what">แบบฝึกหัดบทที่ 3</div><div class="sub">คณิตศาสตร์ 2</div></div><div class="due">พรุ่งนี้<small>23:59</small></div></div>
- <div class="entry"><button class="tick" data-act="cheer" aria-label="ส่งแล้ว: รายงานแล็บ 2"><span></span></button><div><div class="what">รายงานแล็บ 2</div><div class="sub">ฟิสิกส์</div></div><div class="due" style="color:var(--paper)">อ. 11 พ.ย.<small>อีก 4 วัน</small></div></div>`;
-const other=(name)=>`<header class="masthead"><div><h2>${name}</h2><div class="meta">ตัวอย่างหน้าอื่น</div></div></header><div class="page2"><h3>${name}</h3>กดแท็บไปมาเพื่อดูเอฟเฟกต์จอติด</div>`;
+ <div class="top"><div class="grow"><span class="dymo en">LECTURELICH</span><div class="title">วันเสาร์</div><div class="date">07 พ.ย. 2569 · เทอม 2</div></div>
+  <canvas class="buddy" id="buddy" width="48" height="48" role="img" aria-label="Pap-Boy (กดเพื่อทักทาย)" data-act="palm" style="cursor:pointer"></canvas>
+  <div class="bubble" id="bubble" aria-live="polite"></div></div>
+ <div class="screen"><span class="tape" style="top:-9px;left:-16px;transform:rotate(-28deg)"></span><span class="tape" style="top:-9px;right:-16px;transform:rotate(26deg)"></span>
+  <div class="row"><div class="grow"><span class="dim sub" style="color:var(--crtDim)">&gt; คาบตอนนี้</span><b style="display:block;font-size:18px">คณิตศาสตร์ 2</b><span class="sub dim" style="color:var(--crtDim)"><span class="n">11:00–13:00</span> · SC9-604</span></div>
+   <div style="text-align:right;color:var(--crtDim)" class="sub">เหลือ<br><span style="font:400 26px VT323;color:#B8FFC9">1:14</span></div></div>
+  <div class="btns" role="group" aria-label="เช็กชื่อ"><button aria-pressed="false" data-act="hand">มาเรียน</button><button aria-pressed="false" data-act="none">ขาด</button><button aria-pressed="false" data-act="none">งดสอน</button></div></div>
+ <div class="sub" style="margin-top:10px;font-family:'Courier Prime',Anuphan">ถัดไป 15:00 ฟิสิกส์ทั่วไป · SC2-101</div>
+ <div class="h">ต้องทำ <small>3 เรื่อง</small></div>
+ <div class="item"><div class="grow"><b>จดหลังคาบ ฟิสิกส์</b><span class="sub">จดวันนี้ +10 XP</span></div><button class="act" data-act="write">จด</button></div>
+ <div class="item"><button class="tick" data-act="cheer" aria-label="ส่งแล้ว: แบบฝึกหัดบทที่ 3"><i></i></button><div class="grow"><b>แบบฝึกหัดบทที่ 3</b><span class="sub">คณิตศาสตร์ 2</span></div><span class="stamp">พรุ่งนี้!</span></div>
+ <div class="item"><button class="tick" data-act="cheer" aria-label="ส่งแล้ว: รายงานแล็บ 2"><i></i></button><div class="grow"><b>รายงานแล็บ 2</b><span class="sub">ฟิสิกส์ · อีก 4 วัน</span></div></div>
+ <div class="qa"><button data-act="write">${svg('<path d="M5 3h10l4 4v14H5z"/><path d="M8 11h8M8 15h8M8 7h5"/>')}จด</button><button data-act="none">${svg('<path d="M12 5v14M5 12h14"/>')}เพิ่มงาน</button><button data-act="none">${svg(ICON.today)}ตาราง</button></div>
+ <div class="xp"><span class="dymo">ได้วันนี้ +${odoHTML()} XP</span><span class="sub">เข้าเรียน 92%</span></div>`;
+const other=n=>`<div class="title">${n}</div><div class="page2">ตัวอย่างหน้าอื่น · กดแท็บไปมาเพื่อดูเอฟเฟกต์จอติด</div>`;
 
-const screen=document.getElementById("screen"),dock=document.getElementById("dock");
-function renderDock(){dock.innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" ${k===tab?'aria-current="page"':""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square">${ICON[k]}</svg>${l}</button>`).join("")}
-function powerOn(){screen.classList.remove("on");void screen.offsetWidth;screen.classList.add("on")}
-function renderScreen(){screen.innerHTML=tab==="today"?today():other(TABS.find(t=>t[0]===tab)[1]);odoSet();powerOn()}
-dock.addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.dataset.tab===tab)return;tab=b.dataset.tab;renderDock();renderScreen()});
+const view=document.getElementById("view"),dock=document.getElementById("dock");
+function renderDock(){dock.innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" ${k===tab?'aria-current="page"':""}>${svg(ICON[k])}${l}</button>`).join("")}
+function powerOn(){view.classList.remove("on");void view.offsetWidth;view.classList.add("on")}
+function renderView(){view.innerHTML=tab==="today"?today():other(TABS.find(t=>t[0]===tab)[1]);odoSet();powerOn();draw()}
+dock.addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.dataset.tab===tab)return;tab=b.dataset.tab;renderDock();renderView()});
 
 // ===== สถานะตัวละคร =====
-let pose="palm",frame=0,until=Date.now()+2400; // เปิดหน้ามา = ทักด้วยท่าประจำตัว
-const SAY={palm:"พักก่อน!",cheer:"ส่งแล้ว!",write:"จดๆ",hand:"มาแล้ว!"};
-function act(p){pose=p;until=Date.now()+1600;const b=document.getElementById("bubble");if(b){b.textContent=SAY[p];b.classList.add("show");setTimeout(()=>b.classList.remove("show"),1300)}}
-setInterval(()=>{
-  if(pose!=="read"&&Date.now()>until)pose="read";
-  frame=reduce?0:1-frame;
-  const cv=document.getElementById("buddy");if(cv)draw(cv,POSES[pose][frame]);
-  sheetCvs.forEach(([c,k])=>draw(c,POSES[k][frame]));
-},400);
-screen.addEventListener("click",e=>{
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let pose="palm",t=0,until=Date.now()+2400; // เปิดหน้ามา = ทักด้วยท่าประจำตัว
+const SAY={palm:"หวัดดี! พักบ้างนะ",cheer:"ส่งแล้ว!",write:"จด ๆ",hand:"มาแล้วครับ!"};
+function act(p){pose=p;until=Date.now()+1600;draw();const b=document.getElementById("bubble");if(!b)return;b.textContent=SAY[p];b.classList.add("show");clearTimeout(act.h);act.h=setTimeout(()=>b.classList.remove("show"),1300)}
+function draw(){const cv=document.getElementById("buddy");if(cv)pb(cv.getContext("2d"),pose,t);sheetCvs.forEach(([cv,k])=>pb(cv.getContext("2d"),k,t))}
+setInterval(()=>{if(pose!=="read"&&Date.now()>until)pose="read";t=reduce?0:1-t;draw()},400);
+view.addEventListener("click",e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
-  if(b.classList.contains("tick")){if(b.classList.contains("done"))return;b.classList.add("done");b.parentElement.classList.add("done");addXp(20)}
-  if(b.closest(".seg")){b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));addXp(5)}
+  if(b.classList.contains("tick")){if(b.querySelector("i").textContent)return;b.querySelector("i").textContent="✓";b.parentElement.classList.add("done");addXp(20)}
+  if(b.closest(".btns")){if(b.getAttribute("aria-pressed")==="true")return;b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));if(a==="hand")addXp(5)}
   if(a==="write")addXp(10);
-  act(a);
+  if(a!=="none")act(a);
 });
 document.getElementById("replay").onclick=powerOn;
 document.getElementById("plus").onclick=()=>{if(tab==="today"){addXp(20);act("cheer")}};
-renderDock();renderScreen();
+document.getElementById("wave").onclick=()=>{if(tab==="today")act("palm")};
+document.querySelector(".wsw").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;document.getElementById("phone").style.setProperty("--w",b.dataset.w+"px");
+  b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+renderDock();renderView();
 </script>
 </body>
 </html>

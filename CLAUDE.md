@@ -30,7 +30,7 @@
 
 ## สถานะล่าสุด (7 พ.ย. 2569)
 - **ธีม "สมุดเทอร์มินัล"** (`docs/HANDOFF_THEME.md`): ข้อ 1–4 ลงแล้ว + เปลี่ยนสีเป็น **แบบ B น้ำเงิน-เหลือง-เทาอ่อน** (`docs/mockups/retro-theme-blue.html`, ตาราง token ใน `docs/DESIGN.md`) · ต่อข้อ 5 หน้าเกม (ยังโลกหินทอง), ข้อ 6 หน้าอื่น · ไอคอนแท็บเป็น `<svg>` เว็บ · ติ๊กงาน+toast ยกเลิกยังไม่ได้เทส (ไม่มีงานในบัญชี)
-- **เปลี่ยนธีมใหม่ (7 พ.ย.)**: แบบ B/ผสม 1 ซ้ำเว็บดัง "1 ใน 65 ล้าน" → เจ้าของเลือก **A "สมุดเก่า + จอเขียวแปะเทป"** (`docs/mockups/e2-terminal-notebook.html`) · ฟอนต์ Anuphan/Chonburi/Courier Prime/VT323(ตัวเลขบนจอ) — **ไม่ใช้ Plex Thai/Chakra Petch แล้ว** · ชุด 6 เปิดกล่องผ่าน · ต่อไป: แปลง `m1-*` (b1–b4) เป็นธีม A → ชุด 7 Pap-Boy → ถามลงโค้ด (ลงทีเดียว) · ประวัติใน `docs/HANDOFF_THEME.md`
+- **เปลี่ยนธีมใหม่ (7 พ.ย.)**: แบบ B/ผสม 1 ซ้ำเว็บดัง "1 ใน 65 ล้าน" → เจ้าของเลือก **A "สมุดเก่า + จอเขียวแปะเทป"** (`docs/mockups/e2-terminal-notebook.html`) · ฟอนต์ Anuphan/Chonburi/Courier Prime/VT323(ตัวเลขบนจอ) — **ไม่ใช้ Plex Thai/Chakra Petch แล้ว** · ชุด 6 เปิดกล่องผ่าน · ทำแล้ว: `a-subjects/a-tasks/a-note/a-settings.html` (b1–b4 ธีม A) + ชุด 7 `inspire-anim.html` Pap-Boy 5 ท่า (รอเจ้าของดู "ไม่สวยค่อยแก้") · ต่อไป: ถามเวลาลงโค้ด (ลงทีเดียว รวมเปลี่ยนชื่อ Lecturelich) · ประวัติใน `docs/HANDOFF_THEME.md`
 - **ชื่อแอปใหม่ Lecturelich** (เปลี่ยนตอนลงธีม) · หน้าเกม = โลกมืดแนว PoE + ฉากสู้บอสประจำเทอม · ระบบ Pap-Boy/ของดรอป/class-ascendancy ใน `docs/LOOT_PLAN.md` · **ส่วนใช้งานมาก่อน**
 - branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → … → `feat/stage6-rooms` (push แล้ว = Vercel production) · ยังไม่มี PR (ขั้น 1–5 แก้ไขต่อบน stage6 → คุยเรื่องเปิด PR ก่อน)
 - iPhone PWA ล็อกอิน+แถบแท็บใช้ได้ (Supabase Site URL = โดเมน Vercel) · ห้าม `viewport-fit=cover`
