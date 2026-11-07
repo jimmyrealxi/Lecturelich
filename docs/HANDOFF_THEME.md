@@ -13,6 +13,16 @@
 5. **หน้าเกม** `app/(tabs)/game.tsx`: ฉากบอส + สไปรต์ (ตอนนี้ CSS box-shadow ใน mockup → ในแอปทำเป็น View กริด หรือ PNG pixelated) · รายชื่อหัวข้อใต้ passive tree (สี rarity + วันทวนรอบถัดไป) · ของที่เก็บได้วันนี้
 6. หน้าอื่น (วิชา/งาน/ตั้งค่า/login/note/room) เปลี่ยนตาม token — ทำ mockup เพิ่มก่อนถ้าโครงเปลี่ยน
 
+## ลงโค้ดส่วนเกมให้ลื่น (จด 7 พ.ย. · ปรับตอนเทสเครื่องจริง)
+- canvas 2D พอ (ฉาก 128×72 ขยายด้วย CSS pixelated) ยังไม่ต้อง PixiJS/WebGL
+- ของนิ่ง (ผนัง พื้น Pap-Boy ตามชุด) วาดครั้งเดียวลง canvas ซ่อน · ต่อเฟรม drawImage + วาดแค่กระสุน/ประกาย/เลข · ท่าทางใช้ sprite sheet PNG — **ห้ามวาดทีละพิกเซลทุกเฟรมแบบ mockup**
+- requestAnimationFrame + ลอจิกจังหวะคงที่ ~12 ครั้ง/วิ แยกจากการวาด · ต้องดูดีที่ 30 fps (iPhone โหมดประหยัดแบต)
+- สถานะต่อเฟรมเก็บใน useRef วาด canvas ตรง ๆ · ห้าม useState ต่อเฟรม · React ใช้กับค่าที่เปลี่ยนนาน ๆ (เลือดบอส LV ชุด)
+- พ้นจอ (IntersectionObserver) / ออกแท็บ → หยุดลูป · prefers-reduced-motion → ภาพนิ่ง
+- ประกายมีเพดาน (~150) ใช้ object pool
+- UI รอบ ๆ ขยับด้วย transform/opacity เท่านั้น · แถบเลือดใช้ scaleX
+- วัด: DevTools Performance + CPU 4× slowdown แล้วลอง iPhone PWA จริง
+
 ## ข้อควรระวัง (เจอมาแล้ว)
 - iPhone PWA: **ห้ามใส่ `viewport-fit=cover`** และ status-bar-style ต้อง `default` (ไม่งั้นหัวจาง/ช่องว่างล่าง) · แก้ +html แล้วต้องลบไอคอนแล้วเพิ่มใหม่ถึงเห็นผล
 - Metro dev server: เพิ่ม/ลบไฟล์แล้ว SSR ขึ้น "Requiring unknown module" → หยุด process ที่พอร์ต 8081 แล้วรันใหม่
