@@ -92,16 +92,12 @@ export default function Today() {
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={[s.page, { paddingTop: insets.top + 8 }]}>
         <View style={s.mast}>
-          <View style={s.mastTop}>
-            <Text style={s.h2} accessibilityRole="header">{weekdayName(now.date)}</Text>
-            <LvChip />
-          </View>
-          <View style={s.dateRow}>
-            <Text style={s.date}>{typedDate(now.date)}</Text>
-            {/* แยกเป็นชิ้น ให้ตัดบรรทัดระหว่างชิ้น ไม่ใช่กลาง "เทอม 2/2569" (replace เป็นช่องว่างไม่ตัดบรรทัด NBSP) */}
-            {termLabel ? <Text style={[s.date, s.dateTerm]}>{`· ${termLabel.replace(/ /g, " ")}`}</Text> : null}
+          <View style={{ flexShrink: 1 }}>
             <Text style={s.dymo}>LECTURELICH</Text>
+            <Text style={s.h2} accessibilityRole="header">{weekdayName(now.date)}</Text>
+            <Text style={s.date}>{typedDate(now.date)}{termLabel ? <Text style={s.dateTerm}>{` · ${termLabel}`}</Text> : null}</Text>
           </View>
+          <LvChip />
         </View>
 
         {loading ? (
@@ -300,20 +296,16 @@ function Screen({ slot, live, minutes, subject, status, onCheck }: {
 const s = StyleSheet.create({
   page: { paddingHorizontal: 16, paddingBottom: 96, width: "100%", maxWidth: 560, alignSelf: "center" },
   mast: {
-    paddingBottom: 12,
+    flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: space.md, paddingBottom: 12,
     borderBottomWidth: 3, borderBottomColor: "rgba(42,33,24,0.75)", borderStyle: "double" as "solid",
   },
   // ป้ายพิมพ์นูน (จุดเดียวต่อจอ) · letter-spacing ได้เพราะเป็นตัวอังกฤษ
   dymo: {
-    backgroundColor: "#1A1A1A", color: "#F2F2F2", fontFamily: font.typeBold, fontSize: 12, lineHeight: 14,
+    alignSelf: "flex-start", backgroundColor: "#1A1A1A", color: "#F2F2F2", fontFamily: font.typeBold, fontSize: 12, lineHeight: 14,
     letterSpacing: 2, paddingHorizontal: 9, paddingTop: 5, paddingBottom: 4, borderRadius: 2,
     textShadowColor: "#000", textShadowOffset: { width: 0, height: -1 }, textShadowRadius: 0,
   },
-  h2: { fontFamily: font.title, fontSize: 32, lineHeight: 44, color: color.paper },
-  // LvChip อยู่แถวเดียวกับหัว (มุมขวาบนเว้นให้ Pap-Boy) → บรรทัดวันที่ได้เต็มกว้าง
-  mastTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.md },
-  // ป้ายนูนอยู่ข้างวันที่ (เจ้าของเลือก 8 พ.ย. แทนวางเหนือหัว) · จอแคบขึ้นบรรทัดใหม่เอง
-  dateRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", columnGap: 8, rowGap: 4 },
+  h2: { fontFamily: font.title, fontSize: 32, lineHeight: 44, color: color.paper, marginTop: 6 },
   date: { fontFamily: font.typeBold, fontSize: 15, color: color.paper },
   dateTerm: { fontFamily: font.bodyMedium },
 
