@@ -1,7 +1,7 @@
 import { Platform, View } from "react-native";
 import { color } from "@/lib/theme";
 
-// ไอคอนเส้นเหลี่ยมของแถบแท็บ (mockup retro-theme.html)
+// ไอคอนเส้นเหลี่ยมของแถบแท็บ (ธีม A: แผงหมึกเข้ม · ไอคอนสีเดียวกับป้าย)
 // shortcut: วาดด้วย <svg> ของเบราว์เซอร์ (ไม่มี react-native-svg) → แอป native ไม่มีไอคอน เหลือแต่ป้าย; ถ้าทำแอป native ค่อยติดตั้ง react-native-svg
 const PATHS = {
   today: <><rect x="3.5" y="5" width="17" height="15.5" /><path d="M3.5 10h17M8 3v4M16 3v4" /></>,
@@ -14,7 +14,7 @@ const PATHS = {
 export function TabIcon({ name, focused, accent = color.go }: {
   name: keyof typeof PATHS; focused: boolean; accent?: string;
 }) {
-  const tint = focused ? color.onNavy : color.onNavyFaint;
+  const tint = focused ? accent : color.onMuted;
   return (
     <View style={{ width: 22, height: 22 }}>
       {/* ขีดสีเหนือแท็บที่เลือก: ชิดขอบบนของแถบ (ปุ่มแท็บเว้นบน 5 + ไอคอนอยู่กลางกล่องสูง 28) */}

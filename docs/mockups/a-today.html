@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich หน้าวันนี้ ธีม A</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* หน้าวันนี้ ธีม A "สมุดเก่า + จอเขียวแปะเทป" — เกลาจาก e2-terminal-notebook.html ฝั่ง A ด้วย impeccable polish (7 พ.ย. 2569)
+   ยึด docs/DESIGN.md: token ชุดเดียว · ลูกเล่นจุดละครั้ง (จอเขียว 1 · ตรายาง 1 · ป้ายนูน 1 · เทป 1 ชุด) · VT323 เฉพาะบนจอ · ไม่ letter-spacing ไทย
+   Pap-Boy ยังไม่ใส่ (เจ้าของออกแบบใหม่) → มุมขวาบนเว้นที่ไว้ */
+:root{
+  --ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;
+  --rule:rgba(60,90,140,.30);--rule2:#8C7B60;
+  --paper:#2A2118;--muted:#574735;--faint:#64523F;
+  --pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;
+  --on:#F3EAD2;--onMuted:#CDBE9E;--go:#F2C94C;
+  --crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B;--crtLine:#2F6B42;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--pen);color:var(--on)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+
+/* ส่วนควบคุมนอกจอ (ไม่ใช่ของแอป) */
+.top{max-width:760px;margin:0 auto 18px}
+.top h1{font:400 22px/1.3 Chonburi,serif;color:#F3EAD2}
+.top p{color:#C9BFAA;font-size:14px;margin-top:4px;max-width:62ch}
+.ctl{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;align-items:center}
+.ctl span{font-size:13px;color:#C9BFAA}
+.ctl .grp{display:flex;border:1.5px solid #8C7B60;border-radius:3px;overflow:hidden}
+.ctl button{min-height:36px;padding:0 12px;font-size:13px;color:#E9E2D2}
+.ctl button+button{border-left:1.5px solid #8C7B60}
+.ctl button[aria-pressed=true]{background:#F3EAD2;color:#2A2118;font-weight:600}
+.ctl :focus-visible{outline-color:#F2C94C}
+
+/* โทรศัพท์ */
+.stage{display:flex;justify-content:center}
+.phone{width:var(--w,360px);max-width:100%;height:800px;border:6px solid #050505;border-radius:30px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+
+/* กระดาษ: ลายเยื่อ + ขอบเก่า + รูเข้าเล่ม + เส้นกั้นแดง = พื้นหลังชิ้นเดียว */
+.page{flex:1;min-height:0;position:relative;color:var(--paper);
+  background:
+    radial-gradient(circle at 7px 7px,#3a3128 4.5px,transparent 5.5px) 6px 72px/14px 60px repeat-y,
+    linear-gradient(90deg,transparent 24px,rgba(160,40,29,.42) 24px 26px,transparent 26px) 0 0/100% 100% no-repeat,
+    var(--grain),
+    radial-gradient(140% 100% at 50% 40%,transparent 60%,rgba(110,70,20,.26) 100%),
+    var(--ink)}
+.sb{height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 20px 0 38px;font:700 13px "Courier Prime",monospace;font-variant-numeric:tabular-nums}
+.scroll{position:absolute;inset:34px 0 0 0;overflow-y:auto;scrollbar-width:none;padding:2px 16px 28px 42px}
+.scroll::-webkit-scrollbar{display:none}
+
+/* หัว: ป้ายนูน (ครั้งเดียว) · วันชื่อ Chonburi · วันที่พิมพ์ดีด · ขวาเว้นที่ Pap-Boy */
+.mast{display:grid;grid-template-columns:1fr 84px;gap:8px;align-items:end;padding-bottom:12px;border-bottom:3px double rgba(42,33,24,.75)}
+.dymo{display:inline-block;background:#1A1A1A;color:#F2F2F2;font:700 12px/1 "Courier Prime",monospace;letter-spacing:2px;padding:5px 9px 4px;border-radius:2px;
+  text-shadow:0 -1px 0 #000,0 1px 0 rgba(255,255,255,.22);box-shadow:0 1px 1px rgba(0,0,0,.35)}
+.mast h2{font:400 32px/1.15 Chonburi,serif;margin-top:10px}
+.mast .date{font:700 15px/1.4 "Courier Prime",monospace;margin-top:2px}
+.mast .date span{font-family:Anuphan;font-weight:500}
+.papboy{height:84px} /* เว้นที่ไว้ให้ตัวละคร ยังไม่ใส่ */
+
+/* จอเขียว (ครั้งเดียวต่อจอ) */
+.scr{position:relative;margin:26px -4px 0 -6px;padding:14px 14px 14px;background:var(--crt);color:var(--crtOn);border-radius:14px/18px;
+  box-shadow:inset 0 0 0 2px #0F2717,inset 0 0 28px rgba(0,0,0,.85),0 3px 0 #2B2117}
+.scr::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+.scr > *{position:relative;z-index:1}
+.tape{position:absolute;z-index:3;width:72px;height:22px;background:rgba(232,221,186,.8);box-shadow:0 1px 2px rgba(0,0,0,.18);
+  -webkit-mask:linear-gradient(90deg,transparent 0 2px,#000 2px calc(100% - 2px),transparent calc(100% - 2px)),repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 4px);
+  mask:linear-gradient(90deg,transparent 0 2px,#000 2px calc(100% - 2px),transparent calc(100% - 2px)),repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 4px)}
+.tape.l{top:-10px;left:-18px;transform:rotate(-28deg)}.tape.r{top:-10px;right:-18px;transform:rotate(26deg)}
+.scr .k{font-size:13px;color:var(--crtDim)}
+.scr .now{display:flex;gap:12px;align-items:flex-start}
+.scr .now .g{flex:1;min-width:0}
+.scr .subj{display:block;font:600 19px/1.3 Anuphan;margin-top:2px}
+.scr .meta{font-size:13px;color:var(--crtDim);margin-top:2px}
+.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums}
+.scr .meta .vt{font-size:19px;color:var(--crtOn)}
+.scr .left{text-align:right;flex:none}
+.scr .left .vt{display:block;font-size:34px;line-height:1;color:#B8FFC9}
+.scr .left small{font-size:12px;color:var(--crtDim)}
+.att{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}
+.att button{min-height:44px;border:1px solid var(--crtLine);border-radius:3px;color:var(--crtOn);font:600 15px Anuphan;transition:transform .12s var(--ease)}
+.att button:active{transform:scale(.97)}
+.att button[aria-pressed=true]{background:var(--crtOn);color:var(--crt);border-color:var(--crtOn)}
+.att:has([aria-pressed=true]) button:not([aria-pressed=true]){color:var(--crtDim)}
+.scr :focus-visible{outline-color:var(--crtOn)}
+.done{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px;color:var(--crtDim)}
+.done b{color:var(--crtOn);font-weight:600}
+.done .vt{font-size:19px;color:var(--crtOn)}
+.next{margin-top:12px;font-size:14px;color:var(--muted)}
+.next b{font:700 14px "Courier Prime",monospace;color:var(--paper)}
+.free{margin-top:26px;padding:4px 0 2px}
+.free h3{font:400 19px/1.3 Chonburi,serif}
+.free p{font-size:14px;color:var(--muted);margin-top:2px}
+
+/* ต้องทำ */
+.h{display:flex;align-items:baseline;gap:10px;margin:30px 0 4px}
+.h h3{font:400 19px/1.3 Chonburi,serif}
+.h small{font:400 13px Anuphan;color:var(--faint)}
+.h small b{font:700 13px "Courier Prime",monospace;color:var(--muted)}
+.list{list-style:none}
+.item{display:flex;align-items:center;gap:10px;min-height:60px;padding:6px 0;border-top:1px solid var(--rule)}
+.item:last-child{border-bottom:1px solid var(--rule)}
+.chk{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;margin-left:-10px;border-radius:3px}
+.box{width:22px;height:22px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px;display:grid;place-items:center}
+.box svg{width:18px;height:18px;color:var(--pen);opacity:0;transform:scale(.6) rotate(-8deg);transition:opacity .18s,transform .25s var(--ease)}
+.item.is-done .box{border-color:var(--pen)}
+.item.is-done .box svg{opacity:1;transform:none}
+.item .g{flex:1;min-width:0}
+.item b{display:block;font-weight:600;line-height:1.35}
+.item .s{font-size:13px;color:var(--muted)}
+.item .s .ty{font:700 13px "Courier Prime",monospace}
+.item.is-done b,.item.is-done .s{color:var(--faint)} /* ไม่ขีดฆ่า: เส้นทับสระบนไทยอ่านยาก */
+.stamp{flex:none;font:700 13px Anuphan;color:var(--red);padding:2px 9px;border:2px solid currentColor;border-radius:4px;transform:rotate(-6deg);opacity:.92;transition:opacity .2s}
+.item.is-done .stamp{opacity:0}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+
+/* ปุ่มลัด (เงาแข็ง 2px ตามกติกา) */
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.qa button{min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:var(--deck);border:1.5px solid var(--paper);border-radius:3px;box-shadow:2px 2px 0 var(--paper);font:500 13px Anuphan;color:var(--paper);transition:transform .1s,box-shadow .1s}
+.qa button:active{transform:translate(2px,2px);box-shadow:none}
+.qa svg{width:20px;height:20px}
+
+/* XP วันนี้ = บรรทัดธรรมดาลิงก์ไปหน้าเกม */
+.xp{display:flex;align-items:center;justify-content:space-between;min-height:48px;margin-top:18px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted);text-decoration:none}
+.xp b{font:700 15px "Courier Prime",monospace;color:var(--paper)}
+.xp i{font-style:normal;color:var(--pen);font-weight:600}
+
+/* toast ยกเลิก 3 วิ */
+.toast{position:absolute;left:12px;right:12px;bottom:76px;z-index:5;display:flex;align-items:center;gap:12px;background:var(--paper);color:var(--on);border-radius:3px;padding:6px 6px 6px 14px;font-size:14px;
+  opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .3s var(--ease)}
+.toast.show{opacity:1;transform:none;pointer-events:auto}
+.toast span{flex:1}
+.toast button{min-height:44px;padding:0 14px;color:var(--go);font-weight:600;border-radius:3px}
+.toast :focus-visible{outline-color:var(--go)}
+
+/* แถบแท็บ: แผงหมึกเข้ม (เหลืองได้เฉพาะตรงนี้) */
+.tabs{flex:none;display:flex;height:66px;background:var(--paper);position:relative;z-index:4}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:500 12px/18px Anuphan;color:var(--onMuted);position:relative}
+.tab svg{width:22px;height:22px}
+.tab[aria-current=page]{color:var(--go)}
+.tab[aria-current=page]::before{content:"";position:absolute;top:0;left:28%;right:28%;height:3px;background:var(--go)}
+.tab .n{position:absolute;top:7px;left:calc(50% + 6px);min-width:18px;padding:0 4px;background:var(--go);color:var(--paper);font:700 12px/17px "Courier Prime",monospace;border-radius:2px;text-align:center}
+.tab:focus-visible{outline-color:var(--go);outline-offset:-4px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-today" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4h7a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-5a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-task" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-gem" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 11h8M8 15h8M8 7h5" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><path d="M4 13.5l5 5.5L20.5 5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="top">
+  <h1>หน้าวันนี้ · ธีม A</h1>
+  <p>เกลาจาก e2 แบบ A ด้วย impeccable · กดลองได้: เช็กชื่อ, ติ๊กงาน (มีแถบยกเลิก 3 วิ), สลับสถานะคาบ และความกว้างจอ</p>
+  <div class="ctl">
+    <span>สถานะ</span>
+    <div class="grp" id="mode"><button aria-pressed="true" data-m="now">กำลังเรียน</button><button aria-pressed="false" data-m="next">คาบถัดไป</button><button aria-pressed="false" data-m="none">ไม่มีคาบ</button></div>
+    <span>จอ</span>
+    <div class="grp" id="width"><button aria-pressed="true" data-w="360">360</button><button aria-pressed="false" data-w="390">390</button></div>
+  </div>
+</div>
+
+<div class="stage">
+<div class="phone" id="phone">
+  <div class="page">
+    <div class="sb"><span>12:46</span><span>79%</span></div>
+    <div class="scroll">
+      <header class="mast">
+        <div>
+          <span class="dymo">LECTURELICH</span>
+          <h2>วันเสาร์</h2>
+          <div class="date">07 พ.ย. 2569 <span>· เทอม 2</span></div>
+        </div>
+        <div class="papboy" aria-hidden="true"></div>
+      </header>
+
+      <!-- กำลังเรียน -->
+      <section class="scr" data-show="now" aria-label="คาบตอนนี้">
+        <span class="tape l"></span><span class="tape r"></span>
+        <div class="now">
+          <div class="g">
+            <span class="k">&gt; คาบตอนนี้</span>
+            <b class="subj">คณิตศาสตร์ 2</b>
+            <div class="meta"><span class="vt">11:00–13:00</span> · SC9-604</div>
+          </div>
+          <div class="left"><small>เหลือ</small><span class="vt">14</span><small>นาที</small></div>
+        </div>
+        <div class="att" role="group" aria-label="เช็กชื่อคาบนี้">
+          <button aria-pressed="false" data-a="มาเรียน">มาเรียน</button>
+          <button aria-pressed="false" data-a="ขาด">ขาด</button>
+          <button aria-pressed="false" data-a="งดสอน">งดสอน</button>
+        </div>
+        <div class="done" id="attDone" hidden><span>บันทึกแล้ว: <b id="attWhat"></b></span><span id="attXp"></span></div>
+      </section>
+
+      <!-- คาบถัดไป -->
+      <section class="scr" data-show="next" aria-label="คาบถัดไป" hidden>
+        <span class="tape l"></span><span class="tape r"></span>
+        <div class="now">
+          <div class="g">
+            <span class="k">&gt; คาบถัดไป</span>
+            <b class="subj">ฟิสิกส์ทั่วไป</b>
+            <div class="meta"><span class="vt">15:00–17:00</span> · SC2-101</div>
+          </div>
+          <div class="left"><small>อีก</small><span class="vt">2:14</span><small>ชม.</small></div>
+        </div>
+      </section>
+
+      <!-- ไม่มีคาบ: ไม่มีจอ -->
+      <section class="free" data-show="none" hidden>
+        <h3>วันนี้ไม่มีคาบเรียน</h3>
+        <p>งานใกล้สุด: แบบฝึกหัดบทที่ 3 ส่งพรุ่งนี้ <b style="font:700 14px 'Courier Prime',monospace;color:var(--paper)">23:59</b></p>
+      </section>
+
+      <p class="next" data-show="now">ถัดไป <b>15:00</b> ฟิสิกส์ทั่วไป · SC2-101</p>
+
+      <div class="h"><h3>ต้องทำ</h3><small><b id="left">3</b> เรื่อง</small></div>
+      <ul class="list">
+        <li class="item"><button class="chk" aria-label="ทำเสร็จ: จดหลังคาบ ฟิสิกส์" data-xp="10"><span class="box"><svg><use href="#i-tick"/></svg></span></button>
+          <div class="g"><b>จดหลังคาบ ฟิสิกส์</b><span class="s">จดวันนี้ได้ <span class="ty">+10</span> XP</span></div></li>
+        <li class="item"><button class="chk" aria-label="ทำเสร็จ: แบบฝึกหัดบทที่ 3" data-xp="20"><span class="box"><svg><use href="#i-tick"/></svg></span></button>
+          <div class="g"><b>แบบฝึกหัดบทที่ 3</b><span class="s"><i class="dot" style="background:#2B4A8A"></i>คณิตศาสตร์ 2 · <span class="ty">23:59</span></span></div><span class="stamp">พรุ่งนี้!</span></li>
+        <li class="item"><button class="chk" aria-label="ทำเสร็จ: รายงานแล็บ 2" data-xp="20"><span class="box"><svg><use href="#i-tick"/></svg></span></button>
+          <div class="g"><b>รายงานแล็บ 2</b><span class="s"><i class="dot" style="background:#2E6B3F"></i>ฟิสิกส์ทั่วไป · อีก <span class="ty">4</span> วัน</span></div></li>
+      </ul>
+
+      <nav class="qa" aria-label="ทางลัด">
+        <button><svg aria-hidden="true"><use href="#i-note"/></svg>จด</button>
+        <button><svg aria-hidden="true"><use href="#i-plus"/></svg>เพิ่มงาน</button>
+        <button><svg aria-hidden="true"><use href="#i-today"/></svg>ตาราง</button>
+      </nav>
+
+      <a class="xp" href="#game"><span>วันนี้ได้ <b id="xp">+20</b> XP · เข้าเรียน <b>92%</b></span><i>หน้าเกม ›</i></a>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="undo">ยกเลิก</button></div>
+  </div>
+
+  <nav class="tabs" aria-label="แท็บหลัก">
+    <a class="tab" aria-current="page"><svg aria-hidden="true"><use href="#i-today"/></svg>วันนี้</a>
+    <a class="tab"><svg aria-hidden="true"><use href="#i-book"/></svg>วิชา</a>
+    <a class="tab"><svg aria-hidden="true"><use href="#i-task"/></svg>งาน<span class="n" id="badge">3</span></a>
+    <a class="tab"><svg aria-hidden="true"><use href="#i-gem"/></svg>เกม</a>
+    <a class="tab"><svg aria-hidden="true"><use href="#i-gear"/></svg>ตั้งค่า</a>
+  </nav>
+</div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let xp=20;const setXp=d=>{xp+=d;$('#xp').textContent='+'+xp};
+const press=(grp,btn)=>grp.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===btn));
+
+// สลับสถานะคาบ / ความกว้างจอ (ส่วนควบคุม mockup)
+$('#mode').onclick=e=>{const b=e.target.closest('button');if(!b)return;press($('#mode'),b);
+  $$('[data-show]').forEach(el=>el.hidden=el.dataset.show!==b.dataset.m)};
+$('#width').onclick=e=>{const b=e.target.closest('button');if(!b)return;press($('#width'),b);$('#phone').style.setProperty('--w',b.dataset.w+'px')};
+
+// เช็กชื่อ: เลือกได้อันเดียว เปลี่ยนใจได้ · มาเรียน +5
+let att=null;
+$('.att').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  if(att==='มาเรียน')setXp(-5);att=b.dataset.a;if(att==='มาเรียน')setXp(5);
+  press($('.att'),b);$('#attDone').hidden=false;$('#attWhat').textContent=att;
+  $('#attXp').innerHTML=att==='มาเรียน'?'<span class="vt">+5</span> XP':''};
+
+// ติ๊กงาน + แถบยกเลิก 3 วิ
+let timer,last=null;
+const count=()=>{const n=$$('.item:not(.is-done)').length;$('#left').textContent=n;$('#badge').textContent=n;$('#badge').hidden=!n};
+const toggle=(li,on)=>{li.classList.toggle('is-done',on);const x=+li.querySelector('.chk').dataset.xp;setXp(on?x:-x);count()};
+$$('.chk').forEach(c=>c.onclick=()=>{const li=c.closest('.item'),on=!li.classList.contains('is-done');toggle(li,on);
+  c.setAttribute('aria-label',(on?'ยกเลิกเสร็จ: ':'ทำเสร็จ: ')+li.querySelector('b').textContent);
+  if(!on){$('#toast').classList.remove('show');return}
+  last=li;$('#toastMsg').textContent='เสร็จแล้ว '+li.querySelector('b').textContent;$('#toast').classList.add('show');
+  clearTimeout(timer);timer=setTimeout(()=>$('#toast').classList.remove('show'),3000)});
+$('#undo').onclick=()=>{if(last){toggle(last,false);last=null}clearTimeout(timer);$('#toast').classList.remove('show')};
+</script>
+</body>
+</html>

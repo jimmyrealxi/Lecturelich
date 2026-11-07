@@ -20,18 +20,19 @@ export default function TabsLayout() {
         headerShadowVisible: false,
         headerTintColor: color.onNavy,
         headerTitleStyle: { fontFamily: font.title, fontSize: 20, color: color.go },
-        tabBarActiveTintColor: color.onNavy,
-        tabBarInactiveTintColor: color.onNavyFaint,
+        // แผงหมึกเข้ม (ธีม A) · เหลืองใช้ได้เพราะอยู่บนพื้นเข้ม
+        tabBarActiveTintColor: color.go,
+        tabBarInactiveTintColor: color.onMuted,
         // แผงทึบติดขอบล่าง · ค่าเดิม 49 ไม่พอสำหรับไอคอน+ป้ายไทย · ขอบล่างอย่างน้อย 10 (แบบ LabHub: iPhone PWA ได้ insets = 0 แต่มีขีด Home)
         tabBarStyle: {
           height: 56 + Math.max(insets.bottom, 10), paddingBottom: Math.max(insets.bottom, 10),
-          backgroundColor: color.navy, borderTopWidth: 1, borderTopColor: color.navyRule,
+          backgroundColor: color.paper, borderTopWidth: 0,
         },
         // ฟอนต์ไทยสูงกว่าละติน: ห้ามป้ายหด ไม่งั้นโดนบีบเหลือ ~10px แล้วตัวหนังสือขาด
-        tabBarLabelStyle: { fontFamily: font.bodyBold, fontSize: 12, lineHeight: 18, flexShrink: 0 },
+        tabBarLabelStyle: { fontFamily: font.bodyMedium, fontSize: 12, lineHeight: 18, flexShrink: 0 },
         tabBarBadgeStyle: {
-          fontFamily: font.num, fontSize: 15, lineHeight: 16, color: color.paper, backgroundColor: color.go,
-          borderRadius: 0, minWidth: 16, height: 16, paddingHorizontal: 4,
+          fontFamily: font.typeBold, fontSize: 12, lineHeight: 17, color: color.paper, backgroundColor: color.go,
+          borderRadius: 2, minWidth: 18, height: 17, paddingHorizontal: 4,
         },
         sceneStyle: { backgroundColor: color.ink },
       }}
@@ -45,11 +46,12 @@ export default function TabsLayout() {
       }} />
       <Tabs.Screen name="tasks" options={{
         title: "งาน", tabBarBadge: pending || undefined,
+        tabBarAccessibilityLabel: pending ? `งาน ค้าง ${pending} เรื่อง` : "งาน",
         tabBarIcon: ({ focused }) => <TabIcon name="tasks" focused={focused} />,
       }} />
       <Tabs.Screen name="game" options={{
         title: "เกม", headerStyle: { backgroundColor: color.cave, borderBottomWidth: 1, borderBottomColor: color.seam },
-        headerTintColor: color.gold, headerTitleStyle: { fontFamily: font.title, fontSize: 20, color: color.gold },
+        headerTintColor: color.gold, tabBarActiveTintColor: color.gold, headerTitleStyle: { fontFamily: font.title, fontSize: 20, color: color.gold },
         tabBarIcon: ({ focused }) => <TabIcon name="game" focused={focused} accent={color.gold} />,
       }} />
       <Tabs.Screen name="settings" options={{
