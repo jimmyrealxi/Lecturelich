@@ -23,3 +23,15 @@ export function useXp(enabled = true) {
     },
   });
 }
+
+/** XP ที่ได้วันนี้ (เวลาไทย) · key ขึ้นต้น xpKey → invalidate XP แล้วอัปเดตด้วย */
+export function useXpToday(date: string) {
+  return useQuery({
+    queryKey: [...xpKey, "today", date],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("xp_events").select("xp").eq("day", date);
+      if (error) throw error;
+      return { xp: data.reduce((n, r) => n + r.xp, 0), count: data.length };
+    },
+  });
+}

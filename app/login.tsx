@@ -29,13 +29,13 @@ export default function Login() {
 }
 
 const s = StyleSheet.create({
-  wrap: { flex: 1, backgroundColor: color.cream, alignItems: "center", justifyContent: "center", padding: space.xl },
-  title: { fontFamily: font.heading, fontSize: 32, color: color.blue },
-  sub: { fontFamily: font.body, fontSize: 14, color: color.sub, marginTop: space.sm, textAlign: "center" },
+  wrap: { flex: 1, backgroundColor: color.ink, alignItems: "center", justifyContent: "center", padding: space.xl },
+  title: { fontFamily: font.heading, fontSize: 32, color: color.go },
+  sub: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.sm, textAlign: "center" },
   btn: {
     marginTop: space.xl, minHeight: minTouch, paddingHorizontal: space.xl, borderRadius: radius.md,
-    backgroundColor: color.blue, alignItems: "center", justifyContent: "center", alignSelf: "stretch", maxWidth: 360,
+    backgroundColor: color.go, alignItems: "center", justifyContent: "center", alignSelf: "stretch", maxWidth: 360,
   },
-  btnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.white },
+  btnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.deck },
   error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.lg, textAlign: "center" },
 });

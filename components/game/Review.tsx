@@ -44,7 +44,7 @@ export function BossPanel({ exam, subjectName, topics, termId, today }: {
       </View>
       <Text style={s.small}>สอบ {exam.date} · {topics.length} หัวข้อ{stars ? ` (★ ${stars} นับ 2 เท่า)` : ""}</Text>
       <View style={[s.bar, { height: 12 }]}>
-        <View style={[s.fill, { backgroundColor: color.hp, transform: [{ scaleX: boss.maxHp ? boss.hp / boss.maxHp : 0 }] }]} />
+        <View style={[s.fill, { backgroundColor: color.blood, transform: [{ scaleX: boss.maxHp ? boss.hp / boss.maxHp : 0 }] }]} />
       </View>
       <Text style={[s.small, s.px]}>HP {boss.hp} / {boss.maxHp}</Text>
       <View style={s.ready}>
@@ -73,14 +73,14 @@ export function PassiveTree({ topics }: { topics: TopicFull[] }) {
         {topics.map((t, i) => {
           const st = states[i];
           const size = t.is_starred ? 24 : 14;
-          const fill = st === "dark" ? color.gameDeep : isMastered(t) ? rarity.unique : t.is_starred ? rarity.rare : color.brass;
+          const fill = st === "dark" ? color.gameDeep : isMastered(t) ? rarity.unique : t.is_starred ? rarity.rare : color.gold;
           return (
             <View key={t.id} style={s.nodeWrap}>
-              {i > 0 && <View style={[s.link, { backgroundColor: st === "lit" && states[i - 1] === "lit" ? color.brass : color.gameLine }]} />}
+              {i > 0 && <View style={[s.link, { backgroundColor: st === "lit" && states[i - 1] === "lit" ? color.gold : color.seam }]} />}
               <View accessible accessibilityLabel={`${t.title} · ${st === "lit" ? "ทวนแล้ว" : st === "fading" ? "เลยรอบทวน" : "ยังไม่ทวน"}`}
                 style={{
                   width: size, height: size, borderRadius: size / 2, backgroundColor: fill,
-                  borderWidth: 2, borderColor: st === "dark" ? color.gameLine : t.is_starred ? color.white : fill,
+                  borderWidth: 2, borderColor: st === "dark" ? color.seam : t.is_starred ? color.bone : fill,
                   opacity: st === "fading" ? 0.45 : 1,
                 }} />
             </View>
@@ -93,21 +93,21 @@ export function PassiveTree({ topics }: { topics: TopicFull[] }) {
 }
 
 const s = StyleSheet.create({
-  panel: { backgroundColor: color.gamePanel, borderWidth: 1, borderColor: color.gameLine, borderRadius: 4, padding: space.md, marginBottom: space.md },
+  panel: { backgroundColor: color.gamePanel, borderWidth: 1, borderColor: color.seam, borderRadius: 4, padding: space.md, marginBottom: space.md },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
-  h3: { fontFamily: font.heading, fontSize: 16, color: color.white, flex: 1 },
-  dcount: { fontFamily: font.pixel, fontSize: 13, color: color.white, backgroundColor: color.bossLine, paddingHorizontal: 8, paddingVertical: 2 },
-  small: { fontFamily: font.body, fontSize: 12, color: color.gameSub },
+  h3: { fontFamily: font.heading, fontSize: 16, color: color.bone, flex: 1 },
+  dcount: { fontFamily: font.pixel, fontSize: 13, color: color.bone, backgroundColor: color.bossLine, paddingHorizontal: 8, paddingVertical: 2 },
+  small: { fontFamily: font.body, fontSize: 12, color: color.ash },
   px: { fontFamily: font.pixel, marginTop: 4 },
-  bar: { backgroundColor: color.gameDeep, borderWidth: 1, borderColor: color.gameLine, marginTop: 6, overflow: "hidden" },
+  bar: { backgroundColor: color.gameDeep, borderWidth: 1, borderColor: color.seam, marginTop: 6, overflow: "hidden" },
   fill: { height: "100%", width: "100%", transformOrigin: "left" },
   ready: { flexDirection: "row", alignItems: "center", gap: space.sm, marginTop: space.sm },
-  pct: { fontFamily: font.pixel, fontSize: 22, color: color.brass },
-  li: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: minTouch, borderTopWidth: 1, borderTopColor: color.gameLine, marginTop: 4 },
+  pct: { fontFamily: font.pixel, fontSize: 22, color: color.gold },
+  li: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: minTouch, borderTopWidth: 1, borderTopColor: color.seam, marginTop: 4 },
   mark: { fontSize: 14, width: 16, textAlign: "center" },
-  topic: { flex: 1, fontFamily: font.body, fontSize: 14, color: color.gameText },
-  rv: { minHeight: minTouch, paddingHorizontal: space.md, backgroundColor: color.brass, borderRadius: 4, justifyContent: "center" },
-  rvText: { fontFamily: font.bodyBold, fontSize: 13, color: color.ink },
+  topic: { flex: 1, fontFamily: font.body, fontSize: 14, color: color.bone },
+  rv: { minHeight: minTouch, paddingHorizontal: space.md, backgroundColor: color.gold, borderRadius: 4, justifyContent: "center" },
+  rvText: { fontFamily: font.bodyBold, fontSize: 13, color: color.cave },
   tree: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", rowGap: space.md },
   nodeWrap: { flexDirection: "row", alignItems: "center" },
   link: { width: 18, height: 3 },

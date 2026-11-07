@@ -48,7 +48,7 @@ export default function SubjectScreen() {
   ].filter((l): l is { label: string; url: string } => !!l.url);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.cream }}>
+    <View style={{ flex: 1, backgroundColor: color.ink }}>
       <View style={s.top}>
         <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/subjects"))} style={s.back}
           accessibilityRole="button" accessibilityLabel="ย้อนกลับ">
@@ -121,20 +121,20 @@ export default function SubjectScreen() {
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.blue, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.lg },
+  top: { backgroundColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.lg },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
   edit: { position: "absolute", right: space.lg, top: space.md, minHeight: minTouch, minWidth: minTouch, alignItems: "flex-end", justifyContent: "center" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.white },
-  title: { fontFamily: font.heading, fontSize: 20, color: color.white },
-  topSub: { fontFamily: font.body, fontSize: 13, color: color.white, opacity: 0.85, marginTop: 2 },
+  backText: { fontFamily: font.body, fontSize: 14, color: color.deck },
+  title: { fontFamily: font.heading, fontSize: 20, color: color.deck },
+  topSub: { fontFamily: font.body, fontSize: 13, color: color.deck, opacity: 0.85, marginTop: 2 },
   links: { flexDirection: "row", gap: space.sm, marginTop: space.md },
   link: {
     flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1, borderColor: "rgba(255,255,255,0.3)",
     backgroundColor: "rgba(255,255,255,0.14)", alignItems: "center", justifyContent: "center",
   },
-  linkText: { fontFamily: font.body, fontSize: 13, color: color.white },
+  linkText: { fontFamily: font.body, fontSize: 13, color: color.deck },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  big: { fontFamily: font.heading, fontSize: 26, color: color.ink },
-  bar: { height: 8, backgroundColor: color.line, borderRadius: 4, overflow: "hidden", marginTop: space.sm },
-  barFill: { height: "100%", backgroundColor: color.blue },
+  big: { fontFamily: font.heading, fontSize: 26, color: color.paper },
+  bar: { height: 8, backgroundColor: color.rule, borderRadius: 4, overflow: "hidden", marginTop: space.sm },
+  barFill: { height: "100%", backgroundColor: color.go },
 });

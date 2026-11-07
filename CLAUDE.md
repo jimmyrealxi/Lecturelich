@@ -29,7 +29,9 @@
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
 ## สถานะล่าสุด (7 พ.ย. 2569)
-- branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → … → `feat/stage6-rooms` (งานล่าสุด commit แล้ว **ยังไม่ push**) · ยังไม่มี PR (ขั้น 1–5 แก้ไขต่อบน stage6 → คุยเรื่องเปิด PR ก่อน)
+- **ธีม "สมุดเทอร์มินัล" (`docs/HANDOFF_THEME.md`)**: ข้อ 1–4 ลงแล้ว (token/ฟอนต์ Chakra Petch+VT323/แถบแท็บ/หน้าวันนี้) รอเจ้าของดูบนมือถือ → ต่อข้อ 5 หน้าเกม, ข้อ 6 หน้าอื่น · ไอคอนแท็บเป็น `<svg>` เว็บ (ไม่มี react-native-svg) · ติ๊กงาน+toast ยกเลิกยังไม่ได้เทส (ไม่มีงานในบัญชี)
+- branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → … → `feat/stage6-rooms` (push แล้ว = Vercel production) · ยังไม่มี PR (ขั้น 1–5 แก้ไขต่อบน stage6 → คุยเรื่องเปิด PR ก่อน)
+- iPhone PWA ล็อกอิน+แถบแท็บใช้ได้ (Supabase Site URL = โดเมน Vercel) · ห้าม `viewport-fit=cover`
 - **Supabase จริงแล้ว** ref `zuwmygzqoezgosyetahc` · migration 6 ไฟล์รันครบ · `.env` ใส่แล้ว (ไม่ commit) · dev: `.claude/launch.json` (`npm run web` พอร์ต 8081)
 - เทสกับของจริง: ขั้น 1 ผ่าน · ขั้น 2 ผ่านครบ (VAPID ใส่แล้ว · `send-push` deploy แล้ว verify_jwt ปิด · push เด้งใน Edge localhost) · ขั้น 3 ผ่าน · ขั้น 4–6 ยังไม่เทส (ขั้น 6 ใช้ `docs/TEST_ROOMS.md`) · หน้าต่างเบราว์เซอร์ใน Claude ปิด `confirm()` อัตโนมัติ → เทสปุ่มลบใน Chrome จริง
 - แก้ระหว่างเทส: `+html.tsx` ต้องวาง `headNodes/bodyNodes` (SDK 58 ไม่งั้นเว็บว่าง) · migration ขั้น 6 `$`→`$$` · คะแนนคิดตามงาน (ได้รวม/เต็มรวม × เต็มของส่วน, งานยังไม่กรอกไม่นับ, เต็มของส่วนเว้นว่าง = สัดส่วน)

@@ -62,9 +62,9 @@ export function XpPop() {
 const s = StyleSheet.create({
   wrap: { position: "absolute", top: 72, left: 0, right: 0, alignItems: "center" },
   box: {
-    backgroundColor: color.gameBg, borderWidth: 2, borderColor: color.brass, borderRadius: radius.sm,
+    backgroundColor: color.cave, borderWidth: 2, borderColor: color.gold, borderRadius: radius.sm,
     paddingHorizontal: space.lg, paddingVertical: space.sm, alignItems: "center",
   },
-  xp: { fontFamily: font.pixel, fontSize: 18, color: color.yellow },
-  lv: { fontFamily: font.pixel, fontSize: 13, color: color.brass, marginTop: 2 },
+  xp: { fontFamily: font.pixel, fontSize: 18, color: color.warn },
+  lv: { fontFamily: font.pixel, fontSize: 13, color: color.gold, marginTop: 2 },
 });

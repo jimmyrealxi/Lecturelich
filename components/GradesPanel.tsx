@@ -60,7 +60,7 @@ export function GradesPanel({ subject, termId }: { subject: Subject; termId: str
             <Pressable key={g} onPress={() => upd.mutate({ id: subject.id, target_grade: g })}
               style={[s.chip, g === subject.target_grade && s.chipOn]} accessibilityRole="radio"
               accessibilityState={{ selected: g === subject.target_grade }}>
-              <Text style={[s.chipText, g === subject.target_grade && { color: color.ink }]}>{g}</Text>
+              <Text style={[s.chipText, g === subject.target_grade && { color: color.paper }]}>{g}</Text>
             </Pressable>
           ))}
         </View>
@@ -258,23 +258,23 @@ function CutoffForm({ cutoffs, onSave, onDone }: { cutoffs: Cutoffs; onSave: (c:
 }
 
 const s = StyleSheet.create({
-  big: { fontFamily: font.heading, fontSize: 26, color: color.ink },
-  bar: { height: 8, backgroundColor: color.line, borderRadius: 4, overflow: "hidden", marginTop: space.sm },
-  barFill: { height: "100%", backgroundColor: color.blue },
-  need: { backgroundColor: color.blue, borderRadius: radius.lg, padding: space.md, marginBottom: space.md },
-  needSmall: { fontFamily: font.body, fontSize: 13, color: color.white, opacity: 0.9 },
-  needBig: { fontFamily: font.heading, fontSize: 26, color: color.white },
+  big: { fontFamily: font.heading, fontSize: 26, color: color.paper },
+  bar: { height: 8, backgroundColor: color.rule, borderRadius: 4, overflow: "hidden", marginTop: space.sm },
+  barFill: { height: "100%", backgroundColor: color.go },
+  need: { backgroundColor: color.go, borderRadius: radius.lg, padding: space.md, marginBottom: space.md },
+  needSmall: { fontFamily: font.body, fontSize: 13, color: color.deck, opacity: 0.9 },
+  needBig: { fontFamily: font.heading, fontSize: 26, color: color.deck },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.sm },
   chip: {
     minWidth: minTouch, minHeight: minTouch, borderRadius: radius.pill, borderWidth: 1, borderColor: "rgba(255,255,255,0.4)",
     alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,
   },
-  chipOn: { backgroundColor: color.yellow, borderColor: color.yellow },
-  chipText: { fontFamily: font.bodyBold, fontSize: 14, color: color.white },
+  chipOn: { backgroundColor: color.warn, borderColor: color.warn },
+  chipText: { fontFamily: font.bodyBold, fontSize: 14, color: color.deck },
   row: { flexDirection: "row", gap: space.sm },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
-  item: { flexDirection: "row", alignItems: "center", minHeight: minTouch, borderTopWidth: 1, borderTopColor: color.line, gap: space.sm },
+  item: { flexDirection: "row", alignItems: "center", minHeight: minTouch, borderTopWidth: 1, borderTopColor: color.rule, gap: space.sm },
   x: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
-  label: { fontFamily: font.body, fontSize: 13, color: color.sub, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
   err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });

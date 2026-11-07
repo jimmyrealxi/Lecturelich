@@ -41,27 +41,27 @@ export function Skeleton({ height = 72 }: { height?: number }) {
 }
 
 export const T = StyleSheet.create({
-  h3: { fontFamily: font.heading, fontSize: 16, color: color.ink },
-  body: { fontFamily: font.body, fontSize: 14, color: color.ink },
-  muted: { fontFamily: font.body, fontSize: 13, color: color.sub },
+  h3: { fontFamily: font.heading, fontSize: 16, color: color.paper },
+  body: { fontFamily: font.body, fontSize: 14, color: color.paper },
+  muted: { fontFamily: font.body, fontSize: 13, color: color.muted },
 });
 
 const s = StyleSheet.create({
   card: {
-    backgroundColor: color.white, borderWidth: 1, borderColor: color.line, borderRadius: radius.lg,
+    backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule, borderRadius: radius.lg,
     padding: space.md, marginBottom: space.md,
   },
-  section: { fontFamily: font.heading, fontSize: 14, color: color.sub, marginTop: space.md, marginBottom: space.sm },
+  section: { fontFamily: font.heading, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: space.sm },
   btn: {
-    flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1, borderColor: color.line,
-    backgroundColor: color.white, alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,
+    flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1, borderColor: color.rule,
+    backgroundColor: color.deck, alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,
   },
-  btnFilled: { backgroundColor: color.blue, borderColor: color.blue },
+  btnFilled: { backgroundColor: color.go, borderColor: color.go },
   btnRed: { borderColor: color.danger },
   btnRedFill: { backgroundColor: color.danger },
-  btnText: { fontFamily: font.body, fontSize: 14, color: color.ink },
-  btnTextFilled: { color: color.white, fontFamily: font.bodyBold },
-  skeleton: { backgroundColor: color.line, borderRadius: radius.lg, marginBottom: space.md, opacity: 0.6 },
+  btnText: { fontFamily: font.body, fontSize: 14, color: color.paper },
+  btnTextFilled: { color: color.deck, fontFamily: font.bodyBold },
+  skeleton: { backgroundColor: color.rule, borderRadius: radius.lg, marginBottom: space.md, opacity: 0.6 },
 });
 
 /** ช่องกรอกพร้อมป้ายชื่อ · error = ข้อความแดงใต้ช่อง */
@@ -69,7 +69,7 @@ export function Field({ label, error, style, ...input }: TextInputProps & { labe
   return (
     <View style={[{ flex: 1 }, style as StyleProp<ViewStyle>]}>
       <Text style={f.label}>{label}</Text>
-      <TextInput placeholderTextColor={color.sub} accessibilityLabel={label} {...input}
+      <TextInput placeholderTextColor={color.muted} accessibilityLabel={label} {...input}
         style={[f.input, !!error && { borderColor: color.danger }]} />
       {!!error && <Text style={f.error}>{error}</Text>}
     </View>
@@ -86,10 +86,10 @@ export function confirmAction(message: string, onYes: () => void) {
 }
 
 const f = StyleSheet.create({
-  label: { fontFamily: font.body, fontSize: 13, color: color.sub, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
   input: {
-    minHeight: minTouch, borderWidth: 1, borderColor: color.line, borderRadius: radius.md, paddingHorizontal: space.md,
-    fontFamily: font.body, fontSize: 16, color: color.ink, backgroundColor: color.white,
+    minHeight: minTouch, borderWidth: 1, borderColor: color.rule, borderRadius: radius.md, paddingHorizontal: space.md,
+    fontFamily: font.body, fontSize: 16, color: color.paper, backgroundColor: color.deck,
   },
   error: { fontFamily: font.body, fontSize: 12, color: color.danger, marginTop: 4 },
 });

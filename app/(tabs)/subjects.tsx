@@ -72,7 +72,7 @@ export default function Subjects() {
 const s = StyleSheet.create({
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   item: { flexDirection: "row", alignItems: "center", gap: space.md, minHeight: 56, paddingVertical: space.sm },
-  divider: { borderTopWidth: 1, borderTopColor: color.line },
+  divider: { borderTopWidth: 1, borderTopColor: color.rule },
   dot: { width: 12, height: 12, borderRadius: 6 },
   hit: { minHeight: minTouch },
 });

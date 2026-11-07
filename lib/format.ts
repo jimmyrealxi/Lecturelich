@@ -3,10 +3,34 @@ const TZ = "Asia/Bangkok";
 
 export const hhmm = (t: string) => t.slice(0, 5);
 
-export const thaiDate = (date: string) =>
-  new Date(date + "T00:00:00+07:00").toLocaleDateString("th-TH", {
-    timeZone: TZ, weekday: "long", day: "numeric", month: "short",
-  });
+const WD = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+const WD_SHORT = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
+const MON = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+const ymd = (date: string) => new Date(date + "T00:00:00Z");
+
+/** "เสาร์ 7 พ.ย." (date = YYYY-MM-DD ตามเวลาไทย) */
+export const thaiDate = (date: string) => {
+  const d = ymd(date);
+  return `${WD[d.getUTCDay()]} ${d.getUTCDate()} ${MON[d.getUTCMonth()]}`;
+};
+
+/** "อ. 11 พ.ย." */
+export const shortDate = (date: string) => {
+  const d = ymd(date);
+  return `${WD_SHORT[d.getUTCDay()]} ${d.getUTCDate()} ${MON[d.getUTCMonth()]}`;
+};
+
+/** นาที → "1:46" */
+export const dur = (min: number) => `${Math.floor(min / 60)}:${String(Math.max(0, min) % 60).padStart(2, "0")}`;
+
+/** กำหนดส่งแยกส่วน: day = "วันนี้"/"พรุ่งนี้"/"อ. 11 พ.ย."/"เลยกำหนด" · time = "23:59" (เวลาไทย) · days = อีกกี่วัน */
+export function dueInfo(dueAt: string, todayDate: string) {
+  const bkk = new Date(Date.parse(dueAt) + 7 * 3600_000).toISOString(); // Asia/Bangkok ไม่มีเวลาออมแสง
+  const date = bkk.slice(0, 10);
+  const days = Math.round((Date.parse(date) - Date.parse(todayDate)) / 86_400_000);
+  const day = days < 0 ? "เลยกำหนด" : days === 0 ? "วันนี้" : days === 1 ? "พรุ่งนี้" : shortDate(date);
+  return { day, time: bkk.slice(11, 16), days };
+}
 
 /** กำหนดส่งแบบสั้น: "วันนี้ 23:59" / "พรุ่งนี้ 23:59" / "พฤ. 12 พ.ย." */
 export function dueLabel(dueAt: string, todayDate: string): string {

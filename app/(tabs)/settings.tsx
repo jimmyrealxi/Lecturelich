@@ -133,6 +133,6 @@ const s = StyleSheet.create({
   two: { flexDirection: "row", gap: space.sm },
   row: { flexDirection: "row", marginTop: space.md },
   step: { flex: 0, width: 44 },
-  pct: { fontFamily: font.bodyBold, fontSize: 16, color: color.ink, minWidth: 64, textAlign: "center" },
+  pct: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper, minWidth: 64, textAlign: "center" },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });

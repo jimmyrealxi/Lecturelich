@@ -40,7 +40,7 @@ export default function Game() {
   const treeTopics = treeId ? topicsOf(treeId) : [];
 
   return (
-    <ScrollView style={{ backgroundColor: color.gameBg }} contentContainerStyle={s.page}>
+    <ScrollView style={{ backgroundColor: color.cave }} contentContainerStyle={s.page}>
       {!d ? (
         <>
           <View style={[s.panel, { height: 100, opacity: 0.6 }]} />
@@ -86,8 +86,8 @@ export default function Game() {
                     {d.subjects.map((sub) => (
                       <Pressable key={sub.subject_id} onPress={() => setPicked(sub.subject_id)} accessibilityRole="radio"
                         accessibilityState={{ selected: sub.subject_id === treeId }}
-                        style={[s.chip, sub.subject_id === treeId && { borderColor: color.brass }]}>
-                        <Text style={[s.name, sub.subject_id === treeId && { color: color.brass }]}>{sub.name}</Text>
+                        style={[s.chip, sub.subject_id === treeId && { borderColor: color.gold }]}>
+                        <Text style={[s.name, sub.subject_id === treeId && { color: color.gold }]}>{sub.name}</Text>
                       </Pressable>
                     ))}
                   </View>
@@ -138,22 +138,22 @@ export default function Game() {
 
 const s = StyleSheet.create({
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  panel: { backgroundColor: color.gamePanel, borderWidth: 1, borderColor: color.gameLine, borderRadius: 4, padding: space.md, marginBottom: space.md },
+  panel: { backgroundColor: color.gamePanel, borderWidth: 1, borderColor: color.seam, borderRadius: 4, padding: space.md, marginBottom: space.md },
   hero: { flexDirection: "row", gap: space.md, alignItems: "center" },
   sprite: {
-    width: 72, height: 72, backgroundColor: color.gameDeep, borderWidth: 2, borderColor: color.brass,
+    width: 72, height: 72, backgroundColor: color.gameDeep, borderWidth: 2, borderColor: color.gold,
     alignItems: "center", justifyContent: "center",
   },
-  lv: { fontFamily: font.pixel, fontSize: 20, color: color.brass },
+  lv: { fontFamily: font.pixel, fontSize: 20, color: color.gold },
   px: { fontFamily: font.pixel, marginTop: 4 },
-  small: { fontFamily: font.body, fontSize: 12, color: color.gameSub },
-  name: { fontFamily: font.body, fontSize: 13, color: color.gameText },
-  title: { fontFamily: font.heading, fontSize: 14, color: color.brass, marginTop: space.xs, marginBottom: space.sm },
-  bar: { backgroundColor: color.gameDeep, borderWidth: 1, borderColor: color.gameLine, marginTop: 6, overflow: "hidden" },
-  barFill: { height: "100%", width: "100%", backgroundColor: color.brass, transformOrigin: "left" },
+  small: { fontFamily: font.body, fontSize: 12, color: color.ash },
+  name: { fontFamily: font.body, fontSize: 13, color: color.bone },
+  title: { fontFamily: font.heading, fontSize: 14, color: color.gold, marginTop: space.xs, marginBottom: space.sm },
+  bar: { backgroundColor: color.gameDeep, borderWidth: 1, borderColor: color.seam, marginTop: 6, overflow: "hidden" },
+  barFill: { height: "100%", width: "100%", backgroundColor: color.gold, transformOrigin: "left" },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: space.sm, marginBottom: space.md },
   cell: { flexBasis: "47%", flexGrow: 1, marginBottom: 0, padding: 10 },
   legend: { flexDirection: "row", gap: space.md, flexWrap: "wrap" },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: space.sm },
-  chip: { minHeight: 44, paddingHorizontal: space.md, borderWidth: 1, borderColor: color.gameLine, borderRadius: 4, justifyContent: "center" },
+  chip: { minHeight: 44, paddingHorizontal: space.md, borderWidth: 1, borderColor: color.seam, borderRadius: 4, justifyContent: "center" },
 });

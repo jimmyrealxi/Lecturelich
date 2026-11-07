@@ -79,6 +79,6 @@ export function RoomsCard() {
 const s = StyleSheet.create({
   row: { flexDirection: "row", gap: space.sm },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
-  code: { fontFamily: font.pixel, fontSize: 14, color: color.blue, letterSpacing: 1 },
+  code: { fontFamily: font.pixel, fontSize: 14, color: color.go, letterSpacing: 1 },
   err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });

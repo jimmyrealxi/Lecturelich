@@ -25,7 +25,7 @@ export default function EditSubject() {
 
   // แก้วิชาเดิม: รอข้อมูลครบก่อน แล้วสร้างฟอร์มด้วยค่าเดิม (key = id → ไม่ต้อง setState ใน effect)
   if (id && (!existing || !slots.data)) {
-    return <View style={{ flex: 1, backgroundColor: color.cream, padding: space.md }}><Skeleton height={300} /></View>;
+    return <View style={{ flex: 1, backgroundColor: color.ink, padding: space.md }}><Skeleton height={300} /></View>;
   }
   return <SubjectForm key={id ?? "new"} termId={term.data?.id ?? ""} existing={existing} existingSlots={slots.data ?? []} />;
 }
@@ -90,7 +90,7 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
       del.mutate(existing.id, { onSuccess: () => router.replace("/subjects") }));
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.cream }}>
+    <View style={{ flex: 1, backgroundColor: color.ink }}>
       <View style={s.top}>
         <Pressable onPress={back} style={s.back} accessibilityRole="button"><Text style={s.backText}>‹ ยกเลิก</Text></Pressable>
         <Text style={s.title}>{id ? "แก้วิชา" : "เพิ่มวิชา"}</Text>
@@ -119,7 +119,7 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
               {DAYS.map((label, wd) => (
                 <Pressable key={wd} onPress={() => patch(i, { weekday: wd })} accessibilityRole="radio"
                   accessibilityState={{ selected: d.weekday === wd }} style={[s.day, d.weekday === wd && s.dayOn]}>
-                  <Text style={[s.dayText, d.weekday === wd && { color: color.white, fontFamily: font.bodyBold }]}>{label}</Text>
+                  <Text style={[s.dayText, d.weekday === wd && { color: color.deck, fontFamily: font.bodyBold }]}>{label}</Text>
                 </Pressable>
               ))}
             </View>
@@ -157,23 +157,23 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.blue, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
+  top: { backgroundColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.white },
-  title: { fontFamily: font.heading, fontSize: 20, color: color.white },
+  backText: { fontFamily: font.body, fontSize: 14, color: color.deck },
+  title: { fontFamily: font.heading, fontSize: 20, color: color.deck },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   two: { flexDirection: "row", gap: space.sm },
-  label: { fontFamily: font.body, fontSize: 13, color: color.sub, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
   swatches: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   sw: { width: 36, height: 36, borderRadius: 18, borderWidth: 3, borderColor: "transparent" },
-  swOn: { borderColor: color.ink },
-  slotbox: { backgroundColor: color.white, borderWidth: 1, borderColor: color.line, borderRadius: radius.lg, padding: space.sm, marginBottom: space.sm },
+  swOn: { borderColor: color.paper },
+  slotbox: { backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule, borderRadius: radius.lg, padding: space.sm, marginBottom: space.sm },
   days: { flexDirection: "row", gap: 4 },
-  day: { flex: 1, minHeight: minTouch, borderWidth: 1, borderColor: color.line, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
-  dayOn: { backgroundColor: color.blue, borderColor: color.blue },
-  dayText: { fontFamily: font.body, fontSize: 13, color: color.ink },
+  day: { flex: 1, minHeight: minTouch, borderWidth: 1, borderColor: color.rule, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
+  dayOn: { backgroundColor: color.go, borderColor: color.go },
+  dayText: { fontFamily: font.body, fontSize: 13, color: color.paper },
   slotRow: { flexDirection: "row", gap: space.sm, alignItems: "flex-end" },
   x: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
-  foot: { flexDirection: "row", gap: space.sm, padding: space.md, borderTopWidth: 1, borderTopColor: color.line, backgroundColor: color.cream },
+  foot: { flexDirection: "row", gap: space.sm, padding: space.md, borderTopWidth: 1, borderTopColor: color.rule, backgroundColor: color.ink },
 });

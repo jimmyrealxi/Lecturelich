@@ -26,7 +26,7 @@ const STEPS: { title: string; steps: string[] }[] = [
 /** หน้าแนะนำติดตั้ง PWA (iPhone ต้องติดตั้งก่อนถึงจะรับ push ได้) */
 export default function Install() {
   return (
-    <View style={{ flex: 1, backgroundColor: color.cream }}>
+    <View style={{ flex: 1, backgroundColor: color.ink }}>
       <View style={s.top}>
         <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/settings"))} style={s.back} accessibilityRole="button">
           <Text style={s.backText}>‹ กลับ</Text>
@@ -51,13 +51,13 @@ export default function Install() {
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.blue, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
+  top: { backgroundColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.white },
-  title: { fontFamily: font.heading, fontSize: 20, color: color.white },
+  backText: { fontFamily: font.body, fontSize: 14, color: color.deck },
+  title: { fontFamily: font.heading, fontSize: 20, color: color.deck },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   step: { flexDirection: "row", gap: space.md, alignItems: "flex-start", paddingVertical: space.sm },
-  divider: { borderTopWidth: 1, borderTopColor: color.line },
-  num: { width: 28, height: 28, borderRadius: 14, backgroundColor: color.blue, alignItems: "center", justifyContent: "center" },
-  numText: { fontFamily: font.bodyBold, fontSize: 14, color: color.white },
+  divider: { borderTopWidth: 1, borderTopColor: color.rule },
+  num: { width: 28, height: 28, borderRadius: 14, backgroundColor: color.go, alignItems: "center", justifyContent: "center" },
+  numText: { fontFamily: font.bodyBold, fontSize: 14, color: color.deck },
 });

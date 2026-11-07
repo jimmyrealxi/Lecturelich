@@ -85,7 +85,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
         {subjects.map((sub) => (
           <Pressable key={sub.id} onPress={() => setSubjectId(subjectId === sub.id ? null : sub.id)}
             style={[s.chip, subjectId === sub.id && s.chipOn]} accessibilityRole="radio" accessibilityState={{ selected: subjectId === sub.id }}>
-            <Text style={[s.chipText, subjectId === sub.id && { color: color.white }]}>{sub.name}</Text>
+            <Text style={[s.chipText, subjectId === sub.id && { color: color.deck }]}>{sub.name}</Text>
           </Pressable>
         ))}
         {subjects.length === 0 && <Text style={T.muted}>ยังไม่มีวิชา (เพิ่มได้ในแท็บวิชา)</Text>}
@@ -98,7 +98,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
             {[{ id: null, name: "ส่วนตัว" }, ...rooms].map((r) => (
               <Pressable key={r.id ?? "me"} onPress={() => setRoomId(r.id)} style={[s.chip, roomId === r.id && s.chipOn]}
                 accessibilityRole="radio" accessibilityState={{ selected: roomId === r.id }}>
-                <Text style={[s.chipText, roomId === r.id && { color: color.white }]}>{r.name}</Text>
+                <Text style={[s.chipText, roomId === r.id && { color: color.deck }]}>{r.name}</Text>
               </Pressable>
             ))}
           </View>
@@ -130,14 +130,14 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
 }
 
 const s = StyleSheet.create({
-  grab: { width: 40, height: 4, backgroundColor: color.line, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
-  label: { fontFamily: font.body, fontSize: 13, color: color.sub, marginTop: space.md, marginBottom: 6 },
+  grab: { width: 40, height: 4, backgroundColor: color.rule, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
+  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
   chip: {
-    minHeight: minTouch, paddingHorizontal: space.md, borderRadius: radius.pill, borderWidth: 1, borderColor: color.line,
-    justifyContent: "center", backgroundColor: color.white,
+    minHeight: minTouch, paddingHorizontal: space.md, borderRadius: radius.pill, borderWidth: 1, borderColor: color.rule,
+    justifyContent: "center", backgroundColor: color.deck,
   },
-  chipOn: { backgroundColor: color.blue, borderColor: color.blue },
-  chipText: { fontFamily: font.body, fontSize: 14, color: color.ink },
+  chipOn: { backgroundColor: color.go, borderColor: color.go },
+  chipText: { fontFamily: font.body, fontSize: 14, color: color.paper },
   two: { flexDirection: "row", gap: space.sm },
 });

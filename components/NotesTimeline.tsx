@@ -68,16 +68,16 @@ export function NotesTimeline({ subjectId, absentKeys }: { subjectId: string; ab
 
 const s = StyleSheet.create({
   tl: { paddingLeft: 18, marginBottom: space.md },
-  line: { position: "absolute", left: 5, top: 6, bottom: 6, width: 2, backgroundColor: color.line },
+  line: { position: "absolute", left: 5, top: 6, bottom: 6, width: 2, backgroundColor: color.rule },
   item: { marginBottom: space.md },
   dot: {
-    position: "absolute", left: -18, top: 10, width: 12, height: 12, borderRadius: 6, backgroundColor: color.blue,
-    borderWidth: 2, borderColor: color.cream,
+    position: "absolute", left: -18, top: 10, width: 12, height: 12, borderRadius: 6, backgroundColor: color.go,
+    borderWidth: 2, borderColor: color.ink,
   },
   topics: { flexDirection: "row", flexWrap: "wrap", gap: 4, marginTop: 6 },
-  topic: { backgroundColor: color.cream, borderWidth: 1, borderColor: color.line, borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 },
-  topicStar: { borderColor: color.ink },
-  topicText: { fontFamily: font.body, fontSize: 12, color: color.ink },
+  topic: { backgroundColor: color.ink, borderWidth: 1, borderColor: color.rule, borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 },
+  topicStar: { borderColor: color.paper },
+  topicText: { fontFamily: font.body, fontSize: 12, color: color.paper },
   photos: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 6 },
-  thumb: { width: 56, height: 42, borderRadius: radius.sm, backgroundColor: color.line },
+  thumb: { width: 56, height: 42, borderRadius: radius.sm, backgroundColor: color.rule },
 });

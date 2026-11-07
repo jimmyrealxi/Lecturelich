@@ -81,26 +81,26 @@ function TaskSheet({ task, meta, onClose }: { task: Assignment; meta: string; on
 
 const s = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: space.sm, paddingVertical: 2 },
-  divider: { borderTopWidth: 1, borderTopColor: color.line },
+  divider: { borderTopWidth: 1, borderTopColor: color.rule },
   hit: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
-  check: { width: 26, height: 26, borderWidth: 2, borderColor: color.blue, borderRadius: 7, alignItems: "center", justifyContent: "center" },
-  checked: { backgroundColor: color.blue },
-  tick: { color: color.white, fontSize: 16, lineHeight: 18 },
-  doneText: { color: color.sub, textDecorationLine: "line-through" },
+  check: { width: 26, height: 26, borderWidth: 2, borderColor: color.go, borderRadius: 7, alignItems: "center", justifyContent: "center" },
+  checked: { backgroundColor: color.go },
+  tick: { color: color.deck, fontSize: 16, lineHeight: 18 },
+  doneText: { color: color.muted, textDecorationLine: "line-through" },
   due: {
-    fontFamily: font.bodyBold, fontSize: 12, color: color.sub, backgroundColor: color.cream,
+    fontFamily: font.bodyBold, fontSize: 12, color: color.muted, backgroundColor: color.ink,
     paddingHorizontal: space.sm, paddingVertical: 3, borderRadius: radius.sm, overflow: "hidden",
   },
   dueSoon: { color: color.danger, backgroundColor: color.dangerBg },
-  dots: { fontSize: 20, color: color.sub },
+  dots: { fontSize: 20, color: color.muted },
   dim: { flex: 1, backgroundColor: "rgba(0,0,0,0.35)" },
   sheet: {
-    position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.white,
+    position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.deck,
     borderTopLeftRadius: 18, borderTopRightRadius: 18, padding: space.lg, width: "100%", maxWidth: 560, alignSelf: "center",
   },
-  grab: { width: 40, height: 4, backgroundColor: color.line, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
+  grab: { width: 40, height: 4, backgroundColor: color.rule, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
   lock: {
-    fontFamily: font.body, fontSize: 13, color: color.sub, backgroundColor: color.cream,
+    fontFamily: font.body, fontSize: 13, color: color.muted, backgroundColor: color.ink,
     borderRadius: radius.md, padding: space.md, marginTop: space.md,
   },
 });

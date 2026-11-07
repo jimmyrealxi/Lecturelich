@@ -42,7 +42,7 @@ export default function Tasks() {
           {(["todo", "done"] as const).map((t) => (
             <Pressable key={t} onPress={() => setTab(t)} style={[s.segItem, tab === t && s.segOn]}
               accessibilityRole="tab" accessibilityState={{ selected: tab === t }}>
-              <Text style={[s.segText, tab === t && { color: color.white, fontFamily: font.bodyBold }]}>
+              <Text style={[s.segText, tab === t && { color: color.deck, fontFamily: font.bodyBold }]}>
                 {t === "todo" ? `ยังไม่ส่ง (${groups.todoCount})` : "ส่งแล้ว"}
               </Text>
             </Pressable>
@@ -86,19 +86,19 @@ export default function Tasks() {
 
 const s = StyleSheet.create({
   page: { padding: space.md, paddingBottom: 96, width: "100%", maxWidth: 560, alignSelf: "center" },
-  seg: { flexDirection: "row", backgroundColor: color.white, borderWidth: 1, borderColor: color.line, borderRadius: radius.md, padding: 3 },
+  seg: { flexDirection: "row", backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule, borderRadius: radius.md, padding: 3 },
   segItem: { flex: 1, minHeight: 40, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
-  segOn: { backgroundColor: color.blue },
-  segText: { fontFamily: font.body, fontSize: 14, color: color.sub },
+  segOn: { backgroundColor: color.go },
+  segText: { fontFamily: font.body, fontSize: 14, color: color.muted },
   fab: {
     position: "absolute", right: space.lg, bottom: space.lg, minHeight: 52, paddingHorizontal: space.lg,
-    borderRadius: radius.pill, backgroundColor: color.blue, justifyContent: "center",
+    borderRadius: radius.pill, backgroundColor: color.go, justifyContent: "center",
     shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 4,
   },
-  fabText: { fontFamily: font.bodyBold, fontSize: 15, color: color.white },
+  fabText: { fontFamily: font.bodyBold, fontSize: 15, color: color.deck },
   dim: { flex: 1, backgroundColor: "rgba(0,0,0,0.35)" },
   sheet: {
-    position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.white,
+    position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.deck,
     borderTopLeftRadius: 18, borderTopRightRadius: 18, padding: space.lg, width: "100%", maxWidth: 560, alignSelf: "center",
   },
 });

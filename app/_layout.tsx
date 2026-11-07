@@ -5,9 +5,11 @@ import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { Kanit_600SemiBold } from "@expo-google-fonts/kanit";
+import { ChakraPetch_600SemiBold, ChakraPetch_700Bold } from "@expo-google-fonts/chakra-petch";
+import { VT323_400Regular } from "@expo-google-fonts/vt323";
 import {
   IBMPlexSansThai_400Regular,
+  IBMPlexSansThai_500Medium,
   IBMPlexSansThai_600SemiBold,
 } from "@expo-google-fonts/ibm-plex-sans-thai";
 import { Silkscreen_400Regular } from "@expo-google-fonts/silkscreen";
@@ -17,8 +19,11 @@ import { CACHE_BUSTER, persister, queryClient } from "@/lib/queryClient";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    Kanit_600SemiBold,
+    ChakraPetch_600SemiBold,
+    ChakraPetch_700Bold,
+    VT323_400Regular,
     IBMPlexSansThai_400Regular,
+    IBMPlexSansThai_500Medium,
     IBMPlexSansThai_600SemiBold,
     Silkscreen_400Regular,
   });

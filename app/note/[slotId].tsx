@@ -114,7 +114,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
       <ScrollView contentContainerStyle={s.page} keyboardShouldPersistTaps="handled">
         <Text style={s.label}>วันนี้เรียนอะไร (สั้น ๆ)</Text>
         <TextInput value={text} onChangeText={setText} multiline maxLength={2000} style={s.textarea}
-          placeholder="เช่น Graph เบื้องต้น, degree อาจารย์บอกออกสอบ" placeholderTextColor={color.sub} accessibilityLabel="วันนี้เรียนอะไร" />
+          placeholder="เช่น Graph เบื้องต้น, degree อาจารย์บอกออกสอบ" placeholderTextColor={color.muted} accessibilityLabel="วันนี้เรียนอะไร" />
 
         <Text style={s.label}>รูปกระดาน (ย่อรูปให้อัตโนมัติ · สูงสุด {MAX_PHOTOS} รูป)</Text>
         <View style={s.photos}>
@@ -149,12 +149,12 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
             {EXAMS.map((e) => (
               <Pressable key={e.value} onPress={() => patchTopic(i, { exam: t.exam === e.value ? null : e.value })}
                 style={[s.exam, t.exam === e.value && s.examOn]} accessibilityRole="radio" accessibilityState={{ selected: t.exam === e.value }}>
-                <Text style={[s.examText, t.exam === e.value && { color: color.white }]}>{e.label}</Text>
+                <Text style={[s.examText, t.exam === e.value && { color: color.deck }]}>{e.label}</Text>
               </Pressable>
             ))}
             <Pressable onPress={() => patchTopic(i, { is_starred: !t.is_starred })} style={[s.star, t.is_starred && s.starOn]}
               accessibilityRole="checkbox" accessibilityState={{ checked: t.is_starred }} accessibilityLabel={`ออกสอบ: ${t.title}`}>
-              <Text style={[s.starText, t.is_starred && { color: color.ink }]}>{t.is_starred ? "★" : "☆"}</Text>
+              <Text style={[s.starText, t.is_starred && { color: color.paper }]}>{t.is_starred ? "★" : "☆"}</Text>
             </Pressable>
             <Pressable onPress={() => removeTopic(i)} style={s.star} accessibilityLabel={`ลบหัวข้อ ${t.title}`}>
               <Text style={{ color: color.danger, fontSize: 16 }}>✕</Text>
@@ -163,7 +163,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
         ))}
         <View style={s.trow}>
           <TextInput value={topicDraft} onChangeText={setTopicDraft} onSubmitEditing={addTopic} placeholder="+ เพิ่มหัวข้อ"
-            placeholderTextColor={color.sub} maxLength={120} style={[T.body, s.topicInput]} returnKeyType="done" accessibilityLabel="เพิ่มหัวข้อ" />
+            placeholderTextColor={color.muted} maxLength={120} style={[T.body, s.topicInput]} returnKeyType="done" accessibilityLabel="เพิ่มหัวข้อ" />
           {!!topicDraft.trim() && <Btn label="เพิ่ม" onPress={addTopic} style={{ flex: 0 }} />}
         </View>
 
@@ -189,41 +189,41 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 }
 
 const s = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: color.cream },
-  top: { backgroundColor: color.blue, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
+  screen: { flex: 1, backgroundColor: color.ink },
+  top: { backgroundColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.white },
-  title: { fontFamily: font.heading, fontSize: 20, color: color.white },
-  topSub: { fontFamily: font.body, fontSize: 13, color: color.white, opacity: 0.85 },
+  backText: { fontFamily: font.body, fontSize: 14, color: color.deck },
+  title: { fontFamily: font.heading, fontSize: 20, color: color.deck },
+  topSub: { fontFamily: font.body, fontSize: 13, color: color.deck, opacity: 0.85 },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  label: { fontFamily: font.body, fontSize: 13, color: color.sub, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
   textarea: {
-    minHeight: 96, borderWidth: 1, borderColor: color.line, borderRadius: radius.md, padding: space.md, backgroundColor: color.white,
-    fontFamily: font.body, fontSize: 16, color: color.ink, textAlignVertical: "top",
+    minHeight: 96, borderWidth: 1, borderColor: color.rule, borderRadius: radius.md, padding: space.md, backgroundColor: color.deck,
+    fontFamily: font.body, fontSize: 16, color: color.paper, textAlignVertical: "top",
   },
   photos: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
-  thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: color.line },
+  thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: color.rule },
   thumbEmpty: { opacity: 0.6 },
   addPhoto: {
-    width: 88, height: 56, borderRadius: radius.sm, borderWidth: 1.5, borderStyle: "dashed", borderColor: color.sub,
+    width: 88, height: 56, borderRadius: radius.sm, borderWidth: 1.5, borderStyle: "dashed", borderColor: color.muted,
     alignItems: "center", justifyContent: "center",
   },
   trow: {
-    flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: color.white, borderWidth: 1, borderColor: color.line,
+    flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule,
     borderRadius: radius.md, paddingLeft: space.md, paddingRight: 4, minHeight: 52, marginBottom: 6,
   },
   topicInput: { flex: 1, minHeight: minTouch },
-  exam: { minHeight: 32, paddingHorizontal: 8, borderRadius: radius.sm, borderWidth: 1, borderColor: color.line, justifyContent: "center" },
-  examOn: { backgroundColor: color.blue, borderColor: color.blue },
-  examText: { fontFamily: font.body, fontSize: 12, color: color.sub },
+  exam: { minHeight: 32, paddingHorizontal: 8, borderRadius: radius.sm, borderWidth: 1, borderColor: color.rule, justifyContent: "center" },
+  examOn: { backgroundColor: color.go, borderColor: color.go },
+  examText: { fontFamily: font.body, fontSize: 12, color: color.muted },
   star: { width: minTouch, height: minTouch, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
-  starOn: { backgroundColor: color.yellow },
-  starText: { fontSize: 20, color: color.sub },
+  starOn: { backgroundColor: color.warn },
+  starText: { fontSize: 20, color: color.muted },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
-  foot: { padding: space.md, borderTopWidth: 1, borderTopColor: color.line, backgroundColor: color.cream },
+  foot: { padding: space.md, borderTopWidth: 1, borderTopColor: color.rule, backgroundColor: color.ink },
   dim: { flex: 1, backgroundColor: "rgba(0,0,0,0.35)" },
   sheet: {
-    position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.white,
+    position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.deck,
     borderTopLeftRadius: 18, borderTopRightRadius: 18, padding: space.lg, width: "100%", maxWidth: 560, alignSelf: "center",
   },
 });
