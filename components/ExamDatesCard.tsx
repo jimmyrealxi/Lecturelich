@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Btn, Card, Field, T } from "@/components/ui";
+import { Btn, Card, Dymo, Field, T } from "@/components/ui";
 import { useSaveExams } from "@/lib/queries/review";
 import { daysUntil, type ExamRow } from "@/lib/review";
 import { isDate } from "@/lib/input";
@@ -18,8 +18,8 @@ export function ExamDatesCard({ subjectId, termId, exams, today }: {
   const [tried, setTried] = useState(false);
   const err = (v: string) => (v.trim() && !isDate(v.trim()) ? "รูปแบบ ปปปป-ดด-วว" : null);
   const errOrder = !err(mid) && !err(fin) && mid.trim() && fin.trim() && fin.trim() < mid.trim() ? "ปลายภาคต้องหลังกลางภาค" : null;
-  const dday = (v: string, label: string) => (isDate(v.trim()) && v.trim() >= today ? `${label} D-${daysUntil(v.trim(), today)}` : null);
-  const info = [dday(mid, "กลางภาค"), dday(fin, "ปลายภาค")].filter(Boolean).join(" · ");
+  // สอบที่ใกล้สุดที่ยังไม่ผ่าน → ป้ายพิมพ์นูน D-N (ป้ายนูนอันเดียวของหน้ารายละเอียดวิชา)
+  const near = ([["กลางภาค", mid.trim()], ["ปลายภาค", fin.trim()]] as const).find(([, v]) => isDate(v) && v >= today);
 
   const onSave = () => {
     setTried(true);
@@ -33,7 +33,10 @@ export function ExamDatesCard({ subjectId, termId, exams, today }: {
         <Field label="กลางภาค" value={mid} onChangeText={setMid} placeholder="ปปปป-ดด-วว" maxLength={10} error={tried ? err(mid) : null} />
         <Field label="ปลายภาค" value={fin} onChangeText={setFin} placeholder="ปปปป-ดด-วว" maxLength={10} error={tried ? err(fin) : null} />
       </View>
-      <Text style={[T.muted, { marginTop: space.sm }]}>เว้นว่าง = ยังไม่มีบอส{info ? ` · ${info}` : ""}</Text>
+      <View style={s.info}>
+        <Text style={T.muted}>เว้นว่าง = ยังไม่มีบอส</Text>
+        {near && <><Text style={T.muted}>· {near[0]}</Text><Dymo>D-{daysUntil(near[1], today)}</Dymo></>}
+      </View>
       {tried && errOrder && <Text style={s.err}>{errOrder}</Text>}
       {save.isError && <Text style={s.err}>บันทึกไม่สำเร็จ ลองอีกครั้ง</Text>}
       <View style={[s.row, { marginTop: space.md }]}>
@@ -45,5 +48,6 @@ export function ExamDatesCard({ subjectId, termId, exams, today }: {
 
 const s = StyleSheet.create({
   row: { flexDirection: "row", gap: space.sm },
+  info: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 6, marginTop: space.sm },
   err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });
