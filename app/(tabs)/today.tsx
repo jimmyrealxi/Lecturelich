@@ -95,7 +95,8 @@ export default function Today() {
           <View style={{ flexShrink: 1 }}>
             <Text style={s.dymo}>LECTURELICH</Text>
             <Text style={s.h2} accessibilityRole="header">{weekdayName(now.date)}</Text>
-            <Text style={s.date}>{typedDate(now.date)}{termLabel ? <Text style={s.dateTerm}>{` · ${termLabel}`}</Text> : null}</Text>
+            {/* "เทอม 2/2569" ห้ามแยกบรรทัด (u00a0 = ช่องว่างไม่ตัดบรรทัด) */}
+            <Text style={s.date}>{typedDate(now.date)}{termLabel ? <Text style={s.dateTerm}>{` · ${termLabel.replace(/ /g, "\u00a0")}`}</Text> : null}</Text>
           </View>
           <LvChip />
         </View>
