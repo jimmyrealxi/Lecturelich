@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
-import { Btn, Card, Skeleton, T } from "@/components/ui";
+import { AddBtn, Btn, Card, Dymo, Section, Skeleton, Stamp, T } from "@/components/ui";
 import { useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
 import { useProfile } from "@/lib/queries/setup";
 import { attendanceStats, countSessions } from "@/lib/schedule";
 import { hhmm } from "@/lib/format";
-import { color, minTouch, space } from "@/lib/theme";
+import { color, font, inkColor, space } from "@/lib/theme";
 
 export const DAY_SHORT = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
 
@@ -42,37 +42,39 @@ export default function Subjects() {
 
   return (
     <ScrollView contentContainerStyle={s.page}>
-      <Text style={[T.muted, { marginBottom: space.sm }]}>{term.data.name} · {rows.length} วิชา</Text>
-      {rows.length > 0 && (
-        <Card>
-          {rows.map(({ subj, when, stats }, i) => (
-            <Pressable key={subj.id} style={[s.item, i > 0 && s.divider]} onPress={() => router.push(`/subject/${subj.id}`)}
-              accessibilityRole="button">
-              <View style={[s.dot, { backgroundColor: subj.color }]} />
-              <View style={{ flex: 1 }}>
-                <Text style={[T.body, { fontWeight: "600" }]}>{subj.name}</Text>
-                <Text style={T.muted}>
-                  {when || "ยังไม่มีเวลาเรียน"}
-                  {stats && " · "}
-                  {stats && (stats.warn
-                    ? <Text style={{ color: color.danger }}>{stats.remaining >= 0 ? `ขาดได้อีก ${stats.remaining}` : "เกินเกณฑ์ขาด"}</Text>
-                    : `เข้าเรียน ${stats.pct}%`)}
-                </Text>
-              </View>
-              <Text style={T.muted}>›</Text>
-            </Pressable>
-          ))}
-        </Card>
-      )}
-      <Btn label="+ เพิ่มวิชา" onPress={() => router.push("/subject/edit")} />
+      <View style={s.meta}><Dymo>{term.data.name}</Dymo><Text style={T.muted}>· {rows.length} วิชา</Text></View>
+      {rows.length > 0 && <Section side="เวลาเรียน · เข้าเรียน">เทอมนี้</Section>}
+      {rows.map(({ subj, when, stats }, i) => (
+        <Pressable key={subj.id} style={[s.item, i === rows.length - 1 && s.last]} onPress={() => router.push(`/subject/${subj.id}`)}
+          accessibilityRole="button" accessibilityLabel={`${subj.name} ${stats ? `เข้าเรียน ${stats.pct}%` : ""}`}>
+          <View style={[s.sq, { backgroundColor: inkColor(subj.color) }]} />
+          <View style={{ flex: 1 }}>
+            <Text style={s.what}>{subj.name}</Text>
+            <Text style={T.muted}>{[subj.code, when || "ยังไม่มีเวลาเรียน"].filter(Boolean).join(" · ")}</Text>
+          </View>
+          {/* ตรายาง "เกินเกณฑ์" จุดเดียวต่อจอ = วิชาแรกที่ขาดเกิน */}
+          {stats && stats.remaining < 0 && rows.findIndex((r) => r.stats && r.stats.remaining < 0) === i ? <Stamp>เกินเกณฑ์</Stamp> : (
+            <View style={{ alignItems: "flex-end" }}>
+              <Text style={[s.pct, stats?.warn && { color: color.danger }]}>{stats ? `${stats.pct}%` : "—"}</Text>
+              <Text style={[s.pctSub, stats?.warn && { color: color.danger }]}>
+                {!stats ? "ยังไม่เช็ก" : stats.warn ? (stats.remaining >= 0 ? `ขาดได้อีก ${stats.remaining}` : "เกินเกณฑ์") : "เข้าเรียน"}
+              </Text>
+            </View>
+          )}
+        </Pressable>
+      ))}
+      <AddBtn label="+ เพิ่มวิชา" onPress={() => router.push("/subject/edit")} />
     </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
-  page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  item: { flexDirection: "row", alignItems: "center", gap: space.md, minHeight: 56, paddingVertical: space.sm },
-  divider: { borderTopWidth: 1, borderTopColor: color.rule },
-  dot: { width: 12, height: 12, borderRadius: 6 },
-  hit: { minHeight: minTouch },
+  page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
+  meta: { flexDirection: "row", alignItems: "center", gap: 6 },
+  item: { flexDirection: "row", alignItems: "center", gap: space.md, minHeight: 60, paddingVertical: space.sm, borderTopWidth: 1, borderTopColor: color.rule },
+  last: { borderBottomWidth: 1, borderBottomColor: color.rule },
+  sq: { width: 14, height: 14, borderRadius: 2 },
+  what: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
+  pct: { fontFamily: font.typeBold, fontSize: 19, color: color.paper },
+  pctSub: { fontFamily: font.body, fontSize: 12, color: color.muted },
 });

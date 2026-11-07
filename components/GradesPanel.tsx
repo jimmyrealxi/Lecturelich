@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Btn, Card, Field, Skeleton, T, confirmAction } from "@/components/ui";
+import { Btn, Card, Crt, Field, Skeleton, T, confirmAction } from "@/components/ui";
 import { type Subject } from "@/lib/queries/core";
 import {
   useAddScore, useDeleteComponent, useDeleteScore, useGradeComponents, useSaveComponents, useUpdateSubjectGrade,
@@ -53,14 +53,14 @@ export function GradesPanel({ subject, termId }: { subject: Subject; termId: str
         </Card>
       )}
 
-      <View style={s.need}>
-        <Text style={s.needSmall}>เกรดเป้าหมาย</Text>
+      <Crt style={{ marginTop: space.md, marginBottom: space.md }}>
+        <Text style={s.needSmall}>&gt; เกรดเป้าหมาย</Text>
         <View style={s.chips}>
           {grades.map((g) => (
             <Pressable key={g} onPress={() => upd.mutate({ id: subject.id, target_grade: g })}
               style={[s.chip, g === subject.target_grade && s.chipOn]} accessibilityRole="radio"
               accessibilityState={{ selected: g === subject.target_grade }}>
-              <Text style={[s.chipText, g === subject.target_grade && { color: color.paper }]}>{g}</Text>
+              <Text style={[s.chipText, g === subject.target_grade && { color: color.crt }]}>{g}</Text>
             </Pressable>
           ))}
         </View>
@@ -84,7 +84,7 @@ export function GradesPanel({ subject, termId }: { subject: Subject; termId: str
             )}
           </>
         )}
-      </View>
+      </Crt>
 
       {rows.length === 0 && editing !== "new" && (
         <Card>
@@ -258,19 +258,19 @@ function CutoffForm({ cutoffs, onSave, onDone }: { cutoffs: Cutoffs; onSave: (c:
 }
 
 const s = StyleSheet.create({
-  big: { fontFamily: font.bodyBold, fontSize: 26, color: color.paper },
-  bar: { height: 8, backgroundColor: color.rule, borderRadius: 4, overflow: "hidden", marginTop: space.sm },
-  barFill: { height: "100%", backgroundColor: color.go },
-  need: { backgroundColor: color.navy, borderRadius: radius.lg, padding: space.md, marginBottom: space.md },
-  needSmall: { fontFamily: font.body, fontSize: 13, color: color.onNavy, opacity: 0.9 },
-  needBig: { fontFamily: font.bodyBold, fontSize: 26, color: color.onNavy },
+  big: { fontFamily: font.typeBold, fontSize: 28, color: color.paper },
+  bar: { height: 8, backgroundColor: "rgba(42,33,24,0.12)", borderRadius: 2, overflow: "hidden", marginTop: space.sm },
+  barFill: { height: "100%", backgroundColor: color.pen },
+  // บนจอเขียว: ตัวเลขใหญ่ VT323 · ข้อความไทย Anuphan
+  needSmall: { fontFamily: font.body, fontSize: 13, color: color.crtDim },
+  needBig: { fontFamily: font.num, fontSize: 40, lineHeight: 42, color: "#B8FFC9" },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.sm },
   chip: {
-    minWidth: minTouch, minHeight: minTouch, borderRadius: radius.pill, borderWidth: 1, borderColor: "rgba(255,255,255,0.4)",
+    minWidth: minTouch, minHeight: minTouch, borderRadius: radius.sm, borderWidth: 1, borderColor: "#2F6B42",
     alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,
   },
-  chipOn: { backgroundColor: color.go, borderColor: color.go },
-  chipText: { fontFamily: font.bodyBold, fontSize: 14, color: color.onNavy },
+  chipOn: { backgroundColor: color.crtOn, borderColor: color.crtOn },
+  chipText: { fontFamily: font.bodyBold, fontSize: 14, color: color.crtOn },
   row: { flexDirection: "row", gap: space.sm },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
   item: { flexDirection: "row", alignItems: "center", minHeight: minTouch, borderTopWidth: 1, borderTopColor: color.rule, gap: space.sm },

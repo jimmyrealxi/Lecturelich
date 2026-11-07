@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Btn, Card, Skeleton, T } from "@/components/ui";
+import { Btn, Card, Crt, Skeleton, T } from "@/components/ui";
 import { LvChip } from "@/components/game/LvChip";
 import {
   useAssignments, useAttendance, useCurrentTerm, useSetAttendance, useSlots, useSubjects, useToggleDone,
@@ -266,8 +266,8 @@ function Screen({ slot, live, minutes, subject, status, onCheck }: {
   const rest = left(live ? end - minutes : start - minutes);
   const where = [subject?.code, slot.room].filter(Boolean).join(" · ");
   return (
-    <View style={s.scrWrap}>
-      <View style={s.scr} accessibilityLabel={live ? "คาบที่กำลังเรียน" : "คาบถัดไป"}>
+    <Crt style={{ marginTop: 26 }}>
+      <View accessibilityLabel={live ? "คาบที่กำลังเรียน" : "คาบถัดไป"}>
         <View style={{ flexDirection: "row", gap: 12 }}>
           <View style={{ flex: 1, minWidth: 0 }}>
             <Text style={s.k}>{live ? "> คาบตอนนี้" : "> คาบถัดไป"}</Text>
@@ -298,14 +298,8 @@ function Screen({ slot, live, minutes, subject, status, onCheck }: {
             )}
           </>
         )}
-        {/* เส้นสแกน: เส้นดำบาง ๆ ทุก 3px ทับหน้าจอ (ไม่รับการแตะ) */}
-        <View pointerEvents="none" style={StyleSheet.absoluteFill} aria-hidden>
-          {Array.from({ length: 90 }, (_, i) => <View key={i} style={[s.scan, { top: i * 3 }]} />)}
-        </View>
       </View>
-      <View style={[s.tape, { left: -14, transform: [{ rotate: "-28deg" }] }]} />
-      <View style={[s.tape, { right: -14, transform: [{ rotate: "26deg" }] }]} />
-    </View>
+    </Crt>
   );
 }
 
@@ -325,13 +319,6 @@ const s = StyleSheet.create({
   date: { fontFamily: font.typeBold, fontSize: 15, color: color.paper },
   dateTerm: { fontFamily: font.bodyMedium },
 
-  scrWrap: { marginTop: 26, marginHorizontal: -4 },
-  scr: {
-    backgroundColor: color.crt, borderRadius: 14, padding: 14, overflow: "hidden",
-    boxShadow: "inset 0 0 0 2px #0F2717, inset 0 0 28px rgba(0,0,0,0.85), 0 3px 0 #2B2117",
-  },
-  scan: { position: "absolute", left: 0, right: 0, height: 1, backgroundColor: "rgba(0,0,0,0.28)" },
-  tape: { position: "absolute", top: -10, width: 72, height: 22, backgroundColor: "rgba(232,221,186,0.82)" },
   k: { fontFamily: font.body, fontSize: 13, color: color.crtDim },
   subj: { fontFamily: font.bodyBold, fontSize: 19, lineHeight: 26, color: color.crtOn, marginTop: 2 },
   meta: { fontFamily: font.body, fontSize: 13, color: color.crtDim, marginTop: 2 },

@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { Btn, Field, Skeleton, confirmAction } from "@/components/ui";
+import { AddBtn, Btn, Field, head, pick, Section, Skeleton, confirmAction } from "@/components/ui";
 import { useCurrentTerm, useSlots, useSubjects, type Subject } from "@/lib/queries/core";
 import type { Slot } from "@/lib/schedule";
 import { useDeleteSubject, useSaveSubject, type SlotInput } from "@/lib/queries/setup";
 import { normTime, normUrl } from "@/lib/input";
 import { hhmm } from "@/lib/format";
-import { color, font, minTouch, radius, space } from "@/lib/theme";
+import { color, font, inkColor, minTouch, radius, space, SUBJECT_COLORS } from "@/lib/theme";
 
-const COLORS = ["#1F4E9C", "#7A5AA6", "#1E7A46", "#B0562A", "#A23B5E", "#2F7F8C"];
+const COLORS = SUBJECT_COLORS;
+const COLOR_NAME = ["น้ำเงิน", "ม่วง", "เขียว", "ส้มอิฐ", "ชมพูเข้ม", "เขียวหัวเป็ด"];
 const DAYS = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
 
 type SlotDraft = { id?: string; weekday: number; start: string; end: string; room: string };
@@ -25,7 +26,7 @@ export default function EditSubject() {
 
   // แก้วิชาเดิม: รอข้อมูลครบก่อน แล้วสร้างฟอร์มด้วยค่าเดิม (key = id → ไม่ต้อง setState ใน effect)
   if (id && (!existing || !slots.data)) {
-    return <View style={{ flex: 1, backgroundColor: color.ink, padding: space.md }}><Skeleton height={300} /></View>;
+    return <View style={{ flex: 1, padding: space.lg }}><Skeleton height={300} /></View>;
   }
   return <SubjectForm key={id ?? "new"} termId={term.data?.id ?? ""} existing={existing} existingSlots={slots.data ?? []} />;
 }
@@ -38,7 +39,7 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
 
   const [code, setCode] = useState(existing?.code ?? "");
   const [name, setName] = useState(existing?.name ?? "");
-  const [col, setCol] = useState(existing?.color ?? COLORS[0]);
+  const [col, setCol] = useState<string>(existing ? inkColor(existing.color) : COLORS[0]);
   const [drafts, setDrafts] = useState<SlotDraft[]>(() =>
     mine.length
       ? mine.map((s) => ({ id: s.id, weekday: s.weekday, start: hhmm(s.start_time), end: hhmm(s.end_time), room: s.room ?? "" }))
@@ -90,10 +91,10 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
       del.mutate(existing.id, { onSuccess: () => router.replace("/subjects") }));
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.ink }}>
-      <View style={s.top}>
-        <Pressable onPress={back} style={s.back} accessibilityRole="button"><Text style={s.backText}>‹ ยกเลิก</Text></Pressable>
-        <Text style={s.title}>{id ? "แก้วิชา" : "เพิ่มวิชา"}</Text>
+    <View style={{ flex: 1 }}>
+      <View style={head.top}>
+        <Pressable onPress={back} style={s.back} accessibilityRole="button"><Text style={head.back}>‹ ยกเลิก</Text></Pressable>
+        <Text style={head.title} accessibilityRole="header">{id ? "แก้วิชา" : "เพิ่มวิชา"}</Text>
       </View>
 
       <ScrollView contentContainerStyle={s.page} keyboardShouldPersistTaps="handled">
@@ -102,9 +103,11 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
           <View style={{ flex: 1 }}>
             <Text style={s.label}>สี</Text>
             <View style={s.swatches}>
-              {COLORS.map((c) => (
+              {COLORS.map((c, i) => (
                 <Pressable key={c} onPress={() => setCol(c)} accessibilityRole="radio" accessibilityState={{ selected: col === c }}
-                  accessibilityLabel={`สี ${c}`} style={[s.sw, { backgroundColor: c }, col === c && s.swOn]} />
+                  accessibilityLabel={`สี${COLOR_NAME[i]}`} style={[s.sw, col === c && s.swOn]}>
+                  <View style={[s.swIn, { backgroundColor: c }]} />
+                </Pressable>
               ))}
             </View>
           </View>
@@ -112,14 +115,14 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
         <Field label="ชื่อวิชา" value={name} onChangeText={setName} placeholder="การเขียนโปรแกรมเชิงวัตถุ" maxLength={80}
           error={tried ? errName : null} />
 
-        <Text style={s.label}>เวลาเรียน (ซ้ำทุกสัปดาห์ · มีได้หลายช่วง)</Text>
+        <Section side={`${drafts.length} คาบ/สัปดาห์`}>ตารางเรียน</Section>
         {drafts.map((d, i) => (
           <View key={d.id ?? "new" + i} style={s.slotbox}>
             <View style={s.days}>
               {DAYS.map((label, wd) => (
                 <Pressable key={wd} onPress={() => patch(i, { weekday: wd })} accessibilityRole="radio"
-                  accessibilityState={{ selected: d.weekday === wd }} style={[s.day, d.weekday === wd && s.dayOn]}>
-                  <Text style={[s.dayText, d.weekday === wd && { color: color.paper, fontFamily: font.bodyBold }]}>{label}</Text>
+                  accessibilityState={{ selected: d.weekday === wd }} style={[s.day, d.weekday === wd && pick.on]}>
+                  <Text style={[s.dayText, d.weekday === wd && pick.onText]}>{label}</Text>
                 </Pressable>
               ))}
             </View>
@@ -136,8 +139,9 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
             {tried && slotError(d) && <Text style={s.error}>{slotError(d)}</Text>}
           </View>
         ))}
-        <Btn label="+ เพิ่มช่วงเวลา" onPress={() => setDrafts((d) => [...d, emptySlot()])} />
+        <AddBtn label="+ เพิ่มคาบ" onPress={() => setDrafts((d) => [...d, emptySlot()])} />
 
+        <Section side="ไม่บังคับ">ลิงก์</Section>
         <Field label="Google Classroom (ไม่ใส่ก็ได้)" value={links.classroom} onChangeText={(v) => setLinks({ ...links, classroom: v })}
           autoCapitalize="none" keyboardType="url" error={tried && urls.classroom === undefined ? "ลิงก์ไม่ถูกต้อง" : null} />
         <Field label="กลุ่มไลน์ (ไม่ใส่ก็ได้)" value={links.line} onChangeText={(v) => setLinks({ ...links, line: v })}
@@ -149,7 +153,7 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
       </ScrollView>
 
       <View style={s.foot}>
-        {existing && <Btn label="ลบวิชา" onPress={onDelete} style={{ flex: 0.5 }} />}
+        {existing && <Btn kind="danger" label="ลบวิชา" onPress={onDelete} style={{ flex: 0.5 }} />}
         <Btn kind="primary" label={save.isPending ? "กำลังบันทึก…" : "บันทึก"} onPress={onSave} />
       </View>
     </View>
@@ -157,23 +161,21 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
-  title: { fontFamily: font.title, fontSize: 20, color: color.go },
-  page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
+  page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   two: { flexDirection: "row", gap: space.sm },
   label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
-  swatches: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  sw: { width: 36, height: 36, borderRadius: 18, borderWidth: 3, borderColor: "transparent" },
+  swatches: { flexDirection: "row", flexWrap: "wrap", gap: 2 },
+  // พื้นที่กด 44 · สีข้างใน 30 · ที่เลือก = วงหมึก
+  sw: { width: minTouch, height: minTouch, borderRadius: 22, borderWidth: 2, borderColor: "transparent", alignItems: "center", justifyContent: "center" },
   swOn: { borderColor: color.paper },
-  slotbox: { backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule, borderRadius: radius.lg, padding: space.sm, marginBottom: space.sm },
+  swIn: { width: 30, height: 30, borderRadius: 15 },
+  slotbox: { backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule2, borderRadius: radius.lg, padding: space.sm, marginBottom: space.sm },
   days: { flexDirection: "row", gap: 4 },
-  day: { flex: 1, minHeight: minTouch, borderWidth: 1, borderColor: color.rule, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
-  dayOn: { backgroundColor: color.go, borderColor: color.go },
-  dayText: { fontFamily: font.body, fontSize: 13, color: color.paper },
+  day: { flex: 1, minHeight: minTouch, borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
+  dayText: { fontFamily: font.bodyBold, fontSize: 13, color: color.paper },
   slotRow: { flexDirection: "row", gap: space.sm, alignItems: "flex-end" },
   x: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
-  foot: { flexDirection: "row", gap: space.sm, padding: space.md, borderTopWidth: 1, borderTopColor: color.rule, backgroundColor: color.ink },
+  foot: { flexDirection: "row", gap: space.sm, padding: space.md, borderTopWidth: 1, borderTopColor: color.rule2, backgroundColor: color.deck },
 });

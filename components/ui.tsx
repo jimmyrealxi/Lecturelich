@@ -8,8 +8,51 @@ export function Card({ children, style }: { children: ReactNode; style?: StylePr
   return <View style={[s.card, style]}>{children}</View>;
 }
 
-export function Section({ children }: { children: ReactNode }) {
-  return <Text style={s.section}>{children}</Text>;
+/** หัวข้อย่อย Chonburi · side = ข้อความเล็กข้างหัว */
+export function Section({ children, side }: { children: ReactNode; side?: ReactNode }) {
+  if (side == null) return <Text style={s.section} accessibilityRole="header">{children}</Text>;
+  return (
+    <View style={s.sectionRow}>
+      <Text style={[s.section, { marginTop: 0, marginBottom: 0 }]} accessibilityRole="header">{children}</Text>
+      <Text style={s.sectionSide}>{side}</Text>
+    </View>
+  );
+}
+
+/** ป้ายพิมพ์นูน (จุดเดียวต่อจอ) */
+export function Dymo({ children }: { children: ReactNode }) {
+  return <Text style={s.dymo}>{children}</Text>;
+}
+
+/** ตรายาง (จุดเดียวต่อจอ) · tone = แดง (ด่วน/เกิน) หรือน้ำเงิน (สถานะดี) */
+export function Stamp({ children, tone = "red" }: { children: ReactNode; tone?: "red" | "pen" }) {
+  const c = tone === "red" ? color.red : color.pen;
+  return <Text style={[s.stamp, { color: c, borderColor: c }]}>{children}</Text>;
+}
+
+/** จอเขียวแปะเทป 2 มุม (จุดเดียวต่อจอ) · เส้นสแกนทับบนสุด ไม่รับการแตะ */
+export function Crt({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
+  return (
+    <View style={[{ marginHorizontal: -4 }, style]}>
+      <View style={s.crt}>
+        {children}
+        <View pointerEvents="none" style={StyleSheet.absoluteFill} aria-hidden>
+          {Array.from({ length: 120 }, (_, i) => <View key={i} style={[s.scan, { top: i * 3 }]} />)}
+        </View>
+      </View>
+      <View style={[s.tape, { left: -14, transform: [{ rotate: "-28deg" }] }]} />
+      <View style={[s.tape, { right: -14, transform: [{ rotate: "26deg" }] }]} />
+    </View>
+  );
+}
+
+/** ปุ่มเพิ่มของ (เส้นประ) */
+export function AddBtn({ label, onPress }: { label: string; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" style={({ pressed }) => [s.add, pressed && { opacity: 0.7 }]}>
+      <Text style={s.addText}>{label}</Text>
+    </Pressable>
+  );
 }
 
 export function Btn({
@@ -69,6 +112,28 @@ const s = StyleSheet.create({
     padding: space.md, marginBottom: space.md,
   },
   section: { fontFamily: font.title, fontSize: 18, lineHeight: 26, color: color.paper, marginTop: space.lg, marginBottom: space.sm },
+  sectionRow: { flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", columnGap: 10, marginTop: space.lg, marginBottom: space.xs },
+  sectionSide: { fontFamily: font.body, fontSize: 13, color: color.faint },
+  dymo: {
+    alignSelf: "flex-start", backgroundColor: "#1A1A1A", color: "#F2F2F2", fontFamily: font.typeBold, fontSize: 12, lineHeight: 14,
+    paddingHorizontal: 8, paddingTop: 4, paddingBottom: 3, borderRadius: 2, overflow: "hidden",
+    textShadowColor: "#000", textShadowOffset: { width: 0, height: -1 }, textShadowRadius: 0,
+  },
+  stamp: {
+    alignSelf: "center", fontFamily: font.bodyBold, fontSize: 13, borderWidth: 2, borderRadius: 4,
+    paddingHorizontal: 9, paddingVertical: 1, transform: [{ rotate: "-6deg" }], opacity: 0.92,
+  },
+  crt: {
+    backgroundColor: color.crt, borderRadius: 14, padding: 14, overflow: "hidden",
+    boxShadow: "inset 0 0 0 2px #0F2717, inset 0 0 28px rgba(0,0,0,0.85), 0 3px 0 #2B2117",
+  },
+  scan: { position: "absolute", left: 0, right: 0, height: 1, backgroundColor: "rgba(0,0,0,0.28)" },
+  tape: { position: "absolute", top: -10, width: 72, height: 22, backgroundColor: "rgba(232,221,186,0.82)" },
+  add: {
+    minHeight: minTouch, borderWidth: 1.5, borderStyle: "dashed", borderColor: color.rule2, borderRadius: radius.md,
+    alignItems: "center", justifyContent: "center", marginTop: space.md,
+  },
+  addText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   btn: {
     flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper,
     alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,

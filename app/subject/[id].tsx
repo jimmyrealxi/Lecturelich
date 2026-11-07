@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { Card, Section, Skeleton, T } from "@/components/ui";
+import { Card, head, Section, Skeleton, T } from "@/components/ui";
 import { TaskRow } from "@/components/TaskRow";
 import { NotesTimeline } from "@/components/NotesTimeline";
 import { GradesPanel } from "@/components/GradesPanel";
@@ -48,24 +48,24 @@ export default function SubjectScreen() {
   ].filter((l): l is { label: string; url: string } => !!l.url);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.ink }}>
-      <View style={s.top}>
+    <View style={{ flex: 1 }}>
+      <View style={head.top}>
         <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/subjects"))} style={s.back}
           accessibilityRole="button" accessibilityLabel="ย้อนกลับ">
-          <Text style={s.backText}>‹ กลับ</Text>
+          <Text style={head.back}>‹ วิชา</Text>
         </Pressable>
         <Pressable onPress={() => router.push({ pathname: "/subject/edit", params: { id } })} style={s.edit} accessibilityRole="button">
-          <Text style={s.backText}>แก้ไข</Text>
+          <Text style={head.back}>แก้ไข</Text>
         </Pressable>
-        <Text style={s.title}>{subject ? `${subject.code ? subject.code + " · " : ""}${subject.name}` : "…"}</Text>
+        <Text style={head.title} accessibilityRole="header">{subject?.name ?? "…"}</Text>
         <Text style={s.topSub}>
-          {mySlots.map((sl) => `${DAY[sl.weekday]} ${hhmm(sl.start_time)}–${hhmm(sl.end_time)}`).join(" · ")}
+          {[subject?.code, ...mySlots.map((sl) => `${DAY[sl.weekday]} ${hhmm(sl.start_time)}–${hhmm(sl.end_time)}${sl.room ? " · " + sl.room : ""}`)].filter(Boolean).join(" · ")}
         </Text>
         {links.length > 0 && (
           <View style={s.links}>
             {links.map((l) => (
               <Pressable key={l.label} style={s.link} onPress={() => Linking.openURL(l.url)} accessibilityRole="link">
-                <Text style={s.linkText}>{l.label} ↗</Text>
+                <Text style={s.linkText}>{l.label}</Text>
               </Pressable>
             ))}
           </View>
@@ -77,21 +77,22 @@ export default function SubjectScreen() {
           <Skeleton height={100} />
         ) : (
           stats && (
-            <Card>
-              <Text style={T.muted}>เข้าเรียน</Text>
-              <Text style={s.big}>{stats.pct}%</Text>
-              <Text style={[T.muted, stats.warn && { color: color.danger }]}>
-                ขาด {stats.absent} ครั้ง ·{" "}
-                {stats.remaining >= 0 ? `ขาดได้อีก ${stats.remaining}` : `เกินเกณฑ์ ${-stats.remaining} ครั้ง`}
-              </Text>
-              <View style={s.bar}><View style={[s.barFill, { width: `${stats.pct}%` }]} /></View>
-            </Card>
+            <>
+              <Section>เข้าเรียน</Section>
+              <Card>
+                <Text style={s.big}>{stats.pct}%<Text style={s.bigSmall}> · ขาด {stats.absent}</Text></Text>
+                <View style={s.bar}><View style={[s.barFill, { width: `${stats.pct}%` }, stats.warn && { backgroundColor: color.danger }]} /></View>
+                <Text style={[T.muted, { marginTop: space.sm }, stats.warn && { color: color.danger }]}>
+                  {stats.remaining >= 0 ? <>ขาดได้อีก <Text style={s.num}>{stats.remaining}</Text> ครั้ง</> : <>เกินเกณฑ์ <Text style={s.num}>{-stats.remaining}</Text> ครั้ง</>}
+                </Text>
+              </Card>
+            </>
           )
         )}
 
         {subject && term.data && (
           <>
-            <Section>วันสอบ (บอส)</Section>
+            <Section side="ตั้งแล้วจะเกิดบอส">วันสอบ</Section>
             {exams.data ? (
               <ExamDatesCard key={myExams.map((e) => e.kind + e.date).join()} subjectId={subject.id} termId={term.data.id}
                 exams={myExams} today={today} />
@@ -99,7 +100,7 @@ export default function SubjectScreen() {
               <Skeleton height={120} />
             )}
 
-            <Section>คะแนนและเกรด</Section>
+            <Section side="จากส่วนที่มีคะแนนแล้ว">คะแนนและเกรด</Section>
             <GradesPanel subject={subject} termId={term.data.id} />
           </>
         )}
@@ -121,20 +122,19 @@ export default function SubjectScreen() {
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.lg },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
   edit: { position: "absolute", right: space.lg, top: space.md, minHeight: minTouch, minWidth: minTouch, alignItems: "flex-end", justifyContent: "center" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
-  title: { fontFamily: font.title, fontSize: 20, color: color.go },
-  topSub: { fontFamily: font.body, fontSize: 13, color: color.onNavy, opacity: 0.85, marginTop: 2 },
+  topSub: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: 2 },
   links: { flexDirection: "row", gap: space.sm, marginTop: space.md },
   link: {
-    flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1, borderColor: "rgba(255,255,255,0.3)",
-    backgroundColor: "rgba(255,255,255,0.14)", alignItems: "center", justifyContent: "center",
+    flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper,
+    alignItems: "center", justifyContent: "center",
   },
-  linkText: { fontFamily: font.body, fontSize: 13, color: color.onNavy },
-  page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  big: { fontFamily: font.bodyBold, fontSize: 26, color: color.paper },
-  bar: { height: 8, backgroundColor: color.rule, borderRadius: 4, overflow: "hidden", marginTop: space.sm },
-  barFill: { height: "100%", backgroundColor: color.go },
+  linkText: { fontFamily: font.bodyBold, fontSize: 13, color: color.paper },
+  page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
+  big: { fontFamily: font.typeBold, fontSize: 32, color: color.paper },
+  bigSmall: { fontFamily: font.body, fontSize: 15, color: color.muted },
+  num: { fontFamily: font.typeBold, color: color.paper },
+  bar: { height: 8, backgroundColor: "rgba(42,33,24,0.12)", borderRadius: 2, overflow: "hidden", marginTop: space.sm },
+  barFill: { height: "100%", backgroundColor: color.pen },
 });

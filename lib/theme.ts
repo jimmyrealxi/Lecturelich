@@ -43,6 +43,11 @@ export const color = {
   bossLine: "#5A1E18",
 } as const;
 
+// สีวิชา: ชุดใหม่โทนหมึกเข้ม (ใช้ตอนเลือกสี) + แมปสีชุดเก่าที่เก็บใน DB · สีที่ไม่รู้จักคืนค่าเดิม
+export const SUBJECT_COLORS = ["#2B4A8A", "#6A3F8F", "#2E6B3F", "#A8501E", "#9C3560", "#1F6F78"] as const;
+const OLD_SUBJECT = ["#1F4E9C", "#7A5AA6", "#1E7A46", "#B0562A", "#A23B5E", "#2F7F8C"];
+export const inkColor = (c: string) => SUBJECT_COLORS[OLD_SUBJECT.indexOf(c.toUpperCase())] ?? c;
+
 // สีความหายาก (รางวัล ความสำเร็จ หัวข้อที่ทวนครบรอบ)
 export const rarity = {
   normal: "#E8E8E8",
