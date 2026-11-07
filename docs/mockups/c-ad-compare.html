@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich เทียบ A D</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ต่อจาก c-today-4styles.html · เทียบ A/D ที่หน้างาน+หน้าเกม และผสม A+D 2 แบบ · ไม่มีตัวละคร/โลโก้จากเกมใด */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1B1F26;font:15px/1.5 "IBM Plex Sans Thai",sans-serif;color:#E6E8EC;padding:28px 16px}
+.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums}
+h1.page{font:700 22px/1.3 "Chakra Petch",sans-serif;color:#fff;margin-bottom:6px}
+h2.part{font:700 18px "Chakra Petch";color:#FFD54A;margin:36px 0 6px}
+p.note{color:#B5BCC8;font-size:14px;max-width:820px;margin-bottom:20px}
+.wrap{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.cap{font:600 15px "Chakra Petch",sans-serif;color:#fff;margin-bottom:4px}
+.cap small{display:block;font:400 13px "IBM Plex Sans Thai";color:#AEB6C2;margin-bottom:8px;max-width:360px}
+.phone{width:360px;max-width:100%;height:780px;border-radius:32px;overflow:hidden;position:relative;border:6px solid #050608;display:flex;flex-direction:column;box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
+.sb{height:32px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:600 13px "IBM Plex Sans Thai"}
+.body{flex:1;overflow-y:auto;scrollbar-width:none;padding:6px 14px 16px}
+.body::-webkit-scrollbar{display:none}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.ic{width:22px;height:22px;flex:none}
+.btn{min-height:44px;border-radius:10px;font:600 15px "Chakra Petch","IBM Plex Sans Thai";display:flex;align-items:center;justify-content:center;gap:6px;border:0;cursor:pointer;padding:0 14px}
+.btns{display:flex;gap:8px;margin-top:12px}.btns .btn{flex:1}
+.tabs{flex:none;display:flex;height:64px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:500 12px "IBM Plex Sans Thai";position:relative}
+.tab svg{width:22px;height:22px}
+.badge{position:absolute;top:8px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;font:600 11px/18px "IBM Plex Sans Thai";text-align:center;padding:0 5px}
+.sec{font:700 15px "Chakra Petch";margin:16px 2px 8px;display:flex;justify-content:space-between;align-items:baseline}
+.sec small{font:500 13px "IBM Plex Sans Thai";opacity:.85}
+.item{display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 12px}
+.item b{font-weight:600;display:block;line-height:1.35}
+.sub{font-size:13px}
+.right{text-align:right;flex:none;font-size:13px;line-height:1.35}
+.chk{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;margin:-8px -6px -8px -8px}
+.chk i{width:24px;height:24px;border-radius:6px;display:block}
+.more{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;margin:-8px -10px -8px -4px;font-size:20px;letter-spacing:1px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.seg{display:flex;padding:4px;border-radius:12px;gap:4px;margin:4px 0 4px}
+.seg div{flex:1;min-height:44px;border-radius:9px;display:flex;align-items:center;justify-content:center;font:600 15px "Chakra Petch","IBM Plex Sans Thai"}
+.hp{height:14px;border-radius:7px;overflow:hidden;position:relative}
+.hp i{display:block;height:100%}
+.hp:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(0,0,0,.45)}
+.hero{height:150px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:13px;text-align:center}
+.lv{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.lvbar{grid-column:1/3;height:6px;border-radius:3px;overflow:hidden}.lvbar i{display:block;height:100%}
+
+/* ===== A มินิมอลน้ำเงิน ===== */
+.A{background:linear-gradient(180deg,#123372 0%,#0B2050 55%,#081838 100%);color:#EEF2FF}
+.A .card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px}
+.A .card+.card{margin-top:12px}
+.A .ttl{font:700 26px/1.2 "Chakra Petch";color:#FFD54A;margin-top:8px}
+.A .muted{color:#B7C3E6}
+.A .chip{font:600 12px "IBM Plex Sans Thai";padding:3px 10px;border-radius:99px;background:#FFD54A;color:#14234A}
+.A .chip.ghost{background:rgba(255,255,255,.12);color:#EEF2FF}
+.A .late{color:#FF9C92;font-weight:600}.A .soon{color:#FFC27A;font-weight:600}
+.A .list{padding:4px}.A .list .item+.item{border-top:1px solid rgba(255,255,255,.1)}
+.A .chk i{border:2px solid #B7C3E6;border-radius:7px}
+.A .seg{background:rgba(255,255,255,.08)}.A .seg .on{background:#FFD54A;color:#14234A}.A .seg div:not(.on){color:#C9D4F2}
+.A .b1{background:#FFD54A;color:#14234A}.A .b2{background:transparent;color:#EEF2FF;border:1.5px solid rgba(255,255,255,.4)}
+.A .hero{background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.3);color:#B7C3E6}
+.A .hp{background:rgba(255,255,255,.12)}.A .hp i{background:#FF8A80}
+.A .lvbar{background:rgba(255,255,255,.12)}.A .lvbar i{background:#FFD54A}
+.A .tabs{background:#071530;border-top:1px solid rgba(255,255,255,.1);color:#9FB0DA}
+.A .tab.on{color:#FFD54A}.A .tab.on:before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;background:#FFD54A;border-radius:0 0 3px 3px}
+.A .badge{background:#FFD54A;color:#14234A}
+
+/* ===== D วินเทจกระดาษ ===== */
+.D{background:#EFE5CB radial-gradient(90% 70% at 50% 30%,#F6EEDA 0%,#EADDBE 100%);color:#1E2F55}
+.D .card{background:#FBF5E4;border:1.5px solid #1E2F55;border-radius:10px;padding:12px;box-shadow:3px 3px 0 #1E2F55}
+.D .card+.card{margin-top:14px}
+.D .ttl{font:700 italic 26px/1.2 "Chakra Petch";margin-top:8px}
+.D .ribbon{display:inline-block;margin:8px 0 12px -14px;padding:6px 22px 6px 16px;background:#F2C94C;color:#1E2F55;font:700 16px "Chakra Petch";clip-path:polygon(0 0,100% 0,calc(100% - 12px) 50%,100% 100%,0 100%)}
+.D .muted{color:#4D5A78}
+.D .chip{font:600 12px "IBM Plex Sans Thai";padding:3px 10px;border-radius:99px;background:#1E2F55;color:#FBF5E4}
+.D .chip.ghost{background:#E6DCC2;color:#1E2F55}
+.D .late{color:#A3231B;font-weight:600}.D .soon{color:#8A4B00;font-weight:600}
+.D .list{padding:4px}.D .list .item+.item{border-top:1px dashed #9AA3B8}
+.D .chk i{border:2px solid #1E2F55;background:#fff;border-radius:4px}
+.D .seg{background:#E6DCC2;border:1.5px solid #1E2F55}.D .seg .on{background:#1E2F55;color:#FBF5E4}
+.D .b1{background:#1E2F55;color:#FBF5E4;border-radius:8px}.D .b2{background:#FBF5E4;color:#1E2F55;border:1.5px solid #1E2F55;border-radius:8px}
+.D .hero{background:#E6DCC2;border:1.5px dashed #1E2F55;color:#4D5A78}
+.D .hp{background:#E6DCC2;border:1.5px solid #1E2F55}.D .hp i{background:#A3231B}
+.D .lvbar{background:#E6DCC2;border:1px solid #1E2F55}.D .lvbar i{background:#1E2F55}
+.D .seal{width:84px;height:84px;border-radius:50%;background:#F2C94C;border:3px solid #1E2F55;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;box-shadow:3px 3px 0 #1E2F55}
+.D .seal b{font:700 22px/1 "Chakra Petch"}.D .seal small{font-size:11px}
+.D .tabs{background:#1E2F55;color:#C9D1E6}
+.D .tab.on{color:#F2C94C}
+.D .badge{background:#F2C94C;color:#1E2F55}
+
+/* ===== M1 ผสม: พื้น A + ลูกเล่น D (ริบบิ้น เงาทึบ ตรากลม) ===== */
+.M1{background:linear-gradient(180deg,#123372 0%,#0B2050 55%,#081838 100%);color:#EEF2FF}
+.M1 .card{background:#163A7A;border:1.5px solid #3D63A8;border-radius:12px;padding:14px;box-shadow:4px 4px 0 #050E24}
+.M1 .card+.card{margin-top:14px}
+.M1 .brand{font:700 italic 24px/1.1 "Chakra Petch";color:#fff;margin-top:8px}
+.M1 .ribbon{display:inline-block;margin:8px 0 14px -14px;padding:6px 22px 6px 16px;background:#FFD54A;color:#14234A;font:700 16px "Chakra Petch";clip-path:polygon(0 0,100% 0,calc(100% - 12px) 50%,100% 100%,0 100%)}
+.M1 .muted{color:#BCC8EA}
+.M1 .chip{font:600 12px "IBM Plex Sans Thai";padding:3px 10px;border-radius:99px;background:#FFD54A;color:#14234A}
+.M1 .chip.ghost{background:rgba(255,255,255,.14);color:#EEF2FF}
+.M1 .soon{color:#FFC27A;font-weight:600}
+.M1 .list{padding:4px}.M1 .list .item+.item{border-top:1px dashed rgba(255,255,255,.22)}
+.M1 .chk i{border:2px solid #BCC8EA;border-radius:5px}
+.M1 .b1{background:#FFD54A;color:#14234A;border-radius:8px;box-shadow:3px 3px 0 #050E24}.M1 .b2{background:transparent;color:#EEF2FF;border:1.5px solid #6F8CC4;border-radius:8px}
+.M1 .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.15);margin-top:10px;overflow:hidden}.M1 .bar i{display:block;height:100%;width:88%;background:#FFD54A}
+.M1 .seal{width:84px;height:84px;border-radius:50%;background:#FFD54A;color:#14234A;border:3px solid #050E24;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;box-shadow:3px 3px 0 #050E24}
+.M1 .seal b{font:700 22px/1 "Chakra Petch"}.M1 .seal small{font-size:11px}
+.M1 .tabs{background:#071530;border-top:1px solid rgba(255,255,255,.1);color:#9FB0DA}
+.M1 .tab.on{color:#FFD54A}.M1 .tab.on:before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;background:#FFD54A;border-radius:0 0 3px 3px}
+.M1 .badge{background:#FFD54A;color:#14234A}
+
+/* ===== M2 ผสม: พื้นครีม D + หัวน้ำเงินและการ์ดเรียบของ A ===== */
+.M2{background:#F3ECDA;color:#1E2F55}
+.M2 .band{background:linear-gradient(180deg,#123372,#0B2050);color:#EEF2FF;margin:-6px -14px 0;padding:10px 16px 34px;border-radius:0 0 22px 22px}
+.M2 .brand{font:700 italic 15px "Chakra Petch";color:#C9D4F2}
+.M2 .date{font:700 26px/1.2 "Chakra Petch";color:#FFD54A}
+.M2 .card{background:#FFFBF1;border-radius:16px;padding:14px;box-shadow:0 1px 0 #D8CCAE,0 6px 16px -10px rgba(30,47,85,.45)}
+.M2 .card+.card{margin-top:12px}
+.M2 .lift{margin-top:-24px}
+.M2 .muted{color:#4D5A78}
+.M2 .chip{font:600 12px "IBM Plex Sans Thai";padding:3px 10px;border-radius:99px;background:#1E2F55;color:#FFFBF1}
+.M2 .chip.ghost{background:#E9E0C8;color:#1E2F55}
+.M2 .soon{color:#8A4B00;font-weight:600}
+.M2 .list{padding:4px}.M2 .list .item+.item{border-top:1px solid #EBE2CC}
+.M2 .tile{width:40px;height:40px;border-radius:10px;background:#F2E6BF;color:#1E2F55;display:flex;align-items:center;justify-content:center;flex:none}
+.M2 .b1{background:#1E2F55;color:#FFFBF1}.M2 .b2{background:#FFFBF1;color:#1E2F55;border:1.5px solid #B9AE90}
+.M2 .bar{height:6px;border-radius:3px;background:#E9E0C8;margin-top:10px;overflow:hidden}.M2 .bar i{display:block;height:100%;width:88%;background:#1E2F55}
+.M2 .xp{display:flex;align-items:flex-end;justify-content:space-between}
+.M2 .spark{display:flex;gap:5px;align-items:flex-end;height:44px}.M2 .spark i{width:9px;background:#1E2F55;border-radius:2px;opacity:.35}.M2 .spark i:last-child{opacity:1}
+.M2 .tabs{background:#FFFBF1;border-top:1px solid #E1D6BB;color:#5E6A86}
+.M2 .tab.on{color:#1E2F55;font-weight:600}.M2 .tab.on:before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;background:#1E2F55;border-radius:0 0 3px 3px}
+.M2 .badge{background:#1E2F55;color:#FFFBF1}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-today" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2"/><rect x="7" y="13" width="4" height="4" fill="currentColor"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4h7a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-5a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-task" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-gem" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M2 9h20M9 3l3 18 3-18" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 11h8M8 15h8M8 7h5" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5"/></symbol>
+</svg>
+
+<h1 class="page">Lecturelich — เทียบ A กับ D + ผสม A+D</h1>
+<p class="note">ต่อจาก <code>c-today-4styles.html</code> · ส่วน 1 เอา A และ D ไปลองกับหน้างานและหน้าเกม ดูว่าใช้ได้ทั้งแอปไหม · ส่วน 2 ผสมสองแบบ (หน้าวันนี้) · ตัวละครใช้กล่องแทนที่ไว้ก่อน (ภาพ Pap-Boy v1 เดิม) · ข้อมูลเท่าหน้าเดิม</p>
+
+<h2 class="part">ส่วน 1 · เทียบหน้างาน + หน้าเกม</h2>
+<div class="wrap">
+
+<!-- A งาน -->
+<div>
+<div class="cap">A · หน้างาน<small>แถบสลับเหลือง · แถวโปร่งบนน้ำเงิน · ส้ม = ใกล้ · แดง = เลย</small></div>
+<div class="phone A">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="ttl">งาน</div><div class="muted" style="font-size:14px;margin-bottom:10px">ค้าง 5 · ใกล้สุดพรุ่งนี้ 23:59</div>
+    <div class="seg"><div class="on">ยังไม่ส่ง 5</div><div>ส่งแล้ว</div></div>
+    <div class="sec">สัปดาห์นี้ <small>ถึง ศ. 13 พ.ย.</small></div>
+    <div class="card list">
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>ใบงานอนุพันธ์</b><span class="sub muted"><span class="dot" style="background:#FFD54A"></span>คณิตศาสตร์ 2 · ในคาบ</span></div><div class="right"><span class="late">เลยกำหนด</span><br><span class="muted">เมื่อวาน</span></div><span class="more muted">⋯</span></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>Lab 6 Interface</b><span class="sub muted"><span class="dot" style="background:#8FA8FF"></span>OOP · <span class="chip ghost">ห้องร่วม</span></span></div><div class="right"><span class="soon">พรุ่งนี้</span><br><span class="muted">23:59</span></div><span class="more muted">⋯</span></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>รายงานแล็บ 2</b><span class="sub muted"><span class="dot" style="background:#7FE0B0"></span>ฟิสิกส์ทั่วไป · ไลน์</span></div><div class="right">พ. 11 พ.ย.<br><span class="muted">อีก 4 วัน</span></div><span class="more muted">⋯</span></div>
+    </div>
+    <div class="sec">ถัดไป <small>1 งาน</small></div>
+    <div class="card list">
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>Essay: My Hometown</b><span class="sub muted"><span class="dot" style="background:#F7A6D0"></span>ภาษาอังกฤษ</span></div><div class="right">จ. 23 พ.ย.<br><span class="muted">อีก 16 วัน</span></div><span class="more muted">⋯</span></div>
+    </div>
+    <div class="sec">งานห้องร่วมของเพื่อน</div>
+    <div class="card list">
+      <div class="item"><svg class="ic muted" style="margin:0 4px"><use href="#i-lock"/></svg><div class="grow"><b>Quiz 3 เตรียมตัว</b><span class="sub muted">OOP · เพิ่มโดย ต้น · ดูได้อย่างเดียว</span></div><div class="right muted">ศ. 13 พ.ย.</div></div>
+    </div>
+    <button class="btn b1" style="width:100%;margin-top:14px"><svg class="ic"><use href="#i-plus"/></svg>เพิ่มงาน</button>
+  </div>
+  <nav class="tabs"><div class="tab"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab on"><svg><use href="#i-task"/></svg>งาน<span class="badge">5</span></div><div class="tab"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+
+<!-- D งาน -->
+<div>
+<div class="cap">D · หน้างาน<small>ช่องติ๊กแบบสมุด · เส้นประคั่น · เงาทึบ</small></div>
+<div class="phone D">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="ttl">งาน</div>
+    <div class="ribbon">ค้าง 5 · ใกล้สุดพรุ่งนี้ 23:59</div>
+    <div class="seg"><div class="on">ยังไม่ส่ง 5</div><div>ส่งแล้ว</div></div>
+    <div class="sec">สัปดาห์นี้ <small>ถึง ศ. 13 พ.ย.</small></div>
+    <div class="card list">
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>ใบงานอนุพันธ์</b><span class="sub muted"><span class="dot" style="background:#C08A00"></span>คณิตศาสตร์ 2 · ในคาบ</span></div><div class="right"><span class="late">เลยกำหนด</span><br><span class="muted">เมื่อวาน</span></div><span class="more">⋯</span></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>Lab 6 Interface</b><span class="sub muted"><span class="dot" style="background:#3557A8"></span>OOP · <span class="chip ghost">ห้องร่วม</span></span></div><div class="right"><span class="soon">พรุ่งนี้</span><br><span class="muted">23:59</span></div><span class="more">⋯</span></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>รายงานแล็บ 2</b><span class="sub muted"><span class="dot" style="background:#2E8A5C"></span>ฟิสิกส์ทั่วไป · ไลน์</span></div><div class="right">พ. 11 พ.ย.<br><span class="muted">อีก 4 วัน</span></div><span class="more">⋯</span></div>
+    </div>
+    <div class="sec">ถัดไป <small>1 งาน</small></div>
+    <div class="card list">
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>Essay: My Hometown</b><span class="sub muted"><span class="dot" style="background:#B04A7E"></span>ภาษาอังกฤษ</span></div><div class="right">จ. 23 พ.ย.<br><span class="muted">อีก 16 วัน</span></div><span class="more">⋯</span></div>
+    </div>
+    <div class="sec">งานห้องร่วมของเพื่อน</div>
+    <div class="card list">
+      <div class="item"><svg class="ic muted" style="margin:0 4px"><use href="#i-lock"/></svg><div class="grow"><b>Quiz 3 เตรียมตัว</b><span class="sub muted">OOP · เพิ่มโดย ต้น · ดูได้อย่างเดียว</span></div><div class="right muted">ศ. 13 พ.ย.</div></div>
+    </div>
+    <button class="btn b1" style="width:100%;margin-top:16px"><svg class="ic"><use href="#i-plus"/></svg>เพิ่มงาน</button>
+  </div>
+  <nav class="tabs"><div class="tab"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab on"><svg><use href="#i-task"/></svg>งาน<span class="badge">5</span></div><div class="tab"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+
+<!-- A เกม -->
+<div>
+<div class="cap">A · หน้าเกม<small>ต่อกับโลกมืด (b5) ได้เนียน เพราะพื้นเข้มอยู่แล้ว</small></div>
+<div class="phone A">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="hero" style="margin-top:6px">[ Pap-Boy v1 + ฉายา ]<br>ภาพเดิมจาก b5</div>
+    <div class="row" style="margin-top:10px"><div class="grow"><b style="font:700 18px 'Chakra Petch'">ผู้จดไม่หยุด</b><div class="muted" style="font-size:13px">LV <span class="vt" style="font-size:18px">7</span> · <span class="vt" style="font-size:18px">340/500</span> XP</div></div><span class="chip">กล่อง 2</span></div>
+    <div class="btns"><button class="btn b2">แต่งตัว</button><button class="btn b1">เปิดกล่อง</button></div>
+    <div class="card" style="margin-top:14px">
+      <div class="row" style="justify-content:space-between"><b style="font:700 15px 'Chakra Petch'">บอสประจำเทอม</b><span class="muted" style="font-size:13px">ตายวันสอบปลายภาค</span></div>
+      <div class="row" style="margin:8px 0 6px;justify-content:space-between"><span>ราชันย์ข้อสอบ</span><span class="vt" style="font-size:20px">HP 62%</span></div>
+      <div class="hp"><i style="width:62%"></i></div>
+    </div>
+    <div class="card">
+      <b style="font:700 15px 'Chakra Petch'">สอบที่ใกล้ที่สุด</b>
+      <div class="row" style="margin-top:6px"><div class="grow">กลางภาค ฟิสิกส์<div class="muted" style="font-size:13px">พร้อมสอบ <span class="vt" style="font-size:16px">45%</span> · ยังไม่ทวน 3 หัวข้อ</div></div><span class="chip">อีก 9 วัน</span></div>
+    </div>
+    <div class="card">
+      <b style="font:700 15px 'Chakra Petch'">LV แต่ละวิชา</b>
+      <div class="lv" style="margin-top:8px"><span>คณิตศาสตร์ 2</span><span class="vt" style="font-size:18px">LV 4</span><div class="lvbar"><i style="width:70%"></i></div></div>
+      <div class="lv" style="margin-top:8px"><span>ฟิสิกส์ทั่วไป</span><span class="vt" style="font-size:18px">LV 3</span><div class="lvbar"><i style="width:35%"></i></div></div>
+    </div>
+  </div>
+  <nav class="tabs"><div class="tab"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab"><svg><use href="#i-task"/></svg>งาน<span class="badge">5</span></div><div class="tab on"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+
+<!-- D เกม -->
+<div>
+<div class="cap">D · หน้าเกม<small>แบบกระดาษล้วน · ดูเป็นสมุดสะสม ไม่ใช่โลกมืด (ขัดกับ b5 ที่อนุมัติ)</small></div>
+<div class="phone D">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="hero" style="margin-top:6px">[ Pap-Boy v1 + ฉายา ]<br>ภาพเดิมจาก b5</div>
+    <div class="row" style="margin-top:10px"><div class="grow"><b style="font:700 italic 18px 'Chakra Petch'">ผู้จดไม่หยุด</b><div class="muted" style="font-size:13px">LV 7 · 340/500 XP</div></div><span class="chip">กล่อง 2</span></div>
+    <div class="btns"><button class="btn b2">แต่งตัว</button><button class="btn b1">เปิดกล่อง</button></div>
+    <div class="card" style="margin-top:14px">
+      <div class="row" style="justify-content:space-between"><b style="font:700 15px 'Chakra Petch'">บอสประจำเทอม</b><span class="muted" style="font-size:13px">ตายวันสอบปลายภาค</span></div>
+      <div class="row" style="margin:8px 0 6px;justify-content:space-between"><span>ราชันย์ข้อสอบ</span><b>HP 62%</b></div>
+      <div class="hp"><i style="width:62%"></i></div>
+    </div>
+    <div class="card">
+      <div class="row"><div class="seal"><b>45%</b><small>พร้อมสอบ</small></div><div class="grow"><b style="font:700 15px 'Chakra Petch'">สอบที่ใกล้ที่สุด</b><div>กลางภาค ฟิสิกส์</div><div class="muted" style="font-size:13px">อีก 9 วัน · ยังไม่ทวน 3 หัวข้อ</div></div></div>
+    </div>
+    <div class="card">
+      <b style="font:700 15px 'Chakra Petch'">LV แต่ละวิชา</b>
+      <div class="lv" style="margin-top:8px"><span>คณิตศาสตร์ 2</span><b>LV 4</b><div class="lvbar"><i style="width:70%"></i></div></div>
+      <div class="lv" style="margin-top:8px"><span>ฟิสิกส์ทั่วไป</span><b>LV 3</b><div class="lvbar"><i style="width:35%"></i></div></div>
+    </div>
+  </div>
+  <nav class="tabs"><div class="tab"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab"><svg><use href="#i-task"/></svg>งาน<span class="badge">5</span></div><div class="tab on"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+</div>
+
+<h2 class="part">ส่วน 2 · ผสม A+D (หน้าวันนี้)</h2>
+<div class="wrap">
+
+<!-- M1 -->
+<div>
+<div class="cap">ผสม 1 · พื้นน้ำเงิน A + ลูกเล่น D<small>ริบบิ้นวันที่ · การ์ดทึบเงาแข็ง · ตรากลม % เข้าเรียน · ปุ่มเหลืองมีเงา · หน้าเกมใช้โลกมืดต่อได้</small></div>
+<div class="phone M1">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="brand">Lecturelich</div>
+    <div class="ribbon">ส. 7 พ.ย. · เทอม 2/2569</div>
+    <div class="card">
+      <div class="row"><svg class="ic" style="color:#FFD54A"><use href="#i-today"/></svg><div class="grow"><b>คณิตศาสตร์ 2</b><div class="muted" style="font-size:13px"><span class="vt" style="font-size:18px">11:00–13:00</span> · SC9-604</div></div><span class="chip">กำลังเรียน</span></div>
+      <div class="bar"><i></i></div>
+      <div class="muted" style="font-size:12px;margin-top:4px">เหลือ <span class="vt" style="font-size:16px">0:14</span> ชม.</div>
+      <div class="btns"><button class="btn b1">มาเรียน</button><button class="btn b2">ขาด</button><button class="btn b2">งดสอน</button></div>
+      <div class="row" style="margin-top:12px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.22)"><svg class="ic muted"><use href="#i-today"/></svg><div class="grow"><b>ฟิสิกส์ทั่วไป</b><div class="muted" style="font-size:13px"><span class="vt" style="font-size:18px">15:00–17:00</span> · SC2-101</div></div><span class="chip ghost">ถัดไป</span></div>
+    </div>
+    <div class="sec">ค้างอยู่ 3 เรื่อง <small>ดูทั้งหมด ›</small></div>
+    <div class="card list">
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>จดหลังคาบ ฟิสิกส์</b><span class="sub muted">จบ 09:00 · จดวันนี้ +10 XP</span></div></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>แบบฝึกหัดบทที่ 3</b><span class="sub muted">คณิตศาสตร์ 2 · <span class="soon">พรุ่งนี้ 23:59</span></span></div></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>รายงานแล็บ 2</b><span class="sub muted">ฟิสิกส์ · อีก 4 วัน</span></div></div>
+    </div>
+    <div class="row" style="margin-top:18px;align-items:center">
+      <div class="seal"><b>92%</b><small>เข้าเรียน</small></div>
+      <div class="grow" style="text-align:right"><div class="muted" style="font-size:13px">ได้วันนี้</div><div class="vt" style="font-size:40px;line-height:1;color:#FFD54A">+20 XP</div><div class="muted" style="font-size:13px">LV 1 · 2 รายการ ›</div></div>
+    </div>
+  </div>
+  <nav class="tabs"><div class="tab on"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab"><svg><use href="#i-task"/></svg>งาน<span class="badge">2</span></div><div class="tab"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+
+<!-- M2 -->
+<div>
+<div class="cap">ผสม 2 · พื้นครีม D + หัวน้ำเงินของ A<small>หัวจอน้ำเงินวันที่เหลือง · การ์ดขาวนวลมน เงานุ่ม (ไม่ใช้เงาแข็ง) · แท่ง XP 7 วันของ A · อ่านกลางแดดง่ายสุด</small></div>
+<div class="phone M2">
+  <div class="sb" style="background:#123372;color:#EEF2FF"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="band"><div class="brand">Lecturelich</div><div class="date">ส. 7 พ.ย.</div><div style="font-size:14px;color:#C9D4F2">เทอม 2/2569 · วันนี้ไปได้ดี</div></div>
+    <div class="card lift">
+      <div class="row"><div class="tile"><svg class="ic"><use href="#i-today"/></svg></div><div class="grow"><b>คณิตศาสตร์ 2</b><div class="muted" style="font-size:13px"><span class="vt" style="font-size:18px">11:00–13:00</span> · SC9-604</div></div><span class="chip">กำลังเรียน</span></div>
+      <div class="bar"><i></i></div>
+      <div class="muted" style="font-size:12px;margin-top:4px">เหลือ <span class="vt" style="font-size:16px">0:14</span> ชม.</div>
+      <div class="btns"><button class="btn b1">มาเรียน</button><button class="btn b2">ขาด</button><button class="btn b2">งดสอน</button></div>
+      <div class="row" style="margin-top:12px;padding-top:10px;border-top:1px solid #EBE2CC"><div class="tile" style="background:#E9E0C8"><svg class="ic"><use href="#i-today"/></svg></div><div class="grow"><b>ฟิสิกส์ทั่วไป</b><div class="muted" style="font-size:13px"><span class="vt" style="font-size:18px">15:00–17:00</span> · SC2-101</div></div><span class="chip ghost">ถัดไป</span></div>
+    </div>
+    <div class="sec">ค้างอยู่ 3 เรื่อง <small>ดูทั้งหมด ›</small></div>
+    <div class="card list">
+      <div class="item"><div class="tile"><svg class="ic"><use href="#i-note"/></svg></div><div class="grow"><b>จดหลังคาบ ฟิสิกส์</b><span class="sub muted">จบ 09:00 · จดวันนี้ +10 XP</span></div><span class="chip">จด</span></div>
+      <div class="item"><div class="tile"><svg class="ic"><use href="#i-task"/></svg></div><div class="grow"><b>แบบฝึกหัดบทที่ 3</b><span class="sub muted">คณิตศาสตร์ 2 · <span class="soon">พรุ่งนี้</span></span></div></div>
+      <div class="item"><div class="tile"><svg class="ic"><use href="#i-task"/></svg></div><div class="grow"><b>รายงานแล็บ 2</b><span class="sub muted">ฟิสิกส์ · อีก 4 วัน</span></div></div>
+    </div>
+    <div class="card xp" style="margin-top:12px">
+      <div><div class="muted" style="font-size:13px">ได้วันนี้</div><div class="vt" style="font-size:40px;line-height:1">+20 XP</div><div class="muted" style="font-size:12px">เข้าเรียน 92% · 2 รายการ ›</div></div>
+      <div class="spark"><i style="height:30%"></i><i style="height:55%"></i><i style="height:40%"></i><i style="height:70%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:60%"></i></div>
+    </div>
+  </div>
+  <nav class="tabs"><div class="tab on"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab"><svg><use href="#i-task"/></svg>งาน<span class="badge">2</span></div><div class="tab"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+</div>
+</body>
+</html>
