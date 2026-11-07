@@ -46,6 +46,19 @@ export function Crt({ children, style }: { children: ReactNode; style?: StylePro
   );
 }
 
+/** ✓ ปากกาน้ำเงิน (SVG เว็บ · native ใช้กล่องสีแทน) */
+export function Tick() {
+  if (Platform.OS !== "web") return <View style={{ width: 10, height: 10, backgroundColor: color.pen }} />;
+  return (
+    <svg width={18} height={18} viewBox="0 0 24 24" aria-hidden>
+      <path d="M4 13.5l5 5.5L20.5 5" fill="none" stroke={color.pen} strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/** เทปกาวแปะขอบบนแผ่นล่าง (จุดเดียวต่อจอ) */
+export const Tape = () => <View pointerEvents="none" style={s.sheetTape} />;
+
 /** ปุ่มเพิ่มของ (เส้นประ) */
 export function AddBtn({ label, onPress }: { label: string; onPress: () => void }) {
   return (
@@ -129,6 +142,10 @@ const s = StyleSheet.create({
   },
   scan: { position: "absolute", left: 0, right: 0, height: 1, backgroundColor: "rgba(0,0,0,0.28)" },
   tape: { position: "absolute", top: -10, width: 72, height: 22, backgroundColor: "rgba(232,221,186,0.82)" },
+  sheetTape: {
+    position: "absolute", top: -11, left: "50%", marginLeft: -37, width: 74, height: 22,
+    backgroundColor: "rgba(232,221,186,0.85)", transform: [{ rotate: "-3deg" }],
+  },
   add: {
     minHeight: minTouch, borderWidth: 1.5, borderStyle: "dashed", borderColor: color.rule2, borderRadius: radius.md,
     alignItems: "center", justifyContent: "center", marginTop: space.md,

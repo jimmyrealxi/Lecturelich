@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { Btn, Skeleton, T, confirmAction } from "@/components/ui";
+import { AddBtn, Btn, head, pick, Section, Skeleton, T, Tape, confirmAction } from "@/components/ui";
 import { AddTaskForm } from "@/components/AddTaskForm";
 import { useCurrentTerm, useSlots, useSubjects, type Subject } from "@/lib/queries/core";
 import { useNote, useSaveNote, type Exam, type Note, type TopicRow } from "@/lib/queries/notes";
@@ -103,18 +103,18 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 
   return (
     <View style={s.screen}>
-      <View style={s.top}>
+      <View style={head.top}>
         <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/today"))} style={s.back} accessibilityRole="button">
-          <Text style={s.backText}>‹ ปิด</Text>
+          <Text style={head.back}>‹ ปิด</Text>
         </Pressable>
-        <Text style={s.title}>{existing ? "แก้โน้ต" : "จดหลังคาบ"}</Text>
+        <Text style={head.title} accessibilityRole="header">{existing ? "แก้โน้ต" : "จดหลังคาบ"}</Text>
         <Text style={s.topSub}>{subject.name} · {thaiDate(date)} {hhmm(slot.start_time)}–{hhmm(slot.end_time)}</Text>
       </View>
 
       <ScrollView contentContainerStyle={s.page} keyboardShouldPersistTaps="handled">
         <Text style={s.label}>วันนี้เรียนอะไร (สั้น ๆ)</Text>
         <TextInput value={text} onChangeText={setText} multiline maxLength={2000} style={s.textarea}
-          placeholder="เช่น Graph เบื้องต้น, degree อาจารย์บอกออกสอบ" placeholderTextColor={color.muted} accessibilityLabel="วันนี้เรียนอะไร" />
+          placeholder="เช่น Graph เบื้องต้น, degree อาจารย์บอกออกสอบ" placeholderTextColor={color.faint} accessibilityLabel="วันนี้เรียนอะไร" />
 
         <Text style={s.label}>รูปกระดาน (ย่อรูปให้อัตโนมัติ · สูงสุด {MAX_PHOTOS} รูป)</Text>
         <View style={s.photos}>
@@ -131,6 +131,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
           {newUris.map((u) => (
             <Pressable key={u} accessibilityLabel="เอารูปนี้ออก" onPress={() => setNewUris((n) => n.filter((x) => x !== u))}>
               <Image source={{ uri: u }} style={s.thumb} />
+              <View style={s.thumbTape} />
             </Pressable>
           ))}
           {photoCount < MAX_PHOTOS && (
@@ -142,19 +143,19 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
         </View>
         {photoCount > 0 && <Text style={[T.muted, { fontSize: 12, marginTop: 4 }]}>แตะรูปเพื่อลบ</Text>}
 
-        <Text style={s.label}>หัวข้อที่เรียน · กด ★ = อาจารย์บอกออกสอบ</Text>
+        <Section side="กด ★ = อาจารย์บอกออกสอบ">หัวข้อที่เรียน</Section>
         {topics.map((t, i) => (
           <View key={t.id ?? "n" + i} style={s.trow}>
             <Text style={[T.body, { flex: 1 }]}>{t.title}</Text>
             {EXAMS.map((e) => (
               <Pressable key={e.value} onPress={() => patchTopic(i, { exam: t.exam === e.value ? null : e.value })}
                 style={[s.exam, t.exam === e.value && s.examOn]} accessibilityRole="radio" accessibilityState={{ selected: t.exam === e.value }}>
-                <Text style={[s.examText, t.exam === e.value && { color: color.paper }]}>{e.label}</Text>
+                <Text style={[s.examText, t.exam === e.value && pick.onText]}>{e.label}</Text>
               </Pressable>
             ))}
             <Pressable onPress={() => patchTopic(i, { is_starred: !t.is_starred })} style={[s.star, t.is_starred && s.starOn]}
               accessibilityRole="checkbox" accessibilityState={{ checked: t.is_starred }} accessibilityLabel={`ออกสอบ: ${t.title}`}>
-              <Text style={[s.starText, t.is_starred && { color: color.paper }]}>{t.is_starred ? "★" : "☆"}</Text>
+              <Text style={[s.starText, t.is_starred && { color: color.red }]}>{t.is_starred ? "★" : "☆"}</Text>
             </Pressable>
             <Pressable onPress={() => removeTopic(i)} style={s.star} accessibilityLabel={`ลบหัวข้อ ${t.title}`}>
               <Text style={{ color: color.danger, fontSize: 16 }}>✕</Text>
@@ -163,12 +164,12 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
         ))}
         <View style={s.trow}>
           <TextInput value={topicDraft} onChangeText={setTopicDraft} onSubmitEditing={addTopic} placeholder="+ เพิ่มหัวข้อ"
-            placeholderTextColor={color.muted} maxLength={120} style={[T.body, s.topicInput]} returnKeyType="done" accessibilityLabel="เพิ่มหัวข้อ" />
+            placeholderTextColor={color.faint} maxLength={120} style={[T.body, s.topicInput]} returnKeyType="done" accessibilityLabel="เพิ่มหัวข้อ" />
           {!!topicDraft.trim() && <Btn label="เพิ่ม" onPress={addTopic} style={{ flex: 0 }} />}
         </View>
 
-        <Text style={s.label}>มีงานสั่งไหม</Text>
-        <Btn label="+ เพิ่มงานของวิชานี้" onPress={() => setAddingTask(true)} />
+        <Section>มีงานสั่งไหม</Section>
+        <AddBtn label="+ เพิ่มงานของวิชานี้" onPress={() => setAddingTask(true)} />
         {save.error && <Text style={s.error}>บันทึกไม่สำเร็จ: {save.error.message}</Text>}
       </ScrollView>
 
@@ -180,6 +181,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
       <Modal visible={addingTask} transparent animationType="slide" onRequestClose={() => setAddingTask(false)}>
         <Pressable style={s.dim} onPress={() => setAddingTask(false)} accessibilityLabel="ปิด" />
         <View style={s.sheet}>
+          <Tape />
           <AddTaskForm subjects={subjects} today={bangkokNow().date} defaultSubjectId={subject.id} defaultSource="class"
             onDone={() => setAddingTask(false)} />
         </View>
@@ -189,41 +191,41 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 }
 
 const s = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: color.ink },
-  top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
+  screen: { flex: 1 },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
-  title: { fontFamily: font.title, fontSize: 20, color: color.go },
-  topSub: { fontFamily: font.body, fontSize: 13, color: color.onNavy, opacity: 0.85 },
-  page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
+  topSub: { fontFamily: font.body, fontSize: 13, color: color.muted },
+  page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
   textarea: {
-    minHeight: 96, borderWidth: 1, borderColor: color.rule, borderRadius: radius.md, padding: space.md, backgroundColor: color.deck,
+    minHeight: 96, borderWidth: 1.5, borderColor: color.rule2, borderRadius: radius.md, padding: space.md, backgroundColor: color.field,
     fontFamily: font.body, fontSize: 16, color: color.paper, textAlignVertical: "top",
   },
   photos: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
-  thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: color.rule },
+  thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: "rgba(42,33,24,0.12)", borderWidth: 1, borderColor: color.rule2 },
+  thumbTape: { position: "absolute", top: -8, left: 18, width: 36, height: 14, backgroundColor: "rgba(232,221,186,0.85)", transform: [{ rotate: "-6deg" }] },
   thumbEmpty: { opacity: 0.6 },
   addPhoto: {
-    width: 88, height: 56, borderRadius: radius.sm, borderWidth: 1.5, borderStyle: "dashed", borderColor: color.muted,
+    width: 88, height: 56, borderRadius: radius.sm, borderWidth: 1.5, borderStyle: "dashed", borderColor: color.rule2,
     alignItems: "center", justifyContent: "center",
   },
   trow: {
-    flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule,
+    flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule2,
     borderRadius: radius.md, paddingLeft: space.md, paddingRight: 4, minHeight: 52, marginBottom: 6,
   },
   topicInput: { flex: 1, minHeight: minTouch },
-  exam: { minHeight: 32, paddingHorizontal: 8, borderRadius: radius.sm, borderWidth: 1, borderColor: color.rule, justifyContent: "center" },
-  examOn: { backgroundColor: color.go, borderColor: color.go },
-  examText: { fontFamily: font.body, fontSize: 12, color: color.muted },
+  exam: { minHeight: minTouch, paddingHorizontal: 8, borderRadius: radius.sm, borderWidth: 1.5, borderColor: color.paper, justifyContent: "center" },
+  examOn: pick.on as object,
+  examText: { fontFamily: font.bodyBold, fontSize: 12, color: color.paper },
   star: { width: minTouch, height: minTouch, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
-  starOn: { backgroundColor: color.go },
+  // ★ ที่เลือก = วงปากกาแดง
+  starOn: { borderWidth: 2, borderColor: color.red, borderRadius: 22 },
   starText: { fontSize: 20, color: color.muted },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
-  foot: { padding: space.md, borderTopWidth: 1, borderTopColor: color.rule, backgroundColor: color.ink },
-  dim: { flex: 1, backgroundColor: "rgba(0,0,0,0.35)" },
+  foot: { padding: space.md, borderTopWidth: 1, borderTopColor: color.rule2, backgroundColor: color.deck },
+  dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },
   sheet: {
     position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.deck,
-    borderTopLeftRadius: 18, borderTopRightRadius: 18, padding: space.lg, width: "100%", maxWidth: 560, alignSelf: "center",
+    borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, borderTopWidth: 1, borderColor: color.rule2,
+    padding: space.lg, width: "100%", maxWidth: 560, alignSelf: "center",
   },
 });

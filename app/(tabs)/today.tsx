@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Btn, Card, Crt, Skeleton, T } from "@/components/ui";
+import { Btn, Card, Crt, Skeleton, T, Tick } from "@/components/ui";
 import { LvChip } from "@/components/game/LvChip";
 import {
   useAssignments, useAttendance, useCurrentTerm, useSetAttendance, useSlots, useSubjects, useToggleDone,
@@ -221,16 +221,6 @@ export default function Today() {
         </View>
       )}
     </View>
-  );
-}
-
-/** ✓ ปากกาน้ำเงิน (SVG เว็บ · native ใช้กล่องสีแทน) */
-export function Tick() {
-  if (Platform.OS !== "web") return <View style={{ width: 10, height: 10, backgroundColor: color.pen }} />;
-  return (
-    <svg width={18} height={18} viewBox="0 0 24 24" aria-hidden>
-      <path d="M4 13.5l5 5.5L20.5 5" fill="none" stroke={color.pen} strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
 

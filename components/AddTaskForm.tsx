@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Btn, Field, T } from "@/components/ui";
+import { Btn, Field, pick, T } from "@/components/ui";
 import { useAddAssignment, useDeleteAssignment, useUpdateAssignment, type Assignment } from "@/lib/queries/core";
 import { useRooms } from "@/lib/queries/rooms";
 import { bangkokIso, bangkokParts, isDate, normTime, normUrl } from "@/lib/input";
@@ -85,7 +85,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
         {subjects.map((sub) => (
           <Pressable key={sub.id} onPress={() => setSubjectId(subjectId === sub.id ? null : sub.id)}
             style={[s.chip, subjectId === sub.id && s.chipOn]} accessibilityRole="radio" accessibilityState={{ selected: subjectId === sub.id }}>
-            <Text style={[s.chipText, subjectId === sub.id && { color: color.paper }]}>{sub.name}</Text>
+            <Text style={[s.chipText, subjectId === sub.id && pick.onText]}>{sub.name}</Text>
           </Pressable>
         ))}
         {subjects.length === 0 && <Text style={T.muted}>ยังไม่มีวิชา (เพิ่มได้ในแท็บวิชา)</Text>}
@@ -98,7 +98,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
             {[{ id: null, name: "ส่วนตัว" }, ...rooms].map((r) => (
               <Pressable key={r.id ?? "me"} onPress={() => setRoomId(r.id)} style={[s.chip, roomId === r.id && s.chipOn]}
                 accessibilityRole="radio" accessibilityState={{ selected: roomId === r.id }}>
-                <Text style={[s.chipText, roomId === r.id && { color: color.paper }]}>{r.name}</Text>
+                <Text style={[s.chipText, roomId === r.id && pick.onText]}>{r.name}</Text>
               </Pressable>
             ))}
           </View>
@@ -134,10 +134,10 @@ const s = StyleSheet.create({
   label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
   chip: {
-    minHeight: minTouch, paddingHorizontal: space.md, borderRadius: radius.pill, borderWidth: 1, borderColor: color.rule,
-    justifyContent: "center", backgroundColor: color.deck,
+    minHeight: minTouch, paddingHorizontal: space.md, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper,
+    justifyContent: "center",
   },
-  chipOn: { backgroundColor: color.go, borderColor: color.go },
-  chipText: { fontFamily: font.body, fontSize: 14, color: color.paper },
+  chipOn: pick.on as object, // วงปากกาน้ำเงิน
+  chipText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
   two: { flexDirection: "row", gap: space.sm },
 });

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { Btn, T } from "@/components/ui";
+import { Btn, T, Tape, Tick } from "@/components/ui";
 import { AddTaskForm } from "@/components/AddTaskForm";
 import { useSession } from "@/lib/auth";
 import { useCurrentTerm, useSubjects, useToggleDone, type Assignment } from "@/lib/queries/core";
@@ -29,14 +29,14 @@ export function TaskRow({ task, subjectName, today, first }: {
         accessibilityLabel={`ส่งแล้ว: ${task.title}`}
         style={s.hit}
       >
-        <View style={[s.check, task.done && s.checked]}>{task.done && <Text style={s.tick}>✓</Text>}</View>
+        <View style={[s.check, task.done && s.checked]}>{task.done && <Tick />}</View>
       </Pressable>
       <Pressable style={{ flex: 1 }} disabled={!task.link} onPress={() => task.link && Linking.openURL(task.link)}>
         <Text style={[T.body, task.done && s.doneText]}>{task.title}</Text>
         <Text style={[T.muted, { fontSize: 12 }]}>{meta}</Text>
       </Pressable>
       {task.due_at && (
-        <Text style={[s.due, soon && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>
+        <Text style={[s.due, soon && !task.done && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>
       )}
       <Pressable onPress={() => !temp && setOpen(true)} style={s.hit} accessibilityRole="button"
         accessibilityLabel={`ตัวเลือกงาน ${task.title}`}>
@@ -47,6 +47,7 @@ export function TaskRow({ task, subjectName, today, first }: {
         <Modal visible transparent animationType="slide" onRequestClose={() => setOpen(false)}>
           <Pressable style={s.dim} onPress={() => setOpen(false)} accessibilityLabel="ปิด" />
           <View style={s.sheet}>
+            <Tape />
             <TaskSheet task={task} meta={meta} onClose={() => setOpen(false)} />
           </View>
         </Modal>
@@ -73,7 +74,7 @@ function TaskSheet({ task, meta, onClose }: { task: Assignment; meta: string; on
       <View style={s.grab} />
       <Text style={T.h3}>{task.title}</Text>
       <Text style={T.muted}>{meta}</Text>
-      <Text style={s.lock}>🔒 งานนี้เพื่อนเป็นคนเพิ่ม — แก้/ลบได้เฉพาะคนสร้างหรือเจ้าของห้อง · ติ๊กส่งแล้วของเรายังกดได้ตามปกติ</Text>
+      <Text style={s.lock}>งานนี้เพื่อนเป็นคนเพิ่ม — แก้/ลบได้เฉพาะคนสร้างหรือเจ้าของห้อง · ติ๊กส่งแล้วของเรายังกดได้ตามปกติ</Text>
       <View style={{ flexDirection: "row", marginTop: space.lg }}><Btn label="ปิด" onPress={onClose} /></View>
     </View>
   );
@@ -83,24 +84,25 @@ const s = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: space.sm, paddingVertical: 2 },
   divider: { borderTopWidth: 1, borderTopColor: color.rule },
   hit: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
-  check: { width: 26, height: 26, borderWidth: 2, borderColor: color.navy, borderRadius: 0, alignItems: "center", justifyContent: "center" },
-  checked: { backgroundColor: color.navy },
-  tick: { color: color.onNavy, fontSize: 16, lineHeight: 18 },
-  doneText: { color: color.muted, textDecorationLine: "line-through" },
-  due: {
-    fontFamily: font.bodyBold, fontSize: 12, color: color.muted, backgroundColor: color.ink,
-    paddingHorizontal: space.sm, paddingVertical: 3, borderRadius: radius.sm, overflow: "hidden",
+  // ช่องติ๊กวาดมือ · ติ๊กแล้ว = ✓ ปากกาน้ำเงิน
+  check: {
+    width: 22, height: 22, borderWidth: 2, borderColor: color.paper, alignItems: "center", justifyContent: "center",
+    borderTopLeftRadius: 2, borderTopRightRadius: 4, borderBottomRightRadius: 3, borderBottomLeftRadius: 2,
   },
-  dueSoon: { color: color.danger, backgroundColor: color.dangerBg },
+  checked: { borderColor: color.pen },
+  doneText: { color: color.faint }, // ไม่ขีดฆ่า: เส้นทับสระบนไทยอ่านยาก
+  due: { fontFamily: font.bodyBold, fontSize: 13, color: color.muted },
+  dueSoon: { color: color.danger },
   dots: { fontSize: 20, color: color.muted },
-  dim: { flex: 1, backgroundColor: "rgba(0,0,0,0.35)" },
+  dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },
   sheet: {
     position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.deck,
-    borderTopLeftRadius: 18, borderTopRightRadius: 18, padding: space.lg, width: "100%", maxWidth: 560, alignSelf: "center",
+    borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, borderTopWidth: 1, borderColor: color.rule2,
+    padding: space.lg, width: "100%", maxWidth: 560, alignSelf: "center",
   },
-  grab: { width: 40, height: 4, backgroundColor: color.rule, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
+  grab: { width: 40, height: 4, backgroundColor: color.rule2, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
   lock: {
-    fontFamily: font.body, fontSize: 13, color: color.muted, backgroundColor: color.ink,
+    fontFamily: font.body, fontSize: 13, color: color.muted, backgroundColor: color.field, borderWidth: 1, borderColor: color.rule2,
     borderRadius: radius.md, padding: space.md, marginTop: space.md,
   },
 });
