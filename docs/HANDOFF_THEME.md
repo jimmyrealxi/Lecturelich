@@ -13,6 +13,11 @@
 5. **หน้าเกม** `app/(tabs)/game.tsx`: ฉากบอส + สไปรต์ (ตอนนี้ CSS box-shadow ใน mockup → ในแอปทำเป็น View กริด หรือ PNG pixelated) · รายชื่อหัวข้อใต้ passive tree (สี rarity + วันทวนรอบถัดไป) · ของที่เก็บได้วันนี้
 6. หน้าอื่น (วิชา/งาน/ตั้งค่า/login/note/room) เปลี่ยนตาม token — ทำ mockup เพิ่มก่อนถ้าโครงเปลี่ยน
 
+## เปลี่ยนชื่อแอปเป็น Lecturelich (ทำตอนลงธีม · เจ้าของสั่ง 7 พ.ย.)
+- แก้: `app.json` name · `public/manifest.webmanifest` name/short_name · `app/+html.tsx` application-name + apple-mobile-web-app-title · `app/login.tsx` · `app/install.tsx` · `components/RoomsCard.tsx` ข้อความชวน · `public/sw.js` หัวแจ้งเตือน · CLAUDE.md หัวไฟล์
+- ไม่แก้: slug/scheme · ชื่องาน cron ใน migration · package.json · repo/โดเมน Vercel/โฟลเดอร์ (เจ้าของทำเองถ้าต้องการ)
+- iPhone ต้องลบไอคอนแล้วเพิ่มใหม่ถึงเห็นชื่อใหม่
+
 ## ลงโค้ดส่วนเกมให้ลื่น (จด 7 พ.ย. · ปรับตอนเทสเครื่องจริง)
 - canvas 2D พอ (ฉาก 128×72 ขยายด้วย CSS pixelated) ยังไม่ต้อง PixiJS/WebGL
 - ของนิ่ง (ผนัง พื้น Pap-Boy ตามชุด) วาดครั้งเดียวลง canvas ซ่อน · ต่อเฟรม drawImage + วาดแค่กระสุน/ประกาย/เลข · ท่าทางใช้ sprite sheet PNG — **ห้ามวาดทีละพิกเซลทุกเฟรมแบบ mockup**
