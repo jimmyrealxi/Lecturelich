@@ -291,7 +291,7 @@ const s = StyleSheet.create({
     flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: space.md,
     paddingHorizontal: pad, paddingTop: 14, paddingBottom: 14, backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go,
   },
-  h2: { fontFamily: font.headingBold, fontSize: 30, lineHeight: 36, color: color.go },
+  h2: { fontFamily: font.title, fontSize: 30, lineHeight: 36, color: color.go },
   meta: { fontFamily: font.body, fontSize: 14, color: color.onNavyMuted, marginTop: 2 },
 
   now: { paddingHorizontal: pad, paddingTop: 18, paddingBottom: 20, backgroundColor: color.navy },
@@ -303,7 +303,7 @@ const s = StyleSheet.create({
   clock: { fontFamily: font.num, fontSize: 64, lineHeight: 60, color: "#FFFFFF" },
   clockSmall: { fontSize: 30, color: color.onNavyMuted },
   scan: { position: "absolute", left: 0, right: 0, height: 1, backgroundColor: "rgba(30,61,116,0.5)" },
-  subject: { fontFamily: font.heading, fontSize: 22, lineHeight: 30, color: color.onNavy },
+  subject: { fontFamily: font.bodyBold, fontSize: 22, lineHeight: 30, color: color.onNavy },
   where: { fontFamily: font.body, fontSize: 14, color: color.onNavyMuted },
   track: { flexDirection: "row", gap: 2, marginTop: 14, marginBottom: 6 },
   cell: { flex: 1, height: 6, backgroundColor: color.navyRule },
@@ -313,14 +313,14 @@ const s = StyleSheet.create({
   seg: { flexDirection: "row", marginTop: 16, borderWidth: 1, borderColor: color.navyRule },
   segBtn: { flex: 1, minHeight: 48, alignItems: "center", justifyContent: "center" },
   segBorder: { borderLeftWidth: 1, borderLeftColor: color.navyRule },
-  segText: { fontFamily: font.heading, fontSize: 15, color: color.onNavy },
+  segText: { fontFamily: font.bodyBold, fontSize: 15, color: color.onNavy },
   link: { alignSelf: "center", minHeight: minTouch, justifyContent: "center", paddingHorizontal: 12, marginTop: 10 },
   linkText: { fontFamily: font.bodyMedium, fontSize: 14, color: color.onNavyMuted, textDecorationLine: "underline" },
   countdown: { fontFamily: font.body, fontSize: 15, color: color.onNavyMuted, marginTop: 2 },
   countNum: { fontFamily: font.num, fontSize: 22, color: color.onNavy },
 
   h: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", paddingHorizontal: pad, paddingTop: 24, paddingBottom: 8 },
-  hTitle: { fontFamily: font.heading, fontSize: 16, color: color.paper },
+  hTitle: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
   hSide: { fontFamily: font.body, fontSize: 13, color: color.faint },
   entry: {
     flexDirection: "row", alignItems: "flex-start", gap: 12, paddingHorizontal: pad, paddingVertical: 12,
@@ -335,12 +335,12 @@ const s = StyleSheet.create({
   miniLink: { minHeight: minTouch, justifyContent: "center" },
   miniText: { fontFamily: font.body, fontSize: 13, color: color.muted, textDecorationLine: "underline" },
   act: { minHeight: minTouch, paddingHorizontal: 16, borderWidth: 1, borderColor: color.warn, justifyContent: "center" },
-  actText: { fontFamily: font.heading, fontSize: 14, color: color.warn },
+  actText: { fontFamily: font.bodyBold, fontSize: 14, color: color.warn },
   // ช่องติ๊ก 22px แต่พื้นที่กด 44 (ดึงขอบออกด้วย margin ลบ ให้แถวไม่สูงเกิน)
   tick: { width: 44, height: 44, marginVertical: -11, marginLeft: -11, marginRight: 52 - 33, alignItems: "center", justifyContent: "center" },
   box: { width: 22, height: 22, borderWidth: 2, borderColor: color.muted },
   boxOn: { backgroundColor: color.go, borderColor: color.navy },
-  due: { fontFamily: font.heading, fontSize: 15, lineHeight: 18 },
+  due: { fontFamily: font.bodyBold, fontSize: 15, lineHeight: 18 },
   dueSmall: { fontFamily: font.body, fontSize: 12, color: color.faint },
   dueTime: { fontFamily: font.num, fontSize: 16 },
 
@@ -358,5 +358,5 @@ const s = StyleSheet.create({
   },
   toastText: { flex: 1, fontFamily: font.body, fontSize: 14, color: color.onNavy },
   toastBtn: { minHeight: minTouch, paddingHorizontal: 14, backgroundColor: color.go, justifyContent: "center" },
-  toastBtnText: { fontFamily: font.heading, fontSize: 14, color: color.paper },
+  toastBtnText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
 });

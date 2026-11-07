@@ -19,7 +19,7 @@ export default function TabsLayout() {
         headerStyle: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go },
         headerShadowVisible: false,
         headerTintColor: color.onNavy,
-        headerTitleStyle: { fontFamily: font.headingBold, fontSize: 20, color: color.go },
+        headerTitleStyle: { fontFamily: font.title, fontSize: 20, color: color.go },
         tabBarActiveTintColor: color.onNavy,
         tabBarInactiveTintColor: color.onNavyFaint,
         // แผงทึบติดขอบล่าง · ค่าเดิม 49 ไม่พอสำหรับไอคอน+ป้ายไทย · ขอบล่างอย่างน้อย 10 (แบบ LabHub: iPhone PWA ได้ insets = 0 แต่มีขีด Home)
@@ -28,7 +28,7 @@ export default function TabsLayout() {
           backgroundColor: color.navy, borderTopWidth: 1, borderTopColor: color.navyRule,
         },
         // ฟอนต์ไทยสูงกว่าละติน: ห้ามป้ายหด ไม่งั้นโดนบีบเหลือ ~10px แล้วตัวหนังสือขาด
-        tabBarLabelStyle: { fontFamily: font.heading, fontSize: 12, lineHeight: 18, flexShrink: 0 },
+        tabBarLabelStyle: { fontFamily: font.bodyBold, fontSize: 12, lineHeight: 18, flexShrink: 0 },
         tabBarBadgeStyle: {
           fontFamily: font.num, fontSize: 15, lineHeight: 16, color: color.paper, backgroundColor: color.go,
           borderRadius: 0, minWidth: 16, height: 16, paddingHorizontal: 4,
@@ -49,7 +49,7 @@ export default function TabsLayout() {
       }} />
       <Tabs.Screen name="game" options={{
         title: "เกม", headerStyle: { backgroundColor: color.cave, borderBottomWidth: 1, borderBottomColor: color.seam },
-        headerTintColor: color.gold, headerTitleStyle: { fontFamily: font.headingBold, fontSize: 20, color: color.gold },
+        headerTintColor: color.gold, headerTitleStyle: { fontFamily: font.title, fontSize: 20, color: color.gold },
         tabBarIcon: ({ focused }) => <TabIcon name="game" focused={focused} accent={color.gold} />,
       }} />
       <Tabs.Screen name="settings" options={{

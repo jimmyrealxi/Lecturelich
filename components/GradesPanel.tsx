@@ -258,12 +258,12 @@ function CutoffForm({ cutoffs, onSave, onDone }: { cutoffs: Cutoffs; onSave: (c:
 }
 
 const s = StyleSheet.create({
-  big: { fontFamily: font.heading, fontSize: 26, color: color.paper },
+  big: { fontFamily: font.bodyBold, fontSize: 26, color: color.paper },
   bar: { height: 8, backgroundColor: color.rule, borderRadius: 4, overflow: "hidden", marginTop: space.sm },
   barFill: { height: "100%", backgroundColor: color.go },
   need: { backgroundColor: color.navy, borderRadius: radius.lg, padding: space.md, marginBottom: space.md },
   needSmall: { fontFamily: font.body, fontSize: 13, color: color.onNavy, opacity: 0.9 },
-  needBig: { fontFamily: font.heading, fontSize: 26, color: color.onNavy },
+  needBig: { fontFamily: font.bodyBold, fontSize: 26, color: color.onNavy },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.sm },
   chip: {
     minWidth: minTouch, minHeight: minTouch, borderRadius: radius.pill, borderWidth: 1, borderColor: "rgba(255,255,255,0.4)",

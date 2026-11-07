@@ -95,7 +95,7 @@ export function PassiveTree({ topics }: { topics: TopicFull[] }) {
 const s = StyleSheet.create({
   panel: { backgroundColor: color.gamePanel, borderWidth: 1, borderColor: color.seam, borderRadius: 4, padding: space.md, marginBottom: space.md },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
-  h3: { fontFamily: font.heading, fontSize: 16, color: color.bone, flex: 1 },
+  h3: { fontFamily: font.bodyBold, fontSize: 16, color: color.bone, flex: 1 },
   dcount: { fontFamily: font.pixel, fontSize: 13, color: color.bone, backgroundColor: color.bossLine, paddingHorizontal: 8, paddingVertical: 2 },
   small: { fontFamily: font.body, fontSize: 12, color: color.ash },
   px: { fontFamily: font.pixel, marginTop: 4 },

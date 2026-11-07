@@ -41,7 +41,7 @@ export function Skeleton({ height = 72 }: { height?: number }) {
 }
 
 export const T = StyleSheet.create({
-  h3: { fontFamily: font.heading, fontSize: 16, color: color.paper },
+  h3: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
   body: { fontFamily: font.body, fontSize: 14, color: color.paper },
   muted: { fontFamily: font.body, fontSize: 13, color: color.muted },
 });
@@ -51,7 +51,7 @@ const s = StyleSheet.create({
     backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule, borderRadius: radius.lg,
     padding: space.md, marginBottom: space.md,
   },
-  section: { fontFamily: font.heading, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: space.sm },
+  section: { fontFamily: font.bodyBold, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: space.sm },
   btn: {
     flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1, borderColor: color.rule,
     backgroundColor: color.deck, alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,

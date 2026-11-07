@@ -148,7 +148,7 @@ const s = StyleSheet.create({
   px: { fontFamily: font.pixel, marginTop: 4 },
   small: { fontFamily: font.body, fontSize: 12, color: color.ash },
   name: { fontFamily: font.body, fontSize: 13, color: color.bone },
-  title: { fontFamily: font.heading, fontSize: 14, color: color.gold, marginTop: space.xs, marginBottom: space.sm },
+  title: { fontFamily: font.bodyBold, fontSize: 14, color: color.gold, marginTop: space.xs, marginBottom: space.sm },
   bar: { backgroundColor: color.gameDeep, borderWidth: 1, borderColor: color.seam, marginTop: 6, overflow: "hidden" },
   barFill: { height: "100%", width: "100%", backgroundColor: color.gold, transformOrigin: "left" },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: space.sm, marginBottom: space.md },

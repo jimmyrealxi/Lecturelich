@@ -54,7 +54,7 @@ const s = StyleSheet.create({
   top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
   backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
-  title: { fontFamily: font.headingBold, fontSize: 20, color: color.go },
+  title: { fontFamily: font.title, fontSize: 20, color: color.go },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   step: { flexDirection: "row", gap: space.md, alignItems: "flex-start", paddingVertical: space.sm },
   divider: { borderTopWidth: 1, borderTopColor: color.rule },

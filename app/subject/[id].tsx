@@ -125,7 +125,7 @@ const s = StyleSheet.create({
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
   edit: { position: "absolute", right: space.lg, top: space.md, minHeight: minTouch, minWidth: minTouch, alignItems: "flex-end", justifyContent: "center" },
   backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
-  title: { fontFamily: font.headingBold, fontSize: 20, color: color.go },
+  title: { fontFamily: font.title, fontSize: 20, color: color.go },
   topSub: { fontFamily: font.body, fontSize: 13, color: color.onNavy, opacity: 0.85, marginTop: 2 },
   links: { flexDirection: "row", gap: space.sm, marginTop: space.md },
   link: {
@@ -134,7 +134,7 @@ const s = StyleSheet.create({
   },
   linkText: { fontFamily: font.body, fontSize: 13, color: color.onNavy },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  big: { fontFamily: font.heading, fontSize: 26, color: color.paper },
+  big: { fontFamily: font.bodyBold, fontSize: 26, color: color.paper },
   bar: { height: 8, backgroundColor: color.rule, borderRadius: 4, overflow: "hidden", marginTop: space.sm },
   barFill: { height: "100%", backgroundColor: color.go },
 });

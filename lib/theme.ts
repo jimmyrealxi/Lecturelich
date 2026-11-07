@@ -1,24 +1,35 @@
-// design tokens ที่เดียวของแอป — กติกาการใช้อยู่ใน docs/DESIGN.md · mockup docs/mockups/retro-theme.html
+// design tokens ที่เดียวของแอป — กติกาการใช้อยู่ใน docs/DESIGN.md (ธีม A สมุดเก่า + จอเขียวแปะเทป)
 
 export const color = {
-  // หน้าใช้งาน "สมุดเทอร์มินัล" โทนยูนิฟอร์ม: พื้นเทาอ่อน + แผงน้ำเงิน + ขีดเหลือง (mockup retro-theme-blue.html แบบ B)
-  ink: "#E6E9EE", // พื้นหลังหน้า
-  deck: "#F3F5F8", // การ์ด ช่องกรอก แผ่นล่าง
-  rule: "#C7CDD6", // เส้นแบ่งบาง
-  rule2: "#B5BDC9", // ขอบปุ่ม ช่องว่างของแถบ
-  paper: "#14213A", // ตัวหนังสือหลัก · ตัวหนังสือบนพื้นเหลือง
-  muted: "#4A5873", // ข้อความรอง
-  faint: "#5C6982", // ข้อความประกอบ
-  go: "#F2C230", // เหลือง: เป็นพื้นหรือบนน้ำเงินเท่านั้น ห้ามเป็นตัวหนังสือบนพื้นอ่อน
-  warn: "#A84B0C", // ส้มเข้ม: ค้าง/ใกล้ส่ง (ตัวหนังสือบนพื้นอ่อนได้)
-  danger: "#B3261E",
-  dangerBg: "#FBE9E7",
-  navy: "#1E3D74", // แผงเด่น แถบแท็บ ปุ่มติ๊ก
-  navyDeep: "#173162", // หัวหน้า
-  navyRule: "#34558F", // เส้น/ช่องว่างบนแผงน้ำเงิน
-  onNavy: "#F4F6FA", // ตัวหนังสือบนน้ำเงิน
-  onNavyMuted: "#C2CDE0",
-  onNavyFaint: "#A9B8D2",
+  // หน้าใช้งานธีม A "สมุดเก่า + จอเขียวแปะเทป" (mockup e2-terminal-notebook.html ฝั่ง A + a-*.html)
+  ink: "#E9DDBF", // พื้นกระดาษ
+  deck: "#F3EAD2", // กล่อง แผง แผ่นล่าง · ตัวหนังสือบนปุ่มหมึก
+  field: "#FBF5E6", // ช่องกรอก
+  rule: "rgba(60,90,140,0.30)", // เส้นบรรทัดฟ้าแบบสมุด
+  rule2: "#8C7B60", // ขอบกล่อง/ช่องกรอก เส้นประ เงาแข็งปุ่มหลัก (เส้นเท่านั้น ไม่ใช่ตัวหนังสือ)
+  paper: "#2A2118", // หมึกดำ: ตัวหนังสือหลัก ปุ่มหลัก แถบแท็บ
+  muted: "#574735", // ข้อความรอง
+  faint: "#64523F", // ข้อความประกอบ
+  pen: "#2B4A8A", // ปากกาน้ำเงิน: ตัวเลือกที่เลือก ✓ ลิงก์
+  red: "#A0281D", // ปากกาแดง: ★ ตรายางด่วน เส้นกั้นหน้า
+  go: "#F2C94C", // เหลือง: บนพื้นหมึกเข้มเท่านั้น ห้ามเป็นตัวหนังสือบนพื้นอ่อน
+  warn: "#8A3F08", // ใกล้ส่ง/ค้าง
+  danger: "#A0281D",
+  dangerBg: "rgba(160,40,29,0.08)", // พื้นกล่องเตือน (ตัวหนังสือ dangerInk)
+  dangerInk: "#6E1A12",
+  on: "#F3EAD2", // ตัวหนังสือบนพื้นหมึกเข้ม
+  onMuted: "#CDBE9E",
+  crt: "#08130C", // จอเขียว: พื้น
+  crtOn: "#9EF0B4", // จอเขียว: ตัวหลัก
+  crtDim: "#73C48B", // จอเขียว: ตัวรอง
+
+  // ชื่อจากธีม B ที่หน้าเก่ายังใช้ — ย้ายไปชื่อข้างบนตอนแก้หน้านั้น (ขั้น 3–4) แล้วลบทิ้ง
+  navy: "#2B4A8A",
+  navyDeep: "#2A2118",
+  navyRule: "#8C7B60",
+  onNavy: "#F3EAD2",
+  onNavyMuted: "#CDBE9E",
+  onNavyFaint: "#CDBE9E",
 
   // หน้าเกม "อีกโลก" (หิน ทองหม่น)
   cave: "#0F0D0C",
@@ -41,13 +52,14 @@ export const rarity = {
 } as const;
 
 export const font = {
-  heading: "ChakraPetch_600SemiBold", // หัวข้อ ปุ่ม แท็บ
-  headingBold: "ChakraPetch_700Bold",
-  body: "IBMPlexSansThai_400Regular",
-  bodyMedium: "IBMPlexSansThai_500Medium",
-  bodyBold: "IBMPlexSansThai_600SemiBold",
-  num: "VT323_400Regular", // ตัวเลข/เวลาเท่านั้น ห้ามใช้กับคำไทย
-  pixel: "Silkscreen_400Regular", // เฉพาะคำอังกฤษสั้น เช่น LV XP HP
+  title: "Chonburi_400Regular", // หัวจอ หัวข้อย่อย (ไทย)
+  body: "Anuphan_400Regular", // เนื้อหา
+  bodyMedium: "Anuphan_500Medium",
+  bodyBold: "Anuphan_600SemiBold", // ปุ่ม แท็บ ป้าย
+  type: "CourierPrime_400Regular", // วันที่ ตัวเลขนอกจอ ป้ายพิมพ์ดีด
+  typeBold: "CourierPrime_700Bold",
+  num: "VT323_400Regular", // ตัวเลขบนจอเขียวเท่านั้น ห้ามใช้กับคำไทย
+  pixel: "Silkscreen_400Regular", // หน้าเกม: คำอังกฤษสั้น LV XP HP
 } as const;
 
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 } as const;

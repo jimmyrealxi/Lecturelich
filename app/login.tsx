@@ -30,7 +30,7 @@ export default function Login() {
 
 const s = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: color.ink, alignItems: "center", justifyContent: "center", padding: space.xl },
-  title: { fontFamily: font.heading, fontSize: 32, color: color.navy },
+  title: { fontFamily: font.bodyBold, fontSize: 32, color: color.navy },
   sub: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.sm, textAlign: "center" },
   btn: {
     marginTop: space.xl, minHeight: minTouch, paddingHorizontal: space.xl, borderRadius: radius.md,
