@@ -65,6 +65,6 @@ const s = StyleSheet.create({
     backgroundColor: color.cave, borderWidth: 2, borderColor: color.gold, borderRadius: radius.sm,
     paddingHorizontal: space.lg, paddingVertical: space.sm, alignItems: "center",
   },
-  xp: { fontFamily: font.pixel, fontSize: 18, color: color.warn },
+  xp: { fontFamily: font.pixel, fontSize: 18, color: color.gold },
   lv: { fontFamily: font.pixel, fontSize: 13, color: color.gold, marginTop: 2 },
 });

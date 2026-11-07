@@ -42,7 +42,7 @@ export default function JoinRoom() {
 const s = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: color.ink, justifyContent: "center", padding: space.lg },
   card: { width: "100%", maxWidth: 420, alignSelf: "center" },
-  code: { fontFamily: font.pixel, fontSize: 24, color: color.go, marginVertical: space.sm, letterSpacing: 2 },
+  code: { fontFamily: font.pixel, fontSize: 24, color: color.navy, marginVertical: space.sm, letterSpacing: 2 },
   row: { flexDirection: "row", gap: space.sm, marginTop: space.md },
   err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
 });

@@ -121,18 +121,18 @@ export default function SubjectScreen() {
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.lg },
+  top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.lg },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
   edit: { position: "absolute", right: space.lg, top: space.md, minHeight: minTouch, minWidth: minTouch, alignItems: "flex-end", justifyContent: "center" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.deck },
-  title: { fontFamily: font.heading, fontSize: 20, color: color.deck },
-  topSub: { fontFamily: font.body, fontSize: 13, color: color.deck, opacity: 0.85, marginTop: 2 },
+  backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
+  title: { fontFamily: font.headingBold, fontSize: 20, color: color.go },
+  topSub: { fontFamily: font.body, fontSize: 13, color: color.onNavy, opacity: 0.85, marginTop: 2 },
   links: { flexDirection: "row", gap: space.sm, marginTop: space.md },
   link: {
     flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1, borderColor: "rgba(255,255,255,0.3)",
     backgroundColor: "rgba(255,255,255,0.14)", alignItems: "center", justifyContent: "center",
   },
-  linkText: { fontFamily: font.body, fontSize: 13, color: color.deck },
+  linkText: { fontFamily: font.body, fontSize: 13, color: color.onNavy },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   big: { fontFamily: font.heading, fontSize: 26, color: color.paper },
   bar: { height: 8, backgroundColor: color.rule, borderRadius: 4, overflow: "hidden", marginTop: space.sm },

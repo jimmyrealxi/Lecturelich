@@ -13,7 +13,7 @@ export default function Root({ children }: PropsWithChildren) {
         {/* ห้ามใส่ viewport-fit=cover (แบบ LabHub): iPhone จะวางเว็บใต้แถบสถานะ (หัวจาง) + เหลือช่องว่างใต้แถบแท็บ */}
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link rel="manifest" href="/manifest.webmanifest" />
-        <meta name="theme-color" content="#121513" />
+        <meta name="theme-color" content="#173162" />
         <meta name="application-name" content="StudyQuest" />
         <meta name="mobile-web-app-capable" content="yes" />
         {/* iOS: "เพิ่มไปยังหน้าจอโฮม" เปิดเต็มจอแบบแอป (จำเป็นสำหรับ Web Push บน iPhone) */}
@@ -35,6 +35,6 @@ export default function Root({ children }: PropsWithChildren) {
 
 // ให้รู้สึกเหมือนแอป: แตะสองทีไม่ซูม / ไม่มีกรอบแวบตอนแตะ / หมุนจอแล้วตัวหนังสือไม่ขยายเอง
 const webAppCss = `
-html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; background: #121513; }
+html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; background: #E6E9EE; }
 body { -webkit-tap-highlight-color: transparent; }
 `;

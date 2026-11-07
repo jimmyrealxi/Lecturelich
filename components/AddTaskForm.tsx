@@ -85,7 +85,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
         {subjects.map((sub) => (
           <Pressable key={sub.id} onPress={() => setSubjectId(subjectId === sub.id ? null : sub.id)}
             style={[s.chip, subjectId === sub.id && s.chipOn]} accessibilityRole="radio" accessibilityState={{ selected: subjectId === sub.id }}>
-            <Text style={[s.chipText, subjectId === sub.id && { color: color.deck }]}>{sub.name}</Text>
+            <Text style={[s.chipText, subjectId === sub.id && { color: color.paper }]}>{sub.name}</Text>
           </Pressable>
         ))}
         {subjects.length === 0 && <Text style={T.muted}>ยังไม่มีวิชา (เพิ่มได้ในแท็บวิชา)</Text>}
@@ -98,7 +98,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
             {[{ id: null, name: "ส่วนตัว" }, ...rooms].map((r) => (
               <Pressable key={r.id ?? "me"} onPress={() => setRoomId(r.id)} style={[s.chip, roomId === r.id && s.chipOn]}
                 accessibilityRole="radio" accessibilityState={{ selected: roomId === r.id }}>
-                <Text style={[s.chipText, roomId === r.id && { color: color.deck }]}>{r.name}</Text>
+                <Text style={[s.chipText, roomId === r.id && { color: color.paper }]}>{r.name}</Text>
               </Pressable>
             ))}
           </View>

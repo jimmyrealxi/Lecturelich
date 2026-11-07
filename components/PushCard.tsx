@@ -62,11 +62,11 @@ export function PushCard() {
 }
 
 const s = StyleSheet.create({
-  warn: { backgroundColor: color.deck, borderColor: color.go, borderStyle: "dashed", borderWidth: 1.5 },
+  warn: { backgroundColor: color.deck, borderColor: color.navy, borderStyle: "dashed", borderWidth: 1.5 },
   row: { flexDirection: "row", marginTop: space.md },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   ok: {
-    fontFamily: font.bodyBold, fontSize: 13, color: color.go, backgroundColor: color.ink,
+    fontFamily: font.bodyBold, fontSize: 13, color: color.navy, backgroundColor: color.ink,
     paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill, overflow: "hidden",
   },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },

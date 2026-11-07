@@ -29,7 +29,7 @@
 หลังทำงานเสร็จ อัปเดต "สถานะล่าสุด" ด้านล่าง (~5 บรรทัด ลบของเก่าที่เสร็จแล้ว)
 
 ## สถานะล่าสุด (7 พ.ย. 2569)
-- **ธีม "สมุดเทอร์มินัล" (`docs/HANDOFF_THEME.md`)**: ข้อ 1–4 ลงแล้ว (token/ฟอนต์ Chakra Petch+VT323/แถบแท็บ/หน้าวันนี้) รอเจ้าของดูบนมือถือ → ต่อข้อ 5 หน้าเกม, ข้อ 6 หน้าอื่น · ไอคอนแท็บเป็น `<svg>` เว็บ (ไม่มี react-native-svg) · ติ๊กงาน+toast ยกเลิกยังไม่ได้เทส (ไม่มีงานในบัญชี)
+- **ธีม "สมุดเทอร์มินัล"** (`docs/HANDOFF_THEME.md`): ข้อ 1–4 ลงแล้ว + เปลี่ยนสีเป็น **แบบ B น้ำเงิน-เหลือง-เทาอ่อน** (`docs/mockups/retro-theme-blue.html`, ตาราง token ใน `docs/DESIGN.md`) · ต่อข้อ 5 หน้าเกม (ยังโลกหินทอง), ข้อ 6 หน้าอื่น · ไอคอนแท็บเป็น `<svg>` เว็บ · ติ๊กงาน+toast ยกเลิกยังไม่ได้เทส (ไม่มีงานในบัญชี)
 - branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → … → `feat/stage6-rooms` (push แล้ว = Vercel production) · ยังไม่มี PR (ขั้น 1–5 แก้ไขต่อบน stage6 → คุยเรื่องเปิด PR ก่อน)
 - iPhone PWA ล็อกอิน+แถบแท็บใช้ได้ (Supabase Site URL = โดเมน Vercel) · ห้าม `viewport-fit=cover`
 - **Supabase จริงแล้ว** ref `zuwmygzqoezgosyetahc` · migration 6 ไฟล์รันครบ · `.env` ใส่แล้ว (ไม่ commit) · dev: `.claude/launch.json` (`npm run web` พอร์ต 8081)

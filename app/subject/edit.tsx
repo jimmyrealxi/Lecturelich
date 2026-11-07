@@ -119,7 +119,7 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
               {DAYS.map((label, wd) => (
                 <Pressable key={wd} onPress={() => patch(i, { weekday: wd })} accessibilityRole="radio"
                   accessibilityState={{ selected: d.weekday === wd }} style={[s.day, d.weekday === wd && s.dayOn]}>
-                  <Text style={[s.dayText, d.weekday === wd && { color: color.deck, fontFamily: font.bodyBold }]}>{label}</Text>
+                  <Text style={[s.dayText, d.weekday === wd && { color: color.paper, fontFamily: font.bodyBold }]}>{label}</Text>
                 </Pressable>
               ))}
             </View>
@@ -157,10 +157,10 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
+  top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.deck },
-  title: { fontFamily: font.heading, fontSize: 20, color: color.deck },
+  backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
+  title: { fontFamily: font.headingBold, fontSize: 20, color: color.go },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   two: { flexDirection: "row", gap: space.sm },
   label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },

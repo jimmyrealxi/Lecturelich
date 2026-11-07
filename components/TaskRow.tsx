@@ -83,9 +83,9 @@ const s = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: space.sm, paddingVertical: 2 },
   divider: { borderTopWidth: 1, borderTopColor: color.rule },
   hit: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
-  check: { width: 26, height: 26, borderWidth: 2, borderColor: color.go, borderRadius: 7, alignItems: "center", justifyContent: "center" },
-  checked: { backgroundColor: color.go },
-  tick: { color: color.deck, fontSize: 16, lineHeight: 18 },
+  check: { width: 26, height: 26, borderWidth: 2, borderColor: color.navy, borderRadius: 0, alignItems: "center", justifyContent: "center" },
+  checked: { backgroundColor: color.navy },
+  tick: { color: color.onNavy, fontSize: 16, lineHeight: 18 },
   doneText: { color: color.muted, textDecorationLine: "line-through" },
   due: {
     fontFamily: font.bodyBold, fontSize: 12, color: color.muted, backgroundColor: color.ink,

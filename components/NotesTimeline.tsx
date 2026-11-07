@@ -71,7 +71,7 @@ const s = StyleSheet.create({
   line: { position: "absolute", left: 5, top: 6, bottom: 6, width: 2, backgroundColor: color.rule },
   item: { marginBottom: space.md },
   dot: {
-    position: "absolute", left: -18, top: 10, width: 12, height: 12, borderRadius: 6, backgroundColor: color.go,
+    position: "absolute", left: -18, top: 10, width: 12, height: 12, borderRadius: 6, backgroundColor: color.navy,
     borderWidth: 2, borderColor: color.ink,
   },
   topics: { flexDirection: "row", flexWrap: "wrap", gap: 4, marginTop: 6 },

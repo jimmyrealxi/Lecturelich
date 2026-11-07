@@ -14,7 +14,7 @@ const PATHS = {
 export function TabIcon({ name, focused, accent = color.go }: {
   name: keyof typeof PATHS; focused: boolean; accent?: string;
 }) {
-  const tint = focused ? color.paper : color.faint;
+  const tint = focused ? color.onNavy : color.onNavyFaint;
   return (
     <View style={{ width: 22, height: 22 }}>
       {/* ขีดสีเหนือแท็บที่เลือก: ชิดขอบบนของแถบ (ปุ่มแท็บเว้นบน 5 + ไอคอนอยู่กลางกล่องสูง 28) */}

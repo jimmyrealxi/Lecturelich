@@ -22,8 +22,8 @@ export function LvChip() {
 
 const s = StyleSheet.create({
   chip: { minHeight: 44, alignItems: "flex-end", justifyContent: "flex-end", paddingLeft: 8 },
-  lv: { fontFamily: font.pixel, fontSize: 11, color: color.warn },
+  lv: { fontFamily: font.pixel, fontSize: 11, color: color.go },
   cells: { flexDirection: "row", gap: 3, marginTop: 6 },
-  cell: { width: 9, height: 12, backgroundColor: color.rule2 },
-  on: { backgroundColor: color.warn },
+  cell: { width: 9, height: 12, backgroundColor: color.navyRule },
+  on: { backgroundColor: color.go },
 });

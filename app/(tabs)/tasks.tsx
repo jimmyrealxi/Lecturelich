@@ -42,7 +42,7 @@ export default function Tasks() {
           {(["todo", "done"] as const).map((t) => (
             <Pressable key={t} onPress={() => setTab(t)} style={[s.segItem, tab === t && s.segOn]}
               accessibilityRole="tab" accessibilityState={{ selected: tab === t }}>
-              <Text style={[s.segText, tab === t && { color: color.deck, fontFamily: font.bodyBold }]}>
+              <Text style={[s.segText, tab === t && { color: color.paper, fontFamily: font.bodyBold }]}>
                 {t === "todo" ? `ยังไม่ส่ง (${groups.todoCount})` : "ส่งแล้ว"}
               </Text>
             </Pressable>
@@ -95,7 +95,7 @@ const s = StyleSheet.create({
     borderRadius: radius.pill, backgroundColor: color.go, justifyContent: "center",
     shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 4,
   },
-  fabText: { fontFamily: font.bodyBold, fontSize: 15, color: color.deck },
+  fabText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   dim: { flex: 1, backgroundColor: "rgba(0,0,0,0.35)" },
   sheet: {
     position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.deck,

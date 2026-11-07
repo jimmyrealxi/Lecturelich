@@ -221,8 +221,8 @@ export default function Today() {
 function State({ text, live }: { text: string; live: boolean }) {
   return (
     <View style={s.state}>
-      <View style={[s.dot, !live && { backgroundColor: color.muted }]} />
-      <Text style={[s.stateText, !live && { color: color.muted }]}>{text}</Text>
+      <View style={[s.dot, !live && { backgroundColor: color.onNavyMuted }]} />
+      <Text style={[s.stateText, !live && { color: color.onNavyMuted }]}>{text}</Text>
     </View>
   );
 }
@@ -266,7 +266,7 @@ function NowPanel({ slot, live, minutes, subject, status, onCheck }: {
             {(["present", "absent"] as const).map((st, i) => (
               <Pressable key={st} onPress={() => onCheck(st)} accessibilityRole="button" accessibilityState={{ selected: status === st }}
                 style={[s.segBtn, i > 0 && s.segBorder, status === st && { backgroundColor: color.go }]}>
-                <Text style={[s.segText, status === st && { color: color.deck }]}>{st === "present" ? "มาเรียน" : "ขาด"}</Text>
+                <Text style={[s.segText, status === st && { color: color.paper }]}>{st === "present" ? "มาเรียน" : "ขาด"}</Text>
               </Pressable>
             ))}
           </View>
@@ -289,35 +289,35 @@ const s = StyleSheet.create({
   page: { paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   masthead: {
     flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: space.md,
-    paddingHorizontal: pad, paddingTop: 14, paddingBottom: 14, borderBottomWidth: 1, borderBottomColor: color.rule,
+    paddingHorizontal: pad, paddingTop: 14, paddingBottom: 14, backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go,
   },
-  h2: { fontFamily: font.headingBold, fontSize: 30, lineHeight: 36, color: color.paper },
-  meta: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: 2 },
+  h2: { fontFamily: font.headingBold, fontSize: 30, lineHeight: 36, color: color.go },
+  meta: { fontFamily: font.body, fontSize: 14, color: color.onNavyMuted, marginTop: 2 },
 
-  now: { paddingHorizontal: pad, paddingTop: 18, paddingBottom: 20, backgroundColor: color.deck, borderBottomWidth: 1, borderBottomColor: color.rule },
+  now: { paddingHorizontal: pad, paddingTop: 18, paddingBottom: 20, backgroundColor: color.navy },
   state: { flexDirection: "row", alignItems: "center", gap: 8 },
   dot: { width: 8, height: 8, backgroundColor: color.go },
   stateText: { fontFamily: font.bodyBold, fontSize: 13, color: color.go },
-  label: { fontFamily: font.body, fontSize: 13, color: color.faint, marginTop: space.md },
+  label: { fontFamily: font.body, fontSize: 13, color: color.onNavyFaint, marginTop: space.md },
   clockWrap: { alignSelf: "flex-start", marginTop: 8, marginBottom: 2 },
-  clock: { fontFamily: font.num, fontSize: 64, lineHeight: 60, color: "#F2F5F0" },
-  clockSmall: { fontSize: 30, color: color.muted },
-  scan: { position: "absolute", left: 0, right: 0, height: 1, backgroundColor: "rgba(24,28,25,0.45)" },
-  subject: { fontFamily: font.heading, fontSize: 22, lineHeight: 30, color: color.paper },
-  where: { fontFamily: font.body, fontSize: 14, color: color.muted },
+  clock: { fontFamily: font.num, fontSize: 64, lineHeight: 60, color: "#FFFFFF" },
+  clockSmall: { fontSize: 30, color: color.onNavyMuted },
+  scan: { position: "absolute", left: 0, right: 0, height: 1, backgroundColor: "rgba(30,61,116,0.5)" },
+  subject: { fontFamily: font.heading, fontSize: 22, lineHeight: 30, color: color.onNavy },
+  where: { fontFamily: font.body, fontSize: 14, color: color.onNavyMuted },
   track: { flexDirection: "row", gap: 2, marginTop: 14, marginBottom: 6 },
-  cell: { flex: 1, height: 6, backgroundColor: color.rule2 },
+  cell: { flex: 1, height: 6, backgroundColor: color.navyRule },
   trackL: { flexDirection: "row", justifyContent: "space-between" },
-  trackText: { fontFamily: font.body, fontSize: 13, color: color.faint },
-  trackNum: { fontFamily: font.num, fontSize: 18, color: color.muted },
-  seg: { flexDirection: "row", marginTop: 16, borderWidth: 1, borderColor: color.rule2 },
+  trackText: { fontFamily: font.body, fontSize: 13, color: color.onNavyFaint },
+  trackNum: { fontFamily: font.num, fontSize: 18, color: color.onNavyMuted },
+  seg: { flexDirection: "row", marginTop: 16, borderWidth: 1, borderColor: color.navyRule },
   segBtn: { flex: 1, minHeight: 48, alignItems: "center", justifyContent: "center" },
-  segBorder: { borderLeftWidth: 1, borderLeftColor: color.rule2 },
-  segText: { fontFamily: font.heading, fontSize: 15, color: color.paper },
+  segBorder: { borderLeftWidth: 1, borderLeftColor: color.navyRule },
+  segText: { fontFamily: font.heading, fontSize: 15, color: color.onNavy },
   link: { alignSelf: "center", minHeight: minTouch, justifyContent: "center", paddingHorizontal: 12, marginTop: 10 },
-  linkText: { fontFamily: font.bodyMedium, fontSize: 14, color: color.muted, textDecorationLine: "underline" },
-  countdown: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: 2 },
-  countNum: { fontFamily: font.num, fontSize: 22, color: color.paper },
+  linkText: { fontFamily: font.bodyMedium, fontSize: 14, color: color.onNavyMuted, textDecorationLine: "underline" },
+  countdown: { fontFamily: font.body, fontSize: 15, color: color.onNavyMuted, marginTop: 2 },
+  countNum: { fontFamily: font.num, fontSize: 22, color: color.onNavy },
 
   h: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", paddingHorizontal: pad, paddingTop: 24, paddingBottom: 8 },
   hTitle: { fontFamily: font.heading, fontSize: 16, color: color.paper },
@@ -339,7 +339,7 @@ const s = StyleSheet.create({
   // ช่องติ๊ก 22px แต่พื้นที่กด 44 (ดึงขอบออกด้วย margin ลบ ให้แถวไม่สูงเกิน)
   tick: { width: 44, height: 44, marginVertical: -11, marginLeft: -11, marginRight: 52 - 33, alignItems: "center", justifyContent: "center" },
   box: { width: 22, height: 22, borderWidth: 2, borderColor: color.muted },
-  boxOn: { backgroundColor: color.go, borderColor: color.go },
+  boxOn: { backgroundColor: color.go, borderColor: color.navy },
   due: { fontFamily: font.heading, fontSize: 15, lineHeight: 18 },
   dueSmall: { fontFamily: font.body, fontSize: 12, color: color.faint },
   dueTime: { fontFamily: font.num, fontSize: 16 },
@@ -349,14 +349,14 @@ const s = StyleSheet.create({
     paddingHorizontal: pad, borderTopWidth: 1, borderBottomWidth: 1, borderColor: color.rule,
   },
   sumText: { fontFamily: font.body, fontSize: 14, color: color.muted },
-  sumXp: { fontFamily: font.num, fontSize: 19, color: color.go },
+  sumXp: { fontFamily: font.num, fontSize: 19, color: color.navy },
 
   toast: {
     position: "absolute", left: 12, right: 12, bottom: 12, maxWidth: 536, alignSelf: "center",
     flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12,
     backgroundColor: color.paper, paddingVertical: 6, paddingRight: 6, paddingLeft: 16,
   },
-  toastText: { flex: 1, fontFamily: font.body, fontSize: 14, color: color.ink },
-  toastBtn: { minHeight: minTouch, paddingHorizontal: 14, backgroundColor: color.ink, justifyContent: "center" },
-  toastBtnText: { fontFamily: font.heading, fontSize: 14, color: color.warn },
+  toastText: { flex: 1, fontFamily: font.body, fontSize: 14, color: color.onNavy },
+  toastBtn: { minHeight: minTouch, paddingHorizontal: 14, backgroundColor: color.go, justifyContent: "center" },
+  toastBtnText: { fontFamily: font.heading, fontSize: 14, color: color.paper },
 });

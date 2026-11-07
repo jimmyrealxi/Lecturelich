@@ -60,7 +60,7 @@ const s = StyleSheet.create({
   btnRed: { borderColor: color.danger },
   btnRedFill: { backgroundColor: color.danger },
   btnText: { fontFamily: font.body, fontSize: 14, color: color.paper },
-  btnTextFilled: { color: color.deck, fontFamily: font.bodyBold },
+  btnTextFilled: { color: color.paper, fontFamily: font.bodyBold },
   skeleton: { backgroundColor: color.rule, borderRadius: radius.lg, marginBottom: space.md, opacity: 0.6 },
 });
 

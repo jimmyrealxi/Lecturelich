@@ -149,7 +149,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
             {EXAMS.map((e) => (
               <Pressable key={e.value} onPress={() => patchTopic(i, { exam: t.exam === e.value ? null : e.value })}
                 style={[s.exam, t.exam === e.value && s.examOn]} accessibilityRole="radio" accessibilityState={{ selected: t.exam === e.value }}>
-                <Text style={[s.examText, t.exam === e.value && { color: color.deck }]}>{e.label}</Text>
+                <Text style={[s.examText, t.exam === e.value && { color: color.paper }]}>{e.label}</Text>
               </Pressable>
             ))}
             <Pressable onPress={() => patchTopic(i, { is_starred: !t.is_starred })} style={[s.star, t.is_starred && s.starOn]}
@@ -190,11 +190,11 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: color.ink },
-  top: { backgroundColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
+  top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.deck },
-  title: { fontFamily: font.heading, fontSize: 20, color: color.deck },
-  topSub: { fontFamily: font.body, fontSize: 13, color: color.deck, opacity: 0.85 },
+  backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
+  title: { fontFamily: font.headingBold, fontSize: 20, color: color.go },
+  topSub: { fontFamily: font.body, fontSize: 13, color: color.onNavy, opacity: 0.85 },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
   textarea: {
@@ -217,7 +217,7 @@ const s = StyleSheet.create({
   examOn: { backgroundColor: color.go, borderColor: color.go },
   examText: { fontFamily: font.body, fontSize: 12, color: color.muted },
   star: { width: minTouch, height: minTouch, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
-  starOn: { backgroundColor: color.warn },
+  starOn: { backgroundColor: color.go },
   starText: { fontSize: 20, color: color.muted },
   error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
   foot: { padding: space.md, borderTopWidth: 1, borderTopColor: color.rule, backgroundColor: color.ink },

@@ -51,13 +51,13 @@ export default function Install() {
 }
 
 const s = StyleSheet.create({
-  top: { backgroundColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
+  top: { backgroundColor: color.navyDeep, borderBottomWidth: 3, borderBottomColor: color.go, paddingHorizontal: space.lg, paddingTop: space.md, paddingBottom: space.md },
   back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  backText: { fontFamily: font.body, fontSize: 14, color: color.deck },
-  title: { fontFamily: font.heading, fontSize: 20, color: color.deck },
+  backText: { fontFamily: font.body, fontSize: 14, color: color.onNavy },
+  title: { fontFamily: font.headingBold, fontSize: 20, color: color.go },
   page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   step: { flexDirection: "row", gap: space.md, alignItems: "flex-start", paddingVertical: space.sm },
   divider: { borderTopWidth: 1, borderTopColor: color.rule },
   num: { width: 28, height: 28, borderRadius: 14, backgroundColor: color.go, alignItems: "center", justifyContent: "center" },
-  numText: { fontFamily: font.bodyBold, fontSize: 14, color: color.deck },
+  numText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
 });
