@@ -2,6 +2,7 @@ import { Redirect, Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "@/lib/auth";
 import { LvChip } from "@/components/game/LvChip";
+import { DebugViewport } from "@/components/DebugViewport";
 import { color, font } from "@/lib/theme";
 
 export default function TabsLayout() {
@@ -11,6 +12,8 @@ export default function TabsLayout() {
   if (!session) return <Redirect href="/login" />;
 
   return (
+    <>
+    <DebugViewport />
     <Tabs
       screenOptions={{
         headerStyle: { backgroundColor: color.blue },
@@ -31,5 +34,6 @@ export default function TabsLayout() {
       <Tabs.Screen name="game" options={{ title: "เกม", headerStyle: { backgroundColor: color.gameBg }, headerTintColor: color.brass }} />
       <Tabs.Screen name="settings" options={{ title: "ตั้งค่า" }} />
     </Tabs>
+    </>
   );
 }
