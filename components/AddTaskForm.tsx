@@ -106,7 +106,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
       )}
 
       <View style={s.two}>
-        <Field label="กำหนดส่ง (ไม่ใส่ก็ได้)" value={date} onChangeText={setDate} placeholder={today} error={tried ? errDate : null} />
+        <Field label="กำหนดส่ง (ไม่ใส่ก็ได้)" value={date} onChangeText={setDate} placeholder="ปปปป-ดด-วว" error={tried ? errDate : null} />
         <Field label="เวลา" value={time} onChangeText={setTime} placeholder="23:59" maxLength={5} error={tried ? errTime : null}
           style={{ flex: 0.6 }} />
       </View>
