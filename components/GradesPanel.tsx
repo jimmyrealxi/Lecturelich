@@ -264,10 +264,10 @@ const s = StyleSheet.create({
   // บนจอเขียว: ตัวเลขใหญ่ VT323 · ข้อความไทย Anuphan
   needSmall: { fontFamily: font.body, fontSize: 13, color: color.crtDim },
   needBig: { fontFamily: font.num, fontSize: 40, lineHeight: 42, color: "#B8FFC9" },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: space.sm },
+  chips: { flexDirection: "row", gap: 4, marginTop: space.sm }, // 7 เกรดแถวเดียวตาม mockup (360px: ช่องละ ~38 กว้าง สูง 44)
   chip: {
-    minWidth: minTouch, minHeight: minTouch, borderRadius: radius.sm, borderWidth: 1, borderColor: "#2F6B42",
-    alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,
+    flex: 1, minHeight: minTouch, borderRadius: radius.sm, borderWidth: 1, borderColor: "#2F6B42",
+    alignItems: "center", justifyContent: "center",
   },
   chipOn: { backgroundColor: color.crtOn, borderColor: color.crtOn },
   chipText: { fontFamily: font.bodyBold, fontSize: 14, color: color.crtOn },
