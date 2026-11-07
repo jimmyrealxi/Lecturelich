@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich หน้าวิชา</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ชุด 1 · วิชา — ธีมผสม 1 (น้ำเงิน-เหลือง-เทาอ่อน) */
+:root{--ink:#E6E9EE;--deck:#F3F5F8;--rule:#C7CDD6;--rule2:#B5BDC9;--paper:#14213A;--muted:#4A5873;--faint:#5C6982;
+  --go:#F2C230;--warn:#A84B0C;--danger:#B3261E;--navy:#1E3D74;--navyDeep:#173162;--navyRule:#34558F;--on:#F4F6FA;--onMuted:#C2CDE0;--onFaint:#A9B8D2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2A2E2B;font:15px/1.5 Anuphan,sans-serif;color:#E4E6E2;padding:28px 16px}
+.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums}
+h1{font:700 22px/1.3 Anuphan,sans-serif;color:#fff;margin-bottom:6px}
+p.note{color:#B9BFBA;font-size:14px;max-width:820px;margin-bottom:24px}
+.wrap{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.cap{font:600 15px Anuphan;color:#fff;margin-bottom:10px}
+.phone{width:360px;max-width:100%;height:780px;border-radius:32px;overflow:hidden;border:6px solid #060606;display:flex;flex-direction:column;background:var(--ink);color:var(--paper);box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
+.sb{height:30px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:600 13px Anuphan;background:var(--navyDeep);color:var(--on)}
+.body{flex:1;overflow-y:auto;scrollbar-width:none}
+.mast{background:var(--navyDeep);border-bottom:3px solid var(--go);padding:10px 20px 14px;color:var(--on)}
+.mast h2{font:700 26px/1.15 Anuphan;color:var(--go)}
+.mast .meta{color:var(--onMuted);font-size:14px;margin-top:2px}
+.back{display:flex;justify-content:space-between;align-items:center;min-height:44px;margin:-4px -8px 2px}
+.back a{color:var(--on);text-decoration:none;font:500 14px Anuphan;padding:0 8px;min-height:44px;display:flex;align-items:center}
+.links{display:flex;gap:6px;margin-top:12px}
+.links a{flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--navyRule);color:var(--on);text-decoration:none;font:600 13px Anuphan}
+.h{display:flex;justify-content:space-between;align-items:baseline;padding:22px 20px 8px}
+.h b{font:600 16px Anuphan}.h span{color:var(--faint);font-size:13px}
+.row{display:grid;grid-template-columns:14px 1fr auto;gap:12px;align-items:center;padding:12px 20px;border-top:1px solid var(--rule);color:inherit;text-decoration:none;min-height:64px}
+.row:last-of-type{border-bottom:1px solid var(--rule)}
+.sq{width:12px;height:12px}
+.what{font-weight:500}.sub{color:var(--muted);font-size:13px}
+.pct{font:400 24px/1 VT323;text-align:right}.pct small{display:block;font:400 12px Anuphan;color:var(--faint)}
+.pct.bad{color:var(--danger)}
+.add{display:flex;align-items:center;justify-content:center;min-height:48px;margin:16px 20px;border:1px dashed var(--rule2);color:var(--paper);font:600 15px Anuphan;text-decoration:none}
+/* แผงตัวเลข */
+.panel{padding:14px 20px 16px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--deck)}
+.big{font:400 44px/1 VT323}.big small{font-size:22px;color:var(--muted)}
+.cells{display:flex;gap:2px;margin:10px 0 6px}.cells i{flex:1;height:8px;background:var(--rule)}
+.cells i.ok{background:var(--navy)}.cells i.ab{background:var(--danger)}.cells i.no{background:var(--rule2)}
+.legend{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.chips{display:flex;gap:4px;margin-top:10px}
+.chips button{flex:1;min-width:0;min-height:44px;background:transparent;border:1px solid var(--rule2);font:600 15px Anuphan;color:var(--paper);cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--go);border-color:var(--go)}
+.need{margin-top:12px;background:var(--navy);color:var(--on);padding:12px 14px}
+.need b{font:400 30px/1 VT323;color:var(--go)}.need small{color:var(--onMuted);font-size:13px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 20px;border-top:1px solid var(--rule);min-height:52px}
+.kv:last-child{border-bottom:1px solid var(--rule)}
+.kv .v{font:400 22px VT323;text-align:right}.kv .v small{font:400 12px Anuphan;color:var(--faint);display:block}
+.dday{font:400 20px VT323;color:var(--on);background:var(--navy);padding:2px 10px}
+.note{display:grid;grid-template-columns:62px 1fr;gap:12px;padding:12px 20px;border-top:1px solid var(--rule)}
+.note .d{font:400 19px/1.2 VT323;color:var(--faint)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tags span{font-size:12px;border:1px solid var(--rule2);padding:2px 8px}.tags .star{border-color:var(--warn);color:var(--warn)}
+/* ฟอร์ม */
+.f{padding:0 20px}
+.f label{display:block;font-size:13px;color:var(--muted);margin:14px 0 6px}
+.f input{width:100%;min-height:44px;border:1px solid var(--rule2);background:var(--deck);padding:0 12px;font:16px Anuphan;color:var(--paper)}
+.f input.t{font:20px VT323;text-align:center}
+.two{display:flex;gap:8px}.two>*{flex:1}
+.sw{display:flex;gap:8px}.sw button{width:44px;height:44px;border:2px solid transparent;cursor:pointer}
+.sw button[aria-pressed=true]{outline:3px solid var(--paper);outline-offset:2px}
+.slot{margin:10px 20px 0;border:1px solid var(--rule2);background:var(--deck);padding:10px 12px 12px}
+.days{display:flex;gap:2px}.days button{flex:1;min-height:44px;background:transparent;border:1px solid var(--rule2);font:600 13px Anuphan;color:var(--paper);cursor:pointer}
+.days button[aria-pressed=true]{background:var(--navy);color:var(--on);border-color:var(--navy)}
+.slot .two{margin-top:8px;align-items:center}.slot .dash{flex:none;color:var(--muted)}
+.slot input{min-height:44px;border:1px solid var(--rule2);background:#fff;padding:0 8px;width:100%;font:20px VT323;text-align:center;color:var(--paper)}
+.slot input.room{font:15px Anuphan;text-align:left}
+.rm{display:flex;justify-content:flex-end;margin-top:4px}.rm button{min-height:44px;background:none;border:0;color:var(--danger);font:500 13px Anuphan;cursor:pointer}
+.btns{display:flex;gap:8px;padding:20px}
+.btn{flex:1;min-height:48px;border:0;font:600 15px Anuphan;cursor:pointer}
+.btn.pri{background:var(--go);color:var(--paper)}.btn.del{background:transparent;border:1px solid var(--danger);color:var(--danger);flex:.6}
+.dock{flex:none;display:flex;border-top:1px solid var(--navyRule);background:var(--navy);padding:0 6px 12px}
+.dock a{flex:1;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--onFaint);font:500 12px Anuphan;position:relative;text-decoration:none}
+.dock svg{width:22px;height:22px}
+.dock a.on{color:var(--on)}.dock a.on::before{content:"";position:absolute;top:-1px;left:26%;right:26%;height:3px;background:var(--go)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--go);outline-offset:2px}
+</style>
+<style>
+/* ธีม A "สมุดเก่า + จอเขียวแปะเทป" (7 พ.ย.) · วางทับ CSS ฐานของ b1–b4 · ใช้เป็นตาราง token ตอนลงโค้ดได้
+   ฟอนต์: Anuphan เนื้อหา/ปุ่ม · Chonburi หัวไทย · Courier Prime ตัวเลข/วันที่/ป้าย · VT323 เฉพาะเลขบนจอเขียว
+   ลูกเล่น (เทป ตรายาง ป้ายนูน จอเขียว) ใช้จุดละครั้งต่อจอ · ไม่ไล่สี ไม่ใส่เงาทั่วไป · ไม่ letter-spacing กับข้อความไทย */
+:root{
+  --ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;
+  --rule:rgba(60,90,140,.30);--rule2:#8C7B60;
+  --paper:#2A2118;--muted:#574735;--faint:#64523F;
+  --pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;--danger:#A0281D;
+  --navy:#2B4A8A;--navyDeep:#2A2118;--navyRule:#8C7B60;--on:#F3EAD2;--onMuted:#CDBE9E;--onFaint:#CDBE9E;
+  --go:#F2C94C;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body{background:#222;font-family:Anuphan,sans-serif}
+h1{font:400 24px/1.3 Chonburi,serif}
+.cap{font:600 15px Anuphan}.cap small{font-family:Anuphan}
+.wsw button{font:600 14px Anuphan}
+.wsw button[aria-pressed=true]{color:#2A2118}
+
+/* กระดาษ: ลายเยื่อ + ขอบเก่า + รูเข้าเล่ม + เส้นกั้นหน้าแดง (เป็นพื้นหลังของจอ ไม่เพิ่ม element) */
+.phone{padding-left:26px;color:var(--paper);
+  background:
+    radial-gradient(circle at 6px 6px,#3a3128 4px,transparent 5px) 6px 70px/12px 56px repeat-y,
+    linear-gradient(90deg,transparent 22px,rgba(180,50,40,.45) 22px 24px,transparent 24px) 0 0/100% 100% no-repeat,
+    var(--grain),
+    radial-gradient(140% 100% at 50% 40%,transparent 60%,rgba(110,70,20,.28) 100%),
+    var(--ink)}
+.sb{margin-left:-26px;padding-left:36px;background:transparent;color:var(--paper);font:700 13px "Courier Prime",monospace}
+.dock{margin-left:-26px}
+
+/* หัวจอ: ไม่มีแถบสี · หัว Chonburi · ใต้หัวเส้นคู่แบบสมุดบัญชี */
+.mast{background:transparent;color:var(--paper);border-bottom:3px double rgba(42,33,24,.75);padding-top:6px}
+.mast h2{font:400 30px/1.2 Chonburi,serif;color:var(--paper)}
+.mast .meta{color:var(--muted)}
+.mast .meta b,.mast .meta .vt{color:var(--paper)}
+.back a,a.back{color:var(--paper)!important;font-family:Anuphan}
+.links a{border:1.5px solid var(--paper);color:var(--paper);font:600 13px Anuphan;border-radius:3px}
+
+/* หัวข้อย่อย */
+.h b,.os{font:400 18px Chonburi,serif}
+.h span{color:var(--faint)}
+.sheet h3,.panel h2{font:400 21px/1.3 Chonburi,serif}
+.box h3{font:400 16px Chonburi,serif}
+
+/* ตัวเลขนอกจอเขียว = Courier Prime (VT323 เฉพาะบนจอ) */
+.vt,.pct,.big,.kv .v,.note .d,.due b,.step output b,.code,.st i,.dock .n,.mast .meta b,.f input.t,.slot input,.f input.code{font-family:"Courier Prime",Anuphan,monospace;font-weight:700}
+.phone .vt{font-size:inherit!important}
+.pct{font-size:19px}.big{font-size:34px}.big small{font-size:16px}
+.kv .v{font-size:17px}.note .d{font-size:14px;line-height:1.3}
+.due{font:600 14px/1.25 Anuphan}.due b{font-size:14px}
+.step output b{font-size:22px}.st i{font-size:17px}
+.mast .meta b{font-size:15px}
+.f input.t,.slot input{font-size:17px}
+.f input.code{font-size:18px;letter-spacing:2px}
+.code{font-size:15px;letter-spacing:1px;color:var(--paper);border:1.5px solid var(--paper);padding:1px 6px;border-radius:2px}
+.pct small,.kv .v small,.due small,.step output small{font-family:Anuphan;font-weight:400}
+
+/* เส้นบรรทัด = เส้นฟ้าแบบสมุด */
+.row,.kv,.note,.topic,.line,.step,.st{border-top-color:var(--rule)}
+.row:last-of-type,.row.last,.kv:last-child,.kv:last-of-type,.topic.last,.line.last,.step.last,.st.last{border-bottom-color:var(--rule)}
+
+/* กล่อง/แผง: กระดาษสีอ่อนกว่า ขอบเส้นหมึก ไม่มีเงา */
+.panel,.box,.slot,.var{background:var(--deck);border:1px solid var(--rule2);border-radius:3px}
+
+.var.dashed{border:1.5px dashed var(--paper)}
+
+/* ปุ่ม: หลัก = หมึกดำเต็ม (เงาแข็งเฉพาะปุ่มหลัก/FAB) · รอง = เส้นหมึก */
+.btn,.chips button,.days button,.step button,.addph,.add,.seg,.dots{border-radius:3px}
+.btn,.step button,.chips button,.days button{border:1.5px solid var(--paper);color:var(--paper);background:transparent;font-family:Anuphan;font-weight:600}
+.btn.pri{background:var(--paper);border-color:var(--paper);color:var(--deck);box-shadow:2px 2px 0 var(--rule2)}
+.btn.pri:active{transform:translate(2px,2px);box-shadow:none}
+.btn.pri:disabled{background:transparent;border:1.5px dashed var(--rule2);color:var(--muted);box-shadow:none}
+.btn.del,.btn.danger{border-color:var(--danger);color:var(--danger)}
+.btn.delFill{background:var(--danger);border-color:var(--danger);color:#FFF4EC}
+.add,.addph{border:1.5px dashed var(--rule2);color:var(--paper);font:600 15px Anuphan}
+.fab{background:var(--paper);color:var(--deck);border:0;border-radius:3px;font:700 15px Anuphan;box-shadow:3px 3px 0 var(--rule2)}
+
+/* ที่เลือก: แท็บสลับ = หมึกดำเต็ม · ตัวเลือกย่อย = วงปากกาน้ำเงิน */
+.seg{border:1.5px solid var(--paper)}
+.seg button{color:var(--paper);font-family:Anuphan}
+.seg button+button{border-left-color:var(--paper)}
+.seg button[aria-selected=true],.seg button[aria-checked=true]{background:var(--paper);color:var(--deck)}
+.chips button[aria-pressed=true],.chips button[aria-checked=true],.days button[aria-pressed=true]{
+  background:rgba(43,74,138,.12);border-color:var(--pen);color:#1E3566;box-shadow:inset 0 0 0 1px var(--pen)}
+.sw button[aria-pressed=true]{outline-color:var(--paper)}
+
+/* ช่องกรอก */
+.f input,.slot input,textarea,.addt input.typing{background:var(--field);color:var(--paper);border:1.5px solid var(--rule2);border-radius:3px}
+.addt input{border-radius:3px;border-color:var(--rule2);font-family:Anuphan}
+textarea,.f input,.slot input.room{font-family:Anuphan}
+textarea::placeholder,input::placeholder{color:var(--faint)}
+.f label,.lbl{color:var(--muted)}
+
+/* ช่องติ๊ก: กล่องวาดมือ · ติ๊กแล้ว = ✓ ปากกาน้ำเงิน */
+.tick span{border:2px solid var(--paper);border-radius:2px 4px 3px 2px;background:transparent}
+.tick.done span{background:transparent;border-color:var(--pen);color:var(--pen);font-weight:700;font-size:17px}
+.ic.star[aria-checked=true]{color:var(--red);background:radial-gradient(circle,transparent 13px,var(--red) 13.5px 15px,transparent 15.5px)}
+
+/* แท็บล่าง: แผงหมึกเข้ม (เหลืองใช้ได้เฉพาะบนพื้นเข้มนี้) */
+.dock{background:var(--paper);border-top:0}
+.dock a{color:var(--onMuted);font:500 12px Anuphan}
+.dock a.on{color:var(--go)}.dock a.on::before{background:var(--go);top:0}
+.dock .n{background:var(--go);color:var(--paper);font-size:12px;padding:0 4px;line-height:16px}
+
+/* ข้อความ/สถานะ */
+.sub,.hint,.small,.legend{color:var(--muted)}
+.what a::after{color:var(--faint)}
+.due.soon{color:var(--warn)}.due.late,.pct.bad{color:var(--danger)}
+.shared,.tags span{border:1px solid var(--rule2);border-radius:2px}
+.tags .star{border-color:var(--red);color:var(--red)}
+.tag{background:transparent;color:var(--paper);border:1.5px solid var(--paper);font:700 12px "Courier Prime",Anuphan,monospace;border-radius:2px}
+.cells i{background:rgba(42,33,24,.12)}.cells i.ok{background:var(--pen)}.cells i.ab{background:var(--red)}.cells i.no{background:#B9A985}
+.warnbox,.errbox,.body > .err{background:rgba(160,40,29,.08);color:#6E1A12;border:1.5px solid var(--danger);border-radius:3px}
+.err{color:var(--danger)}
+.okmsg{background:transparent;border:1.5px solid var(--pen);color:#1E3566;border-radius:3px}
+.lock{background:var(--field);border:1px solid var(--rule2);color:var(--muted);border-radius:3px}
+.lock svg{color:var(--paper)}
+.st i{background:transparent;color:var(--paper);border:2px solid var(--paper);border-radius:50%}
+.st kbd{background:var(--field);border:1px solid var(--rule2);font-family:Anuphan}
+.share .yes{color:var(--pen)}
+.ph::after{background:var(--paper);color:var(--deck)}
+.ph.new{outline:2px dashed var(--paper);outline-offset:-2px}
+.or::before,.or::after{background:var(--rule2)}
+
+/* แผ่นล่าง/toast/พื้นหลังมืด */
+.dim{background:rgba(30,22,14,.55);inset:30px 0 0 0}
+.sheet{background:var(--grain),var(--deck);border-top:0;border-radius:4px 4px 0 0;padding-top:14px}
+.grab{background:var(--rule2)}
+.toast{left:38px;background:var(--paper);color:var(--deck);border-radius:3px;box-shadow:none}
+.toast button{background:var(--go);color:var(--paper);font-family:Anuphan;border-radius:2px}
+.foot{background:var(--deck);border-top:1px solid var(--rule2);margin-left:-26px;padding-left:46px}
+.navyfull{background:transparent;color:var(--paper)}
+.logo{font:400 40px/1.15 Chonburi,serif;color:var(--paper)}
+.logo+p{color:var(--muted)}
+.scan{background:var(--red);height:2px;width:72px;transform:rotate(-1.5deg)}
+
+/* ลูกเล่น (ใช้จุดละครั้งต่อจอ) */
+.screen{background:var(--crt);color:var(--crtOn);position:relative;border-radius:14px/18px;
+  box-shadow:inset 0 0 0 2px #0F2717,inset 0 0 28px rgba(0,0,0,.85),0 3px 0 #2B2117}
+.screen::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:repeating-linear-gradient(180deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+.screen .dim2{color:var(--crtDim)}
+.screen .n{font:400 30px/1 VT323,monospace;color:#B8FFC9;font-variant-numeric:tabular-nums}
+.tape{position:absolute;width:74px;height:22px;background:rgba(214,196,146,.88);box-shadow:0 1px 2px rgba(0,0,0,.2);z-index:3;
+  -webkit-mask:linear-gradient(90deg,transparent 0 2px,#000 2px calc(100% - 2px),transparent calc(100% - 2px)),repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 4px)}
+.sheet > .tape{top:-4px;left:50%;margin-left:-37px;transform:rotate(-2deg)}
+.stamp{display:inline-block;font:700 12px Anuphan;padding:1px 7px;border:2px solid currentColor;border-radius:4px;transform:rotate(-6deg);color:var(--red);white-space:nowrap}
+.stamp.blue{color:var(--pen)}
+.dymo{display:inline-block;background:#1A1A1A;color:#F2F2F2;font:700 13px "Courier Prime",Anuphan,monospace;padding:3px 10px;border-radius:2px;text-shadow:0 -1px 0 #000,0 1px 0 rgba(255,255,255,.25)}
+.dymo.en{letter-spacing:2px}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+.panel{border-left:0;border-right:0;border-radius:0}
+.need.screen{margin-top:16px;padding:12px 14px}
+p.note{display:block;padding:0;border:0}
+</style>
+</head>
+<body>
+<h1>ชุด 1 · วิชา (ธีม A สมุดเก่า)</h1>
+<p class="note">ธีม A: หัว Chonburi + เส้นคู่แบบสมุดบัญชี · รายการเป็นบรรทัดบนเส้นฟ้า · ตัวเลข Courier Prime · ลูกเล่นจอละ 1–2 อย่าง: รายการ = ป้ายนูนเทอม + ตรายาง "เกินเกณฑ์" · รายละเอียด = จอเขียวแปะเทป (ต้องได้อีกกี่คะแนน) + ป้ายนูน D-38 · ฟอร์ม = ไม่มีลูกเล่น · สีวิชาเปลี่ยนเป็นโทนหมึกเข้มให้เห็นบนกระดาษ</p>
+<div class="wrap">
+
+<div><div class="cap">รายการวิชา</div>
+<div class="phone"><div class="sb"><span>12:46</span><span>79%</span></div>
+<div class="body">
+  <header class="mast"><h2>วิชา</h2><div class="meta"><span class="dymo">เทอม 2/2569</span> · 4 วิชา</div></header>
+  <div class="h"><b>เทอมนี้</b><span>คาบถัดไป · เข้าเรียน</span></div>
+  <a class="row" href="#"><i class="sq" style="background:#2B4A8A"></i><div><div class="what">คณิตศาสตร์ 2</div><div class="sub">SCB0123 · จ. <span class="vt" style="font-size:17px">10:00</span></div></div><div class="pct">100%<small>ขาดได้อีก 2</small></div></a>
+  <a class="row" href="#"><i class="sq" style="background:#2E6B3F"></i><div><div class="what">ฟิสิกส์ทั่วไป</div><div class="sub">SCB0201 · อ. <span class="vt" style="font-size:17px">13:00</span></div></div><div class="pct">92%<small>ขาดได้อีก 1</small></div></a>
+  <a class="row" href="#"><i class="sq" style="background:#6A3F8F"></i><div><div class="what">การเขียนโปรแกรมเชิงวัตถุ</div><div class="sub">ITE1102 · พ. <span class="vt" style="font-size:17px">09:00</span></div></div><div class="pct bad">78%<small style="margin-top:6px"><span class="stamp">เกินเกณฑ์</span></small></div></a>
+  <a class="row" href="#"><i class="sq" style="background:#A8501E"></i><div><div class="what">ภาษาอังกฤษ</div><div class="sub">LNG1001 · ศ. <span class="vt" style="font-size:17px">08:00</span></div></div><div class="pct">—<small>ยังไม่เริ่ม</small></div></a>
+  <a class="add" href="#">+ เพิ่มวิชา</a>
+</div>
+<nav class="dock">
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>วันนี้</a>
+  <a class="on" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 5h6l2 2v13l-2-2H4zM20 5h-6l-2 2v13l2-2h6z"/></svg>วิชา</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="4" width="16" height="16"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>งาน</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v8M9 11h6"/></svg>เกม</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><rect x="14" y="5" width="4" height="4"/><rect x="8" y="15" width="4" height="4"/></svg>ตั้งค่า</a>
+</nav></div></div>
+
+<div><div class="cap">รายละเอียดวิชา (เลื่อนดูได้)</div>
+<div class="phone"><div class="sb"><span>12:46</span><span>79%</span></div>
+<div class="body">
+  <header class="mast">
+    <div class="back"><a href="#">‹ วิชา</a><a href="#">แก้ไข</a></div>
+    <h2>คณิตศาสตร์ 2</h2><div class="meta">SCB0123 · จ. <span class="vt" style="font-size:18px">10:00–12:00</span> · SC9-604</div>
+    <div class="links"><a href="#">Classroom</a><a href="#">ไลน์</a><a href="#">NotebookLM</a></div>
+  </header>
+
+  <div class="h"><b>เข้าเรียน</b><span>12 จาก 15 คาบ</span></div>
+  <div class="panel">
+    <div class="big">100%<small> · ขาด 0</small></div>
+    <div class="cells" aria-label="สถานะแต่ละคาบ"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i></i><i></i><i></i></div>
+    <div class="legend"><span>■ มา · <span style="color:var(--rule2)">■</span> งดสอน · <span style="color:var(--danger)">■</span> ขาด</span><span>ขาดได้อีก <b class="vt" style="font-size:18px">2</b></span></div>
+  </div>
+
+  <div class="h"><b>คะแนนและเกรด</b><span>จากส่วนที่มีคะแนนแล้ว</span></div>
+  <div class="panel">
+    <div class="big">8.57<small>/60</small></div>
+    <div class="sub">ถ้าจบตอนนี้ได้ F · เป้าหมาย</div>
+    <div class="chips" role="radiogroup" aria-label="เกรดเป้าหมาย"><button aria-pressed="true">A</button><button>B+</button><button>B</button><button>C+</button><button>C</button><button>D+</button><button>D</button></div>
+    <div class="need screen"><span class="tape" style="top:-9px;left:-14px;transform:rotate(-24deg)"></span><span class="dim2" style="font-size:13px">&gt; ต้องได้อีก</span><br><span class="n">71.4</span> <span class="dim2" style="font-size:13px">/ 80 คะแนน จากส่วนที่เหลือ</span></div>
+  </div>
+  <div class="kv"><div><div class="what">งานในคาบ</div><div class="sub">3 งาน · เต็ม 10</div></div><div class="v">8.57<small>/10</small></div></div>
+  <div class="kv"><div><div class="what">กลางภาค</div><div class="sub">ยังไม่กรอก</div></div><div class="v" style="color:var(--faint)">—<small>/30</small></div></div>
+  <div class="kv"><div><div class="what">ปลายภาค</div><div class="sub">ยังไม่กรอก</div></div><div class="v" style="color:var(--faint)">—<small>/40</small></div></div>
+
+  <div class="h"><b>วันสอบ</b><span>ตั้งแล้วจะเกิดบอส</span></div>
+  <div class="kv"><div><div class="what">กลางภาค</div><div class="sub">อ. 15 ธ.ค.</div></div><span class="dymo en">D-38</span></div>
+  <div class="kv"><div><div class="what">ปลายภาค</div><div class="sub">ยังไม่ตั้ง</div></div><a href="#" style="color:var(--paper);font-size:14px;min-height:44px;display:flex;align-items:center">ตั้งวัน</a></div>
+
+  <div class="h"><b>โน้ตทุกคาบ</b><span>12 คาบ · 9 รูป</span></div>
+  <div class="note"><span class="d">จ. 9<br>พ.ย.</span><div><div class="what">ลิมิตและความต่อเนื่อง</div><div class="sub">2 รูป · ทวนอีก 6 วัน</div><div class="tags"><span class="star">★ ลิมิต</span><span>ความต่อเนื่อง</span></div></div></div>
+  <div class="note"><span class="d">จ. 2<br>พ.ย.</span><div><div class="what">อนุพันธ์เบื้องต้น</div><div class="sub">ไม่มีรูป · ถึงรอบทวนแล้ว</div><div class="tags"><span>อนุพันธ์</span><span>กฎลูกโซ่</span></div></div></div>
+  <div style="height:24px"></div>
+</div></div></div>
+
+<div><div class="cap">แก้วิชาและตารางเรียน</div>
+<div class="phone"><div class="sb"><span>12:46</span><span>79%</span></div>
+<div class="body">
+  <header class="mast"><div class="back"><a href="#">‹ ยกเลิก</a><span></span></div><h2>แก้วิชา</h2></header>
+  <div class="f">
+    <label for="n">ชื่อวิชา</label><input id="n" value="คณิตศาสตร์ 2">
+    <label for="c">รหัสวิชา (ใช้จับคู่ในห้องร่วม)</label><input id="c" value="SCB0123">
+    <label>สี</label>
+    <div class="sw" role="radiogroup" aria-label="สีวิชา"><button aria-pressed="true" style="background:#2B4A8A" aria-label="น้ำเงิน"></button><button style="background:#6A3F8F" aria-label="ม่วง"></button><button style="background:#2E6B3F" aria-label="เขียว"></button><button style="background:#A8501E" aria-label="ส้ม"></button><button style="background:#9C3560" aria-label="ชมพู"></button><button style="background:#1F6F78" aria-label="ฟ้า"></button></div>
+  </div>
+  <div class="h"><b>ตารางเรียน</b><span>2 คาบ/สัปดาห์</span></div>
+  <div class="slot">
+    <div class="days" role="radiogroup" aria-label="วัน"><button aria-pressed="true">จ</button><button>อ</button><button>พ</button><button>พฤ</button><button>ศ</button><button>ส</button><button>อา</button></div>
+    <div class="two"><input value="10:00" aria-label="เริ่ม"><span class="dash">–</span><input value="12:00" aria-label="จบ"></div>
+    <div class="two"><input class="room" value="SC9-604" aria-label="ห้อง"></div>
+    <div class="rm"><button>ลบคาบนี้</button></div>
+  </div>
+  <div class="slot">
+    <div class="days" role="radiogroup" aria-label="วัน"><button>จ</button><button>อ</button><button>พ</button><button aria-pressed="true">พฤ</button><button>ศ</button><button>ส</button><button>อา</button></div>
+    <div class="two"><input value="13:00" aria-label="เริ่ม"><span class="dash">–</span><input value="15:00" aria-label="จบ"></div>
+    <div class="two"><input class="room" value="SC2-101" aria-label="ห้อง"></div>
+    <div class="rm"><button>ลบคาบนี้</button></div>
+  </div>
+  <a class="add" href="#">+ เพิ่มคาบ</a>
+  <div class="h"><b>ลิงก์</b><span>ไม่บังคับ</span></div>
+  <div class="f" style="margin-top:-10px">
+    <label for="l1">Google Classroom</label><input id="l1" value="https://classroom.google.com/c/…">
+    <label for="l2">กลุ่มไลน์</label><input id="l2" placeholder="https://line.me/…">
+    <label for="l3">NotebookLM</label><input id="l3" placeholder="https://notebooklm.google.com/…">
+  </div>
+  <div class="btns"><button class="btn del">ลบวิชา</button><button class="btn pri">บันทึก</button></div>
+</div></div></div>
+
+</div>
+</body>
+</html>
