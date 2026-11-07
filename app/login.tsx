@@ -16,6 +16,7 @@ export default function Login() {
     <View style={s.wrap}>
       <Text style={s.title}>Lecturelich</Text>
       <Text style={s.sub}>ผู้ช่วยเรียนส่วนตัว · ตาราง งาน โน้ต และทวนสอบแบบเกม</Text>
+      <View style={s.stroke} />
       {supabaseConfigured ? (
         <Pressable style={s.btn} onPress={onPress} accessibilityRole="button">
           <Text style={s.btnText}>เข้าสู่ระบบด้วย Google</Text>
@@ -29,14 +30,16 @@ export default function Login() {
 }
 
 const s = StyleSheet.create({
-  wrap: { flex: 1, alignItems: "center", justifyContent: "center", padding: space.xl },
+  wrap: { flex: 1, justifyContent: "center", padding: space.xl, width: "100%", maxWidth: 420, alignSelf: "center" },
   title: { fontFamily: font.title, fontSize: 40, lineHeight: 52, color: color.paper },
-  sub: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.sm, textAlign: "center" },
+  sub: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.sm },
+  // ขีดหมึกแดงใต้ชื่อ (mockup a-settings จอ 5)
+  stroke: { width: 72, height: 2, backgroundColor: color.red, marginTop: 18, transform: [{ rotate: "-1.5deg" }] },
   btn: {
-    marginTop: space.xl, minHeight: minTouch, paddingHorizontal: space.xl, borderRadius: radius.md,
-    backgroundColor: color.paper, alignItems: "center", justifyContent: "center", alignSelf: "stretch", maxWidth: 360,
+    marginTop: 18, minHeight: minTouch, paddingHorizontal: space.xl, borderRadius: radius.md,
+    backgroundColor: color.paper, alignItems: "center", justifyContent: "center", alignSelf: "stretch",
     boxShadow: `2px 2px 0 ${color.rule2}`,
   },
   btnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.deck },
-  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.lg, textAlign: "center" },
+  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.lg },
 });
