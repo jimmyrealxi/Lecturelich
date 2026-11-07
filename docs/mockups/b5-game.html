@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyQuest หน้าเกม</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ชุด 5 · หน้าเกม — "อีกโลก" มืด แรงบันดาลใจ PoE (ยืมแค่บรรยากาศ: ผิวหิน ทองหม่น สีความหายาก) · Pap-Boy วาดเอง */
+:root{--cave:#0F0D0C;--deep:#060504;--panel:#1A1613;--seam:#3B3027;--seam2:#54443A;--bone:#E8DFD0;--ash:#B0A28E;--gold:#C9A25B;--blood:#C2372C;--bossLine:#5A1E18;
+  --normal:#E8E8E8;--magic:#8AB0FF;--rare:#F2C230;--unique:#EE8A3C;--w:360px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2A2E2B;font:15px/1.5 "IBM Plex Sans Thai",sans-serif;color:#E4E6E2;padding:28px 16px}
+.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums}
+h1{font:700 22px/1.3 "Chakra Petch",sans-serif;color:#fff;margin-bottom:6px}
+p.note{color:#B9BFBA;font-size:14px;max-width:860px;margin-bottom:12px}
+.wsw{display:flex;gap:6px;margin-bottom:24px}
+.wsw button{min-height:44px;padding:0 16px;background:transparent;border:1px solid #5A615C;color:#E4E6E2;font:600 14px "Chakra Petch";cursor:pointer}
+.wsw button[aria-pressed=true]{background:#F2C230;border-color:#F2C230;color:#14213A}
+.wrap{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.cap{font:600 15px "Chakra Petch";color:#fff;margin-bottom:10px;max-width:var(--w)}
+.cap small{display:block;font:400 13px "IBM Plex Sans Thai";color:#B9BFBA}
+.phone{position:relative;width:var(--w);max-width:100%;height:780px;border-radius:32px;overflow:hidden;border:6px solid #060606;display:flex;flex-direction:column;color:var(--bone);box-shadow:0 18px 40px -12px rgba(0,0,0,.6);
+  background-color:var(--cave);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .45 0 0 0 0 .35 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.sb{height:30px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:600 13px "IBM Plex Sans Thai";background:#120F0D;color:var(--bone)}
+.body{flex:1;overflow-y:auto;scrollbar-width:none}
+/* หัวข้อมีเส้นประดับ (วาดเอง) */
+.h{display:flex;align-items:center;gap:10px;padding:22px 16px 10px;font:600 15px "Chakra Petch";color:var(--gold)}
+.h::before,.h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--seam2))}
+.h::after{background:linear-gradient(90deg,var(--seam2),transparent)}
+.h i{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);flex:none}
+/* กรอบหิน: ขอบนอก seam + ขอบในเข้ม */
+.frame{margin:0 12px;background:var(--panel);border:1px solid var(--seam2);box-shadow:inset 0 0 0 2px var(--deep),inset 0 0 0 3px var(--seam)}
+.in{padding:12px 14px}
+.small{font-size:13px;color:var(--ash)}
+/* Pap-Boy บนสุด */
+.stage{position:relative;background:#120F0D;border-bottom:1px solid var(--seam)}
+.stage canvas{display:block;width:200px;max-width:56%;aspect-ratio:1;image-rendering:pixelated;margin:0 auto;padding-top:6px}
+.stage .glowfloor{position:absolute;left:0;right:0;bottom:0;height:40px;background:radial-gradient(60% 100% at 50% 100%,rgba(201,162,91,.18),transparent)}
+.who{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center;padding:10px 16px 14px;border-bottom:1px solid var(--seam)}
+.lvl{font:400 50px/.8 VT323;color:var(--gold);grid-row:span 2}
+.lvl small{display:block;font:600 11px "Chakra Petch";color:var(--ash);letter-spacing:1px}
+.nm{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.nm b{font:700 18px "Chakra Petch";color:var(--bone)}
+.title{font:600 13px "Chakra Petch";color:var(--magic)}
+.bar{height:8px;background:var(--deep);border:1px solid var(--seam);margin-top:4px}
+.bar i{display:block;height:100%;background:var(--gold)}
+.xpn{font:400 17px VT323;color:var(--ash)}
+.acts{display:flex;gap:8px;padding:12px 16px 0}
+.btn{min-height:44px;padding:0 14px;background:transparent;border:1px solid var(--seam2);color:var(--bone);font:600 14px "Chakra Petch";cursor:pointer;flex:1}
+.btn.gold{background:linear-gradient(#2A2118,#1A140F);border-color:var(--gold);color:var(--gold)}
+.btn .vt{font-size:19px}
+.boxbadge{display:inline-grid;place-items:center;min-width:22px;height:20px;padding:0 5px;margin-left:6px;background:var(--gold);color:var(--deep);font:400 18px/1 VT323}
+/* บอส */
+.boss{border-color:var(--bossLine);box-shadow:inset 0 0 0 2px var(--deep),inset 0 0 0 3px #3A1612}
+.bh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.bh b{font:700 16px "Chakra Petch";color:#F0C8C2}
+.dd{font:400 26px/1 VT323;color:#FF8A7E;white-space:nowrap}
+.hp{height:12px;background:var(--deep);border:1px solid var(--bossLine);margin-top:8px;position:relative}
+.hp i{display:block;height:100%;background:linear-gradient(#D84A3E,#9E2A21)}
+.hpn{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px}
+.hpn .vt{font-size:18px;color:#F0A096}
+.ready{display:flex;align-items:baseline;gap:6px;margin-top:6px}
+.ready b{font:400 34px/1 VT323;color:var(--gold)}
+/* แถวหัวข้อ + ทวนแล้ว */
+.li{display:grid;grid-template-columns:16px 1fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--seam);min-height:56px}
+.li .mk{font-size:14px;text-align:center}
+.li .t{font-size:14px;line-height:1.35}
+.li .t small{display:block;font-size:12px;color:var(--ash)}
+.li .t small.late{color:#F0A096}
+.rv{min-height:44px;padding:0 12px;background:transparent;border:1px solid var(--gold);color:var(--gold);font:600 13px "Chakra Petch";cursor:pointer}
+.more{font-size:13px;color:var(--ash);padding:8px 0 0}
+.nextboss{padding:8px 16px 0;font-size:13px;color:var(--ash)}
+.nextboss .vt{font-size:17px;color:#F0A096}
+/* passive tree */
+.chips{display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto;scrollbar-width:none}
+.chips button{flex:none;min-height:44px;padding:0 12px;background:transparent;border:1px solid var(--seam2);color:var(--bone);font:500 13px "IBM Plex Sans Thai";cursor:pointer}
+.chips button[aria-checked=true]{border-color:var(--gold);color:var(--gold);background:#1F1913}
+.tree{display:flex;flex-wrap:wrap;align-items:center;row-gap:14px;padding:16px 10px 12px}
+.node{display:flex;align-items:center}
+.node .ln{width:14px;height:2px;background:var(--seam2)}
+.node .ln.lit{background:var(--gold)}
+.node b{display:block;width:14px;height:14px;border-radius:50%;border:2px solid var(--seam2);background:var(--deep)}
+.node b.lit{background:var(--gold);border-color:var(--gold)}
+.node b.star{width:24px;height:24px;border-color:var(--bone)}
+.node b.star.lit{background:var(--rare)}
+.node b.mast{background:var(--unique);border-color:var(--unique)}
+.node b.fade{opacity:.45;background:var(--gold);border-color:var(--gold)}
+.tkey{display:flex;flex-wrap:wrap;gap:4px 12px;padding:0 14px 10px;font-size:12px;color:var(--ash)}
+.tkey span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:var(--c);vertical-align:0;box-shadow:inset 0 0 0 1px var(--seam2)}
+/* วิชา */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 12px}
+.cell{padding:10px 12px}
+.cell .nm2{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell .lv{font:400 22px/1 VT323;color:var(--gold);margin-top:2px}
+.cell .xpn{font-size:15px}
+/* ของวันนี้ */
+.loot{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--seam);min-height:52px}
+.loot:first-child{border-top:0}
+.loot .ic{width:26px;height:26px;border:1px solid var(--c);display:grid;place-items:center;color:var(--c);font:400 18px/1 VT323}
+.loot .nm3{font-size:14px}.loot .nm3 small{display:block;font-size:12px;color:var(--ash)}
+.loot .vt{font-size:19px;color:var(--gold)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:0 16px;font-size:13px}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;background:currentColor;margin-right:5px}
+.spacer{height:24px}
+.dock{flex:none;display:flex;border-top:1px solid var(--seam);background:#120F0D;padding:0 6px 12px}
+.dock a{flex:1;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#9C8E7A;font:500 12px "Chakra Petch";position:relative;text-decoration:none}
+.dock svg{width:22px;height:22px}
+.dock a.on{color:var(--bone)}.dock a.on::before{content:"";position:absolute;top:-1px;left:26%;right:26%;height:3px;background:var(--gold)}
+.dock .n{position:absolute;top:8px;right:22%;font:400 15px/15px VT323;color:#14213A;background:#F2C230;padding:0 4px}
+button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<h1>ชุด 5 · หน้าเกม "อีกโลก" (มืด แนว PoE)</h1>
+<p class="note">ข้อมูลเท่าหน้าเดิม: ตัวละคร+LV+XP · บอสที่ใกล้สุด (HP · พร้อมสอบ% · หัวข้อที่ยังไม่ทวน + ปุ่มทวนแล้ว · บอสถัดไป) · passive tree เลือกวิชา · LV แต่ละวิชา · ได้ XP จาก · สีความหายาก · <b>ที่เปลี่ยน/เพิ่ม</b>: กล่องตัวละครเดิม (placeholder) → <b>Pap-Boy v1</b> บนสุด + ฉายา · ปุ่ม "แต่งตัว" (ไปตู้ของ papboy-v1) และ "เปิดกล่อง" (ชุด 6) · ใต้ tree บอกวันทวนรอบถัดไป · "ได้วันนี้" (ของเสริมขั้น 7 — ยังไม่ทำจนกว่าส่วนใช้งานเสร็จ) · <b>ไม่มีฉากสู้บอส</b> ตามที่ตกลง · ห้ามภาพ/ไอคอน/ชื่อ/ฟอนต์ของ PoE — กรอบหินและเส้นประดับวาดเอง</p>
+<div class="wsw" role="radiogroup" aria-label="ความกว้างจอ"><button aria-pressed="true" onclick="setW(this,360)">จอ 360</button><button onclick="setW(this,390)">จอ 390</button></div>
+<div class="wrap">
+
+<template id="game">
+  <div class="stage"><canvas class="pb" width="64" height="64" role="img" aria-label="Pap-Boy ชุดกลางเทอม"></canvas><div class="glowfloor"></div></div>
+  <div class="who">
+    <div class="lvl"><small>LV</small>14</div>
+    <div class="nm"><b>Pap-Boy</b><span class="xpn">XP 230/400</span></div>
+    <div><div class="title">ฉายา: ผู้มาเรียนสม่ำเสมอ</div><div class="bar"><i style="width:57%"></i></div></div>
+  </div>
+  <div class="acts"><button class="btn">แต่งตัว</button><button class="btn gold">เปิดกล่อง<span class="boxbadge">1</span></button></div>
+
+  <div class="h"><i></i>บอสที่ใกล้ที่สุด<i></i></div>
+  <div class="frame boss"><div class="in">
+    <div class="bh"><b>บอสกลางภาค · คณิตศาสตร์ 2</b><span class="dd">D-38</span></div>
+    <div class="small">สอบ อ. 15 ธ.ค. · 9 หัวข้อ (★ 3 นับ 2 เท่า)</div>
+    <div class="hp" role="meter" aria-label="เลือดบอส" aria-valuenow="7" aria-valuemax="12"><i style="width:58%"></i></div>
+    <div class="hpn"><span class="small">HP <span class="vt">7 / 12</span></span><span class="ready"><b>42%</b><span class="small">พร้อมสอบ</span></span></div>
+    <div style="margin-top:10px">
+      <div class="li"><span class="mk" style="color:var(--rare)">★</span><span class="t">ลิมิตด้านเดียว<small class="late">เลยรอบทวน 2 วัน</small></span><button class="rv">ทวนแล้ว</button></div>
+      <div class="li"><span class="mk" style="color:var(--rare)">★</span><span class="t">ความต่อเนื่องของฟังก์ชัน<small>ยังไม่ทวน</small></span><button class="rv">ทวนแล้ว</button></div>
+      <div class="li"><span class="mk" style="color:var(--normal)">•</span><span class="t">อนุพันธ์เบื้องต้น<small>ยังไม่ทวน</small></span><button class="rv">ทวนแล้ว</button></div>
+    </div>
+    <div class="more">และอีก 2 หัวข้อ (ดูใน passive tree)</div>
+  </div></div>
+  <div class="nextboss">บอสถัดไป: กลางภาค ฟิสิกส์ทั่วไป <span class="vt">D-40</span> · กลางภาค OOP <span class="vt">D-41</span></div>
+
+  <div class="h" id="tree"><i></i>Passive tree<i></i></div>
+  <div class="chips" role="radiogroup" aria-label="เลือกวิชา"><button role="radio" aria-checked="true">คณิตศาสตร์ 2</button><button role="radio" aria-checked="false">ฟิสิกส์ทั่วไป</button><button role="radio" aria-checked="false">OOP</button><button role="radio" aria-checked="false">ภาษาอังกฤษ</button></div>
+  <div class="frame">
+    <div class="tree" aria-label="9 หัวข้อ: ทวนแล้ว 4 เลยรอบ 1 ยังไม่ทวน 4">
+      <span class="node"><b class="mast" title="จำนวนจริง · ทวนครบทุกรอบ"></b></span>
+      <span class="node"><i class="ln lit"></i><b class="lit"></b></span>
+      <span class="node"><i class="ln lit"></i><b class="star lit"></b></span>
+      <span class="node"><i class="ln lit"></i><b class="lit"></b></span>
+      <span class="node"><i class="ln"></i><b class="star fade"></b></span>
+      <span class="node"><i class="ln"></i><b class="star"></b></span>
+      <span class="node"><i class="ln"></i><b></b></span>
+      <span class="node"><i class="ln"></i><b></b></span>
+      <span class="node"><i class="ln"></i><b></b></span>
+    </div>
+    <div class="tkey"><span style="--c:var(--gold)">ทวนแล้ว</span><span style="--c:var(--unique)">ครบทุกรอบ</span><span style="--c:#6B5C4C">จาง = เลยรอบ</span><span style="--c:var(--deep);">มืด = ยังไม่ทวน</span><span>ใหญ่ = ★</span></div>
+    <div class="in" style="padding-top:0">
+      <div class="li"><span class="mk" style="color:var(--gold)">●</span><span class="t">ลิมิตของฟังก์ชัน<small>ทวนแล้ว · รอบถัดไป อ. 10 พ.ย.</small></span><span></span></div>
+      <div class="li"><span class="mk" style="color:var(--rare)">★</span><span class="t">ลิมิตด้านเดียว<small class="late">เลยรอบทวน 2 วัน</small></span><button class="rv">ทวนแล้ว</button></div>
+      <div class="li"><span class="mk" style="color:var(--normal)">•</span><span class="t">กฎลูกโซ่<small>ยังไม่ทวน</small></span><button class="rv">ทวนแล้ว</button></div>
+    </div>
+  </div>
+
+  <div class="h"><i></i>ได้วันนี้<i></i></div>
+  <div class="frame">
+    <div class="loot"><span class="ic" style="--c:var(--gold)">▣</span><span class="nm3">กล่องเหล็ก<small>ครบ 50 XP</small></span><span class="vt">×1</span></div>
+    <div class="loot"><span class="ic" style="--c:var(--magic)">◆</span><span class="nm3" style="color:var(--magic)">หูแมว<small>จากกล่องเมื่อวาน · ใส่อยู่</small></span><span></span></div>
+  </div>
+
+  <div class="h"><i></i>วิชา · ซีซั่นเทอมนี้<i></i></div>
+  <div class="grid">
+    <div class="frame cell" style="margin:0"><div class="nm2">คณิตศาสตร์ 2</div><div class="lv">LV 6</div><div class="bar"><i style="width:40%"></i></div><div class="xpn">48/120</div></div>
+    <div class="frame cell" style="margin:0"><div class="nm2">ฟิสิกส์ทั่วไป</div><div class="lv">LV 4</div><div class="bar"><i style="width:75%"></i></div><div class="xpn">60/80</div></div>
+    <div class="frame cell" style="margin:0"><div class="nm2">การเขียนโปรแกรมเชิงวัตถุ</div><div class="lv">LV 5</div><div class="bar"><i style="width:20%"></i></div><div class="xpn">20/100</div></div>
+    <div class="frame cell" style="margin:0"><div class="nm2">ภาษาอังกฤษ</div><div class="lv">LV 1</div><div class="bar"><i style="width:5%"></i></div><div class="xpn">1/20</div></div>
+  </div>
+
+  <div class="h"><i></i>ได้ XP จาก<i></i></div>
+  <div class="frame"><div class="in small">
+    มาเรียน <span class="vt" style="color:var(--gold);font-size:17px">+5</span> · จดหลังคาบ <span class="vt" style="color:var(--gold);font-size:17px">+10</span> (มีรูป <span class="vt" style="color:var(--gold);font-size:17px">+5</span>) · ส่งงานก่อนกำหนด 1 วัน <span class="vt" style="color:var(--gold);font-size:17px">+20</span> · ตรงเวลา <span class="vt" style="color:var(--gold);font-size:17px">+10</span> · ทวนหัวข้อ <span class="vt" style="color:var(--gold);font-size:17px">+3</span> (ไม่เกิน 30/วัน)
+    <div style="margin-top:6px">แต่ละวิชาได้ไม่เกิน 60 XP ต่อวัน · เลเวลวิชาเริ่มใหม่ทุกเทอม ตัวละครไม่รีเซ็ต</div>
+    
+  </div></div>
+
+  <div class="h"><i></i>สีความหายาก<i></i></div>
+  <div class="legend"><span style="color:var(--normal)">ปกติ</span><span style="color:var(--magic)">magic</span><span style="color:var(--rare)">rare</span><span style="color:var(--unique)">unique</span></div>
+  <div class="spacer"></div>
+</template>
+<template id="dock">
+<nav class="dock">
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>วันนี้</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 5h6l2 2v13l-2-2H4zM20 5h-6l-2 2v13l2-2h6z"/></svg>วิชา</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="4" width="16" height="16"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>งาน<span class="n">5</span></a>
+  <a class="on" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v8M9 11h6"/></svg>เกม</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><rect x="14" y="5" width="4" height="4"/><rect x="8" y="15" width="4" height="4"/></svg>ตั้งค่า</a>
+</nav>
+</template>
+
+<div><div class="cap">1 · บนสุด: Pap-Boy + บอส<small>Pap-Boy ขยับตลอด (ปิดเมื่อตั้งลดการเคลื่อนไหว) · ปุ่มเปิดกล่องมีเลขเมื่อมีกล่องรอ ไม่มี = ซ่อนเลข</small></div>
+<div class="phone"><div class="sb"><span>12:46</span><span>79%</span></div><div class="body" data-fill="game"></div><div data-fill="dock"></div></div></div>
+
+<div><div class="cap">2 · เลื่อนลง: passive tree → วิชา<small>แตะวิชาด้านบนเพื่อเปลี่ยน tree · ใต้ tree = หัวข้อพร้อมวันทวนรอบถัดไป</small></div>
+<div class="phone"><div class="sb"><span>12:47</span><span>79%</span></div><div class="body" data-fill="game" data-scroll="tree"></div><div data-fill="dock"></div></div></div>
+
+</div>
+<canvas id="cv" width="64" height="64" hidden></canvas>
+<script>
+const RC={n:"#E8E8E8",m:"#8AB0FF",r:"#F2C230",u:"#EE8A3C"};
+const SLOTS=[
+ {g:"หน้าและหัว",k:"glow",l:"สีจอหน้า",o:[["yellow","เหลือง","n"],["green","เขียว","n"],["cyan","ฟ้าน้ำแข็ง","m"],["pink","ชมพู","r"]]},
+ {k:"mouth",l:"ปาก",o:[["smile","ยิ้ม","n"],["cat","ปากแมว","m"],["fang","เขี้ยว","m"],["tongue","แลบลิ้น","r"]]},
+ {k:"eyes",l:"แว่น",o:[["none","ไม่ใส่","n"],["round","แว่นกลม","m"],["hud","จอ HUD","u"]]},
+ {k:"ears",l:"หู",o:[["none","ไม่มี","n"],["cat","หูแมว","m"],["bunny","หูกระต่าย","r"],["speaker","หูลำโพง","r"]]},
+ {k:"hat",l:"หมวก",o:[["none","ไม่ใส่","n"],["beanie","ไหมพรม","n"],["grad","หมวกบัณฑิต","u"]]},
+ {g:"ตัว",k:"outfit",l:"เสื้อ",o:[["hoodie","ฮู้ดส้ม","n"],["lab","เสื้อกาวน์","m"],["jacket","แจ็กเก็ตทอง","r"]]},
+ {k:"scarf",l:"ผ้าพันคอ",o:[["none","ไม่มี","n"],["red","แดงปลิว","m"]]},
+ {k:"shoes",l:"รองเท้า",o:[["plain","ธรรมดา","n"],["sneaker","ผ้าใบแดง","m"],["gold","บูตทอง","r"]]},
+ {k:"held",l:"ของถือ",o:[["none","มือเปล่า","n"],["pencil","ดินสอยักษ์","r"],["laser","ปากกาเลเซอร์","u"]]},
+ {k:"wings",l:"ปีก",o:[["none","ไม่มี","n"],["paper","ปีกกระดาษ","r"],["pixel","ปีกพิกเซล","m"],["light","ปีกแสง","u"]]},
+ {g:"ออร่าและเอฟเฟกต์",k:"back",l:"ออร่าหลัง",o:[["none","ไม่มี","n"],["ring","วงแหวน","m"],["flame","เปลวทอง","r"],["stars","ดาวหมุน","u"]]},
+ {k:"ground",l:"ออร่าพื้น",o:[["none","ไม่มี","n"],["bloom","ดอกไม้","n"],["ripple","คลื่นน้ำ","m"],["rune","วงเวท","r"],["fire","ไฟใต้เท้า","u"]]},
+ {k:"fx",l:"อนุภาค",o:[["none","ไม่มี","n"],["spark","ประกาย","m"],["binary","เลข 0/1","r"]]},
+ {k:"pet",l:"สัตว์เลี้ยง",o:[["none","ไม่มี","n"],["floppy","ดิสก์บิน","r"]]},
+ {k:"bg",l:"ฉากหลัง",o:[["plain","ห้องน้ำเงิน","n"],["stars","ฟ้ากลางคืน","m"]]},
+];
+const PRESETS={
+ start:{glow:"yellow",mouth:"smile",eyes:"none",ears:"none",hat:"none",outfit:"hoodie",scarf:"none",shoes:"plain",held:"none",wings:"none",back:"none",ground:"none",fx:"none",pet:"none",bg:"plain",title:["นักเรียนฝึกหัด","n"]},
+ mid:{glow:"green",mouth:"cat",eyes:"round",ears:"cat",hat:"none",outfit:"lab",scarf:"red",shoes:"sneaker",held:"none",wings:"pixel",back:"ring",ground:"rune",fx:"spark",pet:"none",bg:"plain",title:["ผู้มาเรียนสม่ำเสมอ","m"]},
+ end:{glow:"cyan",mouth:"fang",eyes:"hud",ears:"speaker",hat:"grad",outfit:"jacket",scarf:"red",shoes:"gold",held:"laser",wings:"light",back:"stars",ground:"fire",fx:"binary",pet:"floppy",bg:"stars",title:["ผู้พิชิตบอสปลายภาค","u"]},
+};
+let st={...PRESETS.start};
+
+// ===== วาดพิกเซล =====
+const cv=document.getElementById("cv");let c=cv.getContext("2d");
+const OUT="#14213A";
+function P(x,y,col,a=1){c.globalAlpha=a;c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),1,1)}
+function R(x,y,w,h,col,a=1){c.globalAlpha=a;c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function disc(cx,cy,r,col,a=1,maxY=99){for(let y=-r;y<=r;y++)for(let x=-r;x<=r;x++)if(x*x+y*y<=r*r+r*.6&&cy+y<=maxY)P(cx+x,cy+y,col,a)}
+function ell(cx,cy,rx,ry,col,a=1,ring=false){for(let y=-ry-1;y<=ry+1;y++)for(let x=-rx-1;x<=rx+1;x++){const v=x*x/(rx*rx)+y*y/(ry*ry);if(ring?Math.abs(v-1)<1.3/Math.min(rx,ry)*1.4:v<=1)P(cx+x,cy+y,col,a)}}
+function box(x,y,w,h,col){R(x,y,w,1,col);R(x,y+h-1,w,1,col);R(x,y,1,h,col);R(x+w-1,y,1,h,col)}
+// วาดหลายชิ้นพร้อมเส้นขอบรวมเป็นเงาเดียว (ขอบก่อน แล้วค่อยเติมสี)
+function shapes(list){
+  for(const s of list){ if(s.k==="r")R(s.x-1,s.y-1,s.w+2,s.h+2,OUT); else if(s.k==="d")disc(s.x,s.y,s.r+1,OUT,1,s.maxY!=null?s.maxY+1:99); else ell(s.x,s.y,s.rx+1,s.ry+1,OUT)}
+  for(const s of list){ if(s.k==="r")R(s.x,s.y,s.w,s.h,s.c); else if(s.k==="d")disc(s.x,s.y,s.r,s.c,1,s.maxY??99); else ell(s.x,s.y,s.rx,s.ry,s.c)}
+}
+const GLOW={yellow:"#F2C230",green:"#86D99B",cyan:"#6FE3F0",pink:"#FF8FC8"};
+const OUTFIT={hoodie:["#E07A3F","#B85A26"],lab:["#F3F5F8","#C7CDD6"],jacket:["#1E3D74","#152C55"]};
+const SHOE={plain:"#2B2B3A",sneaker:"#C2372C",gold:"#C9A25B"};
+// สุ่มแบบคงที่ (ภาพเหมือนเดิมทุกเฟรม)
+const rnd=i=>{const x=Math.sin(i*127.1)*43758.5453;return x-Math.floor(x)};
+
+function drawBg(f){
+  R(0,0,64,64,"#13233D");
+  if(st.bg==="stars"){R(0,0,64,64,"#0B1530");for(let i=0;i<26;i++){const on=(f+i*7)%40<34;P(rnd(i)*64,rnd(i+50)*48,"#F4F6FA",on?.9:.25)}}
+  R(0,56,64,8,"#0E1A2E");for(let x=0;x<64;x+=8)R(x,56,1,8,"#1A2C4E");R(0,56,64,1,"#22365A");
+}
+function drawBack(f){
+  const cx=32,cy=29;
+  if(st.back==="ring"){disc(cx,cy,17,"#8AB0FF",.10);
+    for(let a=0;a<Math.PI*2;a+=.045){const on=Math.floor((a+f*.08)/.35)%2===0;P(cx+Math.cos(a)*20,cy+Math.sin(a)*20,"#8AB0FF",on?.95:.25)}
+    for(let a=0;a<Math.PI*2;a+=.06)P(cx+Math.cos(a)*15,cy+Math.sin(a)*15,"#C9DAFF",.35)}
+  if(st.back==="flame"){for(let x=12;x<=52;x++){const h=17+5*Math.sin(x*.55+f*.6)+3*Math.sin(x*1.3-f*.9)-Math.abs(x-32)*.45;
+      for(let y=0;y<h;y++){const t=y/h;P(x,52-y,t<.45?"#EE8A3C":t<.8?"#F2C230":"#FFE680",.5*(1-t*.5))}}}
+  if(st.back==="stars"){disc(cx,27,16,"#FFE680",.10);disc(cx,27,12,"#FFE680",.12);
+    for(let i=0;i<8;i++){const a=i*Math.PI/4+f*.05,x=cx+Math.cos(a)*22,y=28+Math.sin(a)*15,col=i%2?"#FFE680":"#EE8A3C",tw=(f+i*3)%10<7;
+      P(x,y,col);if(tw){P(x-1,y,col,.8);P(x+1,y,col,.8);P(x,y-1,col,.8);P(x,y+1,col,.8)}}}
+}
+function drawWings(f,b){
+  if(st.wings==="none")return;
+  const flap=(f%10<5)?0:1,L=[5,8,10,12,12,11,10,8,6,4,3,2],rows=[];
+  L.forEach((len,i)=>{const y=29+i+b-(i<4?flap:0);rows.push([24-len,y,len],[40,y,len])});
+  rows.forEach(([x,y,w])=>R(x-1,y-1,w+2,3,OUT));
+  rows.forEach(([x,y,w],j)=>{const i=j>>1;
+    for(let k=0;k<w;k++){const px=x+k,near=(px<32?(x+w-1-px):(px-x))/w;let col,a=1;
+      if(st.wings==="paper"){col=i%3===2?"#8AB0FF":"#F3F5F8";if(Math.abs(px-32)===9)col="#C2372C"}
+      else if(st.wings==="pixel"){col=(px+y)%2?"#8AB0FF":"#5B7FD6"}
+      else{col=near<.35?"#FFE680":near<.7?"#F2C230":"#EE8A3C";a=.92}
+      P(px,y,col,a)}});
+  if(st.wings==="light")for(let i=0;i<4;i++){if((f+i*4)%12<6){P(10+i*2,30+i*3+b,"#FFF6C8");P(54-i*2,30+i*3+b,"#FFF6C8")}}
+}
+function drawGround(f){
+  ell(32,55,11,2,"#000",.28);
+  const g=st.ground;
+  if(g==="rune"){ell(32,55,17,4,"#8AB0FF",.9,true);ell(32,55,12,3,"#8AB0FF",.5,true);
+    for(let i=0;i<6;i++){const a=i*Math.PI/3+f*.12;P(32+Math.cos(a)*17,55+Math.sin(a)*4,"#E8F0FF");P(32+Math.cos(a)*17+1,55+Math.sin(a)*4,"#E8F0FF",.6)}}
+  if(g==="ripple")for(let k=0;k<3;k++){const rx=5+((f*.5+k*6)%18);ell(32,55,rx,Math.max(1,rx/4),"#6FE3F0",Math.max(0,.9-rx/20),true)}
+  if(g==="fire"){ell(32,55,16,3,"#EE8A3C",.3);for(let x=17;x<=47;x+=2){const h=2+((f+x*3)%5);for(let y=0;y<h;y++)P(x,57-y,y<h-2?"#EE8A3C":"#FFE680",.85)}}
+  if(g==="bloom")[[19,"#FF8FC8"],[23,"#F2C230"],[41,"#FF8FC8"],[45,"#8AB0FF"],[16,null],[27,null],[38,null],[48,null]].forEach(([x,col],i)=>{
+      const sw=((f>>2)+i)%2;P(x,56,"#5FBF6A");P(x+sw,55,"#5FBF6A");if(col){P(x+sw,54,col);P(x+sw-1,54,col,.7);P(x+sw+1,54,col,.7);P(x+sw,53,col,.7)}});
+}
+function drawBody(f,b){
+  const [shirt,shade]=OUTFIT[st.outfit],helm="#EEF1F5",list=[];
+  // หู/หมวกที่ต้องมีขอบรวมกับหัว
+  if(st.ears==="cat")for(let i=0;i<6;i++){list.push({k:"r",x:22,y:12+i+b,w:i+1,h:1,c:helm},{k:"r",x:42-i,y:12+i+b,w:i+1,h:1,c:helm})}
+  if(st.ears==="bunny"){list.push({k:"e",x:27,y:9+b,rx:2,ry:6,c:helm},{k:"e",x:37,y:9+b,rx:2,ry:6,c:helm})}
+  if(st.ears==="speaker")list.push({k:"r",x:18,y:22+b,w:3,h:9,c:"#8C97AA"},{k:"r",x:43,y:22+b,w:3,h:9,c:"#8C97AA"});
+  list.push(
+    {k:"r",x:27,y:47,w:3,h:6,c:"#2E3A55"},{k:"r",x:34,y:47,w:3,h:6,c:"#2E3A55"},
+    {k:"r",x:26,y:52,w:4,h:2,c:SHOE[st.shoes]},{k:"r",x:34,y:52,w:4,h:2,c:SHOE[st.shoes]},
+    {k:"r",x:22,y:39+b,w:3,h:6,c:shirt},{k:"r",x:39,y:39+b,w:3,h:6,c:shirt},
+    {k:"r",x:22,y:45+b,w:3,h:2,c:"#F4F6FA"},{k:"r",x:39,y:45+b,w:3,h:2,c:"#F4F6FA"},
+    {k:"r",x:25,y:37+b,w:14,h:12,c:shirt},
+    {k:"d",x:32,y:26+b,r:11,c:helm});
+  shapes(list);
+  // ลายหู/เสื้อ/รองเท้า
+  if(st.ears==="cat")for(let i=2;i<5;i++){R(23,12+i+b,i-1,1,"#FF8FC8");R(43-i+1,12+i+b,i-1,1,"#FF8FC8")}
+  if(st.ears==="bunny"){R(27,6+b,1,6,"#FF8FC8");R(37,6+b,1,6,"#FF8FC8")}
+  if(st.ears==="speaker")for(let y=24;y<30;y+=2){P(19,y+b,OUT);P(44,y+b,OUT)}
+  if(st.shoes==="sneaker"){R(26,53,4,1,"#F3F5F8");R(34,53,4,1,"#F3F5F8")}
+  if(st.shoes==="gold"){P(27,52,"#FFE680");P(35,52,"#FFE680")}
+  if(st.outfit==="hoodie"){R(28,44+b,8,3,shade);P(30,38+b,"#F3F5F8");P(30,39+b,"#F3F5F8");P(33,38+b,"#F3F5F8");P(33,39+b,"#F3F5F8")}
+  if(st.outfit==="lab"){R(31,37+b,1,12,shade);R(34,41+b,3,3,shade);P(35,40+b,"#1E3D74");R(25,37+b,3,2,shade);R(36,37+b,3,2,shade)}
+  if(st.outfit==="jacket"){R(31,37+b,2,12,"#F2C230");R(25,47+b,14,1,"#F2C230");R(22,44+b,3,1,"#F2C230");R(39,44+b,3,1,"#F2C230")}
+  // หมวกนิรภัย: เงา + ไฮไลต์
+  for(let x=24;x<=40;x++)P(x,35+b,"#C9D0DB");P(25,19+b,"#FFFFFF");P(26,18+b,"#FFFFFF");P(27,18+b,"#FFFFFF");
+  // จอหน้า
+  const g=GLOW[st.glow];
+  R(24,21+b,17,11,"#0E1A2E");P(24,21+b,"#EEF1F5");P(40,21+b,"#EEF1F5");P(24,31+b,"#EEF1F5");P(40,31+b,"#EEF1F5");
+  for(let y=22;y<31;y+=2)R(25,y+b,15,1,g,.06);
+  const blink=f%46>43;
+  if(blink){R(27,25+b,2,1,g);R(36,25+b,2,1,g)}else{R(27,24+b,2,3,g);R(36,24+b,2,3,g);P(27,24+b,"#FFFFFF",.7);P(36,24+b,"#FFFFFF",.7)}
+  const m=st.mouth;
+  if(m==="cat")[[29,28],[30,29],[31,28],[32,28],[33,29],[34,28]].forEach(([x,y])=>P(x,y+b,g));
+  else{P(29,28+b,g);R(30,29+b,4,1,g);P(34,28+b,g);
+    if(m==="fang")P(33,30+b,"#FFFFFF");if(m==="tongue")R(31,30+b,2,1,"#FF8FC8")}
+  if(st.eyes==="round"){box(25,22+b,6,6,"#C9A25B");box(34,22+b,6,6,"#C9A25B");R(31,24+b,3,1,"#C9A25B")}
+  if(st.eyes==="hud"){R(25,22+b,15,1,"#6FE3F0",.9);for(let x=26;x<40;x+=3)P(x,23+b,"#6FE3F0",.6);P(39,(f%8<4?24:25)+b,"#FF5A5A")}
+  // ผ้าพันคอ
+  if(st.scarf==="red"){R(25,36+b,14,2,"#C2372C");const w=f%8<4?0:1;R(36+w,38+b,2,4,"#C2372C");P(38+w,41+b,"#8F2620")}
+  // หมวก
+  if(st.hat==="beanie"){for(let y=-9;y<=0;y++)for(let x=-10;x<=10;x++)if(x*x+y*y<=96)P(32+x,21+y+b,"#C2372C");R(22,19+b,21,2,"#F3F5F8");disc(32,10+b,2,"#F3F5F8")}
+  if(st.hat==="grad"){R(27,14+b,11,3,OUT);R(20,13+b,25,2,OUT);R(21,13+b,23,1,"#2B2B3A");R(43,14+b,1,5,"#F2C230");R(42,19+b,3,2,"#F2C230")}
+  // ของถือ (มือขวา)
+  if(st.held==="pencil"){P(41,47+b,OUT);for(let i=1;i<9;i++){P(41+i,47-i+b,"#F2C230");P(42+i,47-i+b,"#C9A25B")}P(50,38+b,"#FF8FC8");P(51,38+b,"#FF8FC8")}
+  if(st.held==="laser"){for(let i=0;i<7;i++)P(42+i,46-i+b,"#AEB6C4");const on=f%6<4;P(49,39+b,"#FF5A5A");if(on){P(50,38+b,"#FF5A5A",.6);P(49,38+b,"#FF5A5A",.4);P(50,39+b,"#FF5A5A",.4)}}
+}
+function drawFront(f){
+  if(st.fx==="spark")for(let i=0;i<7;i++){const x=16+(i*41)%32,y=54-((f*.7+i*9)%38),a=1-(54-y)/40,tw=(f+i)%6<4;
+    P(x,y,"#FFE680",a);if(tw){P(x-1,y,"#FFE680",a*.6);P(x+1,y,"#FFE680",a*.6);P(x,y-1,"#FFE680",a*.6);P(x,y+1,"#FFE680",a*.6)}}
+  if(st.fx==="binary")for(let i=0;i<7;i++){const x=12+(i*37)%40,y=54-((f*.5+i*11)%42),a=Math.max(0,1-(54-y)/44),col=GLOW[st.glow];
+    if(i%2){R(x+1,y,1,5,col,a)}else{R(x,y,3,1,col,a);R(x,y+4,3,1,col,a);R(x,y,1,5,col,a);R(x+2,y,1,5,col,a)}}
+  if(st.pet==="floppy"){const x=52,y=22+(f%14<7?0:1),w=f%4<2;
+    R(x-5,y-5,11,11,OUT);R(x-4,y-4,9,9,"#1E3D74");R(x-3,y-4,7,4,"#F3F5F8");P(x-2,y-3,OUT);P(x+2,y-3,OUT);R(x-2,y+1,5,3,"#AEB6C4");P(x+1,y+2,"#1E3D74");
+    R(x-7,y-2+(w?0:1),2,1,"#F4F6FA");R(x+6,y-2+(w?0:1),2,1,"#F4F6FA")}
+}
+let f=0;const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function frame(){c.clearRect(0,0,64,64);const b=(f%12<6)?0:1;drawBg(f);drawBack(f);drawWings(f,b);drawGround(f);drawBody(f,b);drawFront(f);c.globalAlpha=1}
+
+st={...PRESETS.mid};
+// ฉากหลังโลกมืด: ผนังหิน + พื้นแผ่นหิน (แทนห้องน้ำเงินของ v1)
+drawBg=function(f){R(0,0,64,64,'#140F0D');for(let y=0;y<56;y+=6)for(let x=(y/6%2)*5;x<64;x+=10)R(x,y,1,6,'#1C1612');for(let y=5;y<56;y+=6)R(0,y,64,1,'#1C1612');
+  R(0,56,64,8,'#1E1714');for(let x=0;x<64;x+=11)R(x,56,1,8,'#2C221B');R(0,56,64,1,'#3B3027')};
+const pbs=[...document.querySelectorAll('.pb')];
+function frame2(){frame();pbs.forEach(p=>{const x=p.getContext('2d');x.imageSmoothingEnabled=false;x.clearRect(0,0,64,64);x.drawImage(cv,0,0)})}
+</script>
+<script>
+document.querySelectorAll('[data-fill]').forEach(el=>{const t=document.getElementById(el.dataset.fill).content.cloneNode(true);if(el.dataset.fill==='dock')el.replaceWith(t);else el.appendChild(t)});
+document.querySelectorAll('[data-scroll]').forEach(el=>{const k=el.querySelector('#'+el.dataset.scroll);el.scrollTop=k.offsetTop-el.offsetTop+14});
+function setW(b,w){document.documentElement.style.setProperty('--w',w+'px');b.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))}
+</script>
+<script>
+pbs.push(...document.querySelectorAll('.pb'));
+frame2();if(!reduce)setInterval(()=>{f++;frame2()},85);
+</script>
+</body>
+</html>
