@@ -34,7 +34,7 @@ export default function Settings() {
         <Card>
           <View style={s.between}>
             <Text style={T.h3}>{term.data.name}</Text>
-            <Btn label={creating ? "แก้เทอมนี้" : "เทอมใหม่"} onPress={() => setCreating(!creating)} style={{ flex: 0 }} />
+            <Btn label={creating ? "แก้เทอมนี้" : "เทอมใหม่"} onPress={() => setCreating(!creating)} style={{ flexGrow: 0, flexShrink: 0, flexBasis: "auto" }} />
           </View>
           <Text style={T.muted}>
             {thaiDate(term.data.start_date)} – {thaiDate(term.data.end_date)} · {weeks(term.data.start_date, term.data.end_date)} สัปดาห์
@@ -73,7 +73,7 @@ export default function Settings() {
       <Card>
         <View style={s.between}>
           <Text style={[T.body, { flex: 1 }]} numberOfLines={1}>{session?.user.email ?? ""}</Text>
-          <Btn label="ออกจากระบบ" onPress={() => signOut()} style={{ flex: 0 }} />
+          <Btn label="ออกจากระบบ" onPress={() => signOut()} style={{ flexGrow: 0, flexShrink: 0, flexBasis: "auto" }} />
         </View>
       </Card>
     </ScrollView>

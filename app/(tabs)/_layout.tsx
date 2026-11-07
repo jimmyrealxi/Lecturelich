@@ -37,6 +37,9 @@ export default function TabsLayout() {
           borderRadius: 2, minWidth: 18, height: 17, paddingHorizontal: 4,
         },
         sceneStyle: { backgroundColor: "transparent", paddingLeft: Platform.OS === "web" ? PAPER_INSET : 0 },
+        // ฉากโปร่ง → แท็บที่ไม่ได้เปิดถูกซ่อนแค่ zIndex -1 เลยโผล่ทับ · fade ทำให้ฉากนั้น opacity 0 (ตั้ง 0ms = สลับทันที)
+        animation: "fade",
+        transitionSpec: { animation: "timing", config: { duration: 0 } },
       }}
     >
       <Tabs.Screen name="today" options={{

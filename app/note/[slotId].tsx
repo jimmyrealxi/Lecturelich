@@ -165,7 +165,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
         <View style={s.trow}>
           <TextInput value={topicDraft} onChangeText={setTopicDraft} onSubmitEditing={addTopic} placeholder="+ เพิ่มหัวข้อ"
             placeholderTextColor={color.faint} maxLength={120} style={[T.body, s.topicInput]} returnKeyType="done" accessibilityLabel="เพิ่มหัวข้อ" />
-          {!!topicDraft.trim() && <Btn label="เพิ่ม" onPress={addTopic} style={{ flex: 0 }} />}
+          {!!topicDraft.trim() && <Btn label="เพิ่ม" onPress={addTopic} style={{ flexGrow: 0, flexShrink: 0, flexBasis: "auto" }} />}
         </View>
 
         <Section>มีงานสั่งไหม</Section>
