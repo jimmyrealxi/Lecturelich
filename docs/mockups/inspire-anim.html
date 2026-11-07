@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyQuest แอนิเมชันตอบสนอง</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Silkscreen&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* v1 — แอนิเมชันตอบสนอง (แรงบันดาลใจ: จอเครื่องที่แขนในซีรีส์ · ไม่ใช้ตัวการ์ตูน/ชื่อ/รูปทรง/ฟอนต์จากเกม) · สีแบบ B */
+:root{
+  --ink:#E6E9EE;--deck:#F3F5F8;--rule:#C7CDD6;--rule2:#B5BDC9;--paper:#14213A;--muted:#4A5873;--faint:#5C6982;
+  --go:#F2C230;--warn:#A84B0C;--navy:#1E3D74;--navyDeep:#173162;--navyRule:#34558F;--on:#F4F6FA;--onMuted:#C2CDE0;--onFaint:#A9B8D2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2A2E2B;font:15px/1.5 "IBM Plex Sans Thai",sans-serif;color:#E4E6E2;padding:28px 16px}
+.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums}
+h1{font:700 22px/1.3 "Chakra Petch",sans-serif;color:#fff;margin-bottom:6px}
+p.note{color:#B9BFBA;font-size:14px;max-width:820px;margin-bottom:24px}
+.wrap{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
+.cap{font:600 15px "Chakra Petch",sans-serif;color:#fff;margin-bottom:10px}
+.phone{width:360px;max-width:100%;height:760px;border-radius:32px;overflow:hidden;position:relative;border:6px solid #060606;
+  display:flex;flex-direction:column;background:var(--ink);color:var(--paper);box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
+.sb{height:30px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:600 13px "IBM Plex Sans Thai";background:var(--navyDeep);color:var(--on)}
+/* จอที่เปลี่ยนตามแท็บ */
+.screen{flex:1;overflow:hidden;position:relative;transform-origin:50% 50%}
+.screen.on{animation:crt .26s linear}
+@keyframes crt{
+  0%{transform:scale(.55,.006);opacity:.3}
+  35%{transform:scale(1,.006);opacity:1}
+  65%{transform:scale(1,1);opacity:.55}
+  78%{opacity:1}86%{opacity:.8}100%{transform:none;opacity:1}
+}
+.masthead{padding:12px 20px 12px;display:flex;align-items:flex-end;justify-content:space-between;background:var(--navyDeep);border-bottom:3px solid var(--go)}
+.masthead h2{font:700 28px/1.1 "Chakra Petch",sans-serif;color:var(--go)}
+.meta{color:var(--onMuted);font-size:14px;margin-top:4px}
+.lv{text-align:right}
+.lv .px{font:11px Silkscreen,monospace;color:var(--go)}
+/* ตัวนับ XP แบบหมุน: แต่ละหลักเป็นแถบ 0–9 เลื่อนด้วย transform */
+.odo{display:inline-flex;font:400 24px/1 VT323,monospace;color:var(--on);height:24px;overflow:hidden;vertical-align:bottom}
+.odo .d{display:flex;flex-direction:column;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.odo .d span{height:24px;display:block}
+.now{padding:16px 20px 18px;background:var(--navy);color:var(--on);position:relative}
+.state{display:flex;align-items:center;gap:8px;color:var(--go);font-size:13px;font-weight:600}
+.state::before{content:"";width:8px;height:8px;background:var(--go)}
+.clock{font:400 58px/.9 VT323,monospace;margin:10px 0 4px;color:#fff}
+.clock small{font-size:28px;color:var(--onMuted)}
+.subject{font:600 21px/1.25 "Chakra Petch",sans-serif}
+.where{color:var(--onMuted);font-size:14px}
+/* ตัวละครพิกเซลของเราเอง มุมขวาบนแผง */
+.buddy{position:absolute;right:14px;top:14px;width:96px;height:96px;image-rendering:pixelated}
+.bubble{position:absolute;right:104px;top:20px;background:var(--on);color:var(--paper);font:600 13px "Chakra Petch";padding:6px 12px;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s}
+.bubble.show{opacity:1;transform:none}
+.seg{display:flex;margin-top:14px;border:1px solid var(--navyRule)}
+.seg button{flex:1;min-height:46px;background:transparent;border:0;border-left:1px solid var(--navyRule);color:var(--on);font:600 15px "Chakra Petch";cursor:pointer}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed=true]{background:var(--go);color:var(--paper)}
+button:focus-visible{outline:2px solid var(--go);outline-offset:-2px}
+.h{display:flex;justify-content:space-between;align-items:baseline;padding:18px 20px 8px}
+.h b{font:600 16px "Chakra Petch"}.h span{color:var(--faint);font-size:13px}
+.entry{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:start;padding:12px 20px;border-top:1px solid var(--rule)}
+.entry:last-of-type{border-bottom:1px solid var(--rule)}
+.t{color:var(--warn);font:19px/1.2 VT323}
+.what{font-weight:500}.sub{color:var(--muted);font-size:13px}
+.act{min-height:44px;padding:0 16px;border:1px solid var(--warn);background:transparent;color:var(--warn);font:600 14px "Chakra Petch";cursor:pointer}
+.tick{width:44px;height:44px;margin:-11px 0 -11px -11px;display:grid;place-items:center;background:none;border:0;cursor:pointer}
+.tick span{width:22px;height:22px;border:2px solid var(--muted)}
+.tick.done span{background:var(--go);border-color:var(--navy)}
+.done .what{text-decoration:line-through;color:var(--muted)}
+.due{text-align:right;font:600 15px/1.2 "Chakra Petch";color:var(--warn)}
+.due small{display:block;font:400 16px VT323;color:var(--faint)}
+.page2{padding:20px;color:var(--muted)}
+.page2 h3{font:700 22px "Chakra Petch";color:var(--paper);margin-bottom:8px}
+.dock{flex:none;display:flex;border-top:1px solid var(--navyRule);background:var(--navy);padding:0 6px 12px}
+.dock button{flex:1;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:0;
+  color:var(--onFaint);font:500 12px "Chakra Petch";position:relative;cursor:pointer}
+.dock svg{width:22px;height:22px}
+.dock button[aria-current=page]{color:var(--on)}
+.dock button[aria-current=page]::before{content:"";position:absolute;top:-1px;left:26%;right:26%;height:3px;background:var(--go)}
+.side{max-width:440px}
+.side h2{font:700 17px "Chakra Petch";color:#fff;margin:0 0 6px}
+.side p,.side li{color:#C9CEC9;font-size:14px}
+.side ul{padding-left:18px;margin-bottom:18px}
+.sheet{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 22px}
+.sheet figure{background:var(--navy);padding:12px;text-align:center}
+.sheet canvas{width:96px;height:96px;image-rendering:pixelated;display:block}
+.sheet figcaption{font:500 12px "Chakra Petch";color:var(--onMuted);margin-top:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.ctrl button{min-height:44px;padding:0 14px;background:var(--go);color:var(--paper);border:0;font:600 14px "Chakra Petch";cursor:pointer}
+@media (prefers-reduced-motion:reduce){.screen.on{animation:none}.odo .d{transition:none}}
+</style>
+</head>
+<body>
+<h1>StudyQuest — แอนิเมชันตอบสนอง (mockup v1)</h1>
+<p class="note">
+  แรงบันดาลใจจาก "จอที่แขน" ในซีรีส์: ทำอะไรเสร็จแล้วจอตอบสนอง · <b>ของเราเองทั้งหมด</b> ตัวละครวาดใหม่ (ผมดำ แว่นกลม เสื้อฮู้ดเทา) ไม่ใช้ตัวการ์ตูน ชื่อ รูปทรงเครื่อง ฟอนต์ หรือท่าชูนิ้วจากเกม ·
+  <b>ลองกดในจอได้เลย</b>: เปลี่ยนแท็บ = จอติดแบบ CRT · ติ๊กงาน = ตัวละครดีใจ + XP หมุนขึ้น · กด "จด" = เขียน · เช็กชื่อ = ยกมือ · ทิ้งไว้ = นั่งอ่านหนังสือ
+</p>
+<div class="wrap">
+<div>
+  <div class="cap">หน้าวันนี้ (กดเล่นได้)</div>
+  <div class="phone">
+    <div class="sb"><span>11:46</span><span>79%</span></div>
+    <div class="screen on" id="screen"></div>
+    <nav class="dock" aria-label="เมนูหลัก" id="dock"></nav>
+  </div>
+</div>
+<div class="side">
+  <h2>1 · จอติดตอนเปลี่ยนแท็บ</h2>
+  <ul><li>เส้นบางกลางจอ → ขยายเต็ม → กะพริบ 2 ที รวม 0.26 วิ</li><li>ใช้แค่ <code>transform</code>/<code>opacity</code> · ตั้งลดการเคลื่อนไหว = ข้าม</li></ul>
+  <h2>2 · Pap-Boy ตัวละครประจำแอป (พิกเซล 16×16)</h2>
+  <div class="sheet" id="sheet"></div>
+  <ul><li>ท่าประจำตัว = แบห้านิ้ว (ไม่ใช่ชูนิ้วโป้ง) ใช้ตอนเปิดแอป และตอนเตือน "พักก่อน" เมื่อทำงานติดกันนาน</li><li>อยู่มุมขวาบนแผงคาบ · ท่าละ 2 เฟรม สลับทุก 0.4 วิ · ท่าพิเศษเล่น ~1.6 วิ แล้วกลับไปอ่านหนังสือ</li><li>ในแอปจริงทำเป็นรูป PNG แผ่นเดียว (sprite sheet) · ชุดเปลี่ยนตามเลเวลได้ภายหลัง (ขั้น 7)</li></ul>
+  <h2>3 · XP หมุนขึ้นทีละหลัก</h2>
+  <ul><li>แทนป้ายเด้ง · แต่ละหลักเลื่อนขึ้นเหมือนมาตรวัด 0.7 วิ</li></ul>
+  <div class="ctrl"><button id="replay">เล่นจอติดอีกครั้ง</button><button id="plus">+20 XP</button></div>
+</div>
+</div>
+
+<script>
+// ===== ตัวละครพิกเซล (วาดเอง) =====
+const PAL={H:"#2B2B3A",S:"#F2C9A0",G:"#14213A",M:"#A8473A",W:"#DDE2EA",w:"#AEB6C4",P:"#2E3A55",K:"#14213A",B:"#A84B0C",b:"#F3F5F8",Y:"#F2C230",s:"#C98F62"};
+const head=["     HHHHH","    HHHHHHH","   HHHHHHHHH","   HSSSSSSSH","   SGGSSSGGS","   SGGSSSGGS","   SSSSSSSSS"];
+const legs=["   PPPPPPPPP","   PPP   PPP","   KKK   KKK"];
+const POSES={
+  read:[[...head,"    SSSSSSS","   WWWWWWWWW","  WWBBBBBBBWW","  SWBbbbbbBWS","   WBbbbbbBW","   WBBBBBBBW",...legs],
+        [...head,"    SSSSSSS","   WWWWWWWWW","  WWBBBBBBBWW","  SWBbbbBbBWS","   WBbbbBbBW","   WBBBBBBBW",...legs]],
+  cheer:[["  S  HHHHH  S","  S HHHHHHH S","  WHHHHHHHHHW","  WHSSSSSSSHW","  WSGGSSSGGSW","  WSGGSSSGGSW","   SSSSSSSSS","    SSMMMSS","   WWWWWWWWW","   WWWWWWWWW","   WWWwWwWWW","   WWWWWWWWW",...legs],
+         ["","  S  HHHHH  S","  S HHHHHHH S","  WHHHHHHHHHW","  WHSSSSSSSHW","  WSGGSSSGGSW","  WSGGSSSGGSW","   SSSSSSSSS","    SSMMMSS","   WWWWWWWWW","   WWWWWWWWW","   WWWwWwWWW","   WWWWWWWWW","   PPPPPPPPP","   PP     PP","  KKK     KKK"]],
+  write:[[...head,"    SSSSSSS","   WWWWWWWWW","  WWWWWWWWWSY","  bbbbbbbbbbY","  bwbwbwbbbb","   WWWWWWWWW",...legs],
+         [...head,"    SSSSSSS","   WWWWWWWWW","  WWWWWWWWSY","  bbbbbbbbbYb","  bwbwbwbwbb","   WWWWWWWWW",...legs]],
+  hand:[["            S","     HHHHH  S","    HHHHHHH W","   HHHHHHHHHW","   HSSSSSSSHW","   SGGSSSGGSW","   SGGSSSGGSW","   SSSSSSSSW","    SSSMSSSW","  WWWWWWWWWW","  SWWWWWWWW","   WWWWWWWW",...legs],
+        ["             S","     HHHHH  S","    HHHHHHH W","   HHHHHHHHHW","   HSSSSSSSHW","   SGGSSSGGSW","   SGGSSSGGSW","   SSSSSSSSW","    SSSMSSSW","  WWWWWWWWWW","  SWWWWWWWW","   WWWWWWWW",...legs]],
+  // ท่าประจำตัว: ยกมือแบห้านิ้ว (เหมือนบอก "หยุด/พักก่อน") · นิ้วแยกด้วยสีผิวเข้มสลับ
+  palm:[["          SsSsS","   HHHHH  SsSsS","  HHHHHHH SsSsS"," HHHHHHHHSSSSSS"," HSSSSSSH SSSSS"," SGGSGGSS  WWW"," SGGSGGSS  WW"," SSSSSSSS  WW","  SSMMSS  WW","  WWWWWWWWWW"," WWWWWWWWW"," SWWWWWWW","  WWWWWWW","  PPPPPPP","  PPP PPP","  KKK KKK"],
+        ["","          SsSsS","   HHHHH  SsSsS","  HHHHHHH SsSsS"," HHHHHHHHSSSSSS"," HSSSSSSH SSSSS"," SGGSGGSS  WWW"," SGGSGGSS  WW"," SSSSSSSS  WW","  SSSMSS  WW","  WWWWWWWWWW"," WWWWWWWWW"," SWWWWWWW","  WWWWWWW","  PPPPPPP","  PPP PPP"]],
+};
+function draw(cv,rows){
+  const c=cv.getContext("2d");c.clearRect(0,0,16,16);
+  rows.forEach((r,y)=>[...r].forEach((ch,x)=>{if(PAL[ch]){c.fillStyle=PAL[ch];c.fillRect(x+1,y,1,1)}}));
+}
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// แผ่นท่าทางทั้งหมดด้านข้าง
+const NAMES={palm:"ประจำตัว · แบห้านิ้ว",read:"ว่าง · อ่านหนังสือ",cheer:"ส่งงาน · ดีใจ",write:"จดโน้ต · เขียน",hand:"เช็กชื่อ · ยกมือ"};
+const sheet=document.getElementById("sheet");const sheetCvs=[];
+for(const k in POSES){const f=document.createElement("figure");const cv=document.createElement("canvas");cv.width=cv.height=16;
+  f.append(cv);const cap=document.createElement("figcaption");cap.textContent=NAMES[k];f.append(cap);sheet.append(f);sheetCvs.push([cv,k]);}
+
+// ===== ตัวนับ XP =====
+let xp=30;
+function odoHTML(){return `<span class="odo" aria-live="polite" aria-label="${xp} XP">${String(xp).padStart(3,"0").split("").map(()=>`<span class="d">${[...Array(10)].map((_,i)=>`<span>${i}</span>`).join("")}</span>`).join("")}</span>`}
+function odoSet(){document.querySelectorAll(".odo").forEach(o=>{o.setAttribute("aria-label",xp+" XP");[...String(xp).padStart(3,"0")].forEach((n,i)=>o.children[i].style.transform=`translateY(${-24*n}px)`)})}
+function addXp(n){xp+=n;odoSet()}
+
+// ===== หน้าในจอ =====
+const ICON={
+ today:'<rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+ subjects:'<path d="M4 5h6l2 2v13l-2-2H4zM20 5h-6l-2 2v13l2-2h6z"/>',
+ tasks:'<rect x="4" y="4" width="16" height="16"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+ game:'<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v8M9 11h6"/>',
+ settings:'<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><rect x="14" y="5" width="4" height="4"/><rect x="8" y="15" width="4" height="4"/>'};
+const TABS=[["today","วันนี้"],["subjects","วิชา"],["tasks","งาน"],["game","เกม"],["settings","ตั้งค่า"]];
+let tab="today";
+const today=()=>`
+ <header class="masthead"><div><h2>วันนี้</h2><div class="meta">เสาร์ 7 พ.ย. · เทอม 2/2569</div></div>
+  <div class="lv"><span class="px">LV 1</span><div>${odoHTML()} <span style="font:11px Silkscreen;color:var(--go)">XP</span></div></div></header>
+ <section class="now">
+  <canvas class="buddy" id="buddy" width="16" height="16" aria-label="Pap-Boy"></canvas>
+  <div class="bubble" id="bubble"></div>
+  <div class="state">กำลังเรียน</div>
+  <div class="clock vt">11:00<small>–13:00</small></div>
+  <div class="subject">คณิตศาสตร์ 2</div><div class="where">SCB0123 · ห้อง SC9-604</div>
+  <div class="seg" role="group" aria-label="เช็กชื่อ"><button aria-pressed="false" data-act="hand">มาเรียน</button><button aria-pressed="false">ขาด</button></div>
+ </section>
+ <div class="h"><b>ค้างอยู่</b><span>3 เรื่อง</span></div>
+ <div class="entry"><span class="t">09:00</span><div><div class="what">ฟิสิกส์จบแล้ว ยังไม่ได้จด</div><div class="sub">จดวันนี้ +10 XP</div></div><button class="act" data-act="write">จด</button></div>
+ <div class="entry"><button class="tick" data-act="cheer" aria-label="ส่งแล้ว: แบบฝึกหัดบทที่ 3"><span></span></button><div><div class="what">แบบฝึกหัดบทที่ 3</div><div class="sub">คณิตศาสตร์ 2</div></div><div class="due">พรุ่งนี้<small>23:59</small></div></div>
+ <div class="entry"><button class="tick" data-act="cheer" aria-label="ส่งแล้ว: รายงานแล็บ 2"><span></span></button><div><div class="what">รายงานแล็บ 2</div><div class="sub">ฟิสิกส์</div></div><div class="due" style="color:var(--paper)">อ. 11 พ.ย.<small>อีก 4 วัน</small></div></div>`;
+const other=(name)=>`<header class="masthead"><div><h2>${name}</h2><div class="meta">ตัวอย่างหน้าอื่น</div></div></header><div class="page2"><h3>${name}</h3>กดแท็บไปมาเพื่อดูเอฟเฟกต์จอติด</div>`;
+
+const screen=document.getElementById("screen"),dock=document.getElementById("dock");
+function renderDock(){dock.innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" ${k===tab?'aria-current="page"':""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square">${ICON[k]}</svg>${l}</button>`).join("")}
+function powerOn(){screen.classList.remove("on");void screen.offsetWidth;screen.classList.add("on")}
+function renderScreen(){screen.innerHTML=tab==="today"?today():other(TABS.find(t=>t[0]===tab)[1]);odoSet();powerOn()}
+dock.addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.dataset.tab===tab)return;tab=b.dataset.tab;renderDock();renderScreen()});
+
+// ===== สถานะตัวละคร =====
+let pose="palm",frame=0,until=Date.now()+2400; // เปิดหน้ามา = ทักด้วยท่าประจำตัว
+const SAY={palm:"พักก่อน!",cheer:"ส่งแล้ว!",write:"จดๆ",hand:"มาแล้ว!"};
+function act(p){pose=p;until=Date.now()+1600;const b=document.getElementById("bubble");if(b){b.textContent=SAY[p];b.classList.add("show");setTimeout(()=>b.classList.remove("show"),1300)}}
+setInterval(()=>{
+  if(pose!=="read"&&Date.now()>until)pose="read";
+  frame=reduce?0:1-frame;
+  const cv=document.getElementById("buddy");if(cv)draw(cv,POSES[pose][frame]);
+  sheetCvs.forEach(([c,k])=>draw(c,POSES[k][frame]));
+},400);
+screen.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
+  if(b.classList.contains("tick")){if(b.classList.contains("done"))return;b.classList.add("done");b.parentElement.classList.add("done");addXp(20)}
+  if(b.closest(".seg")){b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));addXp(5)}
+  if(a==="write")addXp(10);
+  act(a);
+});
+document.getElementById("replay").onclick=powerOn;
+document.getElementById("plus").onclick=()=>{if(tab==="today"){addXp(20);act("cheer")}};
+renderDock();renderScreen();
+</script>
+</body>
+</html>

@@ -8,7 +8,7 @@
 - เวลาอิง `Asia/Bangkok` · UI ภาษาไทยทั้งหมด
 - logic สำคัญ (คาบวันนี้ เกรด XP รอบทวน) อยู่ใน `lib/*.ts` แยกจาก UI + มีเทสต์
 - ค่า XP อยู่ที่ config เดียว ห้ามฝังหลายจุด · XP/เลเวล/เลือดบอส/คะแนนรวม คำนวณใน DB (view/RPC)
-- ระบบเกม: ยืมแค่บรรยากาศ ห้ามใช้ภาพ/ไอคอน/ชื่อ/ฟอนต์/โลโก้ของ Fallout หรือ Path of Exile · ห้าม XP เพราะเปิดแอป · ห้าม streak รีเซ็ต
+- ระบบเกม: ยืมแค่บรรยากาศ ห้ามใช้ภาพ/ไอคอน/ชื่อ/ฟอนต์/โลโก้ของ Fallout หรือ Path of Exile (ยกเว้นชื่อตัวละคร parody "Pap-Boy" ที่เจ้าของยืนยัน — ตัวละครต้องวาดเอง) · ห้าม XP เพราะเปิดแอป · ห้าม streak รีเซ็ต
 - Push ยืมแพตเทิร์น LabHub: `push_subscriptions` + `notifications` → trigger (pg_net) → Edge Function `send-push` (VAPID)
 
 ## กติกาสั้นที่ต้องจำเสมอ
@@ -30,6 +30,8 @@
 
 ## สถานะล่าสุด (7 พ.ย. 2569)
 - **ธีม "สมุดเทอร์มินัล"** (`docs/HANDOFF_THEME.md`): ข้อ 1–4 ลงแล้ว + เปลี่ยนสีเป็น **แบบ B น้ำเงิน-เหลือง-เทาอ่อน** (`docs/mockups/retro-theme-blue.html`, ตาราง token ใน `docs/DESIGN.md`) · ต่อข้อ 5 หน้าเกม (ยังโลกหินทอง), ข้อ 6 หน้าอื่น · ไอคอนแท็บเป็น `<svg>` เว็บ · ติ๊กงาน+toast ยกเลิกยังไม่ได้เทส (ไม่มีงานในบัญชี)
+- **mockup ธีม B ชุด 1–5 อนุมัติ · ชุด 6 เปิดกล่อง (`b6-lootbox.html`) รออนุมัติ · ชุด 7 (`inspire-anim.html` ใช้ Pap-Boy v1) ยังไม่ทำ** → ครบแล้วถามเจ้าของว่าลงโค้ดเมื่อไหร่ (ลงทีเดียว) · รายการใน `docs/HANDOFF_THEME.md`
+- **ชื่อแอปใหม่ Lecturelich** (เปลี่ยนตอนลงธีม) · หน้าเกม = โลกมืดแนว PoE + ฉากสู้บอสประจำเทอม · ระบบ Pap-Boy/ของดรอป/class-ascendancy ใน `docs/LOOT_PLAN.md` · **ส่วนใช้งานมาก่อน**
 - branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → … → `feat/stage6-rooms` (push แล้ว = Vercel production) · ยังไม่มี PR (ขั้น 1–5 แก้ไขต่อบน stage6 → คุยเรื่องเปิด PR ก่อน)
 - iPhone PWA ล็อกอิน+แถบแท็บใช้ได้ (Supabase Site URL = โดเมน Vercel) · ห้าม `viewport-fit=cover`
 - **Supabase จริงแล้ว** ref `zuwmygzqoezgosyetahc` · migration 6 ไฟล์รันครบ · `.env` ใส่แล้ว (ไม่ commit) · dev: `.claude/launch.json` (`npm run web` พอร์ต 8081)

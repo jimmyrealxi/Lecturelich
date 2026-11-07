@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pap-Boy ตู้แต่งตัว</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* Pap-Boy v1 — ตัวละครวาดเอง (หมวกนิรภัยหน้าจอ + ฮู้ด) · ทุกชิ้นวาดด้วยโค้ดเป็นพิกเซล 64×64 · ยืมแค่บรรยากาศ ไม่มีภาพ/ชื่อ/ฟอนต์จากเกมใด */
+:root{--ink:#E6E9EE;--paper:#14213A;--muted:#4A5873;--navy:#1E3D74;--navyDeep:#173162;--go:#F2C230;
+  --normal:#E8E8E8;--magic:#8AB0FF;--rare:#F2C230;--unique:#EE8A3C}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2A2E2B;font:15px/1.5 "IBM Plex Sans Thai",sans-serif;color:#E4E6E2;padding:28px 16px}
+h1{font:700 22px/1.3 "Chakra Petch",sans-serif;color:#fff;margin-bottom:6px}
+p.note{color:#B9BFBA;font-size:14px;max-width:880px;margin-bottom:22px}
+.wrap{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.stage{width:340px;max-width:100%;background:var(--navyDeep);border-bottom:3px solid var(--go);padding:10px}
+.stage canvas{width:320px;max-width:100%;aspect-ratio:1;image-rendering:pixelated;display:block;margin:0 auto}
+.name{display:flex;justify-content:space-between;align-items:baseline;padding:8px 4px 2px;color:#F4F6FA}
+.name b{font:700 20px "Chakra Petch";color:var(--go)}
+.title{font:600 14px "Chakra Petch"}
+.count{font:400 20px VT323;color:#C2CDE0}
+.presets{display:flex;gap:6px;margin-top:10px}
+.presets button{flex:1;min-height:44px;background:transparent;border:1px solid #34558F;color:#F4F6FA;font:600 14px "Chakra Petch";cursor:pointer}
+.presets button[aria-pressed=true]{background:var(--go);color:var(--paper);border-color:var(--go)}
+.ward{flex:1;min-width:300px;max-width:620px;background:var(--ink);color:var(--paper)}
+.ward h2{font:700 18px "Chakra Petch";padding:12px 16px;background:var(--navyDeep);color:var(--go);border-bottom:3px solid var(--go)}
+.grp{font:600 13px "Chakra Petch";color:var(--muted);padding:12px 16px 4px;letter-spacing:.5px}
+.slot{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:center;padding:6px 16px;border-top:1px solid #C7CDD6}
+.slot>span{font:600 14px "Chakra Petch"}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts button{min-height:44px;padding:0 10px;display:inline-flex;align-items:center;gap:6px;background:#F3F5F8;border:1px solid #B5BDC9;color:var(--paper);font:500 13px "IBM Plex Sans Thai";cursor:pointer}
+.opts button::before{content:"";width:8px;height:8px;background:var(--c);outline:1px solid #14213A33}
+.opts button[aria-pressed=true]{background:var(--navy);color:#F4F6FA;border-color:var(--navy)}
+button:focus-visible{outline:2px solid var(--go);outline-offset:2px}
+.legend{display:flex;gap:12px;padding:10px 16px 14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:-1px}
+.try{display:flex;align-items:center;gap:8px;margin-top:10px;min-height:44px}
+.try .lab{flex:1;font:600 14px "Chakra Petch";color:#F4F6FA}
+.try button{min-height:44px;padding:0 16px;border:0;font:600 14px "Chakra Petch";cursor:pointer}
+.try .ok{background:var(--go);color:var(--paper)}.try .no{background:transparent;color:#F4F6FA;border:1px solid #34558F}
+.try .ok:disabled{background:#34558F;color:#A9B8D2;cursor:not-allowed}
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid #C7CDD6;scrollbar-width:none}
+.tabs button{flex:none;min-height:44px;padding:0 14px;background:none;border:0;border-bottom:3px solid transparent;font:600 14px "Chakra Petch";color:var(--muted);cursor:pointer}
+.tabs button[aria-selected=true]{color:var(--paper);border-bottom-color:var(--navy)}
+.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;padding:14px 16px}
+.tile{position:relative;background:#F3F5F8;border:2px solid var(--c);padding:0 0 4px;cursor:pointer;text-align:center;font:500 12px/1.3 "IBM Plex Sans Thai";color:var(--paper)}
+.tile canvas{width:100%;aspect-ratio:1;image-rendering:pixelated;display:block;background:#13233D;margin-bottom:4px}
+.tile.lock canvas{filter:grayscale(1) brightness(.35)}
+.tile.lock::after{content:"?";position:absolute;left:0;right:0;top:22%;font:700 26px "Chakra Petch";color:#F4F6FA}
+.tile .on{position:absolute;top:3px;left:3px;font:600 10px "Chakra Petch";background:var(--go);color:var(--paper);padding:0 4px;z-index:1}
+.tile[aria-pressed=true]{outline:3px solid var(--navy);outline-offset:2px}
+.tile .r{display:block;font-size:11px;color:var(--muted)}
+.ward .sum{display:flex;justify-content:space-between;gap:12px;padding:10px 16px;font-size:13px;color:var(--muted);border-top:1px solid #C7CDD6}
+ul{padding-left:18px;color:#C9CEC9;font-size:14px;max-width:340px;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>Pap-Boy v1 — ตัวละคร + ตู้แต่งตัว</h1>
+<p class="note">
+  เด็กหมวกนิรภัย <b>หน้าเป็นจอ</b> (ตา/ปากเรืองแสงบนจอ เปลี่ยนอารมณ์ได้) ใส่ฮู้ด ถุงมือขาว · ตัวอ้วนสั้นสัดส่วน 2 หัว อ่านง่ายแม้ภาพเล็ก ·
+  <b>คลังของ</b>: แตะของ = ลองใส่บนตัวละครทันที กด "ใส่" ถ้าชอบ · ของที่ยังไม่ได้เป็นเงาดำ "???" ลองดูได้แต่ใส่ไม่ได้ · ของทุกชิ้นวาดซ้อนเป็นชั้น: <b>ออร่าหลัง → ปีก → ออร่าพื้น → ตัว → ของสวม → อนุภาคหน้า</b> · ปุ่มต้น/กลาง/ปลายเทอม = ดูตัวอย่างชุด · สีกรอบช่อง = ความหายาก
+</p>
+<div class="wrap">
+  <div>
+    <div class="stage">
+      <canvas id="cv" width="64" height="64" role="img" aria-label="Pap-Boy"></canvas>
+      <div class="name"><b>Pap-Boy</b><span class="count" id="count"></span></div>
+      <div class="title" id="title"></div>
+      <div class="try" id="try" hidden><span class="lab" id="tryLab"></span><button class="no" id="cancel">ยกเลิก</button><button class="ok" id="equip">ใส่</button></div>
+      <div class="presets" role="group" aria-label="ดูตัวอย่างชุด">
+        <button data-p="start">ต้นเทอม</button><button data-p="mid">กลางเทอม</button><button data-p="end">ปลายเทอม</button>
+      </div>
+    </div>
+    <ul>
+      <li>ท่าประจำตัว (แบห้านิ้ว) กับท่าตอบสนองอื่น ๆ ใช้ตัวเดียวกันนี้ ทำต่อหลังอนุมัติรูปร่าง</li>
+      <li>ของบางชิ้นขยับเอง: ผ้าพันคอปลิว ปีกกระพือ ออร่าวิ่ง สัตว์เลี้ยงลอย</li>
+      <li>ในแอปจริง: ส่งออกเป็น PNG ทีละชิ้นแล้วซ้อนชั้น หรือวาดสดแบบนี้ก็ได้ (เบา)</li>
+    </ul>
+  </div>
+  <section class="ward" aria-label="ตู้แต่งตัว">
+    <h2>คลังของ</h2>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="inv" id="inv"></div>
+    <div class="sum"><span id="have"></span><span>แตะของ = ลองใส่ · ของที่ยังไม่ได้ ลองดูได้แต่ใส่ไม่ได้</span></div>
+    <div class="legend"><span><i style="background:var(--normal);outline:1px solid #B5BDC9"></i>ปกติ</span><span><i style="background:var(--magic)"></i>magic</span><span><i style="background:var(--rare)"></i>rare</span><span><i style="background:var(--unique)"></i>unique</span></div>
+  </section>
+</div>
+
+<script>
+const RC={n:"#E8E8E8",m:"#8AB0FF",r:"#F2C230",u:"#EE8A3C"};
+const SLOTS=[
+ {g:"หน้าและหัว",k:"glow",l:"สีจอหน้า",o:[["yellow","เหลือง","n"],["green","เขียว","n"],["cyan","ฟ้าน้ำแข็ง","m"],["pink","ชมพู","r"]]},
+ {k:"mouth",l:"ปาก",o:[["smile","ยิ้ม","n"],["cat","ปากแมว","m"],["fang","เขี้ยว","m"],["tongue","แลบลิ้น","r"]]},
+ {k:"eyes",l:"แว่น",o:[["none","ไม่ใส่","n"],["round","แว่นกลม","m"],["hud","จอ HUD","u"]]},
+ {k:"ears",l:"หู",o:[["none","ไม่มี","n"],["cat","หูแมว","m"],["bunny","หูกระต่าย","r"],["speaker","หูลำโพง","r"]]},
+ {k:"hat",l:"หมวก",o:[["none","ไม่ใส่","n"],["beanie","ไหมพรม","n"],["grad","หมวกบัณฑิต","u"]]},
+ {g:"ตัว",k:"outfit",l:"เสื้อ",o:[["hoodie","ฮู้ดส้ม","n"],["lab","เสื้อกาวน์","m"],["jacket","แจ็กเก็ตทอง","r"]]},
+ {k:"scarf",l:"ผ้าพันคอ",o:[["none","ไม่มี","n"],["red","แดงปลิว","m"]]},
+ {k:"shoes",l:"รองเท้า",o:[["plain","ธรรมดา","n"],["sneaker","ผ้าใบแดง","m"],["gold","บูตทอง","r"]]},
+ {k:"held",l:"ของถือ",o:[["none","มือเปล่า","n"],["pencil","ดินสอยักษ์","r"],["laser","ปากกาเลเซอร์","u"]]},
+ {k:"wings",l:"ปีก",o:[["none","ไม่มี","n"],["paper","ปีกกระดาษ","r"],["pixel","ปีกพิกเซล","m"],["light","ปีกแสง","u"]]},
+ {g:"ออร่าและเอฟเฟกต์",k:"back",l:"ออร่าหลัง",o:[["none","ไม่มี","n"],["ring","วงแหวน","m"],["flame","เปลวทอง","r"],["stars","ดาวหมุน","u"]]},
+ {k:"ground",l:"ออร่าพื้น",o:[["none","ไม่มี","n"],["bloom","ดอกไม้","n"],["ripple","คลื่นน้ำ","m"],["rune","วงเวท","r"],["fire","ไฟใต้เท้า","u"]]},
+ {k:"fx",l:"อนุภาค",o:[["none","ไม่มี","n"],["spark","ประกาย","m"],["binary","เลข 0/1","r"]]},
+ {k:"pet",l:"สัตว์เลี้ยง",o:[["none","ไม่มี","n"],["floppy","ดิสก์บิน","r"]]},
+ {k:"bg",l:"ฉากหลัง",o:[["plain","ห้องน้ำเงิน","n"],["stars","ฟ้ากลางคืน","m"]]},
+];
+const PRESETS={
+ start:{glow:"yellow",mouth:"smile",eyes:"none",ears:"none",hat:"none",outfit:"hoodie",scarf:"none",shoes:"plain",held:"none",wings:"none",back:"none",ground:"none",fx:"none",pet:"none",bg:"plain",title:["นักเรียนฝึกหัด","n"]},
+ mid:{glow:"green",mouth:"cat",eyes:"round",ears:"cat",hat:"none",outfit:"lab",scarf:"red",shoes:"sneaker",held:"none",wings:"pixel",back:"ring",ground:"rune",fx:"spark",pet:"none",bg:"plain",title:["ผู้มาเรียนสม่ำเสมอ","m"]},
+ end:{glow:"cyan",mouth:"fang",eyes:"hud",ears:"speaker",hat:"grad",outfit:"jacket",scarf:"red",shoes:"gold",held:"laser",wings:"light",back:"stars",ground:"fire",fx:"binary",pet:"floppy",bg:"stars",title:["ผู้พิชิตบอสปลายภาค","u"]},
+};
+let st={...PRESETS.start};
+
+// ===== วาดพิกเซล =====
+const cv=document.getElementById("cv");let c=cv.getContext("2d");
+const OUT="#14213A";
+function P(x,y,col,a=1){c.globalAlpha=a;c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),1,1)}
+function R(x,y,w,h,col,a=1){c.globalAlpha=a;c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function disc(cx,cy,r,col,a=1,maxY=99){for(let y=-r;y<=r;y++)for(let x=-r;x<=r;x++)if(x*x+y*y<=r*r+r*.6&&cy+y<=maxY)P(cx+x,cy+y,col,a)}
+function ell(cx,cy,rx,ry,col,a=1,ring=false){for(let y=-ry-1;y<=ry+1;y++)for(let x=-rx-1;x<=rx+1;x++){const v=x*x/(rx*rx)+y*y/(ry*ry);if(ring?Math.abs(v-1)<1.3/Math.min(rx,ry)*1.4:v<=1)P(cx+x,cy+y,col,a)}}
+function box(x,y,w,h,col){R(x,y,w,1,col);R(x,y+h-1,w,1,col);R(x,y,1,h,col);R(x+w-1,y,1,h,col)}
+// วาดหลายชิ้นพร้อมเส้นขอบรวมเป็นเงาเดียว (ขอบก่อน แล้วค่อยเติมสี)
+function shapes(list){
+  for(const s of list){ if(s.k==="r")R(s.x-1,s.y-1,s.w+2,s.h+2,OUT); else if(s.k==="d")disc(s.x,s.y,s.r+1,OUT,1,s.maxY!=null?s.maxY+1:99); else ell(s.x,s.y,s.rx+1,s.ry+1,OUT)}
+  for(const s of list){ if(s.k==="r")R(s.x,s.y,s.w,s.h,s.c); else if(s.k==="d")disc(s.x,s.y,s.r,s.c,1,s.maxY??99); else ell(s.x,s.y,s.rx,s.ry,s.c)}
+}
+const GLOW={yellow:"#F2C230",green:"#86D99B",cyan:"#6FE3F0",pink:"#FF8FC8"};
+const OUTFIT={hoodie:["#E07A3F","#B85A26"],lab:["#F3F5F8","#C7CDD6"],jacket:["#1E3D74","#152C55"]};
+const SHOE={plain:"#2B2B3A",sneaker:"#C2372C",gold:"#C9A25B"};
+// สุ่มแบบคงที่ (ภาพเหมือนเดิมทุกเฟรม)
+const rnd=i=>{const x=Math.sin(i*127.1)*43758.5453;return x-Math.floor(x)};
+
+function drawBg(f){
+  R(0,0,64,64,"#13233D");
+  if(st.bg==="stars"){R(0,0,64,64,"#0B1530");for(let i=0;i<26;i++){const on=(f+i*7)%40<34;P(rnd(i)*64,rnd(i+50)*48,"#F4F6FA",on?.9:.25)}}
+  R(0,56,64,8,"#0E1A2E");for(let x=0;x<64;x+=8)R(x,56,1,8,"#1A2C4E");R(0,56,64,1,"#22365A");
+}
+function drawBack(f){
+  const cx=32,cy=29;
+  if(st.back==="ring"){disc(cx,cy,17,"#8AB0FF",.10);
+    for(let a=0;a<Math.PI*2;a+=.045){const on=Math.floor((a+f*.08)/.35)%2===0;P(cx+Math.cos(a)*20,cy+Math.sin(a)*20,"#8AB0FF",on?.95:.25)}
+    for(let a=0;a<Math.PI*2;a+=.06)P(cx+Math.cos(a)*15,cy+Math.sin(a)*15,"#C9DAFF",.35)}
+  if(st.back==="flame"){for(let x=12;x<=52;x++){const h=17+5*Math.sin(x*.55+f*.6)+3*Math.sin(x*1.3-f*.9)-Math.abs(x-32)*.45;
+      for(let y=0;y<h;y++){const t=y/h;P(x,52-y,t<.45?"#EE8A3C":t<.8?"#F2C230":"#FFE680",.5*(1-t*.5))}}}
+  if(st.back==="stars"){disc(cx,27,16,"#FFE680",.10);disc(cx,27,12,"#FFE680",.12);
+    for(let i=0;i<8;i++){const a=i*Math.PI/4+f*.05,x=cx+Math.cos(a)*22,y=28+Math.sin(a)*15,col=i%2?"#FFE680":"#EE8A3C",tw=(f+i*3)%10<7;
+      P(x,y,col);if(tw){P(x-1,y,col,.8);P(x+1,y,col,.8);P(x,y-1,col,.8);P(x,y+1,col,.8)}}}
+}
+function drawWings(f,b){
+  if(st.wings==="none")return;
+  const flap=(f%10<5)?0:1,L=[5,8,10,12,12,11,10,8,6,4,3,2],rows=[];
+  L.forEach((len,i)=>{const y=29+i+b-(i<4?flap:0);rows.push([24-len,y,len],[40,y,len])});
+  rows.forEach(([x,y,w])=>R(x-1,y-1,w+2,3,OUT));
+  rows.forEach(([x,y,w],j)=>{const i=j>>1;
+    for(let k=0;k<w;k++){const px=x+k,near=(px<32?(x+w-1-px):(px-x))/w;let col,a=1;
+      if(st.wings==="paper"){col=i%3===2?"#8AB0FF":"#F3F5F8";if(Math.abs(px-32)===9)col="#C2372C"}
+      else if(st.wings==="pixel"){col=(px+y)%2?"#8AB0FF":"#5B7FD6"}
+      else{col=near<.35?"#FFE680":near<.7?"#F2C230":"#EE8A3C";a=.92}
+      P(px,y,col,a)}});
+  if(st.wings==="light")for(let i=0;i<4;i++){if((f+i*4)%12<6){P(10+i*2,30+i*3+b,"#FFF6C8");P(54-i*2,30+i*3+b,"#FFF6C8")}}
+}
+function drawGround(f){
+  ell(32,55,11,2,"#000",.28);
+  const g=st.ground;
+  if(g==="rune"){ell(32,55,17,4,"#8AB0FF",.9,true);ell(32,55,12,3,"#8AB0FF",.5,true);
+    for(let i=0;i<6;i++){const a=i*Math.PI/3+f*.12;P(32+Math.cos(a)*17,55+Math.sin(a)*4,"#E8F0FF");P(32+Math.cos(a)*17+1,55+Math.sin(a)*4,"#E8F0FF",.6)}}
+  if(g==="ripple")for(let k=0;k<3;k++){const rx=5+((f*.5+k*6)%18);ell(32,55,rx,Math.max(1,rx/4),"#6FE3F0",Math.max(0,.9-rx/20),true)}
+  if(g==="fire"){ell(32,55,16,3,"#EE8A3C",.3);for(let x=17;x<=47;x+=2){const h=2+((f+x*3)%5);for(let y=0;y<h;y++)P(x,57-y,y<h-2?"#EE8A3C":"#FFE680",.85)}}
+  if(g==="bloom")[[19,"#FF8FC8"],[23,"#F2C230"],[41,"#FF8FC8"],[45,"#8AB0FF"],[16,null],[27,null],[38,null],[48,null]].forEach(([x,col],i)=>{
+      const sw=((f>>2)+i)%2;P(x,56,"#5FBF6A");P(x+sw,55,"#5FBF6A");if(col){P(x+sw,54,col);P(x+sw-1,54,col,.7);P(x+sw+1,54,col,.7);P(x+sw,53,col,.7)}});
+}
+function drawBody(f,b){
+  const [shirt,shade]=OUTFIT[st.outfit],helm="#EEF1F5",list=[];
+  // หู/หมวกที่ต้องมีขอบรวมกับหัว
+  if(st.ears==="cat")for(let i=0;i<6;i++){list.push({k:"r",x:22,y:12+i+b,w:i+1,h:1,c:helm},{k:"r",x:42-i,y:12+i+b,w:i+1,h:1,c:helm})}
+  if(st.ears==="bunny"){list.push({k:"e",x:27,y:9+b,rx:2,ry:6,c:helm},{k:"e",x:37,y:9+b,rx:2,ry:6,c:helm})}
+  if(st.ears==="speaker")list.push({k:"r",x:18,y:22+b,w:3,h:9,c:"#8C97AA"},{k:"r",x:43,y:22+b,w:3,h:9,c:"#8C97AA"});
+  list.push(
+    {k:"r",x:27,y:47,w:3,h:6,c:"#2E3A55"},{k:"r",x:34,y:47,w:3,h:6,c:"#2E3A55"},
+    {k:"r",x:26,y:52,w:4,h:2,c:SHOE[st.shoes]},{k:"r",x:34,y:52,w:4,h:2,c:SHOE[st.shoes]},
+    {k:"r",x:22,y:39+b,w:3,h:6,c:shirt},{k:"r",x:39,y:39+b,w:3,h:6,c:shirt},
+    {k:"r",x:22,y:45+b,w:3,h:2,c:"#F4F6FA"},{k:"r",x:39,y:45+b,w:3,h:2,c:"#F4F6FA"},
+    {k:"r",x:25,y:37+b,w:14,h:12,c:shirt},
+    {k:"d",x:32,y:26+b,r:11,c:helm});
+  shapes(list);
+  // ลายหู/เสื้อ/รองเท้า
+  if(st.ears==="cat")for(let i=2;i<5;i++){R(23,12+i+b,i-1,1,"#FF8FC8");R(43-i+1,12+i+b,i-1,1,"#FF8FC8")}
+  if(st.ears==="bunny"){R(27,6+b,1,6,"#FF8FC8");R(37,6+b,1,6,"#FF8FC8")}
+  if(st.ears==="speaker")for(let y=24;y<30;y+=2){P(19,y+b,OUT);P(44,y+b,OUT)}
+  if(st.shoes==="sneaker"){R(26,53,4,1,"#F3F5F8");R(34,53,4,1,"#F3F5F8")}
+  if(st.shoes==="gold"){P(27,52,"#FFE680");P(35,52,"#FFE680")}
+  if(st.outfit==="hoodie"){R(28,44+b,8,3,shade);P(30,38+b,"#F3F5F8");P(30,39+b,"#F3F5F8");P(33,38+b,"#F3F5F8");P(33,39+b,"#F3F5F8")}
+  if(st.outfit==="lab"){R(31,37+b,1,12,shade);R(34,41+b,3,3,shade);P(35,40+b,"#1E3D74");R(25,37+b,3,2,shade);R(36,37+b,3,2,shade)}
+  if(st.outfit==="jacket"){R(31,37+b,2,12,"#F2C230");R(25,47+b,14,1,"#F2C230");R(22,44+b,3,1,"#F2C230");R(39,44+b,3,1,"#F2C230")}
+  // หมวกนิรภัย: เงา + ไฮไลต์
+  for(let x=24;x<=40;x++)P(x,35+b,"#C9D0DB");P(25,19+b,"#FFFFFF");P(26,18+b,"#FFFFFF");P(27,18+b,"#FFFFFF");
+  // จอหน้า
+  const g=GLOW[st.glow];
+  R(24,21+b,17,11,"#0E1A2E");P(24,21+b,"#EEF1F5");P(40,21+b,"#EEF1F5");P(24,31+b,"#EEF1F5");P(40,31+b,"#EEF1F5");
+  for(let y=22;y<31;y+=2)R(25,y+b,15,1,g,.06);
+  const blink=f%46>43;
+  if(blink){R(27,25+b,2,1,g);R(36,25+b,2,1,g)}else{R(27,24+b,2,3,g);R(36,24+b,2,3,g);P(27,24+b,"#FFFFFF",.7);P(36,24+b,"#FFFFFF",.7)}
+  const m=st.mouth;
+  if(m==="cat")[[29,28],[30,29],[31,28],[32,28],[33,29],[34,28]].forEach(([x,y])=>P(x,y+b,g));
+  else{P(29,28+b,g);R(30,29+b,4,1,g);P(34,28+b,g);
+    if(m==="fang")P(33,30+b,"#FFFFFF");if(m==="tongue")R(31,30+b,2,1,"#FF8FC8")}
+  if(st.eyes==="round"){box(25,22+b,6,6,"#C9A25B");box(34,22+b,6,6,"#C9A25B");R(31,24+b,3,1,"#C9A25B")}
+  if(st.eyes==="hud"){R(25,22+b,15,1,"#6FE3F0",.9);for(let x=26;x<40;x+=3)P(x,23+b,"#6FE3F0",.6);P(39,(f%8<4?24:25)+b,"#FF5A5A")}
+  // ผ้าพันคอ
+  if(st.scarf==="red"){R(25,36+b,14,2,"#C2372C");const w=f%8<4?0:1;R(36+w,38+b,2,4,"#C2372C");P(38+w,41+b,"#8F2620")}
+  // หมวก
+  if(st.hat==="beanie"){for(let y=-9;y<=0;y++)for(let x=-10;x<=10;x++)if(x*x+y*y<=96)P(32+x,21+y+b,"#C2372C");R(22,19+b,21,2,"#F3F5F8");disc(32,10+b,2,"#F3F5F8")}
+  if(st.hat==="grad"){R(27,14+b,11,3,OUT);R(20,13+b,25,2,OUT);R(21,13+b,23,1,"#2B2B3A");R(43,14+b,1,5,"#F2C230");R(42,19+b,3,2,"#F2C230")}
+  // ของถือ (มือขวา)
+  if(st.held==="pencil"){P(41,47+b,OUT);for(let i=1;i<9;i++){P(41+i,47-i+b,"#F2C230");P(42+i,47-i+b,"#C9A25B")}P(50,38+b,"#FF8FC8");P(51,38+b,"#FF8FC8")}
+  if(st.held==="laser"){for(let i=0;i<7;i++)P(42+i,46-i+b,"#AEB6C4");const on=f%6<4;P(49,39+b,"#FF5A5A");if(on){P(50,38+b,"#FF5A5A",.6);P(49,38+b,"#FF5A5A",.4);P(50,39+b,"#FF5A5A",.4)}}
+}
+function drawFront(f){
+  if(st.fx==="spark")for(let i=0;i<7;i++){const x=16+(i*41)%32,y=54-((f*.7+i*9)%38),a=1-(54-y)/40,tw=(f+i)%6<4;
+    P(x,y,"#FFE680",a);if(tw){P(x-1,y,"#FFE680",a*.6);P(x+1,y,"#FFE680",a*.6);P(x,y-1,"#FFE680",a*.6);P(x,y+1,"#FFE680",a*.6)}}
+  if(st.fx==="binary")for(let i=0;i<7;i++){const x=12+(i*37)%40,y=54-((f*.5+i*11)%42),a=Math.max(0,1-(54-y)/44),col=GLOW[st.glow];
+    if(i%2){R(x+1,y,1,5,col,a)}else{R(x,y,3,1,col,a);R(x,y+4,3,1,col,a);R(x,y,1,5,col,a);R(x+2,y,1,5,col,a)}}
+  if(st.pet==="floppy"){const x=52,y=22+(f%14<7?0:1),w=f%4<2;
+    R(x-5,y-5,11,11,OUT);R(x-4,y-4,9,9,"#1E3D74");R(x-3,y-4,7,4,"#F3F5F8");P(x-2,y-3,OUT);P(x+2,y-3,OUT);R(x-2,y+1,5,3,"#AEB6C4");P(x+1,y+2,"#1E3D74");
+    R(x-7,y-2+(w?0:1),2,1,"#F4F6FA");R(x+6,y-2+(w?0:1),2,1,"#F4F6FA")}
+}
+let f=0;const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function frame(){c.clearRect(0,0,64,64);const b=(f%12<6)?0:1;drawBg(f);drawBack(f);drawWings(f,b);drawGround(f);drawBody(f,b);drawFront(f);c.globalAlpha=1}
+frame();if(!reduce)setInterval(()=>{f++;frame()},85);
+
+// ===== คลังของ =====
+const GROUPS=[["หน้า",["glow","mouth","eyes"]],["หัว",["ears","hat"]],["ตัว",["outfit","scarf","shoes"]],["ปีก/ของถือ",["wings","held","pet"]],["ออร่า",["back","ground","fx","bg"]]];
+// รูปย่อ: ตัดเฉพาะส่วนที่เกี่ยว [x,y,ขนาด] · ไม่มี = ทั้งภาพ
+const CROP={glow:[14,8,36],mouth:[14,8,36],eyes:[14,8,36],ears:[12,2,40],hat:[12,2,40],outfit:[14,24,36],scarf:[14,24,36],shoes:[18,38,26],held:[24,24,34],pet:[38,10,26]};
+const CHANCE={n:"60%",m:"28%",r:"10%",u:"2%"};
+const GUARANTEE={"wings.light":"การันตี: ล้มบอสปลายภาค","back.stars":"การันตี: ล้มบอสกลางภาค","hat.grad":"การันตี: จบเทอม","pet.floppy":"การันตี: จดครบทุกคาบ 1 สัปดาห์"};
+const BASE={...PRESETS.start};delete BASE.title;
+// ของที่ "เก็บได้แล้ว" ในตัวอย่างนี้ = ของพื้นฐาน + ชุดกลางเทอม + บางชิ้น · ที่เหลือยังล็อก
+const EXTRA=["beanie","bloom","paper","pencil","fang"];
+const OWNED=new Set(SLOTS.flatMap(sl=>sl.o.filter(([v],i)=>i===0||PRESETS.mid[sl.k]===v||EXTRA.includes(v)).map(([v])=>sl.k+"."+v)));
+const ITEMS=SLOTS.flatMap(sl=>sl.o.filter(([v])=>v!=="none").map(([v,name,r])=>({k:sl.k,v,name,r,slot:sl.l,id:sl.k+"."+v})));
+let eq={...BASE},eqTitle=["นักเรียนฝึกหัด","n"],sel=null,tab=0;
+
+const off=document.createElement("canvas");off.width=off.height=64;
+function drawState(ctx,state,fr){const oc=c,os=st;c=ctx;st=state;c.clearRect(0,0,64,64);const b=(fr%12<6)?0:1;
+  drawBg(fr);drawBack(fr);drawWings(fr,b);drawGround(fr);drawBody(fr,b);drawFront(fr);c.globalAlpha=1;c=oc;st=os}
+function thumb(cvs,it){drawState(off.getContext("2d"),{...BASE,[it.k]:it.v},3);const t=cvs.getContext("2d");t.imageSmoothingEnabled=false;
+  const [x,y,w]=CROP[it.k]||[0,0,64];t.clearRect(0,0,64,64);t.drawImage(off,x,y,w,w,0,0,64,64)}
+
+const $=id=>document.getElementById(id);
+$("tabs").innerHTML=GROUPS.map(([g],i)=>`<button role="tab" data-t="${i}">${g}</button>`).join("");
+function renderInv(){
+  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",+b.dataset.t===tab));
+  const list=ITEMS.filter(it=>GROUPS[tab][1].includes(it.k));
+  $("inv").innerHTML=list.map(it=>{const own=OWNED.has(it.id),on=eq[it.k]===it.v;
+    return `<button class="tile${own?"":" lock"}" style="--c:${it.r==="n"?"#9AA3B2":RC[it.r]}" data-id="${it.id}" aria-pressed="${sel?.id===it.id}" aria-label="${own?it.name:"ยังไม่ได้"} · ${it.slot}">`+
+      `${on?'<span class="on">ใส่อยู่</span>':""}<canvas width="64" height="64"></canvas>${own?it.name:"???"}<span class="r">${it.slot}</span></button>`}).join("");
+  $("inv").querySelectorAll(".tile").forEach(el=>thumb(el.querySelector("canvas"),ITEMS.find(i=>i.id===el.dataset.id)));
+  $("have").textContent=`เก็บได้ ${ITEMS.filter(i=>OWNED.has(i.id)).length}/${ITEMS.length} ชิ้น`;
+}
+const small=t=>`<br><small style="font:400 12px 'IBM Plex Sans Thai';color:#C2CDE0">${t}</small>`;
+function setTitle(tt){const t=$("title");t.textContent="ฉายา: "+tt[0];t.style.color=RC[tt[1]]}
+function show(){
+  const tr=$("try");
+  if(sel){const own=OWNED.has(sel.id),on=eq[sel.k]===sel.v,sl=SLOTS.find(x=>x.k===sel.k),canOff=sl.o[0][0]==="none";
+    st={...eq,[sel.k]:sel.v,title:eqTitle};tr.hidden=false;
+    $("tryLab").innerHTML=`<span style="color:${RC[sel.r]}">${own?sel.name:"???"}</span>`+small(own?(on?"ใส่อยู่":"กำลังลองใส่"):(GUARANTEE[sel.id]||"ได้จากกล่อง · โอกาส "+CHANCE[sel.r]));
+    const eb=$("equip");eb.textContent=on?"ถอด":"ใส่";eb.dataset.mode=on?"off":"on";eb.disabled=!own||(on&&!canOff);
+  }else{st={...eq,title:eqTitle};tr.hidden=true}
+  const worn=SLOTS.filter(x=>eq[x.k]!==x.o[0][0]).length;$("count").textContent=`ใส่ ${worn}/${SLOTS.length}`;
+  setTitle(st.title);if(reduce)frame();
+}
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;tab=+b.dataset.t;renderInv()});
+$("inv").addEventListener("click",e=>{const b=e.target.closest(".tile");if(!b)return;const it=ITEMS.find(i=>i.id===b.dataset.id);sel=sel?.id===it.id?null:it;renderInv();show()});
+$("cancel").onclick=()=>{sel=null;renderInv();show()};
+$("equip").onclick=()=>{if(!sel)return;const sl=SLOTS.find(x=>x.k===sel.k);eq={...eq,[sel.k]:$("equip").dataset.mode==="off"?sl.o[0][0]:sel.v};sel=null;renderInv();show()};
+document.querySelector(".presets").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;sel=null;renderInv();
+  st={...PRESETS[b.dataset.p]};$("try").hidden=false;$("tryLab").innerHTML="ตัวอย่างชุด"+b.textContent+small("ดูเฉย ๆ ไม่ได้ใส่จริง");
+  $("equip").disabled=true;$("equip").textContent="ใส่";setTitle(st.title);if(reduce)frame()});
+renderInv();show();
+</script>
+</body>
+</html>
