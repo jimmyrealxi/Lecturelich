@@ -31,7 +31,7 @@
 ## สถานะล่าสุด (7 พ.ย. 2569)
 - branch ต่อกันเป็นสาย: `main` (ขั้น 0) → `feat/stage1-core` → … → `feat/stage6-rooms` (งานล่าสุด commit แล้ว **ยังไม่ push**) · ยังไม่มี PR (ขั้น 1–5 แก้ไขต่อบน stage6 → คุยเรื่องเปิด PR ก่อน)
 - **Supabase จริงแล้ว** ref `zuwmygzqoezgosyetahc` · migration 6 ไฟล์รันครบ · `.env` ใส่แล้ว (ไม่ commit) · dev: `.claude/launch.json` (`npm run web` พอร์ต 8081)
-- เทสกับของจริง: ขั้น 1 ผ่าน · ขั้น 2 โน้ต+รูปผ่าน **เหลือ Push** (VAPID secrets + `supabase functions deploy send-push`, DEPLOY_PWA ข้อ 4) · ขั้น 3–6 ยังไม่เทส (ขั้น 6 ใช้ `docs/TEST_ROOMS.md`) · หน้าต่างเบราว์เซอร์ใน Claude ปิด `confirm()` อัตโนมัติ → เทสปุ่มลบใน Chrome จริง
+- เทสกับของจริง: ขั้น 1 ผ่าน · ขั้น 2 ผ่านครบ (VAPID ใส่แล้ว · `send-push` deploy แล้ว verify_jwt ปิด · push เด้งใน Edge localhost) · ขั้น 3 ผ่าน · ขั้น 4–6 ยังไม่เทส (ขั้น 6 ใช้ `docs/TEST_ROOMS.md`) · หน้าต่างเบราว์เซอร์ใน Claude ปิด `confirm()` อัตโนมัติ → เทสปุ่มลบใน Chrome จริง
 - แก้ระหว่างเทส: `+html.tsx` ต้องวาง `headNodes/bodyNodes` (SDK 58 ไม่งั้นเว็บว่าง) · migration ขั้น 6 `$`→`$$` · คะแนนคิดตามงาน (ได้รวม/เต็มรวม × เต็มของส่วน, งานยังไม่กรอกไม่นับ, เต็มของส่วนเว้นว่าง = สัดส่วน)
 - ข้อมูลทดสอบในบัญชีเจ้าของ: เทอมเริ่มถูกเลื่อนเป็นก่อน 9 พ.ย. + คาบคณิตถูกย้ายเป็น ส. 01:00–03:00 → เทสเสร็จเปลี่ยนกลับ (จ. 10:00)
 - เสนอได้: คำเตือน "งานได้ 0 ให้กรอก 0" ใต้ช่องคะแนน · ถัดไปหลังเทสครบ: Vercel (Production Branch = branch ล่าสุด) · sprite/ไอคอน placeholder · ขั้น 7 ต้องคุยก่อน
