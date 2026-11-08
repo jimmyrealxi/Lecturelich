@@ -1,12 +1,12 @@
 # โน้ตส่งต่อ (8 พ.ย. 2569) · เปิดเทอม 9 พ.ย.
 
-branch `feat/stage6-rooms` · push แล้วถึง commit `3fd7801` (branch นี้คือ production ของ Vercel: push = ขึ้นเว็บจริงทันที) · ตอนเขียนโน้ตนี้ Vercel กำลัง build
+branch `feat/stage6-rooms` · push แล้วถึง commit `c4ccdc9` (branch นี้คือ production ของ Vercel: push = ขึ้นเว็บจริงทันที)
 
 ## ส่งต่อแชทใหม่ (8 พ.ย. ดึก) อ่านก่อนเพื่อน
-**สถานะ:** โค้ดทั้งหมด commit บน `feat/stage6-rooms` แล้ว ยังไม่ push (push ล่าสุด `3fd7801`) · function `classroom` ที่ขึ้นอยู่เป็นรุ่นแรก (เชื่อม + ดึงงาน + โดเมนใหม่)
-**รอ deploy (ต้องถามเจ้าของก่อน):** `classroom` รุ่นใหม่ (ติ๊กส่งอัตโนมัติพร้อม XP + แจ้งงานใหม่) และ `send-push` (ส่งเลขงานค้าง) · ทั้งสองตัว verify_jwt ปิด · ไม่ต้องรัน migration เพิ่ม · `npx supabase` ไม่ได้ติดตั้ง ใช้เครื่องมือ deploy ของ Supabase ส่งไฟล์ทั้งหมดใน function (`classroom`: index.ts, logic.ts · `send-push`: index.ts, webpush.ts)
-**ลำดับงานต่อ เจ้าของบอกว่า "เดี๋ยวค่อยเทส" รอคำสั่งก่อน:**
-1. deploy 2 function แล้ว push (ถามก่อนทุกครั้ง) · ถ้า push ก่อน deploy แจ้งเตือนยังใช้ได้ แต่เลขบนไอคอนไม่อัปเดตตอนแอปปิด
+**สถานะ:** deploy `classroom` v2 และ `send-push` v7 แล้ว (verify_jwt ปิด) · push โค้ดถึง `c4ccdc9` แล้ว (8 พ.ย.)
+**deploy รอบถัดไป:** `npx supabase` ไม่ได้ติดตั้ง ใช้เครื่องมือ deploy ของ Supabase ส่งไฟล์ทั้งหมดใน function (`classroom`: index.ts, logic.ts · `send-push`: index.ts, webpush.ts) · ถามเจ้าของก่อนทุกครั้ง
+**ลำดับงานต่อ:**
+1. ~~deploy 2 function แล้ว push~~ เสร็จแล้ว
 2. เจ้าของเช็ก Supabase URL Configuration (Site URL + Redirect URLs เป็น `https://lecturelich.vercel.app`) และหน้า Audience ใน Google (Testing = สิทธิ์หมดทุก 7 วัน) · ผมเช็กสองอย่างนี้เองไม่ได้
 3. บนมือถือ: เปิดโดเมนใหม่ ล็อกอิน เพิ่มลงหน้าจอโฮมใหม่ กดรับแจ้งเตือน (ตอนนี้มีแค่ Windows 1 เครื่องที่สมัครไว้)
 4. เทสบนมือถือ: จอซูมตอนจดหัวข้อ · แป้นพิมพ์ตอนเพิ่มงาน · ติ๊กงานค้าง · เปลี่ยนแท็บกลับบนสุด · ตัวหนังสือและปุ่มกลับบน 360px · ไอคอนใหม่ · เลขบนไอคอน
