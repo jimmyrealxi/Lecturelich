@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich หน้าวันนี้ 4 สไตล์</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* หน้าวันนี้ 4 สไตล์จากรูปอ้างอิง (ข้อ 2–5) · ยืมแค่โทน/เลย์เอาต์ ไม่มีตัวละคร โลโก้ ชื่อ หรือฟอนต์ของเกมใด */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1B1F26;font:15px/1.5 "IBM Plex Sans Thai",sans-serif;color:#E6E8EC;padding:28px 16px}
+.th{font-family:"Chakra Petch","IBM Plex Sans Thai",sans-serif}
+.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums}
+h1.page{font:700 22px/1.3 "Chakra Petch",sans-serif;color:#fff;margin-bottom:6px}
+p.note{color:#B5BCC8;font-size:14px;max-width:820px;margin-bottom:24px}
+.wrap{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.cap{font:600 15px "Chakra Petch",sans-serif;color:#fff;margin-bottom:4px}
+.cap small{display:block;font:400 13px "IBM Plex Sans Thai";color:#AEB6C2;margin-bottom:8px;max-width:360px}
+.phone{width:360px;max-width:100%;height:780px;border-radius:32px;overflow:hidden;position:relative;border:6px solid #050608;display:flex;flex-direction:column;box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
+.sb{height:32px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:600 13px "IBM Plex Sans Thai"}
+.body{flex:1;overflow-y:auto;scrollbar-width:none;padding:6px 14px 16px}
+.body::-webkit-scrollbar{display:none}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.ic{width:22px;height:22px;flex:none}
+.btn{min-height:44px;border-radius:10px;font:600 15px "Chakra Petch","IBM Plex Sans Thai";display:flex;align-items:center;justify-content:center;gap:6px;border:0;cursor:pointer;padding:0 14px}
+.btns{display:flex;gap:8px;margin-top:12px}.btns .btn{flex:1}
+.tabs{flex:none;display:flex;height:64px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:500 12px "IBM Plex Sans Thai";position:relative}
+.tab svg{width:22px;height:22px}
+.badge{position:absolute;top:8px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;font:600 11px/18px "IBM Plex Sans Thai";text-align:center;padding:0 5px}
+.sec{font:700 15px "Chakra Petch";margin:16px 2px 8px;display:flex;justify-content:space-between;align-items:baseline}
+.sec a{font:500 13px "IBM Plex Sans Thai";text-decoration:none;color:inherit;opacity:.85}
+.item{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px}
+.item b{font-weight:600;display:block;line-height:1.35}
+.item span.sub{font-size:13px}
+.chk{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;margin:-8px -6px -8px -8px}
+.chk i{width:24px;height:24px;border-radius:6px;display:block}
+
+/* ===== A มินิมอลน้ำเงิน ===== */
+.A{background:linear-gradient(180deg,#123372 0%,#0B2050 55%,#081838 100%);color:#EEF2FF}
+.A .card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px}
+.A .date{font:700 26px/1.2 "Chakra Petch";color:#FFD54A;margin-top:8px}
+.A .hi{color:#C9D4F2;font-size:14px;margin-bottom:12px}
+.A .chip{font:600 12px "IBM Plex Sans Thai";padding:2px 10px;border-radius:99px;background:#FFD54A;color:#14234A}
+.A .chip.up{background:#8FA8FF;color:#0D1B44}
+.A .chip.red{background:#FF8A80;color:#3A0A06}
+.A .muted{color:#B7C3E6}
+.A .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.15);margin-top:10px;overflow:hidden}.A .bar i{display:block;height:100%;width:88%;background:#FFD54A}
+.A .b1{background:#FFD54A;color:#14234A}.A .b2{background:transparent;color:#EEF2FF;border:1.5px solid rgba(255,255,255,.4)}
+.A .list .item+.item{border-top:1px solid rgba(255,255,255,.1)}
+.A .tile{width:40px;height:40px;border-radius:10px;background:rgba(255,213,74,.15);color:#FFD54A;display:flex;align-items:center;justify-content:center;flex:none}
+.A .xp{display:flex;align-items:flex-end;justify-content:space-between}
+.A .spark{display:flex;gap:5px;align-items:flex-end;height:44px}.A .spark i{width:9px;background:#FFD54A;border-radius:2px;opacity:.5}.A .spark i:last-child{opacity:1}
+.A .tabs{background:#071530;border-top:1px solid rgba(255,255,255,.1);color:#9FB0DA}
+.A .tab.on{color:#FFD54A}.A .tab.on:before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;background:#FFD54A;border-radius:0 0 3px 3px}
+.A .badge{background:#FFD54A;color:#14234A}
+
+/* ===== B ขรุขระ (แผ่นเหล็ก) ===== */
+.B{background:#34352F repeating-linear-gradient(115deg,rgba(255,255,255,.025) 0 2px,transparent 2px 7px);color:#ECE6D2}
+.B .plate{background:linear-gradient(180deg,#2E302A,#25271F);border:2px solid #5A5C4E;border-radius:6px;padding:12px;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -2px 0 rgba(0,0,0,.4),0 3px 0 #1A1B16}
+.B .plate:before,.B .plate:after{content:"";position:absolute;top:6px;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#9A9A88,#4A4B40)}
+.B .plate:before{left:6px}.B .plate:after{right:6px}
+.B .plate+.plate{margin-top:12px}
+.B .head{text-align:center;padding:10px}
+.B .brand{font:700 15px "Chakra Petch";letter-spacing:4px;color:#CFC8AE}
+.B .date{font:700 30px/1.1 "Chakra Petch";color:#F1C443;letter-spacing:1px;margin-top:4px}
+.B .lbl{font:700 14px "Chakra Petch";letter-spacing:1px;color:#F1C443;margin:0 0 8px 12px}
+.B .stamp{display:inline-block;background:#F1C443;color:#1E1E18;font:700 13px "Chakra Petch";letter-spacing:1px;padding:2px 10px;transform:rotate(-2deg);border:2px solid #1E1E18;box-shadow:2px 2px 0 rgba(0,0,0,.4)}
+.B .muted{color:#BDB59C}
+.B .red{color:#FF9478;font-weight:600;font-size:13px}
+.B .b1{background:#F1C443;color:#1E1E18;border-radius:4px;box-shadow:0 3px 0 #8C6F1E}.B .b2{background:#45473C;color:#ECE6D2;border-radius:4px;box-shadow:0 3px 0 #1A1B16}
+.B .chk i{border:2px solid #BDB59C;background:#1E1F19}
+.B .chk.on i{background:#F1C443 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12l5 5 9-10' fill='none' stroke='%231E1E18' stroke-width='3'/%3E%3C/svg%3E") center/16px no-repeat;border-color:#F1C443}
+.B .item{background:#1E1F19;border:1px solid #474939;border-radius:4px;margin-top:6px}
+.B .motto{text-align:center;font:700 16px/1.3 "Chakra Petch";color:#F1C443;letter-spacing:1px;padding:10px;background:#1E1F19;border:2px solid #5A5C4E;margin:14px 40px 0;border-radius:4px}
+.B .tabs{background:#23241E;border-top:3px solid #5A5C4E;color:#A9A28A}
+.B .tab.on{color:#F1C443;background:#2E302A}
+.B .badge{background:#FF9478;color:#2A0D05}
+
+/* ===== C เทอร์มินัลไฮเทค ===== */
+.C{background:radial-gradient(120% 60% at 50% 0%,#0D2A55 0%,#061530 60%,#040D1F 100%);color:#DCEBFF}
+.C .pnl{border:1px solid #2F7BD0;border-radius:10px;background:rgba(10,40,85,.45);box-shadow:0 0 14px rgba(70,160,255,.22),inset 0 0 18px rgba(70,160,255,.08);padding:12px}
+.C .title{margin:6px 30px 14px;text-align:center;font:700 18px "Chakra Petch";letter-spacing:3px;color:#7FD4FF;padding:8px;border:1px solid #2F7BD0;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%,0 50%);background:rgba(20,70,140,.4)}
+.C .top{display:grid;grid-template-columns:150px 1fr;gap:10px}
+.C .ring{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.C .stat{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0}
+.C .stat+.stat{border-top:1px solid rgba(47,123,208,.4)}
+.C .stat .vt{font-size:28px;line-height:1;color:#F2C230}
+.C .muted{color:#9DB8DE}
+.C .lbl{font:700 14px "Chakra Petch";color:#7FD4FF;margin-bottom:6px}
+.C .tl{position:relative;padding-left:22px}
+.C .tl:before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:#2F7BD0}
+.C .ev{position:relative;padding:8px 0}
+.C .ev:before{content:"";position:absolute;left:-20px;top:14px;width:12px;height:12px;border-radius:50%;border:2px solid #7FD4FF;background:#061530}
+.C .ev.now:before{background:#F2C230;border-color:#F2C230;box-shadow:0 0 10px #F2C230}
+.C .ev .t{font-size:22px;color:#7FD4FF;width:52px;display:inline-block}
+.C .ev.now .t{color:#F2C230}
+.C .tag{font:600 11px "IBM Plex Sans Thai";padding:1px 8px;border-radius:4px;border:1px solid #F2C230;color:#F2C230}
+.C .b1{background:#F2C230;color:#0A1A33;border-radius:6px}.C .b2{background:transparent;color:#DCEBFF;border:1px solid #2F7BD0;border-radius:6px}
+.C .item{border:1px solid rgba(47,123,208,.5);border-radius:8px;margin-top:6px;background:rgba(10,40,85,.35)}
+.C .item svg.ic{color:#F2C230}
+.C .tabs{background:#040D1F;border-top:1px solid #2F7BD0;box-shadow:0 -4px 14px rgba(70,160,255,.18);color:#7F9CC6}
+.C .tab.on{color:#7FD4FF;text-shadow:0 0 8px rgba(127,212,255,.6)}
+.C .badge{background:#F2C230;color:#0A1A33}
+
+/* ===== D วินเทจกระดาษ ===== */
+.D{background:#EFE5CB radial-gradient(90% 70% at 50% 30%,#F6EEDA 0%,#EADDBE 100%);color:#1E2F55}
+.D .card{background:#FBF5E4;border:1.5px solid #1E2F55;border-radius:10px;padding:12px;box-shadow:3px 3px 0 #1E2F55}
+.D .card+.card{margin-top:14px}
+.D .brand{font:700 italic 26px/1.1 "Chakra Petch";color:#1E2F55;margin-top:8px}
+.D .ribbon{display:inline-block;margin:10px 0 14px -14px;padding:6px 22px 6px 16px;background:#F2C94C;color:#1E2F55;font:700 18px "Chakra Petch";clip-path:polygon(0 0,100% 0,calc(100% - 12px) 50%,100% 100%,0 100%);box-shadow:inset 0 -2px 0 rgba(0,0,0,.12)}
+.D .lbl{font:700 16px "Chakra Petch";margin-bottom:6px}
+.D .chip{font:600 12px "IBM Plex Sans Thai";padding:2px 10px;border-radius:99px;background:#1E2F55;color:#FBF5E4}
+.D .chip.up{background:#DCE3F3;color:#1E2F55;border:1px solid #1E2F55}
+.D .muted{color:#4D5A78}
+.D .red{color:#A3231B;font-weight:600}
+.D .b1{background:#1E2F55;color:#FBF5E4;border-radius:8px}.D .b2{background:#FBF5E4;color:#1E2F55;border:1.5px solid #1E2F55;border-radius:8px}
+.D .chk i{border:2px solid #1E2F55;background:#fff;border-radius:4px}
+.D .item+.item{border-top:1px dashed #9AA3B8}
+.D .seal{width:84px;height:84px;border-radius:50%;background:#F2C94C;border:3px solid #1E2F55;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;box-shadow:3px 3px 0 #1E2F55}
+.D .seal b{font:700 24px/1 "Chakra Petch"}
+.D .seal small{font-size:11px}
+.D .motto{font:700 italic 18px "Chakra Petch";transform:rotate(-4deg);text-align:right;margin:18px 6px 4px}
+.D .tabs{background:#1E2F55;color:#C9D1E6}
+.D .tab.on{color:#F2C94C}
+.D .badge{background:#F2C94C;color:#1E2F55}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-today" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2"/><rect x="7" y="13" width="4" height="4" fill="currentColor"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4h7a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-5a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-task" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-gem" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M2 9h20M9 3l3 18 3-18" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 11h8M8 15h8M8 7h5" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0 1 12 0v6l2 2H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 21h4" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+</svg>
+
+<h1 class="page">Lecturelich — หน้าวันนี้ 4 สไตล์ (จากรูปอ้างอิง ข้อ 2–5)</h1>
+<p class="note">ตัดแบบจอเขียว (ข้อ 1) ออกแล้ว · ข้อมูลชุดเดียวกับหน้าวันนี้จริง: คาบที่กำลังเรียน + ปุ่มเช็กชื่อ · ของค้าง · XP วันนี้ · แท็บ 5 อัน · ยืมแค่โทน/เลย์เอาต์ ไม่มีตัวละคร โลโก้ หรือชื่อจากเกมใด · ช่องเกรดเฉลี่ยในรูปเปลี่ยนเป็น "เข้าเรียน %" เพราะแอปยังไม่คิดเกรดเฉลี่ยรวม</p>
+
+<div class="wrap">
+
+<!-- ===== A ===== -->
+<div>
+<div class="cap">A · มินิมอลน้ำเงิน<small>สะอาด การ์ดโปร่ง ป้ายเหลือง · ใกล้ธีม B ที่อนุมัติแล้วที่สุด</small></div>
+<div class="phone A">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="row"><div class="grow"><div class="date">ส. 7 พ.ย.</div><div class="hi">เทอม 2/2569 · วันนี้ไปได้ดี</div></div><span class="chip">LV 1</span></div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><b class="th" style="font-size:16px">คาบวันนี้</b><span class="muted" style="font-size:13px">2 คาบ</span></div>
+      <div class="row" style="margin-top:10px">
+        <svg class="ic" style="color:#FFD54A"><use href="#i-today"/></svg>
+        <div class="grow"><b>คณิตศาสตร์ 2</b><div class="muted" style="font-size:13px"><span class="vt" style="font-size:18px">11:00–13:00</span> · SC9-604</div></div>
+        <span class="chip">กำลังเรียน</span>
+      </div>
+      <div class="bar"><i></i></div>
+      <div class="muted" style="font-size:12px;margin-top:4px">เหลือ <span class="vt" style="font-size:16px">0:14</span> ชม.</div>
+      <div class="btns"><button class="btn b1">มาเรียน</button><button class="btn b2">ขาด</button><button class="btn b2">งดสอน</button></div>
+      <div class="row" style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.1)">
+        <svg class="ic muted"><use href="#i-today"/></svg>
+        <div class="grow"><b>ฟิสิกส์ทั่วไป</b><div class="muted" style="font-size:13px"><span class="vt" style="font-size:18px">15:00–17:00</span> · SC2-101</div></div>
+        <span class="chip up">ถัดไป</span>
+      </div>
+    </div>
+    <div class="sec">ค้างอยู่ 3 เรื่อง <a href="#">ดูทั้งหมด ›</a></div>
+    <div class="card list" style="padding:4px">
+      <div class="item"><div class="tile"><svg class="ic"><use href="#i-note"/></svg></div><div class="grow"><b>จดหลังคาบ ฟิสิกส์</b><span class="sub muted">จบ 09:00 · จดวันนี้ +10 XP</span></div><span class="chip">จด</span></div>
+      <div class="item"><div class="tile"><svg class="ic"><use href="#i-task"/></svg></div><div class="grow"><b>แบบฝึกหัดบทที่ 3</b><span class="sub muted">คณิตศาสตร์ 2 · พรุ่งนี้ 23:59</span></div><span class="chip red">พรุ่งนี้</span></div>
+      <div class="item"><div class="tile"><svg class="ic"><use href="#i-task"/></svg></div><div class="grow"><b>รายงานแล็บ 2</b><span class="sub muted">ฟิสิกส์ · อ. 11 พ.ย.</span></div><span class="muted" style="font-size:13px">อีก 4 วัน</span></div>
+    </div>
+    <div class="card xp" style="margin-top:14px">
+      <div><div class="muted" style="font-size:13px">ได้วันนี้</div><div class="vt" style="font-size:40px;line-height:1;color:#FFD54A">+20 XP</div><div class="muted" style="font-size:12px">2 รายการ ›</div></div>
+      <div class="spark"><i style="height:30%"></i><i style="height:55%"></i><i style="height:40%"></i><i style="height:70%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:60%"></i></div>
+    </div>
+  </div>
+  <nav class="tabs"><div class="tab on"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab"><svg><use href="#i-task"/></svg>งาน<span class="badge">2</span></div><div class="tab"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+
+<!-- ===== B ===== -->
+<div>
+<div class="cap">B · ขรุขระ แผ่นเหล็ก<small>แผงหมุดย้ำ ป้ายปั๊มเหลือง ช่องติ๊ก · ดิบ ตัวหนา อ่านง่ายกลางแดด</small></div>
+<div class="phone B">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="plate head"><div class="brand">LECTURELICH</div><div class="date">ส. 7 พ.ย.</div><div class="muted" style="font-size:13px">เทอม 2/2569 · LV 1</div></div>
+    <div class="plate">
+      <div class="lbl">คาบตอนนี้</div>
+      <div style="padding:0 4px">
+        <b class="th" style="font-size:20px">คณิตศาสตร์ 2</b>
+        <div class="muted"><span class="vt" style="font-size:22px;color:#ECE6D2">11:00–13:00</span> · SC9-604</div>
+        <div style="margin-top:6px"><span class="stamp">กำลังเรียน</span> <span class="muted" style="font-size:13px;margin-left:6px">เหลือ <span class="vt" style="font-size:18px">0:14</span></span></div>
+        <div class="btns"><button class="btn b1">มาเรียน</button><button class="btn b2">ขาด</button><button class="btn b2">งดสอน</button></div>
+      </div>
+    </div>
+    <div class="plate">
+      <div class="lbl">งานค้าง</div>
+      <div class="item"><span class="chk on"><i></i></span><div class="grow"><b style="text-decoration:line-through;opacity:.6">ใบงานเคมี</b><span class="sub muted">ส่งแล้ว +20 XP</span></div></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>แบบฝึกหัดบทที่ 3</b><span class="sub muted">คณิตศาสตร์ 2</span></div><span class="red">พรุ่งนี้</span></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>รายงานแล็บ 2</b><span class="sub muted">ฟิสิกส์</span></div><span class="muted" style="font-size:13px">อีก 4 วัน</span></div>
+    </div>
+    <div class="plate">
+      <div class="lbl">ยังไม่ได้จด</div>
+      <div class="item"><svg class="ic" style="color:#F1C443;margin-left:4px"><use href="#i-note"/></svg><div class="grow"><b>ฟิสิกส์ทั่วไป</b><span class="sub muted">จบ 09:00 · จดวันนี้ +10 XP</span></div><svg class="ic muted"><use href="#i-chev"/></svg></div>
+    </div>
+    <div class="motto">ได้วันนี้ <span class="vt" style="font-size:24px">+20</span> XP</div>
+  </div>
+  <nav class="tabs"><div class="tab on"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab"><svg><use href="#i-task"/></svg>งาน<span class="badge">2</span></div><div class="tab"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+
+<!-- ===== C ===== -->
+<div>
+<div class="cap">C · เทอร์มินัลไฮเทค<small>เส้นเรืองแสง วงแหวนสรุป ไทม์ไลน์คาบ · ภาพรวมทั้งวันในจอเดียว</small></div>
+<div class="phone C">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="title">LECTURELICH</div>
+    <div class="top">
+      <div class="pnl ring">
+        <svg width="112" height="112" viewBox="0 0 112 112">
+          <circle cx="56" cy="56" r="46" fill="none" stroke="#1C3F6E" stroke-width="10"/>
+          <circle cx="56" cy="56" r="46" fill="none" stroke="#F2C230" stroke-width="10" stroke-linecap="round" stroke-dasharray="266 289" transform="rotate(-90 56 56)" style="filter:drop-shadow(0 0 4px #F2C230)"/>
+          <text x="56" y="62" text-anchor="middle" font-family="VT323" font-size="34" fill="#F2C230">92%</text>
+        </svg>
+        <div class="muted" style="font-size:13px;margin-top:2px">เข้าเรียนเทอมนี้</div>
+      </div>
+      <div class="pnl" style="padding:6px 12px">
+        <div class="stat"><span class="muted" style="font-size:13px">ส. 7 พ.ย.</span><span class="muted" style="font-size:13px">LV 1</span></div>
+        <div class="stat"><span>งานค้าง</span><span class="vt">3</span></div>
+        <div class="stat"><span>คาบวันนี้</span><span class="vt">2</span></div>
+        <div class="stat"><span>XP วันนี้</span><span class="vt">+20</span></div>
+      </div>
+    </div>
+    <div class="pnl" style="margin-top:12px">
+      <div class="lbl">ตารางวันนี้</div>
+      <div class="tl">
+        <div class="ev" style="opacity:.6"><span class="vt t">09:00</span><b>ฟิสิกส์ทั่วไป</b> <span class="muted" style="font-size:13px">จบแล้ว</span></div>
+        <div class="ev now"><span class="vt t">11:00</span><b>คณิตศาสตร์ 2</b> <span class="tag">กำลังเรียน</span>
+          <div class="muted" style="font-size:13px;padding-left:56px">SC9-604 · เหลือ <span class="vt" style="font-size:16px">0:14</span></div>
+          <div class="btns"><button class="btn b1">มาเรียน</button><button class="btn b2">ขาด</button><button class="btn b2">งดสอน</button></div>
+        </div>
+        <div class="ev"><span class="vt t">15:00</span><b>ฟิสิกส์ทั่วไป</b> <span class="muted" style="font-size:13px">SC2-101</span></div>
+      </div>
+    </div>
+    <div class="pnl" style="margin-top:12px">
+      <div class="lbl">ต้องทำ</div>
+      <div class="item"><svg class="ic"><use href="#i-note"/></svg><div class="grow"><b>จดหลังคาบ ฟิสิกส์</b><span class="sub muted">จดวันนี้ +10 XP</span></div><svg class="ic muted"><use href="#i-chev"/></svg></div>
+      <div class="item"><svg class="ic"><use href="#i-task"/></svg><div class="grow"><b>แบบฝึกหัดบทที่ 3</b><span class="sub muted">คณิตศาสตร์ 2 · พรุ่งนี้ 23:59</span></div><svg class="ic muted"><use href="#i-chev"/></svg></div>
+      <div class="item"><svg class="ic"><use href="#i-bell"/></svg><div class="grow"><b>รายงานแล็บ 2</b><span class="sub muted">ฟิสิกส์ · อีก 4 วัน</span></div><svg class="ic muted"><use href="#i-chev"/></svg></div>
+    </div>
+  </div>
+  <nav class="tabs"><div class="tab on"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab"><svg><use href="#i-task"/></svg>งาน<span class="badge">2</span></div><div class="tab"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+
+<!-- ===== D ===== -->
+<div>
+<div class="cap">D · วินเทจกระดาษ<small>พื้นครีม หมึกกรมท่า ริบบิ้นวันที่ เงาทึบแบบโปสเตอร์เก่า · อบอุ่น อ่านสบาย</small></div>
+<div class="phone D">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <div class="brand">Lecturelich</div>
+    <div class="ribbon">ส. 7 พ.ย. · เทอม 2/2569</div>
+    <div class="card">
+      <div class="lbl">คาบวันนี้</div>
+      <div class="row"><svg class="ic"><use href="#i-today"/></svg><div class="grow"><b>คณิตศาสตร์ 2</b><div class="muted" style="font-size:13px">11:00–13:00 · SC9-604 · เหลือ 0:14</div></div><span class="chip">กำลังเรียน</span></div>
+      <div class="btns"><button class="btn b1">มาเรียน</button><button class="btn b2">ขาด</button><button class="btn b2">งดสอน</button></div>
+      <div class="row" style="margin-top:12px;padding-top:10px;border-top:1px dashed #9AA3B8"><svg class="ic"><use href="#i-today"/></svg><div class="grow"><b>ฟิสิกส์ทั่วไป</b><div class="muted" style="font-size:13px">15:00–17:00 · SC2-101</div></div><span class="chip up">ถัดไป</span></div>
+    </div>
+    <div class="card" style="padding:8px 4px">
+      <div class="lbl" style="margin:4px 8px">สิ่งที่ต้องทำ</div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>จดหลังคาบ ฟิสิกส์</b><span class="sub muted">จดวันนี้ +10 XP</span></div></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>แบบฝึกหัดบทที่ 3</b><span class="sub muted">คณิตศาสตร์ 2 · <span class="red">พรุ่งนี้</span></span></div></div>
+      <div class="item"><span class="chk"><i></i></span><div class="grow"><b>รายงานแล็บ 2</b><span class="sub muted">ฟิสิกส์ · อีก 4 วัน</span></div></div>
+    </div>
+    <div class="row" style="margin-top:16px;align-items:flex-end">
+      <div class="seal"><b>92%</b><small>เข้าเรียน</small></div>
+      <div class="grow"><div class="motto">ได้วันนี้ +20 XP!</div><div class="muted" style="text-align:right;font-size:13px;margin-right:6px">LV 1 · 2 รายการ ›</div></div>
+    </div>
+  </div>
+  <nav class="tabs"><div class="tab on"><svg><use href="#i-today"/></svg>วันนี้</div><div class="tab"><svg><use href="#i-book"/></svg>วิชา</div><div class="tab"><svg><use href="#i-task"/></svg>งาน<span class="badge">2</span></div><div class="tab"><svg><use href="#i-gem"/></svg>เกม</div><div class="tab"><svg><use href="#i-gear"/></svg>ตั้งค่า</div></nav>
+</div>
+</div>
+
+</div>
+</body>
+</html>

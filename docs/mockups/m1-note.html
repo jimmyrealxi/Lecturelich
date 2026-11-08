@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich จดหลังคาบ</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ชุด 3 · จดหลังคาบ — ธีมผสม 1 (ต่อจาก b1/b2) */
+:root{--ink:#E6E9EE;--deck:#F3F5F8;--rule:#C7CDD6;--rule2:#B5BDC9;--paper:#14213A;--muted:#4A5873;--faint:#5C6982;
+  --go:#F2C230;--warn:#A84B0C;--danger:#B3261E;--navy:#1E3D74;--navyDeep:#173162;--navyRule:#34558F;--on:#F4F6FA;--onMuted:#C2CDE0;--w:360px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2A2E2B;font:15px/1.5 "IBM Plex Sans Thai",sans-serif;color:#E4E6E2;padding:28px 16px}
+.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums}
+h1{font:700 22px/1.3 "Chakra Petch",sans-serif;color:#fff;margin-bottom:6px}
+p.note{color:#B9BFBA;font-size:14px;max-width:820px;margin-bottom:12px}
+.wsw{display:flex;gap:6px;margin-bottom:24px}
+.wsw button{min-height:44px;padding:0 16px;background:transparent;border:1px solid #5A615C;color:#E4E6E2;font:600 14px "Chakra Petch";cursor:pointer}
+.wsw button[aria-pressed=true]{background:var(--go);border-color:var(--go);color:var(--paper)}
+.wrap{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.cap{font:600 15px "Chakra Petch";color:#fff;margin-bottom:10px;max-width:var(--w)}
+.cap small{display:block;font:400 13px "IBM Plex Sans Thai";color:#B9BFBA}
+.phone{position:relative;width:var(--w);max-width:100%;height:780px;border-radius:32px;overflow:hidden;border:6px solid #060606;display:flex;flex-direction:column;background:var(--ink);color:var(--paper);box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
+.sb{height:30px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:600 13px "IBM Plex Sans Thai";background:var(--navyDeep);color:var(--on)}
+.mast{flex:none;background:var(--navyDeep);border-bottom:3px solid var(--go);padding:4px 20px 14px;color:var(--on)}
+.back{display:flex;align-items:center;min-height:44px;margin-left:-8px;padding:0 8px;color:var(--on);text-decoration:none;font:500 14px "IBM Plex Sans Thai";width:max-content}
+.mast h2{font:700 26px/1.15 "Chakra Petch";color:var(--go)}
+.mast .meta{color:var(--onMuted);font-size:14px;margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mast .meta .sq{width:10px;height:10px;flex:none}
+.mast .meta .vt{font-size:19px;color:var(--on)}
+.body{flex:1;overflow-y:auto;scrollbar-width:none}
+.h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:20px 20px 8px}
+.h b{font:600 16px "Chakra Petch"}.h span{color:var(--faint);font-size:13px;text-align:right}
+.h .vt{font-size:17px}
+.pad{padding:0 20px}
+textarea{width:100%;min-height:104px;border:1px solid var(--rule2);background:#fff;padding:10px 12px;font:16px/1.5 "IBM Plex Sans Thai";color:var(--paper);resize:vertical}
+textarea::placeholder,input::placeholder{color:var(--faint)}
+/* รูปกระดาน */
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ph{position:relative;aspect-ratio:4/3;border:0;cursor:pointer;background:#2F4466}
+.ph::after{content:"✕";position:absolute;top:0;right:0;width:24px;height:24px;display:grid;place-items:center;background:var(--paper);color:var(--on);font-size:12px}
+.ph.new{outline:2px solid var(--go);outline-offset:-2px}
+.addph{aspect-ratio:4/3;min-height:44px;border:1px dashed var(--rule2);background:transparent;color:var(--paper);font:600 14px "Chakra Petch";cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.addph svg{width:22px;height:22px}
+.small{font-size:12px;color:var(--faint);margin-top:6px}
+/* หัวข้อ: บรรทัด 1 ชื่อ+★+✕ · บรรทัด 2 สอบไหน */
+.topic{border-top:1px solid var(--rule);padding:6px 4px 12px 20px}
+.topic.last{border-bottom:1px solid var(--rule)}
+.t1{display:grid;grid-template-columns:1fr 44px 44px;align-items:center;min-height:44px}
+.t1 .what{font-weight:500}
+.ic{width:44px;height:44px;background:none;border:0;cursor:pointer;font-size:20px;color:var(--muted);display:grid;place-items:center}
+.ic.star[aria-checked=true]{background:var(--go);color:var(--paper)}
+.ic.x{color:var(--danger);font-size:15px}
+.exam{display:flex;align-items:center;gap:8px;margin-right:16px}
+.exam span{font-size:13px;color:var(--muted);flex:none}
+.seg{display:flex;flex:1;border:1px solid var(--rule2)}
+.seg button{flex:1;min-height:44px;background:transparent;border:0;font:600 14px "Chakra Petch";color:var(--paper);cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule2)}
+.seg button[aria-checked=true]{background:var(--navy);color:var(--on)}
+.addt{display:grid;grid-template-columns:1fr auto;gap:6px;padding:10px 20px 0}
+.addt input{min-height:44px;border:1px dashed var(--rule2);background:transparent;padding:0 12px;font:16px "IBM Plex Sans Thai";color:var(--paper);width:100%}
+.addt input.typing{border-style:solid;background:#fff}
+.btn{min-height:48px;padding:0 16px;border:1px solid var(--rule2);background:transparent;font:600 15px "Chakra Petch";color:var(--paper);cursor:pointer}
+.btn.wide{width:100%}
+.btn.sm{min-height:44px}
+.btn.pri{background:var(--go);border-color:var(--go);width:100%}
+.btn.pri:disabled{background:var(--deck);border:1px dashed var(--rule2);color:var(--muted);cursor:default}
+.err{margin:12px 20px 0;padding:10px 14px;border:1px solid var(--danger);background:#FBE9E7;color:#5A1410;font-size:14px}
+.foot{flex:none;padding:12px 20px 16px;border-top:1px solid var(--rule);background:var(--ink)}
+.foot .hint{text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
+.spacer{height:24px}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--go);outline-offset:2px}
+</style>
+<style>
+/* ธีม "ผสม 1" v2 (เกลา 7 พ.ย.) · วางทับ CSS ของ b1–b4 · หลัก: พื้นเรียบ ไม่ไล่สี · เหลืองเฉพาะปุ่มหลัก/ที่เลือก/แท็บ · เงาแข็งเฉพาะปุ่มหลัก · มุมมนน้อยเท่ากันทุกที่ · ลูกเล่น D ใช้จุดละครั้ง */
+:root{
+  --ink:#0F2452;--deck:#15306A;--rule:#26457F;--rule2:#3A5A96;
+  --paper:#EEF2FF;--muted:#B9C5E6;--faint:#A0B0D8;
+  --go:#FFD54A;--onGo:#14234A;--warn:#FFC27A;--danger:#FF9C92;
+  --navy:#24498F;--navyDeep:#0A1A3E;--navyRule:#2E4F8C;--on:#F4F6FA;--onMuted:#C9D4F2;--onFaint:#9FB0DA;
+  --field:#0B1D45;--hard:#050E24;--r:6px;
+}
+.phone{background:var(--ink)}
+
+/* หัวจอ: พื้นเข้มกว่าหน้า 1 ขั้น · ขีดเหลืองสั้นใต้ชื่อแทนเส้นเต็ม */
+.mast{background:var(--navyDeep);border-bottom:1px solid var(--rule)}
+.mast h2{color:#fff;position:relative;padding-bottom:6px}
+.mast h2::after{content:"";position:absolute;left:0;bottom:0;width:28px;height:3px;background:var(--go)}
+.mast .meta{color:var(--onMuted)}
+
+/* การ์ด/แผง: ต่างจากพื้นด้วยสีอย่างเดียว ไม่มีเงา */
+.box,.panel,.var,.slot,.need,.sheet .lock{border:1px solid var(--rule);border-radius:var(--r);box-shadow:none}
+.var.dashed{border-style:dashed}
+.need{background:var(--navyDeep)}
+.sheet{background:var(--deck);border-top:1px solid var(--rule2);border-radius:12px 12px 0 0}
+
+/* ปุ่ม: หลัก = เหลืองมีเงาแข็ง (ลูกเล่น D จุดเดียว) · รอง = เส้นขอบ */
+.btn,.chips button,.days button,.step button,.links a,.dots,.seg,.addph,.add{border-radius:var(--r)}
+.btn.pri,.toast button,.st i,.ic.star[aria-checked=true],.wsw button[aria-pressed=true]{color:var(--onGo)}
+.btn.pri{box-shadow:3px 3px 0 var(--hard)}
+.btn.pri:active{transform:translate(3px,3px);box-shadow:none}
+.btn.pri:disabled{box-shadow:none;color:var(--muted)}
+.fab{color:var(--onGo);border:0;border-radius:var(--r);box-shadow:3px 3px 0 var(--hard)}
+.toast{background:#F4F6FA;color:var(--onGo);border-radius:var(--r)}
+.ph::after{background:var(--onGo);color:#fff}
+
+/* ที่เลือก: แท็บสลับ = เหลืองทึบ · ตัวเลือกย่อย = ขอบเหลือง (เบากว่าปุ่มหลัก) */
+.seg button[aria-selected=true]{background:var(--go);color:var(--onGo)}
+.chips button[aria-pressed=true],.chips button[aria-checked=true],.days button[aria-pressed=true],.seg button[aria-checked=true]{
+  background:rgba(255,213,74,.12);border-color:var(--go);color:#fff;box-shadow:inset 0 0 0 1px var(--go)}
+
+/* ช่องกรอก */
+.f input,.slot input,textarea,.addt input.typing{background:var(--field);color:var(--paper);border-color:var(--rule2);border-radius:var(--r)}
+.addt input{border-radius:var(--r)}
+
+/* ช่องติ๊ก */
+.tick span{border-color:var(--muted);border-radius:4px}
+.tick.done span{background:var(--go);border-color:var(--go);color:var(--onGo)}
+
+/* ตัวเลข/ข้อความที่เคยเป็นสีกรมท่าบนพื้นอ่อน */
+.code,.bigcode,.share .yes{color:var(--go)}
+.lock svg{color:var(--muted)}
+.cells i.ok{background:#7FB0FF}
+.tags span,.shared{border-radius:4px}
+
+/* error */
+.warnbox,.errbox{background:rgba(255,156,146,.1);color:#FFD3CD;border-radius:var(--r)}
+.err{background:transparent;color:var(--danger)}
+.btn.delFill{color:#3A0A06}
+
+/* แถบแท็บ */
+.dock{background:var(--navyDeep);border-top:1px solid var(--rule)}
+.dock a.on{color:var(--go)}.dock a.on::before{background:var(--go)}
+.dock .n{color:var(--onGo)}
+.foot{background:var(--navyDeep);border-top-color:var(--rule)}
+
+</style>
+</head>
+<body>
+<h1>ชุด 3 · จดหลังคาบ (ธีมผสม 1)</h1>
+<p class="note">ข้อมูลเท่าหน้าเดิม: ข้อความสั้น · รูปกระดานสูงสุด 6 รูป (แตะรูป = ลบ) · หัวข้อ + ★ ออกสอบ + กลางภาค/ปลายภาค + ลบ · ปุ่มเพิ่มงานของวิชานี้ (เปิดแผ่นเพิ่มงานแบบชุด 2 ตั้งวิชา+"ในคาบ" ไว้ให้) · ปุ่มบันทึกติดล่าง · <b>ที่เปลี่ยน</b>: แถวหัวข้อแตกเป็น 2 บรรทัด เพราะปุ่มกลางภาค/ปลายภาคเดิมสูงแค่ 32px และเบียดที่จอ 360 → ตอนนี้สูง 44 · มุมรูปมี ✕ บอกว่าแตะลบได้ · รูปใหม่ที่ยังไม่อัปโหลดมีกรอบเหลือง</p>
+<div class="wsw" role="radiogroup" aria-label="ความกว้างจอ"><button aria-pressed="true" onclick="setW(this,360)">จอ 360</button><button onclick="setW(this,390)">จอ 390</button></div>
+<div class="wrap">
+
+<!-- 1 จดใหม่ (ว่าง) -->
+<div><div class="cap">1 · จดใหม่ (ยังว่าง)<small>บันทึกกดไม่ได้จนกว่าจะมีอย่างน้อย 1 อย่าง</small></div>
+<div class="phone"><div class="sb"><span>12:05</span><span>79%</span></div>
+<header class="mast"><a class="back" href="#">‹ ปิด</a><h2>จดหลังคาบ</h2>
+  <div class="meta"><i class="sq" style="background:#6FA8FF"></i>คณิตศาสตร์ 2 · จ. 9 พ.ย. <span class="vt">10:00–12:00</span></div></header>
+<div class="body">
+  <div class="h"><b>วันนี้เรียนอะไร</b><span>สั้น ๆ</span></div>
+  <div class="pad"><textarea aria-label="วันนี้เรียนอะไร" placeholder="เช่น Graph เบื้องต้น, degree อาจารย์บอกออกสอบ"></textarea></div>
+  <div class="h"><b>รูปกระดาน</b><span><span class="vt">0/6</span> · ย่อให้อัตโนมัติ</span></div>
+  <div class="pad photos">
+    <button class="addph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>ถ่ายรูป</button>
+    <button class="addph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="5" width="16" height="14"/><path d="M4 16l5-5 4 4 2-2 5 5"/></svg>เลือกรูป</button>
+  </div>
+  <div class="h"><b>หัวข้อที่เรียน</b><span>★ = อาจารย์บอกออกสอบ</span></div>
+  <div class="addt"><input aria-label="เพิ่มหัวข้อ" placeholder="+ เพิ่มหัวข้อ"></div>
+  <div class="h"><b>มีงานสั่งไหม</b><span></span></div>
+  <div class="pad"><button class="btn wide">+ เพิ่มงานของวิชานี้</button></div>
+  <div class="spacer"></div>
+</div>
+<div class="foot"><button class="btn pri" disabled>บันทึก</button><div class="hint">พิมพ์ข้อความ ใส่รูป หรือเพิ่มหัวข้ออย่างน้อย 1 อย่าง</div></div>
+</div></div>
+
+<!-- 2 กรอกแล้ว / แก้โน้ต -->
+<div><div class="cap">2 · กรอกแล้ว (เลื่อนดูได้)<small>เปิดโน้ตเดิม = หัว "แก้โน้ต" · พิมพ์หัวข้อแล้วปุ่ม "เพิ่ม" โผล่ · Enter ก็เพิ่มได้</small></div>
+<div class="phone"><div class="sb"><span>12:08</span><span>79%</span></div>
+<header class="mast"><a class="back" href="#">‹ ปิด</a><h2>แก้โน้ต</h2>
+  <div class="meta"><i class="sq" style="background:#6FA8FF"></i>คณิตศาสตร์ 2 · จ. 9 พ.ย. <span class="vt">10:00–12:00</span></div></header>
+<div class="body">
+  <div class="h"><b>วันนี้เรียนอะไร</b><span>สั้น ๆ</span></div>
+  <div class="pad"><textarea aria-label="วันนี้เรียนอะไร">ลิมิตด้านเดียว + ความต่อเนื่อง อาจารย์บอกข้อสอบกลางภาคมีพิสูจน์ความต่อเนื่อง 1 ข้อ</textarea></div>
+  <div class="h"><b>รูปกระดาน</b><span><span class="vt">4/6</span> · แตะรูปเพื่อลบ</span></div>
+  <div class="pad photos">
+    <button class="ph" aria-label="ลบรูปนี้" style="background:linear-gradient(135deg,#2F4466,#4B6283)"></button>
+    <button class="ph" aria-label="ลบรูปนี้" style="background:linear-gradient(160deg,#3A4F70,#6A7D99)"></button>
+    <button class="ph" aria-label="ลบรูปนี้" style="background:linear-gradient(120deg,#26385A,#55698A)"></button>
+    <button class="ph new" aria-label="เอารูปนี้ออก" style="background:linear-gradient(140deg,#4A5E80,#8494AD)"></button>
+    <button class="addph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>ถ่ายรูป</button>
+    <button class="addph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="5" width="16" height="14"/><path d="M4 16l5-5 4 4 2-2 5 5"/></svg>เลือกรูป</button>
+  </div>
+  <div class="h"><b>หัวข้อที่เรียน</b><span>★ = อาจารย์บอกออกสอบ</span></div>
+  <div class="topic">
+    <div class="t1"><span class="what">ลิมิตด้านเดียว</span><button class="ic star" role="checkbox" aria-checked="true" aria-label="ออกสอบ: ลิมิตด้านเดียว">★</button><button class="ic x" aria-label="ลบหัวข้อ ลิมิตด้านเดียว">✕</button></div>
+    <div class="exam"><span>สอบ</span><div class="seg" role="radiogroup" aria-label="สอบไหน"><button role="radio" aria-checked="true">กลางภาค</button><button role="radio" aria-checked="false">ปลายภาค</button></div></div>
+  </div>
+  <div class="topic">
+    <div class="t1"><span class="what">ความต่อเนื่องของฟังก์ชัน</span><button class="ic star" role="checkbox" aria-checked="true" aria-label="ออกสอบ">★</button><button class="ic x" aria-label="ลบหัวข้อ">✕</button></div>
+    <div class="exam"><span>สอบ</span><div class="seg" role="radiogroup" aria-label="สอบไหน"><button role="radio" aria-checked="true">กลางภาค</button><button role="radio" aria-checked="false">ปลายภาค</button></div></div>
+  </div>
+  <div class="topic last">
+    <div class="t1"><span class="what">ทฤษฎีบทค่าระหว่างกลาง</span><button class="ic star" role="checkbox" aria-checked="false" aria-label="ออกสอบ">☆</button><button class="ic x" aria-label="ลบหัวข้อ">✕</button></div>
+    <div class="exam"><span>สอบ</span><div class="seg" role="radiogroup" aria-label="สอบไหน"><button role="radio" aria-checked="false">กลางภาค</button><button role="radio" aria-checked="true">ปลายภาค</button></div></div>
+  </div>
+  <div class="addt"><input class="typing" aria-label="เพิ่มหัวข้อ" value="ลิมิตที่อนันต์"><button class="btn sm">เพิ่ม</button></div>
+  <div class="pad small">กดตัวที่เลือกอยู่ซ้ำ = ไม่ผูกกับสอบไหน</div>
+  <div class="h"><b>มีงานสั่งไหม</b><span></span></div>
+  <div class="pad"><button class="btn wide">+ เพิ่มงานของวิชานี้</button></div>
+  <div class="err">บันทึกไม่สำเร็จ: เน็ตหลุด ลองใหม่อีกครั้ง (ข้อความที่พิมพ์ยังอยู่)</div>
+  <div class="spacer"></div>
+</div>
+<div class="foot"><button class="btn pri">บันทึก</button></div>
+</div></div>
+
+</div>
+<script>
+function setW(b,w){document.documentElement.style.setProperty('--w',w+'px');b.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))}
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich จอเขียวเฉพาะเรื่องสำคัญ</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* จอเขียวเพิ่ม 2 จุด: แท็บงาน + แท็บวิชา · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#574735;--faint:#64523F;--pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;--on:#F3EAD2;--onMuted:#CDBE9E;--go:#F2C94C;--crt:#08130C;--crtOn:#9EF0B4;--crtBig:#B8FFC9;--crtDim:#73C48B;--crtLine:#2F6B42}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--pen);color:var(--on)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+.head{max-width:1200px;margin:0 auto 18px}
+.head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
+.head p{color:#C9BFAA;font-size:14px;max-width:70ch;margin-top:4px}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.col{width:360px;max-width:100%}
+.cap{font:600 15px Anuphan;color:#fff;margin-bottom:10px}
+.sw{display:flex;margin-bottom:12px;border:1.5px solid var(--rule2);border-radius:3px;overflow:hidden}
+.sw button{flex:1;min-height:44px;padding:0 8px;font-size:13px;color:#E9E2D2}
+.sw button+button{border-left:1.5px solid var(--rule2)}
+.sw button[aria-pressed=true]{background:#F3EAD2;color:#2A2118;font-weight:600}
+.phone{height:680px;border:6px solid #050505;border-radius:30px;overflow:hidden;background:var(--ink);color:var(--paper);display:flex;flex-direction:column}
+.scroll{flex:1;min-height:0;overflow-y:auto;padding:16px 16px 24px;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
+.tabs{flex:none;display:flex;background:var(--paper);color:var(--onMuted);font-size:12px}
+.tabs span{flex:1;min-height:52px;display:flex;align-items:center;justify-content:center}
+.tabs .on{color:var(--go);font-weight:600}
+/* จอเขียว: ของเดิมในหน้าวันนี้ */
+.crt{display:block;width:100%;text-align:left;background:var(--crt);color:var(--crtOn);border-radius:14px;padding:14px;margin:14px 0 4px}
+.crt .row{display:flex;gap:12px}
+.crt .l{flex:1;min-width:0}
+.crt small{display:block;font-size:13px;color:var(--crtDim)}
+.crt b{display:block;font-size:19px;line-height:26px;font-weight:600;margin-top:2px}
+.crt .r{text-align:right;flex:none}
+.big{font:400 36px/36px VT323,monospace;color:var(--crtBig);}
+.col{animation:colon 1s steps(1) infinite}
+@keyframes colon{0%,49%{opacity:1}50%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.col{animation:none}}
+.crt .btn{display:block;width:100%;min-height:44px;margin-top:12px;border:1px solid var(--crtLine);border-radius:3px;font:600 15px Anuphan;color:var(--crtOn)}
+.seg{display:flex;border:1.5px solid var(--paper);border-radius:3px;overflow:hidden}
+.seg span{flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;font:600 14px Anuphan}
+.seg .on{background:var(--paper);color:var(--deck)}
+h2{font:400 19px/28px Chonburi,serif;margin:20px 0 4px}
+.side{float:right;font:400 13px Anuphan;color:var(--faint);margin-top:6px}
+.entry{display:flex;align-items:center;gap:10px;min-height:60px;padding:8px 0;border-top:1px solid var(--rule)}
+.entry .grow{flex:1;min-width:0}
+.box{width:22px;height:22px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px;flex:none;margin-right:2px}
+.what{font-weight:600;font-size:15px;line-height:21px}
+.sub{font-size:13px;color:var(--muted)}
+.ty{font:700 19px "Courier Prime",monospace}
+.pct{text-align:right;flex:none}
+.pct small{display:block;font-size:12px;color:var(--muted)}
+.bad{color:var(--red)}.bad small{color:var(--red)}
+.sq{width:14px;height:14px;border-radius:2px;flex:none}
+.dy{display:inline-block;background:#1A1A1A;color:#F2F2F2;font:700 12px/1 "Courier Prime",monospace;letter-spacing:1px;padding:6px 10px;border-radius:2px}
+.meta{font-size:14px;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-bottom:18px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #4A4235;vertical-align:top}
+th{color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>จอเขียวเฉพาะเรื่องสำคัญของวันนั้น (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>แอปเลือกเรื่องที่สำคัญที่สุดให้เอง ถ้าวันนั้นไม่มีอะไรสำคัญ จอเขียวจะหายไป ไม่ต้องแก้ฐานข้อมูล กดปุ่มเหนือจอเพื่อดูแต่ละสถานการณ์</p>
+</div>
+<div class="wrap">
+  <div class="col">
+    <div class="cap">แท็บงาน</div>
+    <div class="sw" data-for="t" role="group" aria-label="สถานการณ์แท็บงาน">
+      <button data-m="soon" aria-pressed="true">ใกล้ส่ง</button>
+      <button data-m="late" aria-pressed="false">เลยกำหนด</button>
+      <button data-m="none" aria-pressed="false">ยังไม่รีบ</button>
+    </div>
+    <div class="phone">
+      <div class="scroll">
+        <div class="seg"><span class="on">ยังไม่ส่ง (3)</span><span>ส่งแล้ว</span></div>
+        <div id="tCrt"></div>
+        <h2>สัปดาห์นี้</h2>
+        <div id="tList"></div>
+      </div>
+      <div class="tabs"><span>วันนี้</span><span>วิชา</span><span class="on">งาน</span><span>เกม</span><span>ตั้งค่า</span></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="cap">แท็บวิชา</div>
+    <div class="sw" data-for="s" role="group" aria-label="สถานการณ์แท็บวิชา">
+      <button data-m="exam" aria-pressed="true">ใกล้สอบ</button>
+      <button data-m="abs" aria-pressed="false">ใกล้เกินเกณฑ์</button>
+      <button data-m="none" aria-pressed="false">ปกติ</button>
+    </div>
+    <div class="phone">
+      <div class="scroll">
+        <div class="meta"><span class="dy">เทอม 2/2569</span> · 3 วิชา</div>
+        <div id="sCrt"></div>
+        <h2>เทอมนี้<span class="side">เวลาเรียน · เข้าเรียน</span></h2>
+        <div class="entry"><span class="sq" style="background:#2B4A8A"></span><div class="grow"><div class="what">โครงสร้างข้อมูล</div><div class="sub">CP352001 · จ. 10:00</div></div><div class="pct"><span class="ty">100%</span><small>เข้าเรียน</small></div></div>
+        <div class="entry"><span class="sq" style="background:#2E6B3F"></span><div class="grow"><div class="what">คณิต</div><div class="sub">อ. 13:00</div></div><div class="pct"><span class="ty">92%</span><small>เข้าเรียน</small></div></div>
+        <div class="entry" id="thai"><span class="sq" style="background:#6A3F8F"></span><div class="grow"><div class="what">ภาษาไทย</div><div class="sub">พ. 10:00</div></div><div class="pct" id="thaiPct"></div></div>
+      </div>
+      <div class="tabs"><span>วันนี้</span><span class="on">วิชา</span><span>งาน</span><span>เกม</span><span>ตั้งค่า</span></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="cap">แอปเลือกอะไรมาขึ้นจอ</div>
+    <table>
+      <tr><th>แท็บ</th><th>ลำดับ</th></tr>
+      <tr><td>งาน</td><td>งานที่เลยกำหนดนานสุด แล้วตามด้วยงานที่ส่งภายใน 3 วันและใกล้สุด ถ้าไม่มีให้ซ่อน</td></tr>
+      <tr><td>วิชา</td><td>สอบที่เหลือไม่เกิน 14 วันและใกล้สุด แล้วตามด้วยวิชาที่ขาดได้อีกไม่เกิน 1 ครั้ง ถ้าไม่มีให้ซ่อน</td></tr>
+    </table>
+    <div class="cap">สัดส่วนโดยประมาณ</div>
+    <table>
+      <tr><th>แท็บ</th><th>พื้นที่จอ</th></tr>
+      <tr><td>วันนี้</td><td>13–23% (เดิม)</td></tr>
+      <tr><td>งาน</td><td>18% เมื่อมีงานด่วน</td></tr>
+      <tr><td>วิชา</td><td>14% เมื่อมีเรื่องสำคัญ</td></tr>
+      <tr><td>เกม · ตั้งค่า</td><td>0%</td></tr>
+      <tr><th>เฉลี่ย 5 แท็บ</th><th>ประมาณ 9–11%</th></tr>
+    </table>
+  </div>
+</div>
+<script>
+const T={
+  soon:{k:"&gt; ใกล้ส่งสุด",w:"แบบฝึกหัด Graph",s:"โครงสร้างข้อมูล · วันนี้ 23:59",n:"1:46",u:"ชม.",rest:[["รายงานบทที่ 2","ภาษาไทย · อีก 3 วัน"],["ควิซ 1","คณิต · อีก 5 วัน"]]},
+  late:{k:"&gt; เลยกำหนด",w:"รายงานบทที่ 2",s:"ภาษาไทย · เมื่อวาน 23:59",n:"1",u:"วัน",rest:[["แบบฝึกหัด Graph","โครงสร้างข้อมูล · อีก 2 วัน"],["ควิซ 1","คณิต · อีก 5 วัน"]]},
+  none:{rest:[["แบบฝึกหัด Graph","โครงสร้างข้อมูล · อีก 5 วัน"],["รายงานบทที่ 2","ภาษาไทย · อีก 6 วัน"],["ควิซ 1","คณิต · อีก 6 วัน"]]}
+};
+const S={
+  exam:{k:"&gt; สอบใกล้สุด",w:"โครงสร้างข้อมูล",s:"กลางภาค · ศ. 20 พ.ย. · พร้อมสอบ 40%",n:"D-9",u:"",p:["88%","เข้าเรียน",0]},
+  abs:{k:"&gt; ใกล้เกินเกณฑ์ขาด",w:"ภาษาไทย",s:"ขาดแล้ว 2 ครั้ง · ขาดได้ไม่เกิน 3",n:"1",u:"ครั้ง",p:["71%","ขาดได้อีก 1",1]},
+  none:{p:["88%","เข้าเรียน",0]}
+};
+const $=(i)=>document.getElementById(i);
+function tasks(m){const d=T[m];
+  $("tCrt").innerHTML=d.w?`<div class="crt"><div class="row"><div class="l"><small>${d.k}</small><b>${d.w}</b><small>${d.s}</small></div><div class="r"><div class="big">${d.n.replace(":",'<span class="col">:</span>')}</div><small>${d.u}</small></div></div><button class="btn">ส่งแล้ว</button></div>`:"";
+  $("tList").innerHTML=d.rest.map(r=>`<div class="entry"><span class="box"></span><div class="grow"><div class="what">${r[0]}</div><div class="sub">${r[1]}</div></div></div>`).join("");
+}
+function subjects(m){const d=S[m];
+  $("sCrt").innerHTML=d.w?`<button class="crt" aria-label="เปิดหน้าวิชา ${d.w}"><div class="row"><div class="l"><small>${d.k}</small><b>${d.w}</b><small>${d.s}</small></div><div class="r"><div class="big">${d.n}</div><small>${d.u||"&nbsp;"}</small></div></div></button>`:"";
+  $("thaiPct").className="pct"+(d.p[2]?" bad":"");
+  $("thaiPct").innerHTML=`<span class="ty">${d.p[0]}</span><small>${d.p[1]}</small>`;
+}
+document.querySelectorAll(".sw").forEach(g=>g.querySelectorAll("button").forEach(b=>b.onclick=()=>{g.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));(g.dataset.for==="t"?tasks:subjects)(b.dataset.m)}));
+tasks("soon");subjects("exam");
+</script>
+</body>
+</html>

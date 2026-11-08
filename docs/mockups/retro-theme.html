@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyQuest ธีมสมุดเทอร์มินัล</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Silkscreen&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* v2 — "สมุดบันทึกนักเรียนบนเครื่องเทอร์มินัล" + หน้าเกมเป็นอีกโลก (ยืมแค่บรรยากาศ ไม่มีของจากเกมใด) */
+:root{
+  --ink:#121513; --deck:#181C19; --rule:#2B322D; --rule2:#3A433C;
+  --paper:#E2E7DF; --muted:#A2ADA4; --faint:#8A968D;
+  --go:#86D99B; --warn:#F0B35A;
+  --cave:#0F0D0C; --seam:#3B3027; --bone:#E8DFD0; --ash:#B0A28E; --gold:#C9A25B; --blood:#C2372C;
+  --normal:#E8E8E8; --magic:#8AB0FF; --rare:#F2C230; --unique:#EE8A3C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--go);color:var(--ink)}
+body{background:#2A2E2B;font-family:"IBM Plex Sans Thai",sans-serif;font-size:15px;line-height:1.5;color:#E4E6E2;padding:28px 16px}
+.th{font-family:"Chakra Petch","IBM Plex Sans Thai",sans-serif}
+.vt{font-family:VT323,monospace;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.px{font-family:Silkscreen,monospace}
+h1.page{font:700 22px/1.3 "Chakra Petch",sans-serif;color:#fff;margin-bottom:6px}
+p.note{color:#B9BFBA;font-size:14px;max-width:760px;margin-bottom:24px}
+.wrap{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.cap{font:600 15px "Chakra Petch",sans-serif;color:#fff;margin-bottom:10px}
+.phone{width:360px;max-width:100%;height:780px;border-radius:32px;overflow:hidden;position:relative;border:6px solid #060606;
+  display:flex;flex-direction:column;box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
+.sb{height:34px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font:600 13px "IBM Plex Sans Thai"}
+.body{flex:1;overflow-y:auto;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+
+/* ===== สมุดเทอร์มินัล ===== */
+.log{background:var(--ink);color:var(--paper)}
+.masthead{padding:10px 20px 14px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--rule)}
+.masthead h2{font:700 30px/1.1 "Chakra Petch",sans-serif}
+.meta{color:var(--muted);font-size:14px;margin-top:4px}.meta .vt{font-size:19px}
+.lv{text-align:right}
+.lv .px{font-size:11px;color:var(--warn)}
+.cells{display:flex;gap:3px;margin-top:6px;justify-content:flex-end}
+.cells i{width:9px;height:12px;background:var(--rule2)}
+.cells i.f{background:var(--warn)}
+.now{padding:18px 20px 20px;background:var(--deck);border-bottom:1px solid var(--rule)}
+.state{display:flex;align-items:center;gap:8px;color:var(--go);font-size:13px;font-weight:600}
+.state::before{content:"";width:8px;height:8px;background:var(--go);animation:beat 2s ease-out infinite}
+@keyframes beat{60%{opacity:.25}}
+/* เส้นสแกนจุดเดียวของทั้งแอป: ตัวเลขนาฬิกา */
+.clock{font-size:64px;line-height:.9;margin:10px 0 4px;color:#F2F5F0;position:relative;display:inline-block}
+.clock::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(24,28,25,.45) 3px 4px)}
+.clock small{font-size:30px;color:var(--muted)}
+.subject{font:600 22px/1.25 "Chakra Petch",sans-serif}
+.where{color:var(--muted);font-size:14px}
+.track{display:flex;gap:2px;margin:14px 0 6px}
+.track i{flex:1;height:6px;background:var(--rule2)}
+.track i.f{background:var(--go)}
+.track-l{display:flex;justify-content:space-between;color:var(--faint);font-size:13px}.track-l b{font-weight:400;font-size:18px;color:var(--muted)}
+.seg{display:flex;margin-top:16px;border:1px solid var(--rule2)}
+.seg button{flex:1;min-height:48px;background:transparent;border:0;border-left:1px solid var(--rule2);color:var(--paper);
+  font:600 15px "Chakra Petch",sans-serif;cursor:pointer;transition:background .15s ease-out}
+.seg button:first-child{border-left:0}
+.seg button:hover{background:#222823}
+.seg button[aria-pressed=true]{background:var(--go);color:#0D1A11}
+button:focus-visible,a:focus-visible{outline:2px solid var(--warn);outline-offset:-2px}
+.h{display:flex;justify-content:space-between;align-items:baseline;padding:24px 20px 8px}
+.h b{font:600 16px "Chakra Petch",sans-serif}
+.h span{color:var(--faint);font-size:13px}
+.entry{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:start;padding:12px 20px;border-top:1px solid var(--rule)}
+.entry.last{border-bottom:1px solid var(--rule)}
+.t{color:var(--faint);font-size:19px;line-height:1.2}
+.todo .t{color:var(--warn)}
+.what{font-weight:500}
+.sub{color:var(--muted);font-size:13px}
+.act{min-height:44px;padding:0 16px;border:1px solid var(--warn);background:transparent;color:var(--warn);font:600 14px "Chakra Petch",sans-serif;cursor:pointer}
+.act:hover{background:var(--warn);color:#1A1100}
+.due{text-align:right;font-size:20px;line-height:1.1}
+.due.soon{color:var(--warn)}
+.due small{display:block;font:400 12px "IBM Plex Sans Thai";color:var(--faint)}
+.xp{color:var(--go);font-size:20px;line-height:1.2}
+.check{width:22px;height:22px;border:2px solid var(--muted);margin:2px 0 0 4px}
+.dock{flex:none;display:flex;border-top:1px solid var(--rule2);background:var(--deck);padding:0 6px 14px}
+.dock a{flex:1;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  color:var(--faint);font:500 12px "Chakra Petch",sans-serif;position:relative;text-decoration:none}
+.dock svg{width:22px;height:22px}
+.dock a.on{color:var(--paper)}
+.dock a.on::before{content:"";position:absolute;top:-1px;left:26%;right:26%;height:3px;background:var(--go)}
+.dock .n{position:absolute;top:8px;right:24%;font:400 15px/15px VT323;color:#1A1100;background:var(--warn);padding:0 4px}
+
+/* ===== อีกโลก ===== */
+.world{color:var(--bone);background-color:var(--cave);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .45 0 0 0 0 .35 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.world .masthead{border-color:var(--seam)}
+.world .masthead h2{color:var(--gold);font-size:26px}
+.world .meta{color:var(--ash)}
+.char{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--seam)}
+.lvl{font-size:46px;line-height:.8;color:var(--gold)}
+.bar{height:8px;background:#060504;border:1px solid var(--seam);margin:6px 0 2px}
+.bar i{display:block;height:100%;width:50%;background:var(--gold)}
+.arena{position:relative;height:220px;border-bottom:1px solid var(--seam);overflow:hidden;background:#140F0D}
+.floor{position:absolute;left:0;right:0;bottom:0;height:46px;background:repeating-linear-gradient(90deg,#1E1714 0 22px,#191310 22px 44px);border-top:2px solid #2C221B}
+.sprite{position:absolute;left:50%;bottom:106px;width:10px;height:10px;transform:translateX(-40px);animation:idle 1.2s steps(2) infinite;
+  box-shadow:20px 0 #4E4034,30px 0 #4E4034,40px 0 #4E4034,50px 0 #4E4034,
+   10px 10px #4E4034,20px 10px #6E5B49,30px 10px #E5392C,40px 10px #6E5B49,50px 10px #E5392C,60px 10px #4E4034,
+   10px 20px #4E4034,20px 20px #6E5B49,30px 20px #6E5B49,40px 20px #6E5B49,50px 20px #6E5B49,60px 20px #4E4034,
+   0 30px #4E4034,10px 30px #6E5B49,20px 30px #2F261E,30px 30px #2F261E,40px 30px #2F261E,50px 30px #2F261E,60px 30px #6E5B49,70px 30px #4E4034,
+   0 40px #4E4034,10px 40px #6E5B49,20px 40px #6E5B49,30px 40px #8A735C,40px 40px #8A735C,50px 40px #6E5B49,60px 40px #6E5B49,70px 40px #4E4034,
+   10px 50px #4E4034,20px 50px #4E4034,50px 50px #4E4034,60px 50px #4E4034,
+   10px 60px #3A2F26,20px 60px #3A2F26,50px 60px #3A2F26,60px 60px #3A2F26}
+@keyframes idle{50%{transform:translate(-40px,4px)}}
+.plate{position:absolute;left:16px;right:16px;top:14px}
+.nm{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.nm b{font:700 17px "Chakra Petch",sans-serif}
+.dday{font-size:22px;color:#FF8A7E;white-space:nowrap}
+.hp{height:12px;background:#060504;border:1px solid #5A1E18;margin-top:6px}
+.hp i{display:block;height:100%;width:62%;background:var(--blood)}
+.regen{font-size:13px;color:#F0A096;margin-top:4px}
+.world .h b{color:var(--gold)}
+.world .h span{color:var(--ash)}
+.tree{display:block;width:100%;height:150px;padding:0 12px}
+.legend{display:flex;gap:14px;padding:4px 20px 0;font-size:12px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend span::before{content:"";width:8px;height:8px;background:currentColor}
+.loot{display:grid;grid-template-columns:1fr auto;padding:11px 20px;border-top:1px solid var(--seam)}
+.loot.last{border-bottom:1px solid var(--seam)}
+.loot .vt{font-size:20px;color:var(--gold)}
+.world .dock{background:#120F0D;border-color:var(--seam)}
+.world .dock a{color:#9C8E7A}
+.world .dock a.on{color:var(--bone)}
+.world .dock a.on::before{background:var(--gold)}
+/* v3: แก้ตามรีวิวการใช้งาน */
+.link{display:block;margin:10px auto 0;min-height:44px;padding:0 12px;background:none;border:0;color:var(--muted);font:500 14px "IBM Plex Sans Thai";text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.tick{width:44px;height:44px;margin:-11px 0 -11px -11px;display:grid;place-items:center;background:none;border:0;cursor:pointer}
+.tick span{width:22px;height:22px;border:2px solid var(--muted)}
+.tick:hover span{border-color:var(--go)}
+.tick.done span{background:var(--go);border-color:var(--go)}
+.due{font:600 15px/1.2 "Chakra Petch",sans-serif}
+.due small b{font-weight:400;font-size:16px}
+.sum{display:flex;justify-content:space-between;align-items:center;min-height:52px;margin-top:20px;padding:0 20px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);color:var(--muted);text-decoration:none;font-size:14px}
+.sum b{color:var(--go);font-weight:400;font-size:19px}
+.next .state{color:var(--muted)}.next .state::before{background:var(--muted);animation:none}
+.countdown{font-size:15px;color:var(--muted);margin-top:2px}.countdown b{font:400 22px VT323;color:var(--paper)}
+.toast{position:absolute;left:12px;right:12px;bottom:86px;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  background:#E2E7DF;color:#121513;padding:6px 6px 6px 16px;font-size:14px;box-shadow:0 8px 20px -6px rgba(0,0,0,.6)}
+.toast button{min-height:44px;padding:0 14px;background:#121513;color:var(--warn);border:0;font:600 14px "Chakra Petch",sans-serif;cursor:pointer}
+.topics{padding:4px 20px 0}
+.topic{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;min-height:44px;border-top:1px solid var(--seam);font-size:14px}
+.topic i{width:10px;height:10px}
+.topic small{color:var(--ash);font-size:13px}
+@media (prefers-reduced-motion:reduce){.state::before,.sprite{animation:none}}
+</style>
+</head>
+<body>
+<h1 class="page">StudyQuest — สมุดเทอร์มินัล (v3)</h1>
+<p class="note">
+  แก้จากรอบก่อน: คาบที่กำลังเรียนเป็นตัวเด่นตัวเดียว · ที่เหลือเป็น<b>บรรทัดบันทึกมีเวลา</b> ไม่ใช่การ์ดซ้ำ ๆ ·
+  +XP เป็นบรรทัดในบันทึก ไม่เด้งลอย · เส้นสแกนเหลือที่ตัวเลขนาฬิกาจุดเดียว · แถบล่างเป็นแผงทึบติดขอบ ไม่เบลอ ·
+  หน้าเกมเป็นอีกโลก (ผิวหิน + ฉากบอสเต็มกว้าง) · <b>v3</b>: วันที่แบบไทย · เช็กชื่อเหลือ 2 ปุ่ม (งดสอนเป็นลิงก์) · ช่องติ๊กกดได้ 44px + แถบยกเลิก · บันทึก XP ยุบเหลือบรรทัดเดียว · สถานะไม่มีคาบ · รายชื่อหัวข้อใต้ต้นไม้
+</p>
+<div class="wrap">
+<div>
+<div class="cap">หน้าวันนี้</div>
+<div class="phone log">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <header class="masthead">
+      <div><h2>วันนี้</h2><div class="meta">เสาร์ 7 พ.ย. · เทอม 2/2569</div></div>
+      <div class="lv"><span class="px">LV 1</span><div class="cells"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    </header>
+    <section class="now" aria-label="คาบที่กำลังเรียน">
+      <div class="state">กำลังเรียน</div>
+      <div class="clock vt">11:00<small>–13:00</small></div>
+      <div class="subject">คณิตศาสตร์ 2</div>
+      <div class="where">SCB0123 · ห้อง SC9-604</div>
+      <div class="track" aria-hidden="true"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i></div>
+      <div class="track-l"><span>ผ่านไป <b class="vt">1:46</b></span><span>เหลือ <b class="vt">0:14</b></span></div>
+      <div class="seg" role="group" aria-label="เช็กชื่อ">
+        <button aria-pressed="true">มาเรียน</button><button aria-pressed="false">ขาด</button>
+      </div>
+      <button class="link">วันนี้อาจารย์งดสอน</button>
+    </section>
+    <div class="h"><b>ค้างอยู่</b><span>3 เรื่อง</span></div>
+    <div class="entry todo"><span class="t vt">09:00</span><div><div class="what">ฟิสิกส์จบแล้ว ยังไม่ได้จด</div><div class="sub">จดวันนี้ +10 XP · มีรูป +5</div></div><button class="act">จด</button></div>
+    <div class="entry"><button class="tick" aria-label="ทำเครื่องหมายว่าส่งแล้ว: แบบฝึกหัดบทที่ 3"><span></span></button><div><div class="what">แบบฝึกหัดบทที่ 3</div><div class="sub">คณิตศาสตร์ 2</div></div><div class="due soon">พรุ่งนี้<small><b class="vt">23:59</b></small></div></div>
+    <div class="entry last"><button class="tick" aria-label="ทำเครื่องหมายว่าส่งแล้ว: รายงานแล็บ 2"><span></span></button><div><div class="what">รายงานแล็บ 2</div><div class="sub">ฟิสิกส์</div></div><div class="due">อ. 11 พ.ย.<small>อีก 4 วัน</small></div></div>
+    <a class="sum" href="#"><span>ได้วันนี้ <b class="vt">+20 XP</b> · 2 รายการ</span><span aria-hidden="true">›</span></a>
+    <div style="height:20px"></div>
+  </div>
+  <nav class="dock" aria-label="เมนูหลัก">
+    <a class="on" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>วันนี้</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 5h6l2 2v13l-2-2H4zM20 5h-6l-2 2v13l2-2h6z"/></svg>วิชา</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="4" width="16" height="16"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>งาน<span class="n">2</span></a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v8M9 11h6"/></svg>เกม</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><rect x="14" y="5" width="4" height="4"/><rect x="8" y="15" width="4" height="4"/></svg>ตั้งค่า</a>
+  </nav>
+</div>
+</div>
+
+<div>
+<div class="cap">หน้าวันนี้ · ตอนไม่มีคาบ + กดส่งงานแล้ว</div>
+<div class="phone log">
+  <div class="sb"><span>14:10</span><span>76%</span></div>
+  <div class="body">
+    <header class="masthead">
+      <div><h2>วันนี้</h2><div class="meta">เสาร์ 7 พ.ย. · เทอม 2/2569</div></div>
+      <div class="lv"><span class="px">LV 1</span><div class="cells"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></div></div>
+    </header>
+    <section class="now next" aria-label="คาบถัดไป">
+      <div class="state">คาบถัดไป</div>
+      <div class="clock vt">15:00<small>–17:00</small></div>
+      <div class="subject">ฟิสิกส์ทั่วไป</div>
+      <div class="where">SCB0201 · ห้อง SC2-101</div>
+      <div class="countdown">เริ่มในอีก <b>0:50</b> ชม.</div>
+    </section>
+    <div class="h"><b>ค้างอยู่</b><span>1 เรื่อง</span></div>
+    <div class="entry"><button class="tick done" aria-label="ส่งแล้ว: แบบฝึกหัดบทที่ 3"><span></span></button><div><div class="what" style="text-decoration:line-through;color:var(--muted)">แบบฝึกหัดบทที่ 3</div><div class="sub">ส่งแล้ว · ก่อนกำหนด 1 วัน</div></div><span class="xp vt">+20</span></div>
+    <div class="entry last"><button class="tick" aria-label="ทำเครื่องหมายว่าส่งแล้ว: รายงานแล็บ 2"><span></span></button><div><div class="what">รายงานแล็บ 2</div><div class="sub">ฟิสิกส์</div></div><div class="due">อ. 11 พ.ย.<small>อีก 4 วัน</small></div></div>
+    <a class="sum" href="#"><span>ได้วันนี้ <b class="vt">+40 XP</b> · 3 รายการ</span><span aria-hidden="true">›</span></a>
+  </div>
+  <div class="toast" role="status"><span>ส่ง "แบบฝึกหัดบทที่ 3" แล้ว +20 XP</span><button>ยกเลิก</button></div>
+  <nav class="dock" aria-label="เมนูหลัก">
+    <a class="on" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>วันนี้</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 5h6l2 2v13l-2-2H4zM20 5h-6l-2 2v13l2-2h6z"/></svg>วิชา</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="4" width="16" height="16"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>งาน<span class="n">1</span></a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v8M9 11h6"/></svg>เกม</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><rect x="14" y="5" width="4" height="4"/><rect x="8" y="15" width="4" height="4"/></svg>ตั้งค่า</a>
+  </nav>
+</div>
+</div>
+
+<div>
+<div class="cap">หน้าเกม (อีกโลก)</div>
+<div class="phone world">
+  <div class="sb"><span>12:46</span><span>79%</span></div>
+  <div class="body">
+    <header class="masthead"><div><h2>ห้องใต้ดินชั้น 1</h2><div class="meta">บอส <span class="vt">1</span> · หัวข้อ <span class="vt">6</span></div></div></header>
+    <div class="char">
+      <span class="lvl vt">01</span>
+      <div style="flex:1"><div class="th" style="font-weight:600">นักเรียนฝึกหัด</div>
+        <div class="bar"><i></i></div><div class="vt" style="color:var(--ash);font-size:17px">XP 25/50 · ชุดระดับ 1/5</div></div>
+    </div>
+    <section class="arena" aria-label="บอสที่ใกล้ที่สุด">
+      <div class="plate">
+        <div class="nm"><b>ผู้คุมสอบกลางภาค</b><span class="dday vt">D-12</span></div>
+        <div class="hp" role="img" aria-label="เลือดบอส 62%"><i></i></div>
+        <div class="regen">ไม่ได้ทวน 2 วัน · ฟื้นเลือด +8%</div>
+      </div>
+      <div class="sprite" aria-hidden="true"></div>
+      <div class="floor"></div>
+    </section>
+    <div class="h"><b>Passive tree · คณิต</b><span>ทวนครบ 4/6</span></div>
+    <svg class="tree" viewBox="0 0 300 150" shape-rendering="crispEdges" aria-label="ต้นไม้หัวข้อ">
+      <g stroke="#3B3027" stroke-width="3" fill="none"><path d="M150 75H95V35H40M150 75H95V115M150 75H205V40H262M150 75H205V112"/></g>
+      <g stroke="#C9A25B" stroke-width="3" fill="none"><path d="M150 75H95V35H40M150 75H205V40"/></g>
+      <rect x="138" y="63" width="24" height="24" fill="#1A1613" stroke="#C9A25B" stroke-width="3"/>
+      <rect x="86" y="26" width="18" height="18" fill="#8AB0FF"/><rect x="31" y="26" width="18" height="18" fill="#F2C230"/>
+      <rect x="196" y="31" width="18" height="18" fill="#E8E8E8"/><rect x="253" y="31" width="18" height="18" fill="#1A1613" stroke="#3B3027" stroke-width="2"/>
+      <rect x="86" y="106" width="18" height="18" fill="#1A1613" stroke="#3B3027" stroke-width="2"/><rect x="194" y="101" width="22" height="22" fill="#EE8A3C"/>
+    </svg>
+    <div class="legend"><span style="color:var(--normal)">ปกติ</span><span style="color:var(--magic)">magic</span><span style="color:var(--rare)">rare</span><span style="color:var(--unique)">unique</span></div>
+    <div class="topics">
+      <div class="topic"><i style="background:var(--rare)"></i><span>ลิมิต</span><small>ทวนอีก 6 วัน</small></div>
+      <div class="topic"><i style="background:var(--magic)"></i><span>อนุพันธ์</span><small>ทวนพรุ่งนี้</small></div>
+      <div class="topic"><i style="background:var(--normal)"></i><span>กฎลูกโซ่</span><small style="color:#F0A096">ถึงรอบแล้ว</small></div>
+      <div class="topic"><i style="background:var(--unique)"></i><span>อินทิกรัลเบื้องต้น</span><small>ครบทุกรอบ</small></div>
+    </div>
+    <div class="h"><b>ของที่เก็บได้วันนี้</b><span>3 ชิ้น</span></div>
+    <div class="loot"><span style="color:var(--rare)">ใบส่งงานก่อนกำหนด</span><span class="vt">+15</span></div>
+    <div class="loot"><span style="color:var(--magic)">บันทึกหลังคาบพร้อมรูป</span><span class="vt">+15</span></div>
+    <div class="loot last"><span style="color:var(--normal)">ลายเซ็นเข้าเรียน</span><span class="vt">+5</span></div>
+    <div style="height:20px"></div>
+  </div>
+  <nav class="dock" aria-label="เมนูหลัก">
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>วันนี้</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 5h6l2 2v13l-2-2H4zM20 5h-6l-2 2v13l2-2h6z"/></svg>วิชา</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="4" width="16" height="16"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>งาน</a>
+    <a class="on" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v8M9 11h6"/></svg>เกม</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><rect x="14" y="5" width="4" height="4"/><rect x="8" y="15" width="4" height="4"/></svg>ตั้งค่า</a>
+  </nav>
+</div>
+</div>
+</div>
+</body>
+</html>

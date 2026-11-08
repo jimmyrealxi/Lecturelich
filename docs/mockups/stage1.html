@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyQuest ขั้น 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=IBM+Plex+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#1F4E9C;--ink:#0E1E3A;--yellow:#F2C230;--line:#D9DCE1;--cream:#F4F1E8;--sub:#3D4A63;--red:#B3261E}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#C9CDD4;font-family:"IBM Plex Sans Thai",sans-serif;color:var(--ink);padding:24px 16px}
+h1.page{font-family:Kanit;font-size:22px;margin-bottom:4px}
+p.note{color:var(--sub);font-size:14px;margin-bottom:20px;max-width:900px}
+.wrap{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.label{font-family:Kanit;font-size:15px;margin-bottom:8px}
+.phone{width:360px;max-width:100%;height:740px;background:var(--cream);border-radius:28px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(14,30,58,.25);display:flex;flex-direction:column;border:6px solid #111}
+.top{background:var(--blue);color:#fff;padding:14px 16px 12px}
+.top h2{font-family:Kanit;font-size:20px}
+.top small{opacity:.85;font-size:13px}
+.scroll{flex:1;overflow-y:auto;padding:12px 14px 16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+h3{font-family:Kanit;font-size:15px}
+.muted{color:var(--sub);font-size:13px}
+.section{font-family:Kanit;font-size:14px;color:var(--sub);margin:14px 2px 8px}
+.row{display:flex;gap:8px;align-items:center}
+.between{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.btn{min-height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font:inherit;font-size:14px;color:var(--ink);
+  flex:1;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.btn.primary,.btn.on{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.btn.ghost{border-style:dashed;color:var(--sub)}
+.item{display:flex;align-items:center;gap:10px;min-height:52px;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}
+.chev{margin-left:auto;color:var(--sub)}
+label.f{display:block;font-size:13px;color:var(--sub);margin:10px 0 6px}
+input.t{width:100%;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 10px;font:inherit;font-size:14px;background:#fff;color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.swatches{display:flex;gap:8px}
+.sw{width:36px;height:36px;border-radius:50%;border:3px solid transparent}
+.sw.on{border-color:var(--ink)}
+.days{display:flex;gap:4px}
+.days span{flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
+.days span.on{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.slotbox{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:#fff}
+.x{width:44px;height:44px;border:0;background:transparent;color:var(--red);font-size:20px}
+.foot{padding:10px 14px 14px;border-top:1px solid var(--line);background:var(--cream)}
+.tabs{display:flex;background:#fff;border-top:1px solid var(--line)}
+.tabs a{flex:1;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--sub);gap:2px}
+.tabs a b{font-size:18px;line-height:1}
+.tabs a.on{color:var(--blue);font-weight:600}
+.tabs a.on b{border-bottom:3px solid var(--yellow);padding-bottom:2px}
+.seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;margin-bottom:12px}
+.seg span{flex:1;text-align:center;min-height:38px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:14px;color:var(--sub)}
+.seg span.on{background:var(--blue);color:#fff;font-weight:600}
+.task{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
+.check{width:26px;height:26px;border:2px solid var(--blue);border-radius:7px;flex:none}
+.due{margin-left:auto;font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;background:#FBE9E7;color:var(--red);white-space:nowrap}
+.due.ok{background:var(--cream);color:var(--sub)}
+.src{font-size:12px;color:var(--sub)}
+.fab{position:absolute;right:16px;bottom:72px;min-height:52px;padding:0 18px;border-radius:999px;background:var(--blue);color:#fff;
+  font-weight:600;display:flex;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;padding:14px;box-shadow:0 -4px 16px rgba(0,0,0,.15)}
+.grab{width:40px;height:4px;background:var(--line);border-radius:2px;margin:0 auto 10px}
+.dim{position:absolute;inset:0;background:rgba(14,30,58,.35)}
+.rel{position:relative;flex:1;display:flex;flex-direction:column;overflow:hidden}
+</style>
+</head>
+<body>
+<h1 class="page">StudyQuest — mockup ขั้น 1 (หน้าที่ยังไม่มีใน mockup ขั้น 0)</h1>
+<p class="note">ตั้งค่าเทอม · รายการวิชา · ฟอร์มวิชา + ตารางเรียน · แท็บงาน + เพิ่มงาน — หน้าวันนี้และหน้าวิชาใช้แบบขั้น 0 (ทำแล้วในโค้ด)</p>
+
+<div class="wrap">
+
+<!-- 1. ตั้งค่า -->
+<div><div class="label">1. ตั้งค่า (เทอม + บัญชี)</div>
+<div class="phone">
+  <div class="top"><h2>ตั้งค่า</h2></div>
+  <div class="scroll">
+    <div class="section">เทอมปัจจุบัน</div>
+    <div class="card">
+      <div class="between"><h3>เทอม 2/2569</h3><span class="muted">แก้ไข</span></div>
+      <div class="muted">9 พ.ย. 2569 – 7 มี.ค. 2570 · 17 สัปดาห์</div>
+    </div>
+    <div class="card">
+      <h3>เพิ่ม / แก้เทอม</h3>
+      <label class="f">ชื่อเทอม</label><input class="t" value="เทอม 2/2569">
+      <div class="two">
+        <div><label class="f">วันเปิดเทอม</label><input class="t" value="9 พ.ย. 2569"></div>
+        <div><label class="f">วันปิดเทอม</label><input class="t" value="7 มี.ค. 2570"></div>
+      </div>
+      <div class="row" style="margin-top:12px"><button class="btn primary">บันทึกเป็นเทอมปัจจุบัน</button></div>
+    </div>
+    <div class="section">การเข้าเรียน</div>
+    <div class="card"><div class="between"><span>เกณฑ์ต้องเข้าเรียน</span><span class="row"><button class="btn" style="flex:none;width:44px">−</button><b>80%</b><button class="btn" style="flex:none;width:44px">+</button></span></div></div>
+    <div class="section">บัญชี</div>
+    <div class="card"><div class="between"><span>jimmy@gmail.com</span><button class="btn" style="flex:none">ออกจากระบบ</button></div></div>
+  </div>
+  <nav class="tabs"><a><b>◉</b>วันนี้</a><a><b>▤</b>วิชา</a><a><b>☑</b>งาน</a><a><b>⚔</b>เกม</a><a class="on"><b>⚙</b>ตั้งค่า</a></nav>
+</div></div>
+
+<!-- 2. แท็บวิชา -->
+<div><div class="label">2. แท็บวิชา</div>
+<div class="phone">
+  <div class="top"><h2>วิชา</h2><small>เทอม 2/2569 · 4 วิชา</small></div>
+  <div class="scroll">
+    <div class="card">
+      <div class="item"><span class="dot" style="background:#1F4E9C"></span><div><b>OOP</b><div class="muted">จ. 10:00 · พฤ. 13:00 · เข้าเรียน 93%</div></div><span class="chev">›</span></div>
+      <div class="item"><span class="dot" style="background:#7A5AA6"></span><div><b>คณิตศาสตร์ดิสครีต</b><div class="muted">จ. 08:00 · เข้าเรียน 100%</div></div><span class="chev">›</span></div>
+      <div class="item"><span class="dot" style="background:#1E7A46"></span><div><b>เครือข่ายคอมพิวเตอร์</b><div class="muted">พ. 13:00 · <span style="color:var(--red)">ขาดได้อีก 1</span></div></div><span class="chev">›</span></div>
+      <div class="item"><span class="dot" style="background:#B0562A"></span><div><b>อังกฤษ 2</b><div class="muted">อ. 09:00</div></div><span class="chev">›</span></div>
+    </div>
+    <button class="btn ghost" style="width:100%">+ เพิ่มวิชา</button>
+  </div>
+  <nav class="tabs"><a><b>◉</b>วันนี้</a><a class="on"><b>▤</b>วิชา</a><a><b>☑</b>งาน</a><a><b>⚔</b>เกม</a><a><b>⚙</b>ตั้งค่า</a></nav>
+</div></div>
+
+<!-- 3. ฟอร์มวิชา -->
+<div><div class="label">3. เพิ่ม / แก้วิชา + ตารางเรียน</div>
+<div class="phone">
+  <div class="top"><small>‹ ยกเลิก</small><h2>เพิ่มวิชา</h2></div>
+  <div class="scroll">
+    <div class="two">
+      <div><label class="f">รหัสวิชา</label><input class="t" value="CP352001"></div>
+      <div><label class="f">สี</label><div class="swatches"><span class="sw on" style="background:#1F4E9C"></span><span class="sw" style="background:#7A5AA6"></span><span class="sw" style="background:#1E7A46"></span><span class="sw" style="background:#B0562A"></span></div></div>
+    </div>
+    <label class="f">ชื่อวิชา</label><input class="t" value="การเขียนโปรแกรมเชิงวัตถุ">
+
+    <label class="f">เวลาเรียน (ซ้ำทุกสัปดาห์ · มีได้หลายช่วง)</label>
+    <div class="slotbox">
+      <div class="days"><span>อา</span><span class="on">จ</span><span>อ</span><span>พ</span><span>พฤ</span><span>ศ</span><span>ส</span></div>
+      <div class="row" style="margin-top:8px"><input class="t" value="10:00"><span>–</span><input class="t" value="12:00"><input class="t" value="SC9-604"><button class="x" aria-label="ลบช่วงนี้">✕</button></div>
+    </div>
+    <div class="slotbox">
+      <div class="days"><span>อา</span><span>จ</span><span>อ</span><span>พ</span><span class="on">พฤ</span><span>ศ</span><span>ส</span></div>
+      <div class="row" style="margin-top:8px"><input class="t" value="13:00"><span>–</span><input class="t" value="15:00"><input class="t" value="SC9-512"><button class="x" aria-label="ลบช่วงนี้">✕</button></div>
+    </div>
+    <button class="btn ghost" style="width:100%">+ เพิ่มช่วงเวลา</button>
+
+    <label class="f">ลิงก์ (ไม่ใส่ก็ได้)</label>
+    <input class="t" placeholder="Google Classroom" style="margin-bottom:6px">
+    <input class="t" placeholder="กลุ่มไลน์" style="margin-bottom:6px">
+    <input class="t" placeholder="NotebookLM">
+  </div>
+  <div class="foot"><div class="row"><button class="btn" style="flex:.5;color:var(--red)">ลบวิชา</button><button class="btn primary">บันทึก</button></div></div>
+</div></div>
+
+<!-- 4. แท็บงาน + เพิ่มงาน -->
+<div><div class="label">4. แท็บงาน + แผ่นเพิ่มงาน</div>
+<div class="phone">
+  <div class="top"><h2>งาน</h2></div>
+  <div class="rel">
+    <div class="scroll">
+      <div class="seg"><span class="on">ยังไม่ส่ง (3)</span><span>ส่งแล้ว</span></div>
+      <div class="section">สัปดาห์นี้</div>
+      <div class="card">
+        <div class="task"><span class="check"></span><div>Lab 5 Inheritance<div class="src">OOP · Classroom</div></div><span class="due">พรุ่งนี้ 23:59</span></div>
+        <div class="task"><span class="check"></span><div>แบบฝึกหัดบทที่ 3<div class="src">ดิสครีต · ในคาบ</div></div><span class="due ok">พฤ. 12 พ.ย.</span></div>
+      </div>
+      <div class="section">ถัดไป</div>
+      <div class="card"><div class="task"><span class="check"></span><div>รายงานกลุ่ม Subnet<div class="src">เครือข่าย · ไลน์</div></div><span class="due ok">จ. 16 พ.ย.</span></div></div>
+    </div>
+    <div class="dim"></div>
+    <div class="sheet">
+      <div class="grab"></div>
+      <h3>เพิ่มงาน</h3>
+      <label class="f">ชื่องาน</label><input class="t" value="Lab 6 Interface">
+      <div class="two">
+        <div><label class="f">วิชา</label><input class="t" value="OOP ▾"></div>
+        <div><label class="f">กำหนดส่ง</label><input class="t" value="พฤ. 19 พ.ย. 23:59"></div>
+      </div>
+      <label class="f">มาจาก</label>
+      <div class="row"><button class="btn on">Classroom</button><button class="btn">ในคาบ</button><button class="btn">ไลน์</button></div>
+      <label class="f">ลิงก์ (ไม่ใส่ก็ได้)</label><input class="t" placeholder="https://">
+      <div class="row" style="margin-top:12px"><button class="btn primary">เพิ่มงาน</button></div>
+    </div>
+  </div>
+  <nav class="tabs"><a><b>◉</b>วันนี้</a><a><b>▤</b>วิชา</a><a class="on"><b>☑</b>งาน</a><a><b>⚔</b>เกม</a><a><b>⚙</b>ตั้งค่า</a></nav>
+</div></div>
+
+</div>
+</body>
+</html>
