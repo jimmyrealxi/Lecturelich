@@ -31,6 +31,20 @@ branch `feat/stage6-rooms` · งานถึงตรงนี้ commit แล
 - **ฟอนต์:** VT323 / Courier Prime / Silkscreen ไม่มีตัวไทย ห้ามใส่คำไทย ไม่งั้นเครื่องดึงฟอนต์สำรองมาแทน · ป้าย `Dymo` ชื่อเทอมยังเสี่ยงถ้าตั้งชื่อมีคำไทย
 - **ภาพตอนกด:** เล่นเมื่อค่าเปลี่ยนเท่านั้น · เคารพลดการเคลื่อนไหว (เหลือป้ายข้อความ) · "ทันนาทีสุดท้าย" สุ่มเฉพาะตอนส่งใกล้หมดเวลา · XP ใช้ค่าจริง · canvas ใช้แนวทางเดียวกับ `components/game/BossScene.tsx`
 
+## ล้างข้อมูลจำลอง (ใส่ 8 พ.ย. ให้เจ้าของเทส · ล้างตอนเจ้าของสั่งเท่านั้น)
+คาบจำลอง (ห้อง "จำลอง") · หัวข้อ/งาน/โน้ต/ส่วนคะแนน ขึ้นต้น "จำลอง:" · วันสอบ 4 วัน · ขาด ไทย 15+22 พ.ย. · กล่อง 3 ใบ (source "จำลอง") · ของที่ได้จากการเปิดกล่องจำลองจะอยู่ใน `user_items` ต้องดูก่อนลบ
+```sql
+delete from xp_events where ref_id in (select id from class_notes where text like 'จำลอง:%' union select id from assignments where title like 'จำลอง:%' union select id from topics where title like 'จำลอง:%' or title like 'ทดสอบทวน:%' union select a.id from attendance a join class_slots s on s.id = a.slot_id where s.room = 'จำลอง');
+delete from class_notes where text like 'จำลอง:%';
+delete from assignments where title like 'จำลอง:%';
+delete from topics where title like 'จำลอง:%' or title like 'ทดสอบทวน:%';
+delete from class_slots where room = 'จำลอง';
+delete from attendance where slot_id = '95b7f7ee-faeb-4394-9e37-f02ef563daf1' and date in ('2026-11-15', '2026-11-22');
+delete from exams where date in ('2026-11-20', '2027-02-26', '2026-12-20', '2027-03-01');
+delete from grade_components where name like 'จำลอง:%';
+delete from loot_boxes where source = 'จำลอง';
+```
+
 ## ยังไม่ได้เทส
 - จอดูรูปกับรูปจริงจาก Storage (บัญชียังไม่มีโน้ตที่มีรูป) · ถ่ายรูปจริงแล้วเปิดดู
 - แก้ฟอนต์วันที่หน้าวันนี้ + ตู้แต่งตัว: ผ่าน tsc/เทสต์ ยังไม่เปิดดูในแอป
