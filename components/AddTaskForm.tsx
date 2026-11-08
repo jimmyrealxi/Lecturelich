@@ -26,6 +26,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
   const update = useUpdateAssignment();
   const del = useDeleteAssignment();
   const initDue = task?.due_at ? bangkokParts(task.due_at) : null;
+  const locked = !!task?.classroom_work_id; // ชื่อกับวันส่งตาม Classroom รอบดึงถัดไปจะเขียนทับอยู่ดี
   const [confirming, setConfirming] = useState(false);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [title, setTitle] = useState(task?.title ?? "");
@@ -79,7 +80,8 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
       <View style={s.grab} />
       <Text style={T.h3}>{task ? "แก้ไขงาน" : "เพิ่มงาน"}</Text>
       <Field label="ชื่องาน" value={title} onChangeText={setTitle} placeholder="Lab 6 Interface" maxLength={120}
-        error={tried ? errTitle : null} />
+        error={tried ? errTitle : null} editable={!locked} />
+      {locked && <Text style={[T.muted, { marginTop: 4 }]}>ชื่อและวันส่งตาม Classroom จะอัปเดตเองเมื่ออาจารย์แก้</Text>}
 
       <Text style={s.label}>วิชา</Text>
       <View style={s.chips}>
@@ -107,8 +109,8 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
       )}
 
       <View style={s.two}>
-        <DateField label="กำหนดส่ง (ไม่ใส่ก็ได้)" value={date} onChangeText={setDate} error={tried ? errDate : null} />
-        <TimeField label="เวลา" value={time} onChangeText={setTime} placeholder="23:59" error={tried ? errTime : null}
+        <DateField label="กำหนดส่ง (ไม่ใส่ก็ได้)" value={date} onChangeText={setDate} error={tried ? errDate : null} editable={!locked} />
+        <TimeField label="เวลา" value={time} onChangeText={setTime} placeholder="23:59" error={tried ? errTime : null} editable={!locked}
           style={{ flex: 0.6 }} />
       </View>
 

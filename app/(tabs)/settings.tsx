@@ -5,6 +5,7 @@ import { Btn, Card, DateField, Field, Section, Skeleton, T } from "@/components/
 import { useCurrentTerm, type CurrentTerm } from "@/lib/queries/core";
 import { useProfile, useSaveTerm, useUpdateProfile } from "@/lib/queries/setup";
 import { PushCard } from "@/components/PushCard";
+import { ClassroomCard } from "@/components/ClassroomCard";
 import { RoomsCard } from "@/components/RoomsCard";
 import { signOut, useSession } from "@/lib/auth";
 import { DATE_ERR, fromThaiDate, toThaiDate } from "@/lib/input";
@@ -67,6 +68,9 @@ export default function Settings() {
           onMinus={() => update.mutate({ min_attendance_pct: Math.max(50, pct - 5) })}
           onPlus={() => update.mutate({ min_attendance_pct: Math.min(100, pct + 5) })} />
       </Card>
+
+      <Section>งานจากห้องเรียน</Section>
+      <ClassroomCard />
 
       <Section>ห้องร่วม (แชร์งานกับเพื่อน)</Section>
       <RoomsCard />

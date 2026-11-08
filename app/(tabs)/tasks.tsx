@@ -11,6 +11,7 @@ import { countdown, dueInfo, shortDate } from "@/lib/format";
 import { bangkokParts } from "@/lib/input";
 import { urgentTask } from "@/lib/schedule";
 import { useNow } from "@/lib/useNow";
+import { syncLabel, useClassroomAccount, useSyncClassroom } from "@/lib/queries/classroom";
 import { submitXp } from "@/lib/xp";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 
@@ -25,6 +26,8 @@ export default function Tasks() {
   const [adding, setAdding] = useState(false);
   const today = useNow().date;
   const toggle = useToggleDone();
+  const classroom = useClassroomAccount();
+  const sync = useSyncClassroom();
   const [toast, setToast] = useState<Assignment | null>(null);
   // งานที่เพิ่งติ๊ก: คงแถวพร้อม ✓ ไว้ก่อน แล้วค่อยหายตอนออกจากหน้าหรือสลับ ยังไม่ส่ง/ส่งแล้ว
   const [ticked, setTicked] = useState<string[]>([]);
@@ -84,6 +87,20 @@ export default function Tasks() {
             </Pressable>
           ))}
         </View>
+
+        {tab === "todo" && classroom.data && (
+          <View style={s.sync}>
+            <Text style={[T.muted, { flex: 1 }]}>
+              {classroom.data.last_error === "expired" ? "สิทธิ์ Classroom หมดอายุ ไปเชื่อมใหม่ในตั้งค่า"
+                : classroom.data.last_sync_at ? `ดึงจาก Classroom เมื่อ ${syncLabel(classroom.data.last_sync_at, today)}` : "ยังไม่ได้ดึงจาก Classroom"}
+            </Text>
+            {classroom.data.last_error !== "expired" && (
+              <Pressable onPress={() => !sync.isPending && sync.mutate()} style={s.syncBtn} accessibilityRole="button">
+                <Text style={s.syncText}>{sync.isPending ? "กำลังดึง" : "ดึงตอนนี้"}</Text>
+              </Pressable>
+            )}
+          </View>
+        )}
 
         {shown && (
           <UrgentCrt task={shown} today={today} subject={shown.subject_id ? names.get(shown.subject_id) : undefined} onSend={() => send(shown)}
@@ -155,6 +172,9 @@ const s = StyleSheet.create({
   segItem: { flex: 1, minHeight: 44, alignItems: "center", justifyContent: "center" },
   segOn: { backgroundColor: color.paper },
   segText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
+  sync: { flexDirection: "row", alignItems: "center", gap: space.sm, minHeight: minTouch, marginTop: space.sm },
+  syncBtn: { minHeight: minTouch, minWidth: 72, alignItems: "flex-end", justifyContent: "center" },
+  syncText: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen, textDecorationLine: "underline" },
   list: { borderBottomWidth: 1, borderBottomColor: color.rule },
   // FAB หมึกเต็ม + เงาแข็ง
   fab: {

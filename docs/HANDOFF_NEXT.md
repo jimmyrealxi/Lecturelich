@@ -30,6 +30,7 @@ branch `feat/stage6-rooms` · push แล้วถึง commit `3fd7801` (branc
 | `a-crt-effects.html` | ปกติจอนิ่ง + กดแล้วจอเปลี่ยนเป็นภาพ | ลงโค้ดแล้ว รอเทส |
 | `a-crt-variants.html` | ภาพตอนกด 4 ปุ่ม ปุ่มละ 5 แบบ | ลงโค้ดแล้ว รอเทส (`lib/crtArt.ts`) |
 | `a-task-detail.html` | แตะงานแล้วเปิดแผ่นรายละเอียด · **เจ้าของเลือกแบบ A** มีช่องรายละเอียด (ต้องมี migration เพิ่ม 1 คอลัมน์ใน `assignments` งานห้องร่วมเพื่อนเห็นด้วย) · แตะทั้งแถวแทนปุ่ม ⋯ | พักไว้ ยังไม่ลงโค้ด |
+| `a-classroom-connect.html` | เชื่อม Google Classroom เฟส 1 | ลงโค้ดแล้ว รอตั้งค่าและเทส |
 
 ## ที่เจ้าของตัดสินแล้ว (จอเขียว)
 - ตอนปกตินิ่ง: เรืองแสง + เส้นสแกน + เคอร์เซอร์กะพริบ · ไม่มีแถบแสงกวาด
@@ -57,6 +58,15 @@ delete from exams where date in ('2026-11-20', '2027-02-26', '2026-12-20', '2027
 delete from grade_components where name like 'จำลอง:%';
 delete from loot_boxes where source = 'จำลอง';
 ```
+
+## Classroom เฟส 1 (ลงโค้ดแล้ว 8 พ.ย. · ยังไม่ได้เทสจริง)
+**ลำดับสำคัญ: รัน migration ก่อน push** ไม่งั้นแท็บงานโหลดไม่ขึ้น เพราะแอปอ่านคอลัมน์ใหม่ `classroom_work_id`
+1. เจ้าของรัน `supabase/migrations/20261117090000_stage8_classroom.sql` ใน SQL Editor
+2. Google Cloud client เดิม: เพิ่ม Authorized redirect URI `https://zuwmygzqoezgosyetahc.supabase.co/functions/v1/classroom`
+3. Supabase Edge Functions → Secrets: `GOOGLE_CLIENT_ID` `GOOGLE_CLIENT_SECRET` (ค่าเดียวกับล็อกอิน Google)
+4. deploy function `classroom` แบบปิด verify_jwt
+5. push แล้วกดเชื่อมในตั้งค่า
+- ตัดสินแล้ว: ดึงทุก 1 ชม. + ปุ่มดึงตอนนี้ · เฟส 2 งานห้องร่วมทำหลังเจ้าของลองใช้ · ยังไม่ทำ: ติ๊กส่งอัตโนมัติ/XP (รอเจ้าของตอบ) · เช็ก Audience ใน Google ถ้า Testing สิทธิ์หมดทุก 7 วัน
 
 ## ยังไม่ได้เทส
 - จอดูรูปกับรูปจริงจาก Storage (บัญชียังไม่มีโน้ตที่มีรูป) · ถ่ายรูปจริงแล้วเปิดดู

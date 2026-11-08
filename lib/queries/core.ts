@@ -28,6 +28,7 @@ export type Assignment = {
   link: string | null;
   room_id: string | null; // null = งานส่วนตัว
   created_by: string;
+  classroom_work_id?: string | null; // งานที่ดึงจาก Classroom
   done: boolean;
 };
 
@@ -162,7 +163,7 @@ export function useAssignments() {
       const [rows, mine] = await Promise.all([
         supabase
           .from("assignments")
-          .select("id,subject_id,course_code,title,due_at,source,link,room_id,created_by,assignment_status(done)")
+          .select("id,subject_id,course_code,title,due_at,source,link,room_id,created_by,classroom_work_id,assignment_status(done)")
           .order("due_at", { ascending: true, nullsFirst: false })
           .then(must),
         supabase.from("subjects").select("id,code").then(must),
