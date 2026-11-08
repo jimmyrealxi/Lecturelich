@@ -79,7 +79,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
       <View style={s.grab} />
       <Text style={T.h3}>{task ? "แก้ไขงาน" : "เพิ่มงาน"}</Text>
       <Field label="ชื่องาน" value={title} onChangeText={setTitle} placeholder="Lab 6 Interface" maxLength={120}
-        error={tried ? errTitle : null} autoFocus={!task} />
+        error={tried ? errTitle : null} />
 
       <Text style={s.label}>วิชา</Text>
       <View style={s.chips}>

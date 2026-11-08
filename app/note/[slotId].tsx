@@ -229,7 +229,7 @@ const s = StyleSheet.create({
     flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule2,
     borderRadius: radius.md, paddingLeft: space.md, paddingRight: 4, minHeight: 52, marginBottom: 6,
   },
-  topicInput: { flex: 1, minHeight: minTouch },
+  topicInput: { flex: 1, minHeight: minTouch, fontSize: 16 }, // iPhone ซูมจอเองถ้าช่องกรอกเล็กกว่า 16,
   exam: { minHeight: minTouch, paddingHorizontal: 8, borderRadius: radius.sm, borderWidth: 1.5, borderColor: color.paper, justifyContent: "center" },
   examOn: pick.on as object,
   examText: { fontFamily: font.bodyBold, fontSize: 12, color: color.paper },
