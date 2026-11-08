@@ -179,7 +179,7 @@ export default function Today() {
               </Pressable>
             )}
 
-            <Section count={{ n: unnoted.length + openTasks.filter((a) => !a.done).length, unit: "เรื่อง" }}>ต้องทำ</Section>
+            <Section count={{ n: unnoted.length + (tasks.data ?? []).filter((a) => !a.done).length, unit: "เรื่อง" }}>ต้องทำ</Section>
 
             {unnoted.map((slot) => (
               <View key={slot.id} style={s.entry}>
