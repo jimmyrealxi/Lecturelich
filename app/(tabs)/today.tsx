@@ -451,7 +451,7 @@ const s = StyleSheet.create({
 
   entry: { flexDirection: "row", alignItems: "center", gap: 10, minHeight: 68, paddingVertical: 12, borderTopWidth: 1, borderTopColor: color.rule },
   rule: { height: 1, backgroundColor: color.rule },
-  t: { width: 44, fontFamily: font.typeBold, fontSize: 16, color: color.warn, alignSelf: "flex-start", marginTop: 2 },
+  t: { width: 56, fontFamily: font.typeBold, fontSize: 16, color: color.warn, alignSelf: "flex-start", marginTop: 2 },
   what: { fontFamily: font.bodyBold, fontSize: 17, lineHeight: 25, color: color.paper },
   sub: { fontFamily: font.body, fontSize: 15, color: color.muted },
   doneText: { color: color.faint }, // ไม่ขีดฆ่า: เส้นทับสระบนไทยอ่านยาก

@@ -38,15 +38,11 @@ export function TaskRow({ task, subjectName, today, first, stamp, onTick }: {
         <View style={[s.check, task.done && s.checked]}>{task.done && <Tick />}</View>
       </Pressable>
       <Pressable style={{ flex: 1 }} disabled={!task.link} onPress={() => task.link && Linking.openURL(task.link)}>
-        <Text style={[T.body, task.done && s.doneText]}>{task.title}</Text>
+        <Text style={[s.title, task.done && s.doneText]}>{task.title}</Text>
         <Text style={T.muted}>{meta}</Text>
+        {task.due_at && <Text style={[s.due, soon && !task.done && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>}
       </Pressable>
-      {task.due_at && (
-        <View style={{ alignItems: "flex-end", gap: 4 }}>
-          {stamp && <Stamp>เลยกำหนด</Stamp>}
-          <Text style={[s.due, soon && !task.done && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>
-        </View>
-      )}
+      {stamp && <Stamp>เลยกำหนด</Stamp>}
       <Pressable onPress={() => !temp && setOpen(true)} style={s.hit} accessibilityRole="button"
         accessibilityLabel={`ตัวเลือกงาน ${task.title}`}>
         <Text style={s.dots}>⋯</Text>
@@ -90,7 +86,8 @@ function TaskSheet({ task, meta, onClose }: { task: Assignment; meta: string; on
 }
 
 const s = StyleSheet.create({
-  row: { flexDirection: "row", alignItems: "center", gap: space.sm, paddingVertical: 2 },
+  row: { flexDirection: "row", alignItems: "center", gap: space.sm, paddingVertical: 8 },
+  title: { fontFamily: font.bodyBold, fontSize: 17, lineHeight: 25, color: color.paper },
   divider: { borderTopWidth: 1, borderTopColor: color.rule },
   hit: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
   // ช่องติ๊กวาดมือ · ติ๊กแล้ว = ✓ ปากกาน้ำเงิน
