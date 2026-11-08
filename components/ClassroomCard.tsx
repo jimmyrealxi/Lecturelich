@@ -57,6 +57,6 @@ export function ClassroomCard() {
 
 const s = StyleSheet.create({
   row: { flexDirection: "row", gap: space.sm, marginTop: space.md },
-  warn: { fontFamily: font.body, fontSize: 14, color: color.dangerInk, backgroundColor: color.dangerBg, borderRadius: radius.md, padding: space.md, marginTop: space.md },
-  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
+  warn: { fontFamily: font.body, fontSize: 15, color: color.dangerInk, backgroundColor: color.dangerBg, borderRadius: radius.md, padding: space.md, marginTop: space.md },
+  err: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
 });

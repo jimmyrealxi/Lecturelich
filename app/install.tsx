@@ -58,5 +58,5 @@ const s = StyleSheet.create({
   last: { borderBottomWidth: 1, borderBottomColor: color.rule },
   // เลขขั้น = วงหมึก ตัว Courier
   num: { width: 28, height: 28, borderRadius: 14, borderWidth: 2, borderColor: color.paper, alignItems: "center", justifyContent: "center" },
-  numText: { fontFamily: font.typeBold, fontSize: 15, color: color.paper },
+  numText: { fontFamily: font.typeBold, fontSize: 16, color: color.paper },
 });

@@ -132,10 +132,10 @@ const s = StyleSheet.create({
   },
   checked: { borderColor: color.pen },
   change: { minHeight: minTouch, minWidth: 56, alignItems: "center", justifyContent: "center" },
-  changeText: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen, textDecorationLine: "underline" },
+  changeText: { fontFamily: font.bodyBold, fontSize: 16, color: color.pen, textDecorationLine: "underline" },
   bar: { flexDirection: "row", padding: space.lg, borderTopWidth: 1, borderTopColor: color.rule2, width: "100%", maxWidth: 560, alignSelf: "center" },
-  warn: { fontFamily: font.body, fontSize: 14, color: color.dangerInk, backgroundColor: color.dangerBg, borderRadius: radius.md, padding: space.md, marginBottom: space.md },
-  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
+  warn: { fontFamily: font.body, fontSize: 15, color: color.dangerInk, backgroundColor: color.dangerBg, borderRadius: radius.md, padding: space.md, marginBottom: space.md },
+  err: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
   dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },
   sheet: {
     position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "70%", backgroundColor: color.deck, borderTopWidth: 1, borderColor: color.rule2,

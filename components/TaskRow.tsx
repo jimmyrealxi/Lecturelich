@@ -100,7 +100,7 @@ const s = StyleSheet.create({
   },
   checked: { borderColor: color.pen },
   doneText: { color: color.faint }, // ไม่ขีดฆ่า: เส้นทับสระบนไทยอ่านยาก
-  due: { fontFamily: font.bodyBold, fontSize: 14, color: color.muted },
+  due: { fontFamily: font.bodyBold, fontSize: 15, color: color.muted },
   dueSoon: { color: color.danger },
   dots: { fontSize: 20, color: color.muted },
   dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },
@@ -111,7 +111,7 @@ const s = StyleSheet.create({
   },
   grab: { width: 40, height: 4, backgroundColor: color.rule2, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
   lock: {
-    fontFamily: font.body, fontSize: 14, color: color.muted, backgroundColor: color.field, borderWidth: 1, borderColor: color.rule2,
+    fontFamily: font.body, fontSize: 15, color: color.muted, backgroundColor: color.field, borderWidth: 1, borderColor: color.rule2,
     borderRadius: radius.md, padding: space.md, marginTop: space.md,
   },
 });

@@ -209,9 +209,9 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 
 const s = StyleSheet.create({
   screen: { flex: 1 },
-  topSub: { fontFamily: font.body, fontSize: 14, color: color.muted },
+  topSub: { fontFamily: font.body, fontSize: 15, color: color.muted },
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  label: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: space.md, marginBottom: 6 },
   textarea: {
     minHeight: 96, borderWidth: 1.5, borderColor: color.rule2, borderRadius: radius.md, padding: space.md, backgroundColor: color.field,
     fontFamily: font.body, fontSize: 16, color: color.paper, textAlignVertical: "top",
@@ -231,12 +231,12 @@ const s = StyleSheet.create({
   topicInput: { flex: 1, minHeight: minTouch, fontSize: 16 }, // iPhone ซูมจอเองถ้าช่องกรอกเล็กกว่า 16,
   exam: { minHeight: minTouch, paddingHorizontal: 8, borderRadius: radius.sm, borderWidth: 1.5, borderColor: color.paper, justifyContent: "center" },
   examOn: pick.on as object,
-  examText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
+  examText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   star: { width: minTouch, height: minTouch, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
   // ★ ที่เลือก = วงปากกาแดง
   starOn: { borderWidth: 2, borderColor: color.red, borderRadius: 22 },
   starText: { fontSize: 20, color: color.muted },
-  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
+  error: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
   foot: { padding: space.md, borderTopWidth: 1, borderTopColor: color.rule2, backgroundColor: color.deck },
   dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },
   sheet: {

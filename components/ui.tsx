@@ -9,13 +9,67 @@ export function Card({ children, style }: { children: ReactNode; style?: StylePr
   return <View style={[s.card, style]}>{children}</View>;
 }
 
-/** หัวข้อย่อย Chonburi · side = ข้อความเล็กข้างหัว */
-export function Section({ children, side }: { children: ReactNode; side?: ReactNode }) {
-  if (side == null) return <Text style={s.section} accessibilityRole="header">{children}</Text>;
+// เทปหัวข้อ [สี, รอยเหนือเทป] เลือกเองให้หัวข้อติดกันไม่ซ้ำ · รอย: 0 ไม่มี 1 แก้ว 2 คลิปสนิม 3 ขีดนับปากกา
+const TAPE_LOOK: Record<string, readonly [number, number]> = {
+  "ต้องทำ": [0, 0], "ทวนวันนี้": [1, 1],
+  "เทอมปัจจุบัน": [3, 0], "แจ้งเตือนบนเครื่องนี้": [0, 2], "การเข้าเรียน": [2, 0], "งานจากห้องเรียน": [1, 3], "ห้องร่วม (แชร์งานกับเพื่อน)": [0, 0], "บัญชี": [3, 1],
+  "เทอมนี้": [3, 2],
+  "เข้าเรียน": [2, 0], "วันสอบ": [0, 3], "คะแนน": [1, 0], "โน้ตแต่ละคาบ": [3, 2], "งานของวิชา": [0, 0],
+  "สัปดาห์นี้": [0, 1], "ถัดไป": [1, 0], "ไม่มีกำหนดส่ง": [3, 3], "ส่งแล้ว": [2, 0],
+  "หัวข้อที่เรียน": [1, 2], "มีงานสั่งไหม": [0, 0], "ตารางเรียน": [2, 1], "ลิงก์": [3, 0], "คาบชดเชย": [1, 3],
+};
+const TORN = Platform.OS === "web" ? ({ clipPath: "polygon(0 8%,2% 0,100% 0,100% 100%,3% 100%,0 88%,1.6% 66%,0 44%,1.8% 24%)" } as ViewStyle) : null;
+
+/** ตัวเลขบนจอเขียวจิ๋ว ใช้กับตัวเลขและ % เท่านั้น (VT323 ไม่มีตัวไทย) */
+export function Readout({ children }: { children: ReactNode }) {
+  return <View style={s.readout}><Text style={s.readoutText}>{children}</Text></View>;
+}
+
+/** รอยปากกาแดงใต้งานที่เลยรอบ */
+export function PenScribble() {
+  if (Platform.OS !== "web") return null;
+  return <svg width={108} height={6} viewBox="0 0 108 6" aria-hidden style={{ display: "block" }}><path d="M2 4c9-3 15 2 24 0s14-3 24 0 15 1 24-1 18 2 32 0" fill="none" stroke={color.red} strokeWidth={1.5} strokeLinecap="round" /></svg>;
+}
+
+/** รอยในช่องว่างเหนือเทป จึงไม่ทับตัวหนังสือ */
+function GapMark({ kind, left }: { kind: number; left: `${number}%` }) {
+  if (Platform.OS !== "web" || !kind) return null;
   return (
-    <View style={s.sectionRow}>
-      <Text style={[s.section, { marginTop: 0, marginBottom: 0 }]} accessibilityRole="header">{children}</Text>
-      <Text style={s.sectionSide}>{side}</Text>
+    <View pointerEvents="none" style={[s.gapMark, { left }]}>
+      {kind === 1 && (
+        <svg width={120} height={36} viewBox="0 0 96 28.8" fill="none" stroke={color.stain} aria-hidden>
+          <path d="M48 6c24-.6 42 18 42 42S72 90.500 47 90 5.500 71 6 47 25 6.500 48 6Z" strokeWidth={1.4} strokeOpacity={0.34} strokeDasharray="118 7 92 4 36" />
+          <path d="M48 10.500c21 0 37.500 16 37.500 37.500S69 85.500 47.500 85.500 10.500 69 10.500 47.500 27 10.500 48 10.500Z" strokeWidth={4.5} strokeOpacity={0.12} strokeDasharray="84 22 118 14" />
+        </svg>
+      )}
+      {kind === 2 && (
+        <svg width={66} height={26} viewBox="0 0 66 26" fill="none" stroke={color.stain} aria-hidden>
+          <path transform="translate(66 0) rotate(90)" d="M19 12v40a7 7 0 0 1-14 0V14a5 5 0 0 1 10 0v35a2.500 2.500 0 0 1-5 0V19" strokeOpacity={0.5} strokeWidth={1.6} strokeLinecap="round" strokeDasharray="46 2 31 3 54 2" />
+        </svg>
+      )}
+      {kind === 3 && (
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color.red} aria-hidden>
+          <path d="M5 4 3 21M12 3l-2 18M19 4l-2 16" strokeOpacity={0.45} strokeWidth={1.4} strokeLinecap="round" />
+        </svg>
+      )}
+    </View>
+  );
+}
+
+/** หัวข้อย่อยบนเทปขอบฉีก · count = ตัวเลขบนจอจิ๋ว · side = คำอธิบายใต้เทป */
+export function Section({ children, side, count }: { children: ReactNode; side?: ReactNode; count?: { n: number; unit: string } }) {
+  const title = String(children);
+  const [tape, mark] = TAPE_LOOK[title] ?? [3, 0];
+  return (
+    <View style={s.section}>
+      <GapMark kind={mark} left={`${8 + (title.length * 13) % 45}%`} />
+      <View style={s.tapeClip}>
+        <View style={[s.sectionTape, { backgroundColor: color.tape[tape] }, TORN]}>
+          <Text style={s.tapeTitle} accessibilityRole="header">{children}</Text>
+          {count && <><Readout>{count.n}</Readout><Text style={s.tapeUnit}>{count.unit}</Text></>}
+        </View>
+      </View>
+      {side != null && <Text style={s.sectionSide}>{side}</Text>}
     </View>
   );
 }
@@ -190,7 +244,7 @@ export const head = StyleSheet.create({
 export const T = StyleSheet.create({
   h3: { fontFamily: font.bodyBold, fontSize: 18, color: color.paper },
   body: { fontFamily: font.body, fontSize: 16, color: color.paper },
-  muted: { fontFamily: font.body, fontSize: 14, color: color.muted },
+  muted: { fontFamily: font.body, fontSize: 15, color: color.muted },
 });
 
 const s = StyleSheet.create({
@@ -198,16 +252,23 @@ const s = StyleSheet.create({
     backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule2, borderRadius: radius.lg,
     padding: space.md, marginBottom: space.md,
   },
-  section: { fontFamily: font.title, fontSize: 18, lineHeight: 26, color: color.paper, marginTop: space.lg, marginBottom: space.sm },
-  sectionRow: { flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", columnGap: 10, marginTop: space.lg, marginBottom: space.xs },
-  sectionSide: { fontFamily: font.body, fontSize: 14, color: color.faint },
+  section: { marginTop: 34, marginBottom: 6 },
+  gapMark: { position: "absolute", bottom: "100%" },
+  // เทปชนขอบจอขวาพอดีระยะขอบหน้า (16) · ตัดส่วนเกินจากการเอียง กันเลื่อนแนวนอน
+  tapeClip: { marginLeft: -6, marginRight: -16, paddingVertical: 2, overflow: "hidden" },
+  sectionTape: { flexDirection: "row", alignItems: "center", gap: 10, minHeight: 46, paddingVertical: 4, paddingLeft: 20, paddingRight: 16, transform: [{ rotate: "-0.5deg" }] },
+  tapeTitle: { flex: 1, fontFamily: font.title, fontSize: 23, lineHeight: 34, color: color.on },
+  tapeUnit: { fontFamily: font.bodyMedium, fontSize: 15, color: color.on },
+  readout: { minWidth: 38, paddingHorizontal: 8, alignItems: "center", backgroundColor: color.crt, borderWidth: 2, borderColor: "#15110D", borderRadius: 5 },
+  readoutText: { fontFamily: font.num, fontSize: 24, lineHeight: 30, color: color.crtOn, ...crtGlow.title },
+  sectionSide: { fontFamily: font.body, fontSize: 15, color: color.faint, marginTop: space.xs },
   dymo: {
     alignSelf: "flex-start", backgroundColor: "#1A1A1A", color: "#F2F2F2", fontFamily: font.typeBold, fontSize: 12, lineHeight: 14,
     paddingHorizontal: 8, paddingTop: 4, paddingBottom: 3, borderRadius: 2, overflow: "hidden",
     textShadowColor: "#000", textShadowOffset: { width: 0, height: -1 }, textShadowRadius: 0,
   },
   stamp: {
-    alignSelf: "center", fontFamily: font.bodyBold, fontSize: 14, borderWidth: 2, borderRadius: 4,
+    alignSelf: "center", fontFamily: font.bodyBold, fontSize: 15, borderWidth: 2, borderRadius: 4,
     paddingHorizontal: 9, paddingVertical: 1, transform: [{ rotate: "-6deg" }], opacity: 0.92,
   },
   crt: {
@@ -215,7 +276,7 @@ const s = StyleSheet.create({
     boxShadow: "inset 0 0 0 2px #0F2717, inset 0 0 28px rgba(0,0,0,0.85), 0 3px 0 #2B2117",
   },
   crtBig: { fontFamily: font.num, fontSize: 36, lineHeight: 36, color: "#B8FFC9", ...crtGlow.big },
-  crtK: { fontFamily: font.body, fontSize: 14, color: color.crtDim, ...crtGlow.dim },
+  crtK: { fontFamily: font.body, fontSize: 15, color: color.crtDim, ...crtGlow.dim },
   crtTitle: { fontFamily: font.bodyBold, fontSize: 19, lineHeight: 26, color: color.crtOn, marginTop: 2, ...crtGlow.title },
   cursor: { width: 8, height: 14, backgroundColor: color.crtOn },
   toast: {
@@ -223,9 +284,9 @@ const s = StyleSheet.create({
     flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, borderRadius: radius.sm,
     backgroundColor: color.paper, paddingVertical: 6, paddingRight: 6, paddingLeft: 14,
   },
-  toastText: { flex: 1, fontFamily: font.body, fontSize: 15, color: color.on },
+  toastText: { flex: 1, fontFamily: font.body, fontSize: 16, color: color.on },
   toastBtn: { minHeight: minTouch, paddingHorizontal: 14, justifyContent: "center" },
-  toastBtnText: { fontFamily: font.bodyBold, fontSize: 15, color: color.go },
+  toastBtnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.go },
   tape: { position: "absolute", top: -10, width: 72, height: 22, backgroundColor: "rgba(232,221,186,0.82)" },
   sheetTape: {
     position: "absolute", top: -11, left: "50%", marginLeft: -37, width: 74, height: 22,
@@ -235,7 +296,7 @@ const s = StyleSheet.create({
     minHeight: minTouch, borderWidth: 1.5, borderStyle: "dashed", borderColor: color.rule2, borderRadius: radius.md,
     alignItems: "center", justifyContent: "center", marginTop: space.md,
   },
-  addText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
+  addText: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
   btn: {
     flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper,
     alignItems: "center", justifyContent: "center", paddingHorizontal: space.sm,
@@ -245,7 +306,7 @@ const s = StyleSheet.create({
   btnPriDown: { transform: [{ translateX: 2 }, { translateY: 2 }], boxShadow: "none" },
   btnRed: { borderColor: color.danger },
   btnRedFill: { backgroundColor: color.danger },
-  btnText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
+  btnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
   skeleton: { backgroundColor: "rgba(42,33,24,0.10)", borderRadius: radius.lg, marginBottom: space.md },
 });
 
@@ -283,10 +344,10 @@ export function confirmAction(message: string, onYes: () => void) {
 }
 
 const f = StyleSheet.create({
-  label: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: space.md, marginBottom: 6 },
   input: {
     minHeight: minTouch, borderWidth: 1.5, borderColor: color.rule2, borderRadius: radius.md, paddingHorizontal: space.md,
     fontFamily: font.body, fontSize: 16, color: color.paper, backgroundColor: color.field,
   },
-  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: 4 },
+  error: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: 4 },
 });

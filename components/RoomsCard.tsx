@@ -80,8 +80,8 @@ const s = StyleSheet.create({
   row: { flexDirection: "row", gap: space.sm },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
   code: {
-    fontFamily: font.typeBold, fontSize: 15, color: color.paper, letterSpacing: 1,
+    fontFamily: font.typeBold, fontSize: 16, color: color.paper, letterSpacing: 1,
     borderWidth: 1.5, borderColor: color.paper, borderRadius: 2, paddingHorizontal: 6, paddingVertical: 1,
   },
-  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
+  err: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
 });

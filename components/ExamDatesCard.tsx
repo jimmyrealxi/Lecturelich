@@ -54,5 +54,5 @@ export function ExamDatesCard({ subjectId, termId, exams, today }: {
 const s = StyleSheet.create({
   row: { flexDirection: "row", gap: space.sm },
   info: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 6, marginTop: space.sm },
-  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
+  err: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
 });
