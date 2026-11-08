@@ -6,8 +6,8 @@
 <title>ไอคอนแอป Lecturelich</title>
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* ไอคอนแอป · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด · ภาพวาดเองทั้งหมดด้วย SVG */
-:root{--ink:#E9DDBF;--deck:#F3EAD2;--rule2:#8C7B60;--paper:#2A2118;--red:#A0281D;--on:#F3EAD2;--onMuted:#CDBE9E;--desk:#1C1915;--seam:#4A4032}
+/* ไอคอนแอป รอบ 2: ผสม A (ตรายาง) กับ B (จอเขียว) 5 แบบ · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด · ภาพวาดเองทั้งหมดด้วย SVG */
+:root{--ink:#E9DDBF;--rule2:#8C7B60;--red:#A0281D;--on:#F3EAD2;--onMuted:#CDBE9E;--desk:#1C1915;--seam:#4A4032}
 *{box-sizing:border-box;margin:0;padding:0}
 ::selection{background:var(--red);color:var(--on)}
 html{scrollbar-color:var(--rule2) var(--desk)}
@@ -16,7 +16,6 @@ main{max-width:980px;margin:0 auto}
 h1{font:400 28px/1.35 Chonburi,serif}
 .lead{color:var(--onMuted);max-width:62ch;margin:6px 0 30px}
 .opt{display:grid;grid-template-columns:260px 1fr;gap:32px;padding:30px 0;border-top:1px solid var(--seam);align-items:center}
-.opt:first-of-type{border-top:3px double var(--rule2)}
 .ic{display:block;flex:none;border-radius:22.37%}
 .ic.big{width:260px;height:260px}
 .ic.round{border-radius:50%}
@@ -28,20 +27,15 @@ h2 b{font:700 22px 'Courier Prime',monospace;color:var(--ink)}
 .sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px}
 .sizes figure{display:flex;flex-direction:column;align-items:center;gap:6px}
 figcaption{font:400 14px/1.2 'Courier Prime',monospace;color:var(--onMuted)}
-h3{font:400 21px/1.4 Chonburi,serif;margin:12px 0 4px;padding-top:26px;border-top:3px double var(--rule2)}
+h3{font:400 21px/1.4 Chonburi,serif;margin:12px 0 4px;padding-top:26px;border-top:1px solid var(--seam)}
 .note{color:var(--onMuted);margin-bottom:16px;max-width:62ch}
-.homes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.home{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:22px 10px;border-radius:14px}
+.homes{display:grid;gap:12px}
+.home{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:14px 8px;padding:20px 10px;border-radius:14px}
 .home.l{background:#CFC8B8;color:#1E1A14}
 .home.d{background:#14171B;color:#F4F1EA}
 .app{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
-.app span{font-size:14px;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tab{display:flex;align-items:center;gap:8px;background:#35302A;color:#EDE7DA;border-radius:8px 8px 0 0;padding:8px 12px;font-size:14px;width:max-content;max-width:100%}
-.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;border-bottom:2px solid #35302A}
-@media(max-width:720px){
-  .opt{grid-template-columns:1fr;gap:18px;justify-items:start}
-  .homes{grid-template-columns:1fr}
-}
+.app span{font-size:14px;line-height:1.2}
+@media(max-width:720px){.opt{grid-template-columns:1fr;gap:18px;justify-items:start}}
 </style>
 </head>
 <body>
@@ -54,139 +48,171 @@ h3{font:400 21px/1.4 Chonburi,serif;margin:12px 0 4px;padding-top:26px;border-to
       <feColorMatrix in="s" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -9 3.05" result="holes"/>
       <feComposite in="d" in2="holes" operator="out"/>
     </filter>
-    <filter id="glow" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation="9"/></filter>
-    <filter id="pen" x="-6%" y="-6%" width="112%" height="112%">
-      <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="11" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="6"/>
+    <filter id="edge" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="8"/>
     </filter>
+    <filter id="glow" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation="9"/></filter>
     <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="3" fill="#000" opacity=".34"/></pattern>
+    <clipPath id="lh"><rect width="256" height="512"/></clipPath>
+    <clipPath id="rh"><rect x="256" width="256" height="512"/></clipPath>
 
-    <!-- A ตรายาง: พื้นกระดาษเรียบ ช่องตัดจึงระบายสีกระดาษทับได้ -->
-    <g id="a-art" transform="rotate(-6 256 256)">
+    <!-- สีมาจากตัวแปร --i หมึก --c ช่องตัด --eye เบ้าตา -->
+    <g id="skull">
+      <path fill="var(--i)" d="M256 176C188 176 146 222 146 282c0 36 16 64 44 80v40h132v-40c28-16 44-44 44-80 0-60-42-106-110-106z"/>
+      <g fill="var(--eye,var(--c))">
+        <path id="eye" d="M174 280c2-22 26-30 54-18 10 5 12 18 6 36-8 22-44 24-54 8-5-8-7-16-6-26z"/>
+        <use href="#eye" transform="matrix(-1 0 0 1 512 0)"/>
+      </g>
+      <g fill="var(--c)">
+        <path d="M256 312l17 36q-17-8-34 0z"/>
+        <rect x="215" y="368" width="12" height="44"/><rect x="250" y="368" width="12" height="44"/><rect x="285" y="368" width="12" height="44"/>
+      </g>
+      <path d="M256 104L414 166 256 228 98 166z" fill="var(--i)" stroke="var(--c)" stroke-width="16" stroke-linejoin="round"/>
+      <path d="M256 166L392 172" stroke="var(--c)" stroke-width="9" fill="none"/>
+      <path d="M400 176v84" stroke="var(--i)" stroke-width="13" fill="none"/>
+      <path d="M388 258h24l5 52h-34z" fill="var(--i)"/>
+    </g>
+    <g id="stamp" transform="rotate(-6 256 256)">
       <g filter="url(#rough)">
-        <rect x="54" y="54" width="404" height="404" rx="16" fill="none" stroke="#A0281D" stroke-width="28"/>
-        <path fill="#A0281D" d="M256 176C188 176 146 222 146 282c0 36 16 64 44 80v40h132v-40c28-16 44-44 44-80 0-60-42-106-110-106z"/>
-        <g fill="#E9DDBF">
-          <path id="a-eye" d="M174 280c2-22 26-30 54-18 10 5 12 18 6 36-8 22-44 24-54 8-5-8-7-16-6-26z"/>
-          <use href="#a-eye" transform="matrix(-1 0 0 1 512 0)"/>
-          <path d="M256 312l17 36q-17-8-34 0z"/>
-          <rect x="215" y="368" width="12" height="44"/><rect x="250" y="368" width="12" height="44"/><rect x="285" y="368" width="12" height="44"/>
-        </g>
-        <path d="M256 104L414 166 256 228 98 166z" fill="#A0281D" stroke="#E9DDBF" stroke-width="16" stroke-linejoin="round"/>
-        <path d="M256 166L392 172" stroke="#E9DDBF" stroke-width="9" fill="none"/>
-        <path d="M400 176v84" stroke="#A0281D" stroke-width="13" fill="none"/>
-        <path d="M388 258h24l5 52h-34z" fill="#A0281D"/>
+        <rect x="54" y="54" width="404" height="404" rx="16" fill="none" stroke="var(--i)" stroke-width="28"/>
+        <use href="#skull"/>
       </g>
     </g>
-    <symbol id="a" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#a-art"/></symbol>
-    <symbol id="am" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#a-art" transform="translate(256 256) scale(.72) translate(-256 -256)"/></symbol>
-
-    <!-- B จอเขียวแปะเทป -->
-    <g id="b-art">
-      <rect x="40" y="40" width="432" height="432" rx="70" fill="#08130C"/>
-      <path class="px" fill="#9EF0B4" filter="url(#glow)" opacity=".55"/>
-      <path class="px" fill="#9EF0B4"/>
-      <rect x="40" y="40" width="432" height="432" rx="70" fill="url(#scan)"/>
+    <g id="tape">
       <path d="M-14 118L104 -6l58 54L44 172z" fill="#F3EAD2" opacity=".86"/>
       <path d="M526 394L408 518l-58-54L468 340z" fill="#F3EAD2" opacity=".86"/>
     </g>
-    <symbol id="b" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#b-art"/></symbol>
-    <symbol id="bm" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#b-art" transform="translate(256 256) scale(.74) translate(-256 -256)"/></symbol>
 
-    <!-- C สมุดลืมตา -->
-    <g id="c-art">
-      <rect x="66" y="142" width="300" height="228" rx="6" fill="#F3EAD2"/>
-      <rect x="80" y="156" width="272" height="200" rx="3" fill="none" stroke="#2A2118" stroke-width="5"/>
-      <g filter="url(#pen)">
-        <path d="M104 256Q216 150 328 256 216 362 104 256z" fill="none" stroke="#2A2118" stroke-width="16" stroke-linejoin="round"/>
-        <circle cx="216" cy="256" r="50" fill="#A0281D"/>
-        <ellipse cx="216" cy="256" rx="13" ry="42" fill="#2A2118"/>
-      </g>
-      <rect x="394" y="-10" width="42" height="532" fill="#A0281D"/>
-    </g>
-    <symbol id="c" viewBox="0 0 512 512">
-      <rect width="512" height="512" fill="#2A2118"/>
-      <path d="M38 0v512" stroke="#CDBE9E" stroke-width="6" stroke-dasharray="24 18"/>
-      <use href="#c-art"/>
+    <!-- เทียบของเดิม A, B -->
+    <symbol id="a" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#stamp" style="--i:#A0281D;--c:#E9DDBF"/></symbol>
+    <symbol id="b" viewBox="0 0 512 512">
+      <rect width="512" height="512" fill="#E9DDBF"/>
+      <rect x="40" y="40" width="432" height="432" rx="70" fill="#08130C"/>
+      <path class="px" data-u="22" data-x="91" data-y="102" fill="#9EF0B4" filter="url(#glow)" opacity=".55"/>
+      <path class="px" data-u="22" data-x="91" data-y="102" fill="#9EF0B4"/>
+      <rect x="40" y="40" width="432" height="432" rx="70" fill="url(#scan)"/>
+      <use href="#tape"/>
     </symbol>
-    <symbol id="cm" viewBox="0 0 512 512">
-      <rect width="512" height="512" fill="#2A2118"/>
-      <rect x="378" width="34" height="512" fill="#A0281D"/>
-      <g transform="translate(256 256) scale(.74) translate(-290 -256)">
-        <rect x="66" y="142" width="300" height="228" rx="6" fill="#F3EAD2"/>
-        <rect x="80" y="156" width="272" height="200" rx="3" fill="none" stroke="#2A2118" stroke-width="5"/>
-        <g filter="url(#pen)">
-          <path d="M104 256Q216 150 328 256 216 362 104 256z" fill="none" stroke="#2A2118" stroke-width="16"/>
-          <circle cx="216" cy="256" r="50" fill="#A0281D"/><ellipse cx="216" cy="256" rx="13" ry="42" fill="#2A2118"/>
+
+    <!-- 1 จอในตรา -->
+    <g id="v1-art" transform="rotate(-6 256 256)">
+      <rect x="54" y="54" width="404" height="404" rx="16" fill="none" stroke="#A0281D" stroke-width="28" filter="url(#rough)"/>
+      <rect x="86" y="86" width="340" height="340" rx="46" fill="#08130C"/>
+      <path class="px" data-u="18" data-x="121" data-y="130" fill="#9EF0B4" filter="url(#glow)" opacity=".55"/>
+      <path class="px" data-u="18" data-x="121" data-y="130" fill="#9EF0B4"/>
+      <rect x="86" y="86" width="340" height="340" rx="46" fill="url(#scan)"/>
+    </g>
+    <symbol id="v1" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v1-art"/></symbol>
+    <symbol id="v1m" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v1-art" transform="translate(256 256) scale(.72) translate(-256 -256)"/></symbol>
+
+    <!-- 2 ตราเรืองแสง -->
+    <g id="v2-stamp" transform="translate(256 256) scale(.84) translate(-256 -256)"><use href="#stamp" style="--i:#9EF0B4;--c:#08130C"/></g>
+    <g id="v2-art">
+      <rect x="40" y="40" width="432" height="432" rx="70" fill="#08130C"/>
+      <use href="#v2-stamp" filter="url(#glow)" opacity=".5"/>
+      <use href="#v2-stamp"/>
+      <rect x="40" y="40" width="432" height="432" rx="70" fill="url(#scan)"/>
+      <use href="#tape"/>
+    </g>
+    <symbol id="v2" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v2-art"/></symbol>
+    <symbol id="v2m" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v2-art" transform="translate(256 256) scale(.74) translate(-256 -256)"/></symbol>
+
+    <!-- 3 ตาจอเขียว -->
+    <g id="v3-art">
+      <use href="#stamp" style="--i:#A0281D;--c:#E9DDBF;--eye:#08130C"/>
+      <g transform="rotate(-6 256 256)">
+        <g id="v3-pupils" fill="#9EF0B4">
+          <rect x="187" y="266" width="34" height="34"/><rect x="291" y="266" width="34" height="34"/>
         </g>
       </g>
+    </g>
+    <symbol id="v3" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v3-art"/></symbol>
+    <symbol id="v3m" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v3-art" transform="translate(256 256) scale(.72) translate(-256 -256)"/></symbol>
+
+    <!-- 4 ครึ่งซีก: ซ้ายตรายาง ขวาจอ · แนวกะโหลกทั้งสองฝั่งตรงกันที่กึ่งกลาง 256 -->
+    <g id="v4-l" filter="url(#rough)" style="--i:#A0281D;--c:#E9DDBF"><use href="#skull"/></g>
+    <g id="v4-r">
+      <path class="px" data-u="22" data-x="91" data-y="102" fill="#9EF0B4" filter="url(#glow)" opacity=".55"/>
+      <path class="px" data-u="22" data-x="91" data-y="102" fill="#9EF0B4"/>
+    </g>
+    <symbol id="v4" viewBox="0 0 512 512">
+      <g clip-path="url(#lh)"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v4-l"/></g>
+      <g clip-path="url(#rh)"><rect width="512" height="512" fill="#08130C"/><use href="#v4-r"/><rect width="512" height="512" fill="url(#scan)"/></g>
+    </symbol>
+    <symbol id="v4m" viewBox="0 0 512 512">
+      <g clip-path="url(#lh)"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v4-l" transform="translate(256 256) scale(.74) translate(-256 -256)"/></g>
+      <g clip-path="url(#rh)"><rect width="512" height="512" fill="#08130C"/><use href="#v4-r" transform="translate(256 256) scale(.74) translate(-256 -256)"/><rect width="512" height="512" fill="url(#scan)"/></g>
     </symbol>
 
-    <!-- D ตัว L จากเส้นกั้นหน้า -->
-    <g id="d-bg">
-      <rect width="512" height="512" fill="#E9DDBF"/>
-      <path d="M0 76h512M0 160h512M0 244h512M0 328h512M0 412h512M0 496h512" stroke="#3C5A8C" stroke-opacity=".32" stroke-width="5"/>
+    <!-- 5 ป้ายแดงแปะเทป -->
+    <g id="v5-art">
+      <g transform="rotate(-6 256 256)">
+        <rect x="58" y="58" width="396" height="396" rx="14" fill="#A0281D" filter="url(#edge)"/>
+        <path class="px" data-u="20" data-x="106" data-y="116" fill="#9EF0B4"/>
+      </g>
+      <use href="#tape"/>
     </g>
-    <g id="d-art" filter="url(#pen)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M166 58c-8 118 8 250-8 382 96-8 190 8 292-12" stroke="#A0281D" stroke-width="66"/>
-      <path d="M252 232l48 58 110-160" stroke="#2B4A8A" stroke-width="44"/>
-    </g>
-    <symbol id="d" viewBox="0 0 512 512">
-      <use href="#d-bg"/>
-      <circle cx="50" cy="118" r="17" fill="#8C7B60"/><circle cx="50" cy="256" r="17" fill="#8C7B60"/><circle cx="50" cy="394" r="17" fill="#8C7B60"/>
-      <use href="#d-art"/>
-    </symbol>
-    <symbol id="dm" viewBox="0 0 512 512"><use href="#d-bg"/><use href="#d-art" transform="translate(256 256) scale(.72) translate(-290 -250)"/></symbol>
+    <symbol id="v5" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v5-art"/></symbol>
+    <symbol id="v5m" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#v5-art" transform="translate(256 256) scale(.72) translate(-256 -256)"/></symbol>
   </defs>
 </svg>
 
 <main>
-  <h1>ไอคอนแอป Lecturelich</h1>
-  <p class="lead">ตอนนี้แอปยังใช้ไอคอนชั่วคราวของ Expo ทั้ง 4 แบบนี้วาดจากของที่อยู่ในแอปจริง ใช้สีเดียวกับธีม และดูขนาดเล็กไว้ให้แล้ว เลือกแบบเดียว หรือบอกว่าอยากผสมอะไรกับอะไร</p>
+  <h1>ไอคอนแอป: ผสม A กับ B</h1>
+  <p class="lead">5 วิธีเอาตรายางแดงมาอยู่กับจอเขียว ดูทั้งขนาดใหญ่ ขนาดบนมือถือ และทรงกลมของ Android ด้านล่างสุดมี A กับ B เดิมให้เทียบ</p>
 
   <section class="opt">
-    <svg class="ic big" role="img" aria-label="แบบ A ตรายางกะโหลกใส่หมวกบัณฑิต"><use href="#a"/></svg>
+    <svg class="ic big" role="img" aria-label="แบบ 1 กรอบตรายางแดงล้อมจอเขียวที่มีกะโหลกพิกเซล"><use href="#v1"/></svg>
     <div>
-      <h2><b>A</b> ตราครูกะโหลก <span class="pick">แนะนำ</span></h2>
-      <p class="why">ตรายางแดงเอียงบนสมุดเก่า ตรงกับลูกเล่นที่ชอบในแอป รูปบอกชื่อแอปได้ในตราเดียว คือ lecture กับ lich ขนาด 16 จะเหลือแค่หัวกะโหลกไม่มีกรอบ</p>
-      <div class="sizes" data-i="a"></div>
+      <h2><b>1</b> จอในตรา</h2>
+      <p class="why">กรอบตรายางแดงเอียงล้อมจอเขียว เห็นครบทั้งสองอย่างแบบตรงไปตรงมา</p>
+      <div class="sizes" data-i="v1"></div>
     </div>
   </section>
 
   <section class="opt">
-    <svg class="ic big" role="img" aria-label="แบบ B จอเขียวแปะเทป มีกะโหลกพิกเซลใส่หมวกบัณฑิต"><use href="#b"/></svg>
+    <svg class="ic big" role="img" aria-label="แบบ 2 ตรากะโหลกเรืองแสงสีเขียวบนจอ"><use href="#v2"/></svg>
     <div>
-      <h2><b>B</b> ลิชในจอเขียว</h2>
-      <p class="why">จอเขียวแปะเทปจากหน้าวันนี้ มีกะโหลกพิกเซลเรืองแสง เด่นที่สุดเวลาอยู่บนหน้าจอโฮม แต่ฟีลเกมมากกว่าแบบอื่น</p>
-      <div class="sizes" data-i="b"></div>
+      <h2><b>2</b> ตราเรืองแสง</h2>
+      <p class="why">ตรายางทั้งดวงกลายเป็นแสงบนจอเขียว รูปทรงของ A แต่สีและเทปของ B</p>
+      <div class="sizes" data-i="v2"></div>
     </div>
   </section>
 
   <section class="opt">
-    <svg class="ic big" role="img" aria-label="แบบ C ปกสมุดดำมีป้ายรูปดวงตาและยางรัดแดง"><use href="#c"/></svg>
+    <svg class="ic big" role="img" aria-label="แบบ 3 ตรากะโหลกแดงที่ดวงตาเป็นจอเขียว"><use href="#v3"/></svg>
     <div>
-      <h2><b>C</b> สมุดลืมตา</h2>
-      <p class="why">สมุดปกดำเย็บมือ ยางรัดแดง ป้ายชื่อเป็นดวงตาที่คอยจับตาการบ้าน ขลังแต่ไม่มีกะโหลก เหมาะถ้าอยากให้ดูเป็นแอปเรียนมากขึ้น บนพื้นมืดขอบปกจะกลืนไปบ้าง</p>
-      <div class="sizes" data-i="c"></div>
+      <h2><b>3</b> ตาจอเขียว <span class="pick">แนะนำ</span></h2>
+      <p class="why">ตรายางแดงเหมือน A แต่ดวงตาเป็นจอเขียวสองจุด คงฟีลตรายางไว้ครบ และจำง่ายจากแววตา</p>
+      <div class="sizes" data-i="v3"></div>
     </div>
   </section>
 
   <section class="opt">
-    <svg class="ic big" role="img" aria-label="แบบ D ตัว L ปากกาแดงกับเครื่องหมายถูกสีน้ำเงินบนกระดาษมีเส้นบรรทัด"><use href="#d"/></svg>
+    <svg class="ic big" role="img" aria-label="แบบ 4 กะโหลกครึ่งซีก ซ้ายตรายางแดง ขวาพิกเซลบนจอเขียว"><use href="#v4"/></svg>
     <div>
-      <h2><b>D</b> L ปากกาแดง</h2>
-      <p class="why">หน้าสมุดมีรูเข้าเล่ม ตัว L เขียนด้วยปากกาแดงพร้อมติ๊กน้ำเงิน อ่านง่ายและเรียบที่สุด แต่จำได้น้อยกว่าแบบที่มีภาพ</p>
-      <div class="sizes" data-i="d"></div>
+      <h2><b>4</b> ครึ่งซีก</h2>
+      <p class="why">กะโหลกหัวเดียว ซ้ายเป็นตรายางบนกระดาษ ขวาเป็นพิกเซลบนจอ เหมือนธีมแอปที่มีทั้งสมุดและจอในหน้าเดียว</p>
+      <div class="sizes" data-i="v4"></div>
     </div>
   </section>
 
-  <h3>อยู่บนหน้าจอโฮมจริง</h3>
-  <p class="note">ขนาด 60 พอยต์เท่าไอคอนบนมือถือ เทียบบนพื้นสว่างกับพื้นมืด</p>
+  <section class="opt">
+    <svg class="ic big" role="img" aria-label="แบบ 5 แผ่นป้ายแดงแปะเทป มีกะโหลกพิกเซลสีเขียว"><use href="#v5"/></svg>
+    <div>
+      <h2><b>5</b> ป้ายแดงแปะเทป</h2>
+      <p class="why">แผ่นหมึกแดงทึบแปะเทปบนกระดาษ กะโหลกพิกเซลเขียวตัดกับแดงแรงที่สุด</p>
+      <div class="sizes" data-i="v5"></div>
+    </div>
+  </section>
+
+  <h3>บนหน้าจอโฮม</h3>
+  <p class="note">ขนาดเท่าไอคอนบนมือถือ เทียบกับ A และ B เดิม บนพื้นสว่างกับพื้นมืด</p>
   <div class="homes">
     <div class="home l" data-home></div>
     <div class="home d" data-home></div>
   </div>
-  <div class="tabs" id="tabs"></div>
 </main>
 
 <script>
@@ -207,10 +233,11 @@ const PX = [
   "....#.#.#.#....",
   "....#.#.#.#....",
 ];
-const U = 22, X = 91, Y = 102;
-const d = PX.flatMap((row, r) => [...row.matchAll(/#+/g)].map(m =>
-  `M${X + m.index * U} ${Y + r * U}h${m[0].length * U}v${U}h-${m[0].length * U}z`)).join("");
-document.querySelectorAll(".px").forEach(p => p.setAttribute("d", d));
+document.querySelectorAll(".px").forEach(p => {
+  const [U, X, Y] = [+p.dataset.u, +p.dataset.x, +p.dataset.y];
+  p.setAttribute("d", PX.flatMap((row, r) => [...row.matchAll(/#+/g)].map(m =>
+    `M${X + m.index * U} ${Y + r * U}h${m[0].length * U}v${U}h-${m[0].length * U}z`)).join(""));
+});
 
 const ic = (id, size, cls = "") => `<svg class="ic ${cls}" width="${size}" height="${size}" role="presentation"><use href="#${id}"/></svg>`;
 document.querySelectorAll("[data-i]").forEach(el => {
@@ -218,13 +245,12 @@ document.querySelectorAll("[data-i]").forEach(el => {
   el.innerHTML =
     [[120, "120"], [60, "60"], [40, "40"]].map(([s, c]) => `<figure>${ic(i, s)}<figcaption>${c}</figcaption></figure>`).join("") +
     `<figure>${ic(i + "m", 76, "round")}<figcaption>Android</figcaption></figure>` +
-    [[32, "32"], [16, "16"]].map(([s, c]) => `<figure>${ic(i, s, "flat")}<figcaption>${c}</figcaption></figure>`).join("");
+    `<figure>${ic(i, 32, "flat")}<figcaption>32</figcaption></figure>`;
 });
+const HOME = [["v1", "แบบ 1"], ["v2", "แบบ 2"], ["v3", "แบบ 3"], ["v4", "แบบ 4"], ["v5", "แบบ 5"], ["a", "A เดิม"], ["b", "B เดิม"]];
 document.querySelectorAll("[data-home]").forEach(el => {
-  el.innerHTML = ["a", "b", "c", "d"].map(i => `<div class="app">${ic(i, 60)}<span>Lecturelich</span></div>`).join("");
+  el.innerHTML = HOME.map(([i, t]) => `<div class="app">${ic(i, 60)}<span>${t}</span></div>`).join("");
 });
-document.getElementById("tabs").innerHTML = ["a", "b", "c", "d"].map(i =>
-  `<div class="tab">${ic(i, 16, "flat")}Lecturelich แบบ ${i.toUpperCase()}</div>`).join("");
 </script>
 </body>
 </html>
