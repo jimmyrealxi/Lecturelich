@@ -5,6 +5,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import { CrtFocus, Section, Skeleton, T, Tape, UndoBar } from "@/components/ui";
 import { CrtStage, useCrtFx } from "@/components/game/CrtFx";
 import { TaskRow } from "@/components/TaskRow";
+import { EmptyScene } from "@/components/EmptyScene";
 import { AddTaskForm } from "@/components/AddTaskForm";
 import { useAssignments, useCurrentTerm, useSubjects, useToggleDone, type Assignment } from "@/lib/queries/core";
 import { countdown, dueInfo, shortDate } from "@/lib/format";
@@ -111,9 +112,9 @@ export default function Tasks() {
           <Skeleton height={160} />
         ) : groups.sections.every((g) => g.items.length === 0) ? (
           shown ? null :
-          <Text style={[T.muted, { textAlign: "center", marginTop: space.xl }]}>
-            {tab === "todo" ? "ไม่มีงานค้าง พักได้" : "ยังไม่มีงานที่ส่งแล้ว"}
-          </Text>
+          <View style={{ marginTop: space.md }}>
+            <EmptyScene kind={tab === "todo" ? "todo" : "done"} fact={tab === "todo" ? "ไม่มีงานค้าง พักได้" : "ยังไม่มีงานที่ส่งแล้ว"} />
+          </View>
         ) : (
           groups.sections.filter((g) => g.items.length).map((g) => (
             <View key={g.title}>

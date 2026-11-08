@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Card, Skeleton, T } from "@/components/ui";
 import { PhotoViewer } from "@/components/PhotoViewer";
+import { EmptyScene } from "@/components/EmptyScene";
 import { useSubjectNotes } from "@/lib/queries/notes";
 import { signedUrls, thumbPath } from "@/lib/photos";
 import { thaiDate } from "@/lib/format";
@@ -22,7 +23,7 @@ export function NotesTimeline({ subjectId, subjectName, absentKeys }: { subjectI
   });
 
   if (notes.isPending) return <Skeleton height={120} />;
-  if (!notes.data?.length) return <Card><Text style={T.muted}>ยังไม่มีโน้ต · จดได้จากการ์ด “ยังไม่ได้จด” ในหน้าวันนี้หลังเลิกคาบ</Text></Card>;
+  if (!notes.data?.length) return <Card><EmptyScene kind="notes" fact="ยังไม่มีโน้ต · จดได้จากการ์ด “ยังไม่ได้จด” ในหน้าวันนี้หลังเลิกคาบ" /></Card>;
 
   const open = viewing && notes.data.find((n) => n.id === viewing.noteId);
 

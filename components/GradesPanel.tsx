@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Btn, Card, Crt, Field, Skeleton, T, confirmAction } from "@/components/ui";
+import { EmptyScene } from "@/components/EmptyScene";
 import { type Subject } from "@/lib/queries/core";
 import {
   useAddScore, useDeleteComponent, useDeleteScore, useGradeComponents, useSaveComponents, useUpdateSubjectGrade,
@@ -88,7 +89,7 @@ export function GradesPanel({ subject, termId }: { subject: Subject; termId: str
 
       {rows.length === 0 && editing !== "new" && (
         <Card>
-          <Text style={T.muted}>ยังไม่มีส่วนคะแนน</Text>
+          <EmptyScene kind="grades" fact="ยังไม่มีส่วนคะแนน" />
           <View style={[s.row, { marginTop: space.sm }]}>
             <Btn kind="primary" label="ใช้แบบ เก็บ 30 · กลาง 30 · ปลาย 40"
               onPress={() => !save.isPending && save.mutate(TEMPLATE.map((c, i) => ({ ...c, sort: i })))} />

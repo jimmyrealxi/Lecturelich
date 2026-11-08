@@ -3,6 +3,7 @@ import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-na
 import { router, useLocalSearchParams } from "expo-router";
 import { Card, head, Section, Skeleton, T } from "@/components/ui";
 import { TaskRow } from "@/components/TaskRow";
+import { EmptyScene } from "@/components/EmptyScene";
 import { NotesTimeline } from "@/components/NotesTimeline";
 import { GradesPanel } from "@/components/GradesPanel";
 import { ExamDatesCard } from "@/components/ExamDatesCard";
@@ -114,7 +115,7 @@ export default function SubjectScreen() {
         <Section>งานของวิชา</Section>
         <Card>
           {myTasks.length === 0 ? (
-            <Text style={T.muted}>ยังไม่มีงาน</Text>
+            <EmptyScene kind="todo" fact="ยังไม่มีงาน" />
           ) : (
             myTasks.map((a, i) => <TaskRow key={a.id} task={a} today={today} first={i === 0} />)
           )}
