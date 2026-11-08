@@ -3,10 +3,7 @@
 รวมเข้า `main` แล้ว (PR #1) · Vercel Production = `main` · งานใหม่แตก branch จาก `main`
 
 ## สกิลตามคลาส + อาวุธแยกคลาส (9 พ.ย.) อ่านก่อนหัวข้ออื่น
-**ก่อน merge:** เจ้าของรัน `supabase/migrations/20261119090000_stage9b_class_weapons.sql` ใน SQL Editor (ลองแบบ rollback ผ่านแล้ว) แล้วรันบรรทัดนี้ให้นาฬิกาปลุกที่ใส่อยู่เป็นของในตู้ด้วย:
-```sql
-insert into public.user_items (user_id, item_id) select id, 'held.alarm' from auth.users where email = 'armzascout@gmail.com' on conflict do nothing;
-```
+**migration `20261119090000_stage9b_class_weapons.sql` รันแล้ว (9 พ.ย. · เช็กใน DB ครบ) · นาฬิกาปลุกเข้าตู้แล้ว**
 **บัญชีเจ้าของใส่ชุดเทสอยู่** (ของอลังการสุดทุกช่อง เสก 14 ชิ้น + `held.alarm`) ไว้เทสว่าเบียด บัง ล้นขอบไหม · **ก่อนใช้จริงคืนชุดเดิมด้วย SQL นี้** (ค่าเดิมก่อนเสก 9 พ.ย. · เศษชอล์ก 5 กับตัวนับไม่ได้แตะ):
 ```sql
 with me as (select id from auth.users where email = 'armzascout@gmail.com')
