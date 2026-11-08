@@ -9,16 +9,23 @@ export function Card({ children, style }: { children: ReactNode; style?: StylePr
   return <View style={[s.card, style]}>{children}</View>;
 }
 
-// เทปหัวข้อ [สี, รอยเหนือเทป] เลือกเองให้หัวข้อติดกันไม่ซ้ำ · รอย: 0 ไม่มี 1 แก้ว 2 คลิปสนิม 3 ขีดนับปากกา
-const TAPE_LOOK: Record<string, readonly [number, number]> = {
-  "ต้องทำ": [0, 0], "ทวนวันนี้": [1, 1],
-  "เทอมปัจจุบัน": [3, 0], "แจ้งเตือนบนเครื่องนี้": [0, 2], "การเข้าเรียน": [2, 0], "งานจากห้องเรียน": [1, 3], "ห้องร่วม (แชร์งานกับเพื่อน)": [0, 0], "บัญชี": [3, 1],
-  "เทอมนี้": [3, 2],
-  "เข้าเรียน": [2, 0], "วันสอบ": [0, 3], "คะแนน": [1, 0], "โน้ตแต่ละคาบ": [3, 2], "งานของวิชา": [0, 0],
-  "สัปดาห์นี้": [0, 1], "ถัดไป": [1, 0], "ไม่มีกำหนดส่ง": [3, 3], "ส่งแล้ว": [2, 0],
-  "หัวข้อที่เรียน": [1, 2], "มีงานสั่งไหม": [0, 0], "ตารางเรียน": [2, 1], "ลิงก์": [3, 0], "คาบชดเชย": [1, 3],
+// เทปหัวข้อจัดมือทีละอัน ให้หัวข้อติดกันต่างกันทั้งสี ฝั่ง ความเอียง และความยาว
+// [สี, รอยเหนือเทป, มาจากฝั่ง, เอียง (องศา), ยาว %] · รอย: 0 ไม่มี 1 แก้ว 2 คลิปสนิม 3 ขีดนับปากกา
+type TapeLook = readonly [number, number, "l" | "r", number, number];
+const TAPE_LOOK: Record<string, TapeLook> = {
+  "ต้องทำ": [0, 0, "r", -0.7, 92], "ทวนวันนี้": [1, 1, "l", 0.9, 84],
+  "เทอมปัจจุบัน": [3, 0, "l", 0, 78], "แจ้งเตือนบนเครื่องนี้": [6, 2, "r", 1.1, 92], "การเข้าเรียน": [2, 0, "l", -1, 70], "งานจากห้องเรียน": [4, 3, "r", 0, 84], "ห้องร่วม (แชร์งานกับเพื่อน)": [5, 0, "l", 0.7, 92], "บัญชี": [7, 1, "r", -1.2, 60],
+  "เทอมนี้": [4, 2, "l", -0.8, 70],
+  "เข้าเรียน": [2, 0, "r", 0.8, 66], "วันสอบ": [0, 3, "l", 0, 58], "คะแนน": [7, 0, "r", -1.1, 56], "โน้ตแต่ละคาบ": [5, 2, "l", 0.6, 82], "งานของวิชา": [1, 0, "r", 0, 76],
+  "สัปดาห์นี้": [0, 1, "r", -0.7, 88], "ถัดไป": [4, 0, "l", 1, 68], "ไม่มีกำหนดส่ง": [6, 3, "r", 0, 86], "ส่งแล้ว": [2, 0, "l", -0.9, 72],
+  "หัวข้อที่เรียน": [1, 2, "l", -0.6, 84], "มีงานสั่งไหม": [6, 0, "r", 0.9, 80], "ตารางเรียน": [2, 1, "r", 0, 76], "ลิงก์": [7, 0, "l", -1, 52], "คาบชดเชย": [5, 3, "l", 0.8, 76],
 };
-const TORN = Platform.OS === "web" ? ({ clipPath: "polygon(0 8%,2% 0,100% 0,100% 100%,3% 100%,0 88%,1.6% 66%,0 44%,1.8% 24%)" } as ViewStyle) : null;
+const FALLBACK_LOOK: TapeLook = [3, 0, "r", -0.5, 84];
+// ขอบฉีกอยู่ด้านที่ไม่ชนขอบจอ
+const TORN = Platform.OS === "web" ? {
+  r: { clipPath: "polygon(0 8%,2% 0,100% 0,100% 100%,3% 100%,0 88%,1.6% 66%,0 44%,1.8% 24%)" } as ViewStyle,
+  l: { clipPath: "polygon(0 0,98% 0,100% 12%,98.2% 34%,100% 56%,98.4% 78%,100% 92%,97% 100%,0 100%)" } as ViewStyle,
+} : null;
 
 /** ตัวเลขบนจอเขียวจิ๋ว ใช้กับตัวเลขและ % เท่านั้น (VT323 ไม่มีตัวไทย) */
 export function Readout({ children }: { children: ReactNode }) {
@@ -59,14 +66,20 @@ function GapMark({ kind, left }: { kind: number; left: `${number}%` }) {
 /** หัวข้อย่อยบนเทปขอบฉีก · count = ตัวเลขบนจอจิ๋ว · side = คำอธิบายใต้เทป */
 export function Section({ children, side, count }: { children: ReactNode; side?: ReactNode; count?: { n: number; unit: string } }) {
   const title = String(children);
-  const [tape, mark] = TAPE_LOOK[title] ?? [3, 0];
+  const [tape, mark, from, tilt, width] = TAPE_LOOK[title] ?? FALLBACK_LOOK;
+  const { bg, fg } = color.tape[tape];
+  const placed: ViewStyle = {
+    backgroundColor: bg, width: `${width}%`, transform: [{ rotate: `${tilt}deg` }],
+    alignSelf: from === "l" ? "flex-start" : "flex-end",
+    paddingLeft: from === "l" ? 16 : 24, paddingRight: from === "l" ? 26 : 16,
+  };
   return (
     <View style={s.section}>
       <GapMark kind={mark} left={`${8 + (title.length * 13) % 45}%`} />
       <View style={s.tapeClip}>
-        <View style={[s.sectionTape, { backgroundColor: color.tape[tape] }, TORN]}>
-          <Text style={s.tapeTitle} accessibilityRole="header">{children}</Text>
-          {count && <><Readout>{count.n}</Readout><Text style={s.tapeUnit}>{count.unit}</Text></>}
+        <View style={[s.sectionTape, placed, TORN?.[from]]}>
+          <Text style={[s.tapeTitle, { color: fg }]} accessibilityRole="header">{children}</Text>
+          {count && <><Readout>{count.n}</Readout><Text style={[s.tapeUnit, { color: fg }]}>{count.unit}</Text></>}
         </View>
       </View>
       {side != null && <Text style={s.sectionSide}>{side}</Text>}
@@ -255,10 +268,10 @@ const s = StyleSheet.create({
   section: { marginTop: 34, marginBottom: 6 },
   gapMark: { position: "absolute", bottom: "100%" },
   // เทปชนขอบจอขวาพอดีระยะขอบหน้า (16) · ตัดส่วนเกินจากการเอียง กันเลื่อนแนวนอน
-  tapeClip: { marginLeft: -6, marginRight: -16, paddingVertical: 2, overflow: "hidden" },
-  sectionTape: { flexDirection: "row", alignItems: "center", gap: 10, minHeight: 46, paddingVertical: 4, paddingLeft: 20, paddingRight: 16, transform: [{ rotate: "-0.5deg" }] },
-  tapeTitle: { flex: 1, fontFamily: font.title, fontSize: 23, lineHeight: 34, color: color.on },
-  tapeUnit: { fontFamily: font.bodyMedium, fontSize: 15, color: color.on },
+  tapeClip: { marginHorizontal: -16, paddingVertical: 7, overflow: "hidden" },
+  sectionTape: { flexDirection: "row", alignItems: "center", gap: 10, minHeight: 46, paddingVertical: 4 },
+  tapeTitle: { flex: 1, fontFamily: font.title, fontSize: 23, lineHeight: 34 },
+  tapeUnit: { fontFamily: font.bodyMedium, fontSize: 15 },
   readout: { minWidth: 38, paddingHorizontal: 8, alignItems: "center", backgroundColor: color.crt, borderWidth: 2, borderColor: "#15110D", borderRadius: 5 },
   readoutText: { fontFamily: font.num, fontSize: 24, lineHeight: 30, color: color.crtOn, ...crtGlow.title },
   sectionSide: { fontFamily: font.body, fontSize: 15, color: color.faint, marginTop: space.xs },
