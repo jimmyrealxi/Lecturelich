@@ -31,6 +31,26 @@ export function workFields(w: Work) {
 /** งานใหม่ที่เลยกำหนดไปก่อนวันนี้ไม่ดึง · งานไม่มีวันส่งดึงเสมอ */
 export const isCurrent = (dueAt: string | null, startOfTodayMs: number) => dueAt === null || Date.parse(dueAt) >= startOfTodayMs;
 
+export type Submission = {
+  courseWorkId: string;
+  state?: string;
+  submissionHistory?: { stateHistory?: { state?: string; stateTimestamp?: string } }[];
+};
+
+/** RETURNED = อาจารย์คืนงานแล้ว ถือว่าจบเหมือนส่ง · RECLAIMED_BY_STUDENT = ดึงกลับ ยังไม่นับ */
+export const isTurnedIn = (s: Submission) => s.state === "TURNED_IN" || s.state === "RETURNED";
+
+/** เวลากดส่งครั้งล่าสุด · null = อาจารย์คืนงานโดยนักเรียนไม่เคยกดส่ง */
+export function turnedInAt(s: Submission): string | null {
+  const times = (s.submissionHistory ?? [])
+    .filter((h) => h.stateHistory?.state === "TURNED_IN" && h.stateHistory.stateTimestamp)
+    .map((h) => Date.parse(h.stateHistory!.stateTimestamp!));
+  return times.length ? new Date(Math.max(...times)).toISOString() : null;
+}
+
+/** งานที่ส่งไปก่อนเชื่อม Classroom ไม่ได้ XP ย้อนหลัง */
+export const earnsXp = (at: string | null, connectedAt: string) => at !== null && Date.parse(at) >= Date.parse(connectedAt);
+
 type Fields = ReturnType<typeof workFields>;
 
 /** เทียบเวลาเป็นตัวเลข เพราะ DB คืน +00:00 แต่ฝั่งนี้เป็น Z */

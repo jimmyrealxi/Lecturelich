@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { guessSubject } from "./classroom.ts";
-import { dueIso, isChanged, isCurrent, workFields, workKey, type Work } from "../supabase/functions/classroom/logic.ts";
+import { dueIso, earnsXp, isChanged, isCurrent, isTurnedIn, turnedInAt, workFields, workKey, type Submission, type Work } from "../supabase/functions/classroom/logic.ts";
 
 const work = (extra: Partial<Work> = {}): Work => ({ id: "9", courseId: "1", title: " Lab ", ...extra });
 const today = Date.parse("2026-11-09T00:00:00+07:00");
@@ -31,6 +31,22 @@ test("เวลาเดียวกันคนละรูปแบบไม�
   assert.equal(isChanged({ ...a, due_at: "2026-11-09T00:00:00+00:00" }, a), false);
   assert.equal(isChanged({ ...a, title: "เดิม" }, a), true);
   assert.equal(isChanged({ ...a, due_at: null }, a), true);
+});
+
+test("สถานะส่งจาก Classroom: เวลาส่งล่าสุด และงานก่อนเชื่อมไม่ได้ XP", () => {
+  const sub = (state: string, ...times: string[]): Submission => ({
+    courseWorkId: "9", state,
+    submissionHistory: [{ stateHistory: { state: "CREATED", stateTimestamp: "2026-11-01T00:00:00Z" } }, ...times.map((stateTimestamp) => ({ stateHistory: { state: "TURNED_IN", stateTimestamp } }))],
+  });
+  assert.equal(isTurnedIn(sub("TURNED_IN")), true);
+  assert.equal(isTurnedIn(sub("RETURNED")), true);
+  assert.equal(isTurnedIn(sub("RECLAIMED_BY_STUDENT")), false);
+  assert.equal(isTurnedIn(sub("CREATED")), false);
+  assert.equal(turnedInAt(sub("RETURNED")), null);
+  assert.equal(turnedInAt(sub("TURNED_IN", "2026-11-02T00:00:00Z", "2026-11-03T01:02:03.5Z")), "2026-11-03T01:02:03.500Z");
+  assert.equal(earnsXp("2026-11-09T00:00:00Z", "2026-11-08T13:00:00+00:00"), true);
+  assert.equal(earnsXp("2026-11-08T12:59:00Z", "2026-11-08T13:00:00+00:00"), false);
+  assert.equal(earnsXp(null, "2026-11-08T13:00:00+00:00"), false);
 });
 
 test("เดาวิชาจากรหัสหรือชื่อ เลือกที่ยาวสุด", () => {

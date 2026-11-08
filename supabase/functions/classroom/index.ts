@@ -4,7 +4,7 @@
 //   POST { action: cron } + x-cron-secret ← pg_cron ทุกชั่วโมง
 // secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET · deploy --no-verify-jwt เพราะ Google กับ cron ไม่มี JWT จึงตรวจเองในไฟล์นี้
 
-import { isChanged, isCurrent, workFields, workKey, type Work } from "./logic.ts";
+import { earnsXp, isChanged, isCurrent, isTurnedIn, turnedInAt, workFields, workKey, type Submission, type Work } from "./logic.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
@@ -96,6 +96,22 @@ type Existing = {
   assignment_status: { done: boolean }[];
 };
 
+// ติ๊กเฉพาะงานที่ยังไม่มีแถวสถานะ: ถ้าเจ้าของเคยติ๊กหรือยกเลิกเองในแอป จะไม่ไปทับ
+async function tickSubmitted(user: string, turnedIn: Map<string, string | null>) {
+  const [account] = await rows<{ created_at: string }>(`classroom_accounts?user_id=${eq(user)}&select=created_at`);
+  const works = await rows<{ id: string; classroom_work_id: string; assignment_status: unknown[] }>(`assignments?created_by=${eq(user)}&room_id=is.null&classroom_work_id=not.is.null&select=id,classroom_work_id,assignment_status(user_id)`);
+  const ticks = works.filter((w) => !w.assignment_status.length && turnedIn.has(w.classroom_work_id))
+    .map((w) => ({ id: w.id, at: turnedIn.get(w.classroom_work_id) ?? null }));
+  if (!ticks.length) return;
+  // trigger คิด XP จาก submitted_at จึงได้ก่อนกำหนด/ตรงเวลา/เลยกำหนดตามเวลาส่งจริง
+  await restOk("assignment_status?on_conflict=user_id,assignment_id", {
+    method: "POST", headers: { Prefer: "resolution=ignore-duplicates" },
+    body: JSON.stringify(ticks.map((t) => ({ user_id: user, assignment_id: t.id, done: true, submitted_at: t.at }))),
+  });
+  const noXp = ticks.filter((t) => !earnsXp(t.at, account.created_at)).map((t) => t.id);
+  if (noXp.length) await restOk(`xp_events?user_id=${eq(user)}&action=eq.submit&ref_id=in.(${noXp.join(",")})`, { method: "DELETE" });
+}
+
 async function syncUser(user: string) {
   try {
     const token = await accessToken(user);
@@ -106,6 +122,7 @@ async function syncUser(user: string) {
     const byKey = new Map(existing.map((e) => [e.classroom_work_id, e]));
     const today = Date.parse(new Date(Date.now() + 7 * 3_600_000).toISOString().slice(0, 10) + "T00:00:00+07:00");
 
+    const turnedIn = new Map<string, string | null>();
     let failed = 0;
     for (const c of courses) {
       let works: Work[];
@@ -141,7 +158,15 @@ async function syncUser(user: string) {
           await restOk(`assignments?id=${eq(e.id)}`, { method: "DELETE" });
         }
       }
+      try {
+        const subs = await listAll<Submission>(`${API}/courses/${encodeURIComponent(c.course_id)}/courseWork/-/studentSubmissions?userId=me&pageSize=100`, "studentSubmissions", token);
+        for (const s of subs) if (isTurnedIn(s)) turnedIn.set(`${c.course_id}/${s.courseWorkId}`, turnedInAt(s));
+      } catch (e) {
+        // อ่านสถานะส่งไม่ได้ไม่กระทบการดึงงาน รอบถัดไปลองใหม่
+        console.error(e);
+      }
     }
+    await tickSubmitted(user, turnedIn);
     const allFailed = courses.length > 0 && failed === courses.length;
     await setAccount(user, allFailed ? { last_error: "failed" } : { last_sync_at: new Date().toISOString(), last_error: null });
   } catch (e) {
