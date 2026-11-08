@@ -1,4 +1,6 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useTabTop } from "@/lib/useTabTop";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { useFocusEffect } from "expo-router";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { CrtFocus, Section, Skeleton, T, Tape, UndoBar } from "@/components/ui";
 import { CrtStage, useCrtFx } from "@/components/game/CrtFx";
@@ -15,6 +17,7 @@ import { color, font, minTouch, radius, space } from "@/lib/theme";
 const WEEK_MS = 7 * 86_400_000;
 
 export default function Tasks() {
+  const top = useTabTop();
   const tasks = useAssignments();
   const term = useCurrentTerm();
   const subjects = useSubjects(term.data?.id);
@@ -23,6 +26,9 @@ export default function Tasks() {
   const today = useNow().date;
   const toggle = useToggleDone();
   const [toast, setToast] = useState<Assignment | null>(null);
+  // งานที่เพิ่งติ๊ก: คงแถวพร้อม ✓ ไว้ก่อน แล้วค่อยหายตอนออกจากหน้าหรือสลับ ยังไม่ส่ง/ส่งแล้ว
+  const [ticked, setTicked] = useState<string[]>([]);
+  useFocusEffect(useCallback(() => () => setTicked([]), []));
 
   const names = useMemo(() => new Map((subjects.data ?? []).map((s) => [s.id, s.name])), [subjects.data]);
   const focus = tab === "todo" ? urgentTask(tasks.data ?? [], today) : null;
@@ -48,12 +54,12 @@ export default function Tasks() {
   const groups = useMemo(() => {
     const all = tasks.data ?? [];
     const open = all.filter((a) => !a.done);
-    const todo = open.filter((a) => a.id !== focus?.id); // เรื่องบนจอเขียวไม่ซ้ำในรายการ
+    const todo = all.filter((a) => (!a.done || ticked.includes(a.id)) && a.id !== focus?.id); // เรื่องบนจอเขียวไม่ซ้ำในรายการ
     const soonLimit = Date.parse(today + "T00:00:00+07:00") + WEEK_MS; // ภายใน 7 วันนับจากต้นวันนี้
     return {
       todoCount: open.length,
       // ตรายาง "เลยกำหนด" แค่แถวแรกที่เลยกำหนด (แท็บยังไม่ส่ง) · shortcut: เทียบเวลาตอนคำนวณ งานที่เพิ่งเลยกำหนดขณะเปิดหน้าค้างจะขึ้นตอนข้อมูลรีเฟรช
-      lateId: tab === "todo" ? todo.find((a) => a.due_at && Date.parse(a.due_at) < Date.now())?.id : undefined,
+      lateId: tab === "todo" ? todo.find((a) => !a.done && a.due_at && Date.parse(a.due_at) < Date.now())?.id : undefined,
       sections:
         tab === "done"
           ? [{ title: "ส่งแล้ว", items: all.filter((a) => a.done) }]
@@ -63,14 +69,14 @@ export default function Tasks() {
               { title: "ไม่มีกำหนดส่ง", items: todo.filter((a) => !a.due_at) },
             ],
     };
-  }, [tasks.data, tab, today, focus?.id]);
+  }, [tasks.data, tab, today, focus?.id, ticked]);
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={s.page}>
+      <ScrollView ref={top} contentContainerStyle={s.page}>
         <View style={s.seg} accessibilityRole="tablist">
           {(["todo", "done"] as const).map((t) => (
-            <Pressable key={t} onPress={() => setTab(t)} style={[s.segItem, tab === t && s.segOn]}
+            <Pressable key={t} onPress={() => { setTab(t); setTicked([]); }} style={[s.segItem, tab === t && s.segOn]}
               accessibilityRole="tab" accessibilityState={{ selected: tab === t }}>
               <Text style={[s.segText, tab === t && { color: color.deck }]}>
                 {t === "todo" ? `ยังไม่ส่ง (${groups.todoCount})` : "ส่งแล้ว"}
@@ -98,7 +104,7 @@ export default function Tasks() {
               <View style={s.list}>
                 {g.items.map((a, i) => (
                   <TaskRow key={a.id} task={a} today={today} first={i === 0} stamp={a.id === groups.lateId}
-                    subjectName={a.subject_id ? names.get(a.subject_id) : undefined} />
+                    subjectName={a.subject_id ? names.get(a.subject_id) : undefined} onTick={(id) => setTicked((t) => [...t, id])} />
                 ))}
               </View>
             </View>

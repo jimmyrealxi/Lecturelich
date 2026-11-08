@@ -1,3 +1,4 @@
+import { useTabTop } from "@/lib/useTabTop";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Btn, Card, DateField, Field, Section, Skeleton, T } from "@/components/ui";
@@ -13,6 +14,7 @@ import { color, font, space } from "@/lib/theme";
 const weeks = (a: string, b: string) => Math.ceil((Date.parse(b) - Date.parse(a) + 86_400_000) / (7 * 86_400_000));
 
 export default function Settings() {
+  const top = useTabTop();
   const session = useSession();
   const term = useCurrentTerm();
   const profile = useProfile();
@@ -26,7 +28,7 @@ export default function Settings() {
   const formTerm = creating ? null : term.data ?? null;
 
   return (
-    <ScrollView contentContainerStyle={s.page}>
+    <ScrollView ref={top} contentContainerStyle={s.page}>
       <Section>เทอมปัจจุบัน</Section>
       {term.isPending ? (
         <Skeleton />

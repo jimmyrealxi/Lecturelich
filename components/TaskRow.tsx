@@ -13,8 +13,9 @@ const SOURCE = { classroom: "Classroom", class: "ในคาบ", line: "ไล
 
 /** แถวงาน 1 ชิ้น: กดช่องสี่เหลี่ยม = ติ๊กส่งแล้ว (optimistic) · กดชื่อ = เปิดลิงก์ (ถ้ามี) · ⋯ = แก้/ลบ */
 /** stamp = ตรายาง "เลยกำหนด" (ผู้เรียกส่งให้แถวเลยกำหนดแถวแรกแถวเดียว · จุดเดียวต่อจอ) */
-export function TaskRow({ task, subjectName, today, first, stamp }: {
-  task: Assignment; subjectName?: string; today: string; first?: boolean; stamp?: boolean;
+/** onTick = ติ๊กว่าส่งแล้ว (แท็บงานใช้คงแถวไว้จนกว่าจะเปลี่ยนหน้า) */
+export function TaskRow({ task, subjectName, today, first, stamp, onTick }: {
+  task: Assignment; subjectName?: string; today: string; first?: boolean; stamp?: boolean; onTick?: (id: string) => void;
 }) {
   const toggle = useToggleDone();
   const [open, setOpen] = useState(false);
@@ -24,7 +25,11 @@ export function TaskRow({ task, subjectName, today, first, stamp }: {
   return (
     <View style={[s.row, !first && s.divider]}>
       <Pressable
-        onPress={() => !temp && toggle.mutate({ id: task.id, done: !task.done })}
+        onPress={() => {
+          if (temp) return;
+          if (!task.done) onTick?.(task.id);
+          toggle.mutate({ id: task.id, done: !task.done });
+        }}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: task.done }}
         accessibilityLabel={`ส่งแล้ว: ${task.title}`}

@@ -1,3 +1,4 @@
+import { useTabTop } from "@/lib/useTabTop";
 import { useMemo } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -14,6 +15,7 @@ import { color, font, inkColor, space } from "@/lib/theme";
 export const DAY_SHORT = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
 
 export default function Subjects() {
+  const top = useTabTop();
   const term = useCurrentTerm();
   const subjects = useSubjects(term.data?.id);
   const slots = useSlots(term.data?.id);
@@ -54,7 +56,7 @@ export default function Subjects() {
   const openSubject = (id: string) => router.push(`/subject/${id}`);
 
   return (
-    <ScrollView contentContainerStyle={s.page}>
+    <ScrollView ref={top} contentContainerStyle={s.page}>
       <View style={s.meta}><Dymo>{term.data.name}</Dymo><Text style={T.muted}>· {rows.length} วิชา</Text></View>
       {exam && examName ? (
         <Pressable onPress={() => openSubject(exam.subject_id)} accessibilityRole="button" accessibilityLabel={`เปิดหน้าวิชา ${examName}`}>

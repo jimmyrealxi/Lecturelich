@@ -1,3 +1,4 @@
+import { useTabTop } from "@/lib/useTabTop";
 import { useState } from "react";
 import { router } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -22,6 +23,7 @@ import { XP_CONFIG } from "@/lib/xp";
 const KIND = { midterm: "กลางภาค", final: "ปลายภาค" } as const;
 
 export default function Game() {
+  const top = useTabTop();
   const q = useXp();
   const d = q.data;
   const term = useCurrentTerm();
@@ -44,7 +46,7 @@ export default function Game() {
 
   if (!d) {
     return (
-      <ScrollView style={s.page} contentContainerStyle={s.content}>
+      <ScrollView ref={top} style={s.page} contentContainerStyle={s.content}>
         <View style={[s.skel, { height: 200 }]} />
         <View style={[s.skel, { height: 120, marginTop: space.md }]} />
         {q.isError && <Text style={[s.small, s.pad]}>โหลดข้อมูลเกมไม่สำเร็จ (ลองรีเฟรช)</Text>}
@@ -65,7 +67,7 @@ export default function Game() {
   const title = TITLES.find((t) => t.id === titles?.current) ?? TITLES[0];
 
   return (
-    <ScrollView style={s.page} contentContainerStyle={s.content}>
+    <ScrollView ref={top} style={s.page} contentContainerStyle={s.content}>
       {tb && term.data && (
         <BossScene look={look} stage={tb.stage} title={`อสูรกองข้อสอบ · ${term.data.name}`} pct={tb.pct} phase={tb.phase}
           note={tb.dead ? "ล้มแล้ว · ได้กล่องทอง" : tb.stage === "end" && finalsLeft > 0 ? `ใกล้ตาย · สอบปลายภาคเหลือ ${finalsLeft} วิชา` : "ตายเมื่อสอบปลายภาคครบทุกวิชา"} />

@@ -1,3 +1,4 @@
+import { useTabTop } from "@/lib/useTabTop";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
@@ -29,6 +30,7 @@ import { XP_CONFIG } from "@/lib/xp";
 // ป้ายนูนอันเดียว (LECTURELICH) · XP วันนี้เป็นบรรทัดลิงก์ไปหน้าเกม · มุมขวาบน Pap-Boy เปลี่ยนท่าตามสิ่งที่ทำ (docs/mockups/inspire-anim.html)
 
 export default function Today() {
+  const top = useTabTop();
   const insets = useSafeAreaInsets();
   const now = useNow();
   const term = useCurrentTerm();
@@ -123,7 +125,7 @@ export default function Today() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={[s.page, { paddingTop: insets.top + 8 }]}>
+      <ScrollView ref={top} contentContainerStyle={[s.page, { paddingTop: insets.top + 8 }]}>
         <View style={s.mast}>
           <View style={{ flexShrink: 1 }}>
             <Text style={s.dymo}>LECTURELICH</Text>
