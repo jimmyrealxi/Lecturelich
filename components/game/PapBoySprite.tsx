@@ -9,7 +9,7 @@ export function PapBoySprite({ look, size, bg = false, label = "Pap-Boy" }: { lo
   return <Sprite look={look} size={size} bg={bg} label={label} />;
 }
 
-/** มุมหน้าวันนี้: ตัดกรอบ 48×54 จาก 64 ขยาย 2 เท่า (เผื่อหูกระต่าย) · sheet สร้างเมื่อใช้ท่านั้นครั้งแรก */
+/** มุมหน้าวันนี้: ตัดกรอบ 52×59 จาก 64 ขยาย 2 เท่า (พอดีชุดที่กินที่สุด: หูกระต่าย ท่าชูมือ ดิสก์บิน ออร่าพื้น) · sheet สร้างเมื่อใช้ท่านั้นครั้งแรก */
 export function PapBoyBuddy({ look, pose }: { look: Look; pose: Pose }) {
   if (Platform.OS !== "web") return null;
   return <Buddy look={look} pose={pose} />;
@@ -31,10 +31,10 @@ function Buddy({ look, pose }: { look: Look; pose: Pose }) {
     const ctx = ref.current?.getContext("2d");
     if (!ctx) return;
     ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, 48, 54);
-    ctx.drawImage(buddySheet(look, pose), (n % FRAMES) * 64 + 8, 2, 48, 54, 0, 0, 48, 54);
+    ctx.clearRect(0, 0, 52, 59);
+    ctx.drawImage(buddySheet(look, pose), (n % FRAMES) * 64 + 8, 0, 52, 59, 0, 0, 52, 59);
   });
-  return <canvas ref={ref} width={48} height={54} aria-hidden style={{ width: 96, height: 108, imageRendering: "pixelated", display: "block" }} />;
+  return <canvas ref={ref} width={52} height={59} aria-hidden style={{ width: 104, height: 118, imageRendering: "pixelated", display: "block" }} />;
 }
 
 function Sprite({ look, size, bg, label }: { look: Look; size: number; bg: boolean; label: string }) {
