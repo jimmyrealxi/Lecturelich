@@ -24,7 +24,7 @@ export default function Tasks() {
   const subjects = useSubjects(term.data?.id);
   const [tab, setTab] = useState<"todo" | "done">("todo");
   const [adding, setAdding] = useState(false);
-  const today = useNow().date;
+  const { date: today, ms: nowMs } = useNow();
   const toggle = useToggleDone();
   const classroom = useClassroomAccount();
   const sync = useSyncClassroom();
@@ -61,8 +61,8 @@ export default function Tasks() {
     const soonLimit = Date.parse(today + "T00:00:00+07:00") + WEEK_MS; // ภายใน 7 วันนับจากต้นวันนี้
     return {
       todoCount: open.length,
-      // ตรายาง "เลยกำหนด" แค่แถวแรกที่เลยกำหนด (แท็บยังไม่ส่ง) · shortcut: เทียบเวลาตอนคำนวณ งานที่เพิ่งเลยกำหนดขณะเปิดหน้าค้างจะขึ้นตอนข้อมูลรีเฟรช
-      lateId: tab === "todo" ? todo.find((a) => !a.done && a.due_at && Date.parse(a.due_at) < Date.now())?.id : undefined,
+      // ตรายาง "เลยกำหนด" แค่แถวแรกที่เลยกำหนด (แท็บยังไม่ส่ง)
+      lateId: tab === "todo" ? todo.find((a) => !a.done && a.due_at && Date.parse(a.due_at) < nowMs)?.id : undefined,
       sections:
         tab === "done"
           ? [{ title: "ส่งแล้ว", items: all.filter((a) => a.done) }]
@@ -72,7 +72,7 @@ export default function Tasks() {
               { title: "ไม่มีกำหนดส่ง", items: todo.filter((a) => !a.due_at) },
             ],
     };
-  }, [tasks.data, tab, today, focus?.id, ticked]);
+  }, [tasks.data, tab, today, nowMs, focus?.id, ticked]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -103,7 +103,7 @@ export default function Tasks() {
         )}
 
         {shown && (
-          <UrgentCrt task={shown} today={today} subject={shown.subject_id ? names.get(shown.subject_id) : undefined} onSend={() => send(shown)}
+          <UrgentCrt task={shown} today={today} nowMs={nowMs} subject={shown.subject_id ? names.get(shown.subject_id) : undefined} onSend={() => send(shown)}
             overlay={fx.play && <CrtStage key={fx.play.n} play={fx.play} onEnd={fx.stop} />} />
         )}
 
@@ -147,8 +147,8 @@ export default function Tasks() {
 }
 
 /** จอเขียวแท็บงาน (docs/mockups/a-crt-focus.html): งานเลยกำหนดนานสุด หรือใกล้ส่งสุด + ปุ่มส่งแล้ว */
-function UrgentCrt({ task, today, subject, onSend, overlay }: { task: Assignment; today: string; subject?: string; onSend: () => void; overlay: ReactNode }) {
-  const min = Math.ceil((Date.parse(task.due_at!) - Date.now()) / 60_000);
+function UrgentCrt({ task, today, nowMs, subject, onSend, overlay }: { task: Assignment; today: string; nowMs: number; subject?: string; onSend: () => void; overlay: ReactNode }) {
+  const min = Math.ceil((Date.parse(task.due_at!) - nowMs) / 60_000);
   const late = min < 0;
   const left = countdown(Math.abs(min));
   const due = dueInfo(task.due_at!, today);

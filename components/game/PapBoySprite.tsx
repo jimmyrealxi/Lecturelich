@@ -15,17 +15,24 @@ export function PapBoyBuddy({ look, pose }: { look: Look; pose: Pose }) {
   return <Buddy look={look} pose={pose} />;
 }
 
+const buddySheets = new WeakMap<Look, Map<Pose, HTMLCanvasElement>>();
+
+function buddySheet(look: Look, pose: Pose) {
+  let poses = buddySheets.get(look);
+  if (!poses) buddySheets.set(look, (poses = new Map()));
+  let sheet = poses.get(pose);
+  if (!sheet) poses.set(pose, (sheet = buildSheet(look, false, pose)));
+  return sheet;
+}
+
 function Buddy({ look, pose }: { look: Look; pose: Pose }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const sheets = useMemo(() => new Map<Pose, HTMLCanvasElement>(), [look]);
   useLoop(ref, (n) => {
     const ctx = ref.current?.getContext("2d");
     if (!ctx) return;
-    let sheet = sheets.get(pose);
-    if (!sheet) sheets.set(pose, (sheet = buildSheet(look, false, pose)));
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, 48, 54);
-    ctx.drawImage(sheet, (n % FRAMES) * 64 + 8, 2, 48, 54, 0, 0, 48, 54);
+    ctx.drawImage(buddySheet(look, pose), (n % FRAMES) * 64 + 8, 2, 48, 54, 0, 0, 48, 54);
   });
   return <canvas ref={ref} width={48} height={54} aria-hidden style={{ width: 96, height: 108, imageRendering: "pixelated", display: "block" }} />;
 }
