@@ -45,6 +45,18 @@ export function useOpenBox() {
   });
 }
 
+/** แลกเศษชอล์กเป็นของที่ยังไม่มี (migration 7b · craft_item) · รอผลจาก DB แล้วโหลดสถานะใหม่ */
+export function useCraft() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (itemId: string) => {
+      const { error } = await supabase.rpc("craft_item", { p_item: itemId });
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: lootKey }),
+  });
+}
+
 /** ใส่/ถอด (optimistic: เปลี่ยนชุดทันที ล้มเหลวค่อยย้อน) */
 export function useEquip() {
   const qc = useQueryClient();

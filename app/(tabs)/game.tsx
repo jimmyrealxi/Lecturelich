@@ -69,7 +69,7 @@ export default function Game() {
     <ScrollView style={s.page} contentContainerStyle={s.content}>
       {tb && term.data && (
         <BossScene look={look} stage={tb.stage} title={`อสูรกองข้อสอบ · ${term.data.name}`} pct={tb.pct} phase={tb.phase}
-          note={tb.dead ? "ล้มแล้ว · เทอมนี้สอบครบ" : tb.stage === "end" && finalsLeft > 0 ? `ใกล้ตาย · สอบปลายภาคเหลือ ${finalsLeft} วิชา` : "ตายเมื่อสอบปลายภาคครบทุกวิชา"} />
+          note={tb.dead ? "ล้มแล้ว · ได้กล่องทอง" : tb.stage === "end" && finalsLeft > 0 ? `ใกล้ตาย · สอบปลายภาคเหลือ ${finalsLeft} วิชา` : "ตายเมื่อสอบปลายภาคครบทุกวิชา"} />
       )}
       <View style={s.who}>
         <View>

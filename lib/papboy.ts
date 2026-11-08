@@ -50,6 +50,8 @@ export const LOOT_CONFIG = {
   oddsN: 60, oddsM: 28, oddsR: 10, oddsU: 2, // % ในกล่องเหล็ก
   pity: 10, // ไม่เจอ rare ขึ้นไปติดกัน 10 กล่อง → ใบถัดไป rare แน่นอน
   dupN: 5, dupM: 15, dupR: 40, dupU: 120, // ได้ซ้ำ → เศษชอล์ก
+  silverAttend: 10, silverPhoto: 5, silverEarly: 3, silverReview: 10, // กล่องเงิน: เข้าเรียน · จดมีรูป · ส่งก่อน ≥1 วัน · ทวน
+  craftN: 10, craftM: 30, craftR: 80, craftU: 200, // แลกเศษชอล์กเป็นของที่ยังไม่มี
 } as const;
 
 // ---------- วาด ----------

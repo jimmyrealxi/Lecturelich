@@ -15,7 +15,10 @@ import { color, font, space } from "@/lib/theme";
 
 const BOX: Record<BoxKind, { name: string; from: string }> = {
   iron: { name: "กล่องเหล็ก", from: `ครบทุก ${LOOT_CONFIG.ironEvery} XP` },
-  silver: { name: "กล่องเงิน", from: "เป้าย่อย" },
+  silver: {
+    name: "กล่องเงิน",
+    from: `เข้าเรียน ${LOOT_CONFIG.silverAttend} คาบ · จดมีรูป ${LOOT_CONFIG.silverPhoto} · ส่งก่อน ${LOOT_CONFIG.silverEarly} งาน · ทวน ${LOOT_CONFIG.silverReview} ครั้ง`,
+  },
   gold: { name: "กล่องทอง", from: "ล้มบอสประจำเทอม" },
 };
 const ODDS: [Rarity, number][] = [["n", LOOT_CONFIG.oddsN], ["m", LOOT_CONFIG.oddsM], ["r", LOOT_CONFIG.oddsR], ["u", LOOT_CONFIG.oddsU]];
@@ -63,6 +66,17 @@ export default function LootBox() {
               <Text style={[s.cnt, count(k) === 0 && { color: color.ash }]}>×{count(k)}</Text>
             </View>
           ))}
+        </Frame>
+
+        <H>แลกเศษชอล์ก</H>
+        <Frame>
+          <Pressable style={s.box} onPress={() => router.push("/chalk")} accessibilityRole="button">
+            <View style={{ flex: 1 }}>
+              <Text style={s.boxName}>เลือกของที่ยังไม่มี</Text>
+              <Text style={s.small}>มีเศษ {d.chalk} · ราคา {LOOT_CONFIG.craftN}–{LOOT_CONFIG.craftU} ตามสี</Text>
+            </View>
+            <Text style={[s.cnt, { fontSize: 22 }]}>›</Text>
+          </Pressable>
         </Frame>
 
         <H>โอกาสในกล่องเหล็ก</H>

@@ -45,6 +45,7 @@ export default function RootLayout() {
         {/* โลกมืดเต็มจอ ไม่มีขอบสมุด (เหมือนแท็บเกม) */}
         <Stack.Screen name="lootbox" options={{ contentStyle: { backgroundColor: "transparent" } }} />
         <Stack.Screen name="wardrobe" options={{ contentStyle: { backgroundColor: "transparent" } }} />
+        <Stack.Screen name="chalk" options={{ contentStyle: { backgroundColor: "transparent" } }} />
       </Stack>
       <XpPop />
     </ThemeProvider>
