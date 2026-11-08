@@ -18,3 +18,6 @@ export const CLASSES = [
     { id: "memory_shock", name: "ผู้ปลุกความจำ", desc: "หัวเย็บแม็กต่อกัน โหลสมองลอยข้างตัว ไฟช็อตวิ่งบนจอ" },
   ] },
 ] as const;
+
+export const classById = (id?: string | null) => CLASSES.find((k) => k.id === id);
+export const ascById = (id?: string | null) => CLASSES.flatMap((k) => [...k.asc]).find((a) => a.id === id);

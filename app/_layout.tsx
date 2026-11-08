@@ -46,6 +46,7 @@ export default function RootLayout() {
         <Stack.Screen name="lootbox" options={{ contentStyle: { backgroundColor: "transparent" } }} />
         <Stack.Screen name="wardrobe" options={{ contentStyle: { backgroundColor: "transparent" } }} />
         <Stack.Screen name="chalk" options={{ contentStyle: { backgroundColor: "transparent" } }} />
+        <Stack.Screen name="class" options={{ contentStyle: { backgroundColor: "transparent" } }} />
       </Stack>
       <XpPop />
     </ThemeProvider>
