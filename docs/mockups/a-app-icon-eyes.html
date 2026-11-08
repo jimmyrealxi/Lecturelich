@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ไอคอนแอป: ปรับตา</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ไอคอนแอป รอบ 3: แบบ 3 ตาจอเขียว ลองตา 5 แบบ · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด · ภาพวาดเองทั้งหมดด้วย SVG */
+:root{--ink:#E9DDBF;--rule2:#8C7B60;--red:#A0281D;--on:#F3EAD2;--onMuted:#CDBE9E;--desk:#1C1915;--seam:#4A4032}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--red);color:var(--on)}
+html{scrollbar-color:var(--rule2) var(--desk)}
+body{background:var(--desk);color:var(--on);font:16px/1.55 Anuphan,sans-serif;padding:28px 16px 48px}
+main{max-width:980px;margin:0 auto}
+h1{font:400 28px/1.35 Chonburi,serif}
+.lead{color:var(--onMuted);max-width:62ch;margin:6px 0 30px}
+.opt{display:grid;grid-template-columns:220px 1fr;gap:32px;padding:26px 0;border-top:1px solid var(--seam);align-items:center}
+.ic{display:block;flex:none;border-radius:22.37%}
+.ic.big{width:220px;height:220px}
+.ic.round{border-radius:50%}
+.ic.flat{border-radius:2px}
+h2{font:400 21px/1.4 Chonburi,serif;display:flex;align-items:baseline;gap:10px}
+h2 b{font:700 22px 'Courier Prime',monospace;color:var(--ink)}
+.why{color:var(--onMuted);max-width:56ch;margin:4px 0 16px}
+.pick{display:inline-block;font:600 14px/1 Anuphan;color:#fff;background:var(--red);padding:6px 9px;border-radius:3px;transform:rotate(-3deg);margin-left:4px}
+.sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px}
+.sizes figure{display:flex;flex-direction:column;align-items:center;gap:6px}
+figcaption{font:400 14px/1.2 'Courier Prime',monospace;color:var(--onMuted)}
+h3{font:400 21px/1.4 Chonburi,serif;margin:12px 0 12px;padding-top:26px;border-top:1px solid var(--seam)}
+.homes{display:grid;gap:12px}
+.home{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:14px 8px;padding:20px 10px;border-radius:14px}
+.home.l{background:#CFC8B8;color:#1E1A14}
+.home.d{background:#14171B;color:#F4F1EA}
+.app{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.app span{font-size:14px;line-height:1.2}
+@media(max-width:720px){.opt{grid-template-columns:1fr;gap:18px;justify-items:start}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="rough" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="8" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".5" numOctaves="2" seed="3" result="s"/>
+      <feColorMatrix in="s" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -9 3.05" result="holes"/>
+      <feComposite in="d" in2="holes" operator="out"/>
+    </filter>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="3" fill="#000" opacity=".3"/></pattern>
+
+    <g id="skull">
+      <path fill="#A0281D" d="M256 176C188 176 146 222 146 282c0 36 16 64 44 80v40h132v-40c28-16 44-44 44-80 0-60-42-106-110-106z"/>
+      <g fill="var(--eye,#08130C)">
+        <path id="eye" d="M174 280c2-22 26-30 54-18 10 5 12 18 6 36-8 22-44 24-54 8-5-8-7-16-6-26z"/>
+        <use href="#eye" transform="matrix(-1 0 0 1 512 0)"/>
+      </g>
+      <g fill="#E9DDBF">
+        <path d="M256 312l17 36q-17-8-34 0z"/>
+        <rect x="215" y="368" width="12" height="44"/><rect x="250" y="368" width="12" height="44"/><rect x="285" y="368" width="12" height="44"/>
+      </g>
+      <path d="M256 104L414 166 256 228 98 166z" fill="#A0281D" stroke="#E9DDBF" stroke-width="16" stroke-linejoin="round"/>
+      <path d="M256 166L392 172" stroke="#E9DDBF" stroke-width="9" fill="none"/>
+      <path d="M400 176v84" stroke="#A0281D" stroke-width="13" fill="none"/>
+      <path d="M388 258h24l5 52h-34z" fill="#A0281D"/>
+    </g>
+    <g id="stamp" transform="rotate(-6 256 256)">
+      <g filter="url(#rough)">
+        <rect x="54" y="54" width="404" height="404" rx="16" fill="none" stroke="#A0281D" stroke-width="28"/>
+        <use href="#skull"/>
+      </g>
+    </g>
+
+    <!-- ตาแต่ละแบบ วาดในแกนเดียวกับตรา (เอียง -6°) · เบ้าซ้ายกลาง 205,284 เบ้าขวากลาง 307,284 -->
+    <g id="eye0"><g fill="#9EF0B4"><rect x="187" y="266" width="34" height="34"/><rect x="291" y="266" width="34" height="34"/></g></g>
+
+    <g id="eye1"><g fill="#08130C"><rect x="196" y="268" width="18" height="32"/><rect x="298" y="268" width="18" height="32"/></g></g>
+
+    <g id="eye2">
+      <g fill="#9EF0B4" filter="url(#glow)" opacity=".6"><rect x="183" y="264" width="44" height="40"/><rect x="285" y="264" width="44" height="40"/></g>
+      <g fill="#9EF0B4"><rect x="183" y="264" width="44" height="40"/><rect x="285" y="264" width="44" height="40"/></g>
+      <g fill="url(#scan)"><rect x="183" y="264" width="44" height="40"/><rect x="285" y="264" width="44" height="40"/></g>
+    </g>
+
+    <g id="eye3">
+      <g fill="#9EF0B4" filter="url(#glow)" opacity=".55"><path id="glare" d="M182 266l50 22v16l-50-14z"/><use href="#glare" transform="matrix(-1 0 0 1 512 0)"/></g>
+      <g fill="#9EF0B4"><use href="#glare"/><use href="#glare" transform="matrix(-1 0 0 1 512 0)"/></g>
+    </g>
+
+    <g id="eye4" fill="none" stroke="#9EF0B4" stroke-width="13">
+      <path d="M188 262L222 284 188 306"/>
+      <path d="M286 302h44"/>
+    </g>
+
+    <g id="eye5">
+      <g fill="#9EF0B4" filter="url(#glow)" opacity=".75"><path id="plus" d="M193 260h24v12h12v24h-12v12h-24v-12h-12v-24h12z"/><use href="#plus" x="102"/></g>
+      <g fill="#9EF0B4"><use href="#plus"/><use href="#plus" x="102"/></g>
+    </g>
+
+    <symbol id="e0" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#stamp"/><g transform="rotate(-6 256 256)"><use href="#eye0"/></g></symbol>
+    <symbol id="e1" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#stamp" style="--eye:#9EF0B4"/><g transform="rotate(-6 256 256)"><use href="#eye1"/></g></symbol>
+    <symbol id="e2" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#stamp"/><g transform="rotate(-6 256 256)"><use href="#eye2"/></g></symbol>
+    <symbol id="e3" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#stamp"/><g transform="rotate(-6 256 256)"><use href="#eye3"/></g></symbol>
+    <symbol id="e4" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#stamp"/><g transform="rotate(-6 256 256)"><use href="#eye4"/></g></symbol>
+    <symbol id="e5" viewBox="0 0 512 512"><rect width="512" height="512" fill="#E9DDBF"/><use href="#stamp"/><g transform="rotate(-6 256 256)"><use href="#eye5"/></g></symbol>
+  </defs>
+</svg>
+
+<main>
+  <h1>ไอคอนแอป: ปรับตาของแบบ 3</h1>
+  <p class="lead">ตราและกะโหลกเหมือนเดิมทุกอย่าง เปลี่ยนแค่ดวงตา ดูขนาด 60 กับ 40 เป็นหลัก เพราะเป็นขนาดที่เห็นจริงบนมือถือ</p>
+
+  <section class="opt">
+    <svg class="ic big" role="img" aria-label="ตาเดิม สี่เหลี่ยมเขียวเล็กบนเบ้าดำ"><use href="#e0"/></svg>
+    <div><h2><b>0</b> ตาเดิม</h2><p class="why">สี่เหลี่ยมเขียวเล็กกลางเบ้า พอย่อเล็กตาจะหายไปเยอะ ใส่ไว้เทียบ</p><div class="sizes" data-i="e0"></div></div>
+  </section>
+  <section class="opt">
+    <svg class="ic big" role="img" aria-label="ตาแบบ 1 เบ้าตาเขียวทั้งเบ้า รูม่านตาดำ"><use href="#e1"/></svg>
+    <div><h2><b>1</b> เรืองเต็มเบ้า</h2><p class="why">ทั้งเบ้าเป็นสีเขียว รูม่านตาดำแนวตั้ง เห็นชัดสุดแม้ขนาดเล็ก ดูจ้องหน่อย ๆ</p><div class="sizes" data-i="e1"></div></div>
+  </section>
+  <section class="opt">
+    <svg class="ic big" role="img" aria-label="ตาแบบ 2 จอเขียวบานใหญ่มีเส้นสแกน"><use href="#e2"/></svg>
+    <div><h2><b>2</b> จอบานใหญ่</h2><p class="why">ขยายตาเดิมให้เต็มขึ้น มีแสงเรืองและเส้นสแกน เหมือนจอเขียวในแอปจริง</p><div class="sizes" data-i="e2"></div></div>
+  </section>
+  <section class="opt">
+    <svg class="ic big" role="img" aria-label="ตาแบบ 3 ตาเรืองแสงเฉียงดุ"><use href="#e3"/></svg>
+    <div><h2><b>3</b> ตาดุ <span class="pick">แนะนำ</span></h2><p class="why">ขีดเขียวเฉียงลงเข้าหากลาง เหมือนอาจารย์มองตอนไม่ส่งงาน ให้อารมณ์ชัดสุด</p><div class="sizes" data-i="e3"></div></div>
+  </section>
+  <section class="opt">
+    <svg class="ic big" role="img" aria-label="ตาแบบ 4 ตาซ้ายเป็นเครื่องหมายมากกว่า ตาขวาเป็นขีดล่าง"><use href="#e4"/></svg>
+    <div><h2><b>4</b> พรอมต์ &gt;_</h2><p class="why">ตาซ้ายเป็น &gt; ตาขวาเป็น _ มาจากข้อความ "&gt; ตอนนี้ว่าง" บนจอเขียว ขี้เล่นและเป็นของแอปเราเอง</p><div class="sizes" data-i="e4"></div></div>
+  </section>
+  <section class="opt">
+    <svg class="ic big" role="img" aria-label="ตาแบบ 5 กากบาทพิกเซลเรืองแสง"><use href="#e5"/></svg>
+    <div><h2><b>5</b> พิกเซลเรือง</h2><p class="why">ตาเป็นพิกเซลทรงบวกที่มีแสงฟุ้ง ได้กลิ่นจอเก่าและดูมีเวทมนตร์ขึ้น</p><div class="sizes" data-i="e5"></div></div>
+  </section>
+
+  <h3>บนหน้าจอโฮม</h3>
+  <div class="homes">
+    <div class="home l" data-home></div>
+    <div class="home d" data-home></div>
+  </div>
+</main>
+
+<script>
+const ic = (id, size, cls = "") => `<svg class="ic ${cls}" width="${size}" height="${size}" role="presentation"><use href="#${id}"/></svg>`;
+document.querySelectorAll("[data-i]").forEach(el => {
+  const i = el.dataset.i;
+  el.innerHTML = [[120, ""], [60, ""], [40, ""], [32, "flat"]].map(([s, c]) => `<figure>${ic(i, s, c)}<figcaption>${s}</figcaption></figure>`).join("");
+});
+document.querySelectorAll("[data-home]").forEach(el => {
+  el.innerHTML = [0, 1, 2, 3, 4, 5].map(i => `<div class="app">${ic("e" + i, 60)}<span>${i ? "ตา " + i : "ตาเดิม"}</span></div>`).join("");
+});
+</script>
+</body>
+</html>
