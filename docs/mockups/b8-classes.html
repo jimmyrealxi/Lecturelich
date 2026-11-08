@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คลาสและสายย่อย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&display=swap" rel="stylesheet">
+<style>
+:root{--cave:#0F0D0C;--panel:#1B1613;--deep:#141110;--seam:#3B3027;--bone:#E8DFCB;--ash:#B5A88F;--gold:#C9A25B}
+*{box-sizing:border-box}
+html,body{background:var(--cave)}
+body{margin:0;color:var(--bone);font:400 16px/1.55 Anuphan,sans-serif}
+::selection{background:var(--gold);color:var(--cave)}
+.top{max-width:1040px;margin:0 auto;padding:28px 16px 6px}
+h1{font:400 30px/1.4 Chonburi,serif;margin:0 0 4px;color:var(--gold)}
+.top p{margin:0;color:var(--ash);max-width:62ch}
+main{max-width:1040px;margin:0 auto;padding:12px 16px 56px}
+.cls{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:0;border-top:1px solid var(--seam);padding:22px 0}
+.base{padding-right:24px}
+.base h2{font:400 25px/1.4 Chonburi,serif;margin:0;color:var(--gold)}
+.vibe{color:var(--ash);margin:0 0 8px}
+canvas{display:block;image-rendering:pixelated}
+.big{width:192px;height:192px}
+.small{width:128px;height:128px;flex:none}
+.trait{margin:8px 0 0;font-size:15px;color:var(--bone)}
+.side{min-width:0}
+.after{font-weight:500;color:var(--ash);margin:0 0 10px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.asc{background:var(--panel);border:1px solid var(--seam);border-radius:3px;padding:12px;display:flex;gap:12px;min-width:0}
+.asc h3{font:400 19px/1.45 Chonburi,serif;margin:0 0 4px;color:var(--bone)}
+.asc p{margin:0;font-size:15px;line-height:1.5;color:var(--ash)}
+.foot{border-top:1px solid var(--seam);padding-top:16px;color:var(--ash);font-size:15px}
+@media (max-width:820px){.cls{grid-template-columns:1fr}.base{padding:0 0 16px}}
+@media (max-width:620px){.pair{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>คลาสและสายย่อย</h1>
+  <p>Pap-Boy ตัวเดิม เปลี่ยนชุดตามสายการเรียน เลือกคลาสตอนเปิดเทอม พ้นกลางภาคเลือกสายย่อยได้อีก 1 ทาง</p>
+</div>
+<main id="m"></main>
+<script>
+const OUT="#14213A";let c,A=1;
+const P=(x,y,k,a=1)=>{c.globalAlpha=a*A;c.fillStyle=k;c.fillRect(Math.round(x),Math.round(y),1,1)};
+const R=(x,y,w,h,k,a=1)=>{c.globalAlpha=a*A;c.fillStyle=k;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))};
+const disc=(cx,cy,r,k,a=1)=>{for(let y=-r;y<=r;y++)for(let x=-r;x<=r;x++)if(x*x+y*y<=r*r+r*.6)P(cx+x,cy+y,k,a)};
+const rr=(x,y,w,h,k)=>({k:"r",x,y,w,h,c:k});
+function shapes(l){for(const s of l)s.k==="r"?R(s.x-1,s.y-1,s.w+2,s.h+2,OUT):disc(s.x,s.y,s.r+1,OUT);for(const s of l)s.k==="r"?R(s.x,s.y,s.w,s.h,s.c):disc(s.x,s.y,s.r,s.c)}
+const cap=(k,b,t=-11,e=-3)=>{for(let y=t;y<=e;y++)for(let x=-11;x<=11;x++)if(x*x+y*y<=128)P(32+x,26+b+y,k)};
+
+function body(g,f,b){
+  const hd=g.helm||"#EEF1F5",d=f%12<6?0:1,W="#F4F6FA",S=g.shirt,gl=g.glow||"#F2C230";
+  const l=[];
+  if(!g.noLegs)l.push(rr(27,47,3,6,"#2E3A55"),rr(34,47,3,6,"#2E3A55"),rr(26,52,4,2,g.shoe||"#2B2B3A"),rr(34,52,4,2,g.shoe||"#2B2B3A"));
+  l.push(rr(21,37+b,3,3,S),rr(20,35+b,3,3,S),rr(19,33+b,3,3,S),rr(18,30+b,3,4,S),rr(39,39+b,3,6,S),rr(39,45+b,3,2,W));
+  l.push(rr(25,37+b,14,12,S));
+  if(g.robe)l.push(rr(24,46+b,16,8,S));
+  l.push({k:"d",x:32,y:26+b,r:11,c:hd});
+  shapes(l);
+  if(g.shade)R(28,44+b,8,3,g.shade);
+  for(let x=24;x<=40;x++)P(x,35+b,"#C9D0DB",hd==="#EEF1F5"?1:.5);
+  R(24,21+b,17,11,"#0E1A2E");
+  for(let y=22;y<31;y+=2)R(25,y+b,15,1,gl,.06);
+  if(f%48>45){R(27,25+b,2,1,gl);R(36,25+b,2,1,gl)}
+  else if(g.eye==="dot"){R(27,24+b,2,3,gl);R(36,24+b,2,3,gl)}
+  else if(g.eye==="sleep"){R(26,26+b,4,1,gl);R(35,26+b,4,1,gl)}
+  else [[0,1],[1,0],[2,1]].forEach(([x,y])=>{P(26+x,24+y+b,gl);P(35+x,24+y+b,gl)});
+  if(g.mouth==="fang"){P(29,28+b,gl);R(30,29+b,4,1,gl);P(34,28+b,gl);P(33,30+b,"#FFF")}
+  else if(g.mouth==="o")R(31,28+b,2,2,gl);
+  else if(g.mouth==="flat")R(30,29+b,5,1,gl);
+  else{P(29,28+b,gl);R(30,29+b,4,1,gl);P(34,28+b,gl)}
+  shapes([rr(16-d,24+b,7,6,W),rr(22-d,21+b,1,4,W),rr(20-d,20+b,1,5,W),rr(18-d,20+b,1,5,W),rr(16-d,21+b,1,4,W),rr(23-d,27+b,2,2,W)]);
+}
+const pencil=b=>{P(41,47+b,OUT);for(let i=1;i<11;i++){P(41+i,47-i+b,"#F2C230");P(42+i,47-i+b,"#C9A25B")}P(52,36+b,"#FF8FC8");P(53,36+b,"#FF8FC8")};
+const orbit=(f,n,rx,ry,cy,fn)=>{for(let i=0;i<n;i++){const a=i*2*Math.PI/n+f*Math.PI/24;const fr=Math.sin(a)>-.3;fn(32+Math.cos(a)*rx,cy+Math.sin(a)*ry,i,fr)}};
+
+const CL=[
+{n:"นักจดซาก",v:"สายจด เก็บทุกอย่างที่เหลือรอด",t:"ผ้าโพกหัว ย่ามใส่กระดาษ ดินสอยาวเท่าหอก",
+ g:{shirt:"#5B6B2F",shade:"#3F4C20",glow:"#86D99B",shoe:"#5A3E22",
+  front(f,b){cap("#4F5A26",b,-11,-6);R(21,20+b,23,2,"#3F4C20");const w=f%8<4?0:1;R(44,20+b+w,4,1,"#3F4C20");R(47,21+b-w,3,1,"#3F4C20");for(let i=0;i<11;i++)P(26+i,38+i+b,"#8A5A2B");shapes([rr(23,44+b,7,6,"#8A5A2B")]);R(24,42+b,5,2,"#F3EAD2");R(26,41+b,3,1,"#F3EAD2");R(23,46+b,7,1,"#5A3E22");pencil(b)}},
+ s:[
+ {n:"อาลักษณ์เถื่อน",t:"คลุมฮู้ดเขียนไม่หยุด กระดาษลอยตามตัว ปากกาขนนกทาหมึก",
+  g:{shirt:"#2C2A3A",shade:"#1E1D29",helm:"#3A3750",glow:"#86D99B",robe:1,noLegs:1,
+   back(f,b){orbit(f,5,21,11,24,(x,y,i,fr)=>{if(!fr)shapes([rr(x-1,y-1,3,4,"#F3EAD2")])})},
+   front(f,b){for(let y=-12;y<=0;y++)for(let x=-12;x<=12;x++){const r=x*x+y*y;if(r<=148&&r>=104)P(32+x,26+b+y,"#2C2A3A")}R(20,26+b,2,8,"#2C2A3A");R(43,26+b,2,8,"#2C2A3A");shapes([rr(44,27+b,1,20,"#F3EAD2")]);R(45,27+b,3,8,"#F3EAD2");R(46,29+b,3,5,"#D9CDB2");R(43,28+b,1,6,"#D9CDB2");R(44,46+b,1,3,"#2B4A8A");if(f%24<12)P(44,50+b+f%12/3,"#2B4A8A");orbit(f,5,21,11,24,(x,y,i,fr)=>{if(fr)shapes([rr(x-1,y-1,3,4,"#F3EAD2")])})}}},
+ {n:"นักถอดรหัสกระดาน",t:"แบกกระดานดำไว้ข้างหลัง สวมแว่นเชื่อม อ่านลายมืออาจารย์ออก",
+  g:{shirt:"#2F5A63",shade:"#1F3E45",glow:"#6FE3F0",
+   back(f){shapes([rr(13,8,38,26,"#8A5A2B")]);R(15,10,34,22,"#1F3A2D");const on=f%24;[[17,13,8],[17,17,5],[17,21,10],[44,13,4],[43,17,5],[42,25,6]].forEach(([x,y,w],i)=>{R(x,y,(on>i*3)?w:Math.max(1,w-3),1,"#E8E8E8",.8)})},
+   front(f,b){R(23,22+b,8,6,"#C9772E");R(33,22+b,8,6,"#C9772E");R(24,23+b,6,4,"#0E1A2E");R(34,23+b,6,4,"#0E1A2E");R(26,24+b,3,2,"#6FE3F0");R(35,24+b,3,2,"#6FE3F0");R(31,24+b,2,1,"#C9772E");R(21,23+b,2,2,"#5A3E22");R(41,23+b,2,2,"#5A3E22");shapes([rr(43,41+b,6,2,"#F4F6FA")]);for(let i=0;i<4;i++){const t=(f+i*12)%48;P(47+i,40-t/5,"#E8E8E8",1-t/48)}}}},
+ ]},
+{n:"นักล่าเดดไลน์",v:"สายส่งงาน นับถอยหลังเป็นงานอดิเรก",t:"ผ้าคาดหัวแดง นาฬิกาจับเวลาในมือ เสื้อกั๊กขาด",
+ g:{shirt:"#8F2A1F",shade:"#6A1E16",glow:"#F2C230",shoe:"#2B2B3A",
+  front(f,b){R(21,19+b,23,3,"#C2372C");const w=f%8<4?0:1;R(43,20+b,4,2,"#C2372C");R(46,21+b+w,4,1,"#8F2620");R(25,37+b,3,12,"#3A2A20");R(36,37+b,3,12,"#3A2A20");shapes([{k:"d",x:45,y:45+b,r:4,c:"#F3EAD2"},rr(44,39+b,2,2,"#AEB6C4")]);const a=f*Math.PI/12;P(45+Math.round(Math.cos(a)*2),45+b+Math.round(Math.sin(a)*2),"#A0281D");P(45,45+b,"#14213A")}},
+ s:[
+ {n:"มือปืนนาทีสุดท้าย",t:"หมวกปีกกว้าง ปืนแม็กเย็บกระดาษ ยิงส่ง 23:59",
+  g:{shirt:"#6B4A2A",shade:"#4B331C",glow:"#F2C230",mouth:"flat",shoe:"#5A3E22",
+   front(f,b){shapes([rr(25,8+b,15,9,"#5A3E22"),rr(17,16+b,31,2,"#5A3E22")]);R(25,14+b,15,2,"#A0281D");R(27,9+b,2,5,"#7A5430");for(let x=25;x<39;x+=4)R(x,38+b,2,10,"#A0281D",.75);shapes([rr(42,42+b,10,3,"#8C97AA"),rr(42,45+b,3,3,"#5A626F")]);R(50,41+b,2,1,"#5A626F");const t=f%24;if(t<3){R(53,42+b,2,3,"#FFE680");P(55,43+b,"#EE8A3C");}if(t<14){R(53+t*.7,43+b,2,1,"#E8E8E8")}}}},
+ {n:"ผู้ส่งล่วงหน้า",t:"บุรุษไปรษณีย์ยุคล่ม รองเท้ามีปีก ส่งก่อนกำหนดเสมอ",
+  g:{shirt:"#2B4A8A",shade:"#1E3560",glow:"#86D99B",shoe:"#E8DFCB",
+   back(f){for(let i=0;i<3;i++){const t=(f+i*16)%48,x=46+t*.3,y=30-t*.5;if(t<40){shapes([rr(x,y,5,3,"#F3EAD2")]);P(x+2,y+1,"#A0281D")}}},
+   front(f,b){cap("#2B4A8A",b,-11,-6);R(22,20+b,22,1,"#1E3560");R(38,19+b,10,2,"#1E3560");for(let i=0;i<11;i++)P(37-i,38+i+b,"#8A5A2B");shapes([rr(38,44+b,8,7,"#8A5A2B")]);R(38,46+b,8,1,"#5A3E22");R(40,43+b,4,1,"#F3EAD2");const w=f%6<3?0:1;[[23,52],[38,52]].forEach(([x,y])=>{R(x,y-w,3,1,"#F4F6FA");R(x+1,y-1-w,2,1,"#F4F6FA")});}}},
+ ]},
+{n:"ผู้รอดหน้าห้อง",v:"สายเข้าเรียน มาก่อนใคร กลับหลังใคร",t:"หม้อต้มเป็นหมวก เกราะจากโต๊ะเล็กเชอร์",
+ g:{shirt:"#6F7A85",shade:"#505962",glow:"#F2C230",shoe:"#2B2B3A",
+  front(f,b){cap("#8C97AA",b,-12,-6);R(21,20+b,23,2,"#5A626F");R(19,18+b,3,2,"#5A626F");R(43,18+b,3,2,"#5A626F");R(30,12+b,5,2,"#3A4048");[[26,39],[37,39],[26,47],[37,47]].forEach(([x,y])=>P(x,y+b,"#E8DFCB"));shapes([rr(41,38+b,10,13,"#8A5A2B")]);R(41,41+b,10,1,"#5A3E22");R(43,44+b,4,1,"#F3EAD2");R(43,46+b,6,1,"#F3EAD2");P(49,39+b,"#14213A")}},
+ s:[
+ {n:"ยามคาบเช้า",t:"หมวกนิรภัย ตะเกียงส่องทาง พระอาทิตย์ยังไม่ทันขึ้นก็ถึงแล้ว",
+  g:{shirt:"#C9772E",shade:"#A05A1E",glow:"#FFE680",shoe:"#5A3E22",
+   back(f){const r=22+(f%48<24?0:1);for(let y=-r;y<=0;y++)for(let x=-r;x<=r;x++)if(x*x+y*y<=r*r)P(32+x,50+y,"#EE8A3C",.28);for(let i=0;i<9;i++){const a=Math.PI+i*Math.PI/8;P(32+Math.cos(a)*(r+3),50+Math.sin(a)*(r+3),"#F2C230",(f+i*5)%24<16?.9:.3)}},
+   front(f,b){cap("#F2C230",b,-12,-6);R(20,20+b,25,2,"#C9A25B");R(30,14+b,5,1,"#C9A25B");R(25,41+b,14,2,"#F3EAD2");R(25,45+b,14,1,"#F3EAD2");R(44,37+b,1,4,"#5A626F");shapes([rr(42,41+b,5,7,"#5A626F")]);const k=f%12<6?"#FFE680":"#F2C230";R(43,42+b,3,5,k);disc(44,44+b,7,"#FFE680",.16)}}},
+ {n:"เจ้าที่หลังห้อง",t:"ผีเฝ้าเก้าอี้แถวสุดท้าย มาทุกคาบ แต่ไม่ค่อยตื่น",
+  g:{shirt:"#4A4E63",shade:"#383B4C",glow:"#6FE3F0",eye:"sleep",mouth:"o",noLegs:1,robe:1,ghost:1,
+   back(f){const a=A;A=1;shapes([rr(18,6,28,4,"#8A5A2B"),rr(18,10,3,44,"#8A5A2B"),rr(43,10,3,44,"#8A5A2B"),rr(21,20,22,3,"#5A3E22")]);A=a},
+   front(f,b){for(let x=24;x<40;x+=3){const h=2+((f>>2)+x)%3;R(x,53+b,2,h,"#4A4E63",.7)}const a=A;A=1;for(let i=0;i<3;i++){const t=(f+i*16)%48,x=45+t*.2,y=24-t*.4,k="#6FE3F0",o=1-t/48;R(x,y,3,1,k,o);P(x+1,y+1,k,o);R(x,y+2,3,1,k,o)}A=a}}},
+ ]},
+{n:"หมอผีทวน",v:"สายทวน ปลุกความรู้ที่ตายไปแล้ว",t:"เสื้อคลุมม่วง คทาติดบัตรคำ ตาเรืองแสงตอนตีสอง",
+ g:{shirt:"#4B2E6B",shade:"#35204C",glow:"#FF8FC8",robe:1,noLegs:1,
+  front(f,b){cap("#35204C",b,-13,-7);for(let i=0;i<8;i++)R(32-(8-i),16+b-i-5,(8-i)*2+1,1,"#35204C");P(30,10+b,"#F2C230");P(35,14+b,"#F2C230");shapes([rr(45,22+b,2,32,"#5A3E22"),rr(41,15+b,10,7,"#F3EAD2")]);R(43,17+b,6,1,"#A0281D");R(43,19+b,4,1,"#64523F")}},
+ s:[
+ {n:"ลิชคืนก่อนสอบ",t:"ตายไปแล้วรอบหนึ่งแต่ยังอ่านไม่จบ มงกุฎบัตรคำ คทากาแฟ",
+  g:{shirt:"#23193A",shade:"#160F26",glow:"#6FE3F0",helm:"#D9D2BF",mouth:"fang",eye:"dot",robe:1,noLegs:1,
+   back(f,b){disc(32,27,23,"#6FE3F0",.05);for(let a=0;a<6.28;a+=.05)P(32+Math.cos(a)*24,28+Math.sin(a)*24,"#7B5BD6",Math.floor((a+f*.1)/.4)%2?.6:.15);orbit(f,6,23,10,30,(x,y,i,fr)=>{if(!fr)shapes([rr(x-2,y-1,4,3,"#F3EAD2")])})},
+   front(f,b){[[24,12],[29,9],[34,9],[39,12]].forEach(([x,y],i)=>{shapes([rr(x,y+b,3,6,"#C9A25B")]);P(x+1,y+1+b,"#6FE3F0")});R(24,16+b,18,2,"#C9A25B");shapes([rr(46,20+b,2,34,"#3A2A20"),rr(42,12+b,10,8,"#F3EAD2")]);R(43,13+b,8,1,"#5A3E22");for(let i=0;i<3;i++){const t=(f+i*16)%48;R(44+i*3,10-t/8+b,1,2,"#D9CDB2",1-t/48)}orbit(f,6,23,10,30,(x,y,i,fr)=>{if(fr)shapes([rr(x-2,y-1,4,3,"#F3EAD2")])})}}},
+ {n:"ผู้ปลุกความจำ",t:"นักวิทย์คลั่ง ขดลวดบนหัว สมองในโหล ช็อตให้จำได้",
+  g:{shirt:"#E8E4D8",shade:"#C7C2B2",glow:"#86D99B",shoe:"#2B2B3A",
+   back(f){for(let i=0;i<6;i++){const t=(f+i*8)%48,x=14+(i*37)%36;P(x,50-t*.8,"#86D99B",1-t/48)}},
+   front(f,b){R(31,10+b,3,6,"#8C97AA");for(let y=8;y<16;y+=2)R(29,y+b,7,1,"#C9772E");const z=f%12<5;if(z){[[33,6],[35,4],[33,3],[36,1]].forEach(([x,y])=>P(x,y+b,"#86D99B"));[[29,5],[27,3],[29,2]].forEach(([x,y])=>P(x,y+b,"#86D99B"))}R(31,41+b,3,5,"#C7C2B2");P(36,43+b,"#2E6B3F");P(29,45+b,"#2E6B3F");shapes([rr(42,36+b,9,14,"#AFC9C4"),rr(41,34+b,11,2,"#5A626F"),rr(41,50+b,11,2,"#5A626F")]);disc(46,42+b,3,"#FF8FC8");R(45,41+b,3,1,"#C2588F");P(47,43+b,"#C2588F");const t=f%18;P(44,48-t/3+b,"#E8FFF6",.7)}}},
+ ]},
+];
+
+const figs=[];
+function fig(g,cls){const v=document.createElement("canvas");v.width=v.height=64;v.className=cls;v.setAttribute("role","img");figs.push([v.getContext("2d"),g]);return v}
+function esc(s){return s}
+const m=document.getElementById("m");
+CL.forEach(k=>{
+  const s=document.createElement("section");s.className="cls";
+  const b=document.createElement("div");b.className="base";
+  b.innerHTML="<h2>"+esc(k.n)+"</h2><p class=vibe>"+esc(k.v)+"</p>";
+  const cv=fig(k.g,"big");cv.setAttribute("aria-label",k.n);b.append(cv);
+  const t=document.createElement("p");t.className="trait";t.textContent=k.t;b.append(t);
+  const sd=document.createElement("div");sd.className="side";
+  sd.innerHTML="<p class=after>พ้นกลางภาค เลือก 1 ทาง</p>";
+  const p=document.createElement("div");p.className="pair";
+  k.s.forEach(a=>{const e=document.createElement("article");e.className="asc";const v=fig(a.g,"small");v.setAttribute("aria-label",a.n);const d=document.createElement("div");d.innerHTML="<h3>"+esc(a.n)+"</h3><p>"+esc(a.t)+"</p>";e.append(v,d);p.append(e)});
+  sd.append(p);s.append(b,sd);m.append(s);
+});
+const foot=document.createElement("p");foot.className="foot";foot.textContent="ชื่อทั้งหมดแก้ได้ · หน้าตาคลาสไม่มีผลกับ XP เกรด หรือคะแนนห้อง";m.append(foot);
+
+function draw(f){figs.forEach(([x,g])=>{c=x;c.clearRect(0,0,64,64);A=g.ghost?.72:1;const b=f%12<6?0:1;g.back&&g.back(f,b);c.globalAlpha=.28;c.fillStyle="#000";for(let y=-2;y<=2;y++)for(let i=-11;i<=11;i++)if(i*i/121+y*y/4<=1)c.fillRect(32+i,55+y,1,1);body(g,f,b);g.front&&g.front(f,b);c.globalAlpha=1;A=1})}
+let f=0;draw(0);
+if(!matchMedia("(prefers-reduced-motion: reduce)").matches)setInterval(()=>{if(!document.hidden){f=(f+1)%48;draw(f)}},83);
+</script>
+</body>
+</html>
