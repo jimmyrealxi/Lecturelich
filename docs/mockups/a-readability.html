@@ -21,6 +21,7 @@ body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:2
 .phone{position:relative;width:360px;max-width:100%;overflow:hidden;color:var(--paper);border-radius:6px;padding:0 16px 28px 38px;background:
   radial-gradient(circle at 7px 7px,#3a3128 4.5px,transparent 5.5px) 6px 72px/14px 60px repeat-y,
   linear-gradient(90deg,transparent 24px,rgba(160,40,29,.42) 24px 26px,transparent 26px),
+  var(--wear,linear-gradient(transparent,transparent)),
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
   radial-gradient(140% 100% at 50% 40%,transparent 60%,rgba(110,70,20,.26) 100%),
   var(--ink)}
@@ -52,6 +53,8 @@ body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:2
 .star{color:var(--red)}
 
 /* แบบใหม่ */
+/* กระดาษเก่า: จุดกระเล็ก ๆ คราบเหลืองจาง และรอยขูด กระจายทั่วแผ่น ไม่มีจุดเด่น */
+.new{--wear:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='520'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.42' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .27 0 0 0 0 .1 13 0 0 0 -8.6'/%3E%3C/filter%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .3 0 0 0 0 .12 4 0 0 0 -2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='.05'/%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='.13'/%3E%3Cg fill='none' stroke='%236B4A22' stroke-linecap='round' stroke-opacity='.11'%3E%3Cpath d='M64 88l27 7M71 92l14 2'/%3E%3Cpath d='M318 174l-19 12'/%3E%3Cpath d='M152 301c9 2 18 1 26-3'/%3E%3Cpath d='M372 402l22 5M380 406l9 1'/%3E%3Cpath d='M94 468l-14 9'/%3E%3C/g%3E%3C/svg%3E")}
 .new>*{position:relative;z-index:1}
 .new .fx{position:absolute;z-index:0;pointer-events:none}
 /* รอยทุกชิ้นมีที่มา เส้นคม ไม่เบลอ: คลิปขึ้นสนิม แก้วที่วางทับ มุมที่พับ */
@@ -163,6 +166,7 @@ body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:2
       <li>เทปสีขอบฉีก: สนิมแดง = ต้องทำ · เขียวหม่น = ทวน</li>
       <li>จอเขียวจิ๋วบอกตัวเลขสำคัญ เหมือนของที่ยังใช้งานได้ในซากเมือง</li>
       <li>ทุกรอยมีที่มา: รอยสนิมจากคลิปหนีบมุมบนขวา รอยแก้วโผล่เหนือเทปกลางซ้าย ปากกาแดงล่างซ้าย และมุมกระดาษพับล่างขวา กระจายเป็นฟันปลาทั้งหน้า</li>
+      <li>กระดาษทั้งแผ่นมีจุดกระ คราบเหลือง และรอยขูดจาง ๆ เห็นเมื่อมองใกล้ แต่ไม่ดึงสายตา</li>
       <li>วาดเองทั้งหมด ไม่ใช้ภาพ ไอคอน ชื่อ หรือฟอนต์ของ Fallout</li>
     </ul>
     <h2>ต้องตัดสินใจ</h2>
