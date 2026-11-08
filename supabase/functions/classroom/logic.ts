@@ -8,6 +8,7 @@ export type Work = {
   alternateLink?: string;
   dueDate?: { year: number; month: number; day: number };
   dueTime?: { hours?: number; minutes?: number };
+  updateTime?: string;
 };
 
 export const workKey = (w: Work) => `${w.courseId}/${w.id}`;
@@ -30,6 +31,15 @@ export function workFields(w: Work) {
 
 /** งานใหม่ที่เลยกำหนดไปก่อนวันนี้ไม่ดึง · งานไม่มีวันส่งดึงเสมอ */
 export const isCurrent = (dueAt: string | null, startOfTodayMs: number) => dueAt === null || Date.parse(dueAt) >= startOfTodayMs;
+
+/** ข้อความแจ้งงานใหม่ · งานที่โพสต์นานกว่า 1 วันไม่แจ้ง กันเด้งรัวตอนเพิ่งเลือกห้อง */
+export function newWorkNotice(w: Work, courseName: string, nowMs: number) {
+  if (!w.updateTime || nowMs - Date.parse(w.updateTime) > 86_400_000) return null;
+  const { title, due_at } = workFields(w);
+  const due = due_at ? new Date(Date.parse(due_at) + 7 * 3_600_000).toISOString() : null;
+  const when = due ? `ส่ง ${due.slice(8, 10)}/${due.slice(5, 7)} ${due.slice(11, 16)} น.` : "ไม่มีกำหนดส่ง";
+  return { title: `งานใหม่: ${title}`, body: `${courseName} · ${when}`, url: "/tasks", ref: `classroom:${workKey(w)}` };
+}
 
 export type Submission = {
   courseWorkId: string;

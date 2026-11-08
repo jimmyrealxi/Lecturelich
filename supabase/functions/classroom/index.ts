@@ -4,7 +4,7 @@
 //   POST { action: cron } + x-cron-secret ← pg_cron ทุกชั่วโมง
 // secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET · deploy --no-verify-jwt เพราะ Google กับ cron ไม่มี JWT จึงตรวจเองในไฟล์นี้
 
-import { earnsXp, isChanged, isCurrent, isTurnedIn, turnedInAt, workFields, workKey, type Submission, type Work } from "./logic.ts";
+import { earnsXp, isChanged, isCurrent, isTurnedIn, newWorkNotice, turnedInAt, workFields, workKey, type Submission, type Work } from "./logic.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
@@ -116,7 +116,7 @@ async function syncUser(user: string) {
   try {
     const token = await accessToken(user);
     await refreshCourses(user, token);
-    const courses = await rows<{ course_id: string; subject_id: string | null }>(`classroom_courses?user_id=${eq(user)}&enabled=is.true&select=course_id,subject_id`);
+    const courses = await rows<{ course_id: string; name: string; subject_id: string | null }>(`classroom_courses?user_id=${eq(user)}&enabled=is.true&select=course_id,name,subject_id`);
     const existing = await rows<Existing>(`assignments?created_by=${eq(user)}&room_id=is.null&classroom_work_id=not.is.null&select=id,classroom_work_id,title,due_at,description,link,assignment_status(done)`);
     const hidden = new Set((await rows<{ work_id: string }>(`classroom_hidden?user_id=${eq(user)}&select=work_id`)).map((h) => h.work_id));
     const byKey = new Map(existing.map((e) => [e.classroom_work_id, e]));
@@ -136,6 +136,7 @@ async function syncUser(user: string) {
       }
       const seen = new Set<string>();
       const inserts = [];
+      const notices = [];
       for (const w of works) {
         const key = workKey(w);
         seen.add(key);
@@ -145,12 +146,20 @@ async function syncUser(user: string) {
           if (isChanged(row, next)) await restOk(`assignments?id=${eq(row.id)}`, { method: "PATCH", body: JSON.stringify(next) });
         } else if (!hidden.has(key) && isCurrent(next.due_at, today)) {
           inserts.push({ ...next, created_by: user, subject_id: c.subject_id, source: "classroom", room_id: null, classroom_work_id: key });
+          const notice = newWorkNotice(w, c.name, Date.now());
+          if (notice) notices.push({ ...notice, user_id: user });
         }
       }
       if (inserts.length) {
         await restOk("assignments?on_conflict=created_by,classroom_work_id", {
           method: "POST", headers: { Prefer: "resolution=ignore-duplicates" }, body: JSON.stringify(inserts),
         });
+      }
+      if (notices.length) {
+        // ส่ง push ผ่าน trigger notifications_push · เตือนไม่สำเร็จต้องไม่ทำให้ดึงงานล้ม
+        await restOk("notifications?on_conflict=user_id,ref", {
+          method: "POST", headers: { Prefer: "resolution=ignore-duplicates" }, body: JSON.stringify(notices),
+        }).catch(console.error);
       }
       // อาจารย์ลบงานแล้วลบตาม เว้นงานที่ติ๊กส่งไปแล้ว
       for (const e of existing) {

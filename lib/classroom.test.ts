@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { guessSubject } from "./classroom.ts";
-import { dueIso, earnsXp, isChanged, isCurrent, isTurnedIn, turnedInAt, workFields, workKey, type Submission, type Work } from "../supabase/functions/classroom/logic.ts";
+import { dueIso, earnsXp, isChanged, isCurrent, isTurnedIn, newWorkNotice, turnedInAt, workFields, workKey, type Submission, type Work } from "../supabase/functions/classroom/logic.ts";
 
 const work = (extra: Partial<Work> = {}): Work => ({ id: "9", courseId: "1", title: " Lab ", ...extra });
 const today = Date.parse("2026-11-09T00:00:00+07:00");
@@ -47,6 +47,15 @@ test("สถานะส่งจาก Classroom: เวลาส่งล่�
   assert.equal(earnsXp("2026-11-09T00:00:00Z", "2026-11-08T13:00:00+00:00"), true);
   assert.equal(earnsXp("2026-11-08T12:59:00Z", "2026-11-08T13:00:00+00:00"), false);
   assert.equal(earnsXp(null, "2026-11-08T13:00:00+00:00"), false);
+});
+
+test("แจ้งงานใหม่: เวลาไทย ไม่แจ้งงานที่โพสต์นานกว่า 1 วัน", () => {
+  const now = Date.parse("2026-11-09T12:00:00Z");
+  const fresh = work({ updateTime: "2026-11-09T11:00:00Z", dueDate: { year: 2026, month: 11, day: 9 }, dueTime: { hours: 16, minutes: 59 } });
+  assert.deepEqual(newWorkNotice(fresh, "OOP", now), { title: "งานใหม่: Lab", body: "OOP · ส่ง 09/11 23:59 น.", url: "/tasks", ref: "classroom:1/9" });
+  assert.equal(newWorkNotice(work({ updateTime: "2026-11-09T11:00:00Z" }), "OOP", now)?.body, "OOP · ไม่มีกำหนดส่ง");
+  assert.equal(newWorkNotice(work({ updateTime: "2026-11-08T11:59:00Z" }), "OOP", now), null);
+  assert.equal(newWorkNotice(work(), "OOP", now), null);
 });
 
 test("เดาวิชาจากรหัสหรือชื่อ เลือกที่ยาวสุด", () => {
