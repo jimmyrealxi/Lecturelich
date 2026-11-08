@@ -1,6 +1,6 @@
 # โน้ตส่งต่อ (8 พ.ย. 2569) · เปิดเทอม 9 พ.ย.
 
-branch `feat/stage6-rooms` · push แล้วถึง commit `c4ccdc9` (branch นี้คือ production ของ Vercel: push = ขึ้นเว็บจริงทันที)
+รวมเข้า `main` แล้ว (PR #1) · Vercel Production = `main` · งานใหม่แตก branch จาก `main`
 
 ## ส่งต่อแชทใหม่ (8 พ.ย. ดึก) อ่านก่อนเพื่อน
 **สถานะ:** deploy `classroom` v2 และ `send-push` v7 แล้ว (verify_jwt ปิด) · push โค้ดถึง `c4ccdc9` แล้ว (8 พ.ย.)
