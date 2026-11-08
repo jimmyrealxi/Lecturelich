@@ -4,7 +4,7 @@
 //   รับ Web Push จาก Edge Function send-push (ท้ายไฟล์)
 // แก้ไฟล์นี้แล้วเปลี่ยน VERSION → cache เก่าถูกล้างตอนเปิดครั้งถัดไป
 
-const VERSION = "sq-v3";
+const VERSION = "sq-v4";
 const SHELL = ["/", "/manifest.webmanifest", "/icons/icon-192.png"];
 
 self.addEventListener("install", (event) => {
