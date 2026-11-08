@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>รายละเอียดงาน</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* หน้ารายละเอียดงาน · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#574735;--pen:#2B4A8A;--red:#A0281D;--on:#F3EAD2}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--pen);color:var(--on)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+body{background:#1C1915;color:#E9E2D2;font:16px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+.head{max-width:1200px;margin:0 auto 18px}
+.head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
+.head p{color:#C9BFAA;font-size:15px;max-width:70ch;margin-top:4px}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.col{width:360px;max-width:100%}
+.cap{font:600 16px Anuphan;color:#fff;margin-bottom:10px}
+.cap small{display:block;font:400 14px/1.5 Anuphan;color:#C9BFAA}
+.phone{position:relative;height:720px;border:6px solid #050505;border-radius:30px;overflow:hidden;background:var(--ink);color:var(--paper)}
+.scroll{height:100%;overflow-y:auto;padding:18px 16px 28px 42px}
+.hole{position:absolute;left:24px;top:0;bottom:0;width:2px;background:rgba(160,40,29,.42)}
+h3{font:400 18px/26px Chonburi,serif;margin:20px 0 8px}
+.row{display:flex;align-items:center;gap:10px;min-height:68px;padding:6px 0;border-top:1px solid var(--rule);width:100%;text-align:left}
+.row:first-of-type{border-top:0}
+.box{flex:none;width:22px;height:22px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px;margin:0 11px;display:grid;place-items:center}
+.box.on{border-color:var(--pen)}
+.grow{flex:1;min-width:0}
+.grow b{display:block;font-weight:400;font-size:16px;line-height:1.35}
+.grow small,.due{font-size:14px;color:var(--muted)}
+.done b{color:#64523F}
+.due{font-weight:600;flex:none;text-align:right}
+.late{color:var(--red)}
+.dim{position:absolute;inset:0;background:rgba(42,33,24,.45)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--deck);border-top:1px solid var(--rule2);padding:24px 16px 18px}
+.tape{position:absolute;top:-11px;left:50%;width:74px;height:22px;margin-left:-37px;background:rgba(232,221,186,.85);transform:rotate(-3deg)}
+.title{font:400 22px/32px Chonburi,serif;padding-right:88px}
+.stamp{position:absolute;right:16px;top:26px;color:var(--red);border:2px solid var(--red);border-radius:4px;padding:1px 9px;font:600 14px Anuphan;transform:rotate(-6deg);opacity:.92}
+dl{margin-top:12px;border-top:3px double rgba(42,33,24,.75)}
+.f{display:flex;gap:12px;min-height:44px;align-items:center;border-bottom:1px solid var(--rule);padding:6px 0}
+dt{width:76px;flex:none;font-size:14px;color:var(--muted)}
+dd{flex:1;font-size:16px}
+.ty{font-family:"Courier Prime",monospace;font-weight:700}
+.left{font-size:14px;color:var(--red);font-weight:600}
+.notes{margin-top:14px}
+.notes h4{font:400 14px Anuphan;color:var(--muted);margin-bottom:2px}
+.notes p{font-size:16px;line-height:30px;background:repeating-linear-gradient(transparent 0 29px,var(--rule) 29px 30px);min-height:60px}
+.link{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin-top:14px;border:2px solid var(--pen);color:var(--pen);font:600 15px Anuphan;border-radius:3px}
+.two{display:grid;grid-template-columns:.6fr 1fr;gap:8px;margin-top:10px}
+.btn{min-height:48px;border:1.5px solid var(--paper);border-radius:3px;font:600 15px Anuphan}
+.pri{background:var(--paper);color:var(--deck);box-shadow:2px 2px 0 var(--rule2)}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>แตะงานแล้วดูรายละเอียด</h1>
+  <p>ทั้งแถวแตะได้ ยกเว้นช่องติ๊ก เลิกใช้ปุ่ม ⋯ แล้วย้ายการแก้ไขและลบไปไว้ในแผ่นนี้ ลิงก์งานเปิดจากปุ่มในแผ่น จึงไม่เด้งออกจากแอปเพราะแตะพลาด เลือกระหว่างแบบ A กับแบบ B</p>
+</div>
+<div class="wrap">
+  <section class="col">
+    <p class="cap">รายการงาน<small>ติ๊กแล้วเห็น ✓ ค้างไว้จนเปลี่ยนหน้า (ลงโค้ดแล้ว)</small></p>
+    <div class="phone"><span class="hole"></span><div class="scroll">
+      <h3>สัปดาห์นี้</h3>
+      <div>
+        <div class="row"><span class="box"></span><div class="grow"><b>Lab 6 Interface</b><small>OOP · Classroom</small></div><span class="due late">เลย 1 วัน</span></div>
+        <div class="row done"><span class="box on"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13.5l5 5.5L20.5 5" fill="none" stroke="#2B4A8A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="grow"><b>แบบฝึกหัดบทที่ 3</b><small>คณิต · ในคาบ</small></div><span class="due">พรุ่งนี้</span></div>
+        <div class="row"><span class="box"></span><div class="grow"><b>ส่งสรุปงานกลุ่ม</b><small>ภาษาไทย · ไลน์ · ห้องร่วม</small></div><span class="due">ศ. 23:59</span></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="col">
+    <p class="cap">แบบ A มีช่องรายละเอียด<small>จดคำสั่งงานได้ ต้องรัน migration เพิ่ม 1 คอลัมน์ งานในห้องร่วมเพื่อนจะเห็นข้อความนี้ด้วย</small></p>
+    <div class="phone"><span class="hole"></span><div class="scroll"></div><div class="dim"></div>
+      <div class="sheet"><span class="tape"></span>
+        <p class="title">Lab 6 Interface</p><span class="stamp">เลยกำหนด</span>
+        <dl>
+          <div class="f"><dt>วิชา</dt><dd>OOP</dd></div>
+          <div class="f"><dt>กำหนดส่ง</dt><dd><span class="ty">08/11/2569 23:59</span><br><span class="left">เลยมา 1 วัน</span></dd></div>
+          <div class="f"><dt>มาจาก</dt><dd>Classroom · ส่วนตัว</dd></div>
+        </dl>
+        <div class="notes"><h4>รายละเอียด</h4><p>ทำข้อ 1–5 จากสไลด์บทที่ 6 ส่งเป็น PDF ตั้งชื่อไฟล์ตามรหัสนักศึกษา</p></div>
+        <button class="link">เปิดลิงก์งาน</button>
+        <div class="two"><button class="btn">แก้ไข</button><button class="btn pri">ส่งแล้ว</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col">
+    <p class="cap">แบบ B ไม่มีช่องรายละเอียด<small>ใช้ข้อมูลที่มีอยู่ ไม่ต้องรัน migration ลงได้เร็วกว่า</small></p>
+    <div class="phone"><span class="hole"></span><div class="scroll"></div><div class="dim"></div>
+      <div class="sheet"><span class="tape"></span>
+        <p class="title">ส่งสรุปงานกลุ่ม</p>
+        <dl>
+          <div class="f"><dt>วิชา</dt><dd>ภาษาไทย</dd></div>
+          <div class="f"><dt>กำหนดส่ง</dt><dd><span class="ty">13/11/2569 23:59</span><br><span class="left" style="color:var(--muted)">เหลืออีก 4 วัน</span></dd></div>
+          <div class="f"><dt>มาจาก</dt><dd>ไลน์ · ห้องร่วม</dd></div>
+        </dl>
+        <button class="link">เปิดลิงก์งาน</button>
+        <div class="two"><button class="btn">แก้ไข</button><button class="btn pri">ส่งแล้ว</button></div>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
