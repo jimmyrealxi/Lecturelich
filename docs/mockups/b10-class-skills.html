@@ -838,21 +838,29 @@ function drawBossSheet() {
 const WEAPONS = {
   scribe: [
     { id: "pen", name: "ปากกาลูกลื่น", r: "n", shot: "สะบัดหยดหมึก" },
+    { id: "whiteout", name: "ลิควิดก้นขวด", r: "n", shot: "แถบขาวลบคำผิด" },
+    { id: "stamp", name: "ตรายางแดง", r: "m", shot: "ตรายางบินไปประทับ" },
     { id: "pencil", name: "ดินสอยักษ์", r: "r", shot: "ดินสอพุ่งทั้งแท่ง" },
     { id: "laser", name: "ปากกาเลเซอร์", r: "u", shot: "เส้นแสงแดง" },
   ],
   deadline: [
     { id: "hand", name: "เข็มนาฬิกาหัก", r: "n", shot: "เข็มแทงตรงเป้า" },
+    { id: "rubber", name: "หนังยางมัดงาน", r: "n", shot: "ดีดหนังยาง" },
+    { id: "calendar", name: "ปฏิทินฉีก", r: "m", shot: "หน้าปฏิทินปลิวใส่" },
     { id: "stapler", name: "ปืนแม็กเย็บ", r: "r", shot: "ลวดเย็บเป็นชุด" },
     { id: "alarm", name: "นาฬิกาปลุกเถื่อน", r: "u", shot: "ทั้งเรือนบินไปปลุก" },
   ],
   survivor: [
     { id: "eraser", name: "แปรงลบกระดาน", r: "n", shot: "ปาก้อนฝุ่นชอล์ก" },
+    { id: "bottle", name: "กระติกน้ำบุบ", r: "n", shot: "ขว้างฝากระติก" },
+    { id: "whistle", name: "นกหวีดหัวหน้าห้อง", r: "m", shot: "เสียงนกหวีดแหลม" },
     { id: "torch", name: "ไฟฉายเก่า", r: "r", shot: "ลูกแสงกลม" },
     { id: "bell", name: "กระดิ่งหน้าห้อง", r: "u", shot: "กระดิ่งทองเด้งไป" },
   ],
   necro: [
     { id: "card", name: "บัตรคำขาด ๆ", r: "n", shot: "บัตรคำบิน" },
+    { id: "highlighter", name: "ไฮไลต์หมึกแห้ง", r: "n", shot: "ขีดสีเรืองแสง" },
+    { id: "sticky", name: "โน้ตแปะหลอน", r: "m", shot: "กระดาษโน้ตปลิวตาม" },
     { id: "ruler", name: "ไม้บรรทัดปลุกผี", r: "r", shot: "ไม้บรรทัดควงสว่าน" },
     { id: "sheet", name: "ชีตเก่าคืนชีพ", r: "u", shot: "แผ่นชีตเรืองแสง" },
   ],
@@ -863,6 +871,14 @@ const TRAIL = { n: 2, m: 3, r: 4, u: 6 }, BURST = { n: 3, m: 4, r: 5, u: 7 };
 function held(S, id, x, y, f) {
   const diag = (n, c) => { for (let i = 0; i < n; i++) rect(S, x + i, y - i, 1, 1, c); };
   if (id === "pen") { diag(8, "#2B4A8A"); rect(S, x + 8, y - 8, 1, 1, "#E8E8E8"); }
+  if (id === "whiteout") { rect(S, x, y - 6, 4, 7, "#F3F5F8"); rect(S, x + 1, y - 8, 2, 2, "#8AB0FF"); rect(S, x + 4, y - 5, 2, 1, "#F3F5F8"); }
+  if (id === "stamp") { rect(S, x + 2, y - 8, 3, 4, "#5A3E22"); rect(S, x, y - 4, 7, 2, "#2A211B"); rect(S, x, y - 2, 7, 1, "#C2372C"); }
+  if (id === "rubber") { rect(S, x, y - 7, 1, 8, "#C9772E"); rect(S, x + 6, y - 7, 1, 8, "#C9772E"); rect(S, x, y - 7, 7, 1, "#C9772E"); rect(S, x, y, 7, 1, "#C9772E"); }
+  if (id === "calendar") { rect(S, x, y - 9, 8, 10, "#F3EAD2"); rect(S, x, y - 9, 8, 3, "#C2372C"); rect(S, x + 3, y - 4, 2, 3, "#2A211B"); }
+  if (id === "bottle") { rect(S, x + 1, y - 10, 3, 2, "#5A626F"); rect(S, x, y - 8, 5, 9, "#6F7A85"); rect(S, x + 1, y - 6, 1, 5, "#AEB6C4"); }
+  if (id === "whistle") { circ(S, x + 3, y - 3, 3, "#AEB6C4"); rect(S, x + 5, y - 6, 6, 2, "#AEB6C4"); rect(S, x + 3, y - 3, 1, 1, "#2A211B"); }
+  if (id === "highlighter") { for (let i = 0; i < 9; i++) rect(S, x + i, y - i, 2, 1, "#FFE680"); rect(S, x + 9, y - 9, 2, 1, "#86D99B"); }
+  if (id === "sticky") { rect(S, x, y - 8, 8, 8, "#F2C230"); rect(S, x + 6, y - 2, 2, 2, "#C9A25B"); rect(S, x + 1, y - 6, 5, 1, "#8A5A2B"); rect(S, x + 1, y - 4, 4, 1, "#8A5A2B"); }
   if (id === "pencil") { rect(S, x, y, 1, 1, "#14213A"); for (let i = 1; i < 9; i++) { rect(S, x + i, y - i, 1, 1, "#F2C230"); rect(S, x + i + 1, y - i, 1, 1, "#C9A25B"); } rect(S, x + 9, y - 9, 2, 1, "#FF8FC8"); }
   if (id === "laser") { diag(7, "#AEB6C4"); rect(S, x + 7, y - 7, 1, 1, "#FF5A5A"); if (f % 6 < 4) rect(S, x + 8, y - 8, 1, 1, "#FF5A5A", 0.6); }
   if (id === "hand") { diag(9, "#E8E8E8"); rect(S, x - 1, y - 1, 3, 3, "#AEB6C4"); }
@@ -879,6 +895,14 @@ function held(S, id, x, y, f) {
 // กระสุน · ตรงกลางคือ (x, y) หันไปทางบอส
 function bullet(S, id, x, y, f, col) {
   if (id === "pen") { circ(S, x, y, 1, col); rect(S, x, y, 1, 1, "#FFFFFF"); rect(S, x - 2, y, 1, 1, col, 0.7); }
+  if (id === "whiteout") { rect(S, x - 6, y, 9, 2, "#F3F5F8"); rect(S, x - 7, y, 1, 2, col, 0.7); }
+  if (id === "stamp") { rect(S, x - 1, y - 4, 3, 3, "#5A3E22"); rect(S, x - 3, y - 1, 7, 2, "#2A211B"); rect(S, x - 3, y + 1, 7, 1, "#C2372C"); }
+  if (id === "rubber") { rect(S, x - 5, y - 1, 9, 1, "#C9772E"); rect(S, x - 5, y + 1, 9, 1, "#C9772E"); rect(S, x + 4, y, 1, 1, "#C9772E"); rect(S, x - 6, y, 1, 1, "#C9772E"); }
+  if (id === "calendar") { const w = f % 4 < 2 ? 0 : 1; rect(S, x - 3, y - 4 + w, 7, 9, "#F3EAD2"); rect(S, x - 3, y - 4 + w, 7, 2, "#C2372C"); rect(S, x - 1, y + w, 3, 3, "#2A211B"); }
+  if (id === "bottle") { rect(S, x - 3, y - 1, 6, 3, "#5A626F"); rect(S, x - 2, y - 1, 4, 1, "#AEB6C4"); }
+  if (id === "whistle") { for (let i = 1; i <= 3; i++) rect(S, x - i * 3, y - 2, 1, 5, col, 0.9 - i * 0.25); rect(S, x, y - 1, 3, 3, "#AEB6C4"); }
+  if (id === "highlighter") { rect(S, x - 8, y - 1, 11, 3, "#FFE680", 0.55); rect(S, x + 3, y - 1, 2, 3, "#86D99B"); }
+  if (id === "sticky") { const w = f % 4 < 2 ? 0 : 1; rect(S, x - 3, y - 3 + w, 7, 7, "#F2C230"); rect(S, x + 2, y + 2 + w, 2, 2, "#C9A25B"); rect(S, x - 2, y - 1 + w, 5, 1, "#8A5A2B"); }
   if (id === "pencil") { rect(S, x - 5, y, 7, 2, "#F2C230"); rect(S, x - 6, y, 1, 2, "#FF8FC8"); rect(S, x + 2, y, 1, 2, "#E6DCC4"); rect(S, x + 3, y, 1, 1, "#2A211B"); }
   if (id === "laser") { rect(S, x - 9, y - 1, 11, 3, "#FF5A5A", 0.3); rect(S, x - 9, y, 11, 1, "#FF5A5A"); rect(S, x - 4, y, 6, 1, "#FFFFFF"); }
   if (id === "hand") { rect(S, x - 6, y - 1, 2, 3, "#AEB6C4"); rect(S, x - 5, y, 8, 1, "#E8E8E8"); rect(S, x + 3, y, 2, 1, col); }
@@ -920,7 +944,7 @@ const SKILLS = {
 };
 
 // ---- สถานะที่เลือก ----
-const sel = { cls: "scribe", stage: "mid", w: 1, glow: "yellow", fx: "none" };
+const sel = { cls: "scribe", stage: "mid", w: 3, glow: "yellow", fx: "none" };
 const room = drawRoom(), bossS = drawBossSheet();
 const sheets = new Map();
 const lookNow = () => ({ ...DEFAULT_LOOK, cls: sel.cls, held: "pencil", glow: sel.glow, fx: sel.fx });
