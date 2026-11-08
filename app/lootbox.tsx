@@ -108,8 +108,9 @@ export default function LootBox() {
       </ScrollView>
       <View style={s.acts}>
         <Pressable onPress={start} disabled={!next || open.isPending} accessibilityRole="button"
-          style={[s.btn, s.gold, (!next || open.isPending) && { opacity: 0.5 }]}>
-          <Text style={[s.btnT, { color: color.gold }]}>
+          style={[s.btn, next && s.gold, open.isPending && { opacity: 0.5 }]}>
+          {/* ไม่มีกล่อง = ปุ่มเทาแต่ข้อความยังอ่านออก (ไม่ใช้ opacity) */}
+          <Text style={[s.btnT, { color: next ? color.gold : color.ash }]}>
             {open.isPending ? "กำลังเปิด…" : next ? `เปิด${BOX[next.kind].name}` : "ยังไม่มีกล่อง · ได้จาก XP"}
           </Text>
         </Pressable>

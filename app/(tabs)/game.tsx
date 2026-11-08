@@ -88,10 +88,10 @@ export default function Game() {
 
       {loot && (
         <View style={s.acts}>
-          <Pressable style={s.btn} onPress={() => router.push("/wardrobe" as never)} accessibilityRole="button">
+          <Pressable style={s.btn} onPress={() => router.push("/wardrobe")} accessibilityRole="button">
             <Text style={s.btnT}>แต่งตัว</Text>
           </Pressable>
-          <Pressable style={[s.btn, s.gold]} onPress={() => router.push("/lootbox" as never)} accessibilityRole="button"
+          <Pressable style={[s.btn, s.gold]} onPress={() => router.push("/lootbox")} accessibilityRole="button"
             accessibilityLabel={`เปิดกล่อง รอเปิด ${loot.boxes.length} กล่อง`}>
             <Text style={[s.btnT, { color: color.gold }]}>เปิดกล่อง</Text>
             {loot.boxes.length > 0 && <Text style={s.badge}>{loot.boxes.length}</Text>}

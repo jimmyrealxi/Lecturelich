@@ -42,6 +42,9 @@ export default function RootLayout() {
       {/* โปร่งให้เห็นกระดาษที่ body · แท็บเว้นซ้ายเองใน (tabs)/_layout (แถบแท็บต้องเต็มกว้าง) */}
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "transparent", paddingLeft: inset } }}>
         <Stack.Screen name="(tabs)" options={{ contentStyle: { backgroundColor: "transparent" } }} />
+        {/* โลกมืดเต็มจอ ไม่มีขอบสมุด (เหมือนแท็บเกม) */}
+        <Stack.Screen name="lootbox" options={{ contentStyle: { backgroundColor: "transparent" } }} />
+        <Stack.Screen name="wardrobe" options={{ contentStyle: { backgroundColor: "transparent" } }} />
       </Stack>
       <XpPop />
     </ThemeProvider>
