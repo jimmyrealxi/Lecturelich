@@ -15,7 +15,7 @@ const REDIRECT_URI = `${SUPABASE_URL}/functions/v1/classroom`;
 const COURSES_SCOPE = "https://www.googleapis.com/auth/classroom.courses.readonly";
 const WORK_SCOPE = "https://www.googleapis.com/auth/classroom.coursework.me.readonly";
 const WORK_SCOPE_ALIAS = "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"; // Google คืนชื่อนี้แทน
-const ORIGINS = ["https://studyquest-tau.vercel.app", "http://localhost:8081"];
+const ORIGINS = ["https://lecturelich.vercel.app", "http://localhost:8081"];
 const API = "https://classroom.googleapis.com/v1";
 
 const CORS = {

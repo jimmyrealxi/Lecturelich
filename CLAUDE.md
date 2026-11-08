@@ -30,7 +30,7 @@
 
 ## สถานะล่าสุด (8 พ.ย. 2569)
 - **งานต่อและคำถามที่ค้างอยู่ใน `docs/HANDOFF_NEXT.md`** (ดูก่อนเริ่ม)
-- **ดึงงานจาก Google Classroom ทำได้ (ทดสอบ 8 พ.ย.):** บัญชี `@udru.ac.th` ผ่าน Playground ด้วย client ของแอปเอง ได้ 200 · scope `classroom.courses.readonly` + `classroom.coursework.me.readonly` · ได้ title, description, alternateLink, dueDate (บางงานไม่มีวันส่ง) · **เฟส 1 ลงโค้ดแล้ว (ยังไม่ได้เทสจริง) · ต้องรัน migration 8 ก่อน push ไม่งั้นแท็บงานพัง** ขั้นตอนใน `docs/HANDOFF_NEXT.md` · เฟส 2 งานห้องร่วมทำทีหลัง · ไลน์ใช้วิธีวางข้อความแทนบอต
+- **ดึงงานจาก Google Classroom ทำได้ (ทดสอบ 8 พ.ย.):** บัญชี `@udru.ac.th` ผ่าน Playground ด้วย client ของแอปเอง ได้ 200 · scope `classroom.courses.readonly` + `classroom.coursework.me.readonly` · ได้ title, description, alternateLink, dueDate (บางงานไม่มีวันส่ง) · **เฟส 1 ลงโค้ดแล้ว · migration 8 รันแล้ว · function `classroom` deploy แล้ว (verify_jwt ปิด) · ยังไม่ push · ยังไม่ได้กดเชื่อมจริง** ขั้นตอนใน `docs/HANDOFF_NEXT.md` · เฟส 2 งานห้องร่วมทำทีหลัง · ไลน์ใช้วิธีวางข้อความแทนบอต
 - **แก้ตามผลเทส Vercel 5 จุด (commit แล้ว · ยังไม่ push · รอเจ้าของเทสบนมือถือ):** จอซูมตอนจดหัวข้อ · แป้นพิมพ์เด้งตอนเปิดฟอร์มเพิ่มงาน · ติ๊กงานแล้วค้างจนเปลี่ยนหน้า · ออกจากแท็บแล้วกลับบนสุด (`lib/useTabTop.ts`) · ขยายตัวหนังสือทั้งแอปและปุ่มกลับ (กติกาใหม่ใน `docs/DESIGN.md`) · tsc ผ่าน เทสต์ 55 ข้อผ่าน · ยังไม่ได้เปิดดูในเบราว์เซอร์ · **หน้ารายละเอียดงาน: เจ้าของเลือกแบบ A (มีช่องรายละเอียด) · พักไว้ก่อน ยังไม่ลงโค้ด** `docs/mockups/a-task-detail.html`
 - **ช่องวันที่/เวลาทั้งแอปเป็น พ.ศ. `8/11/2569` พิมพ์แค่ตัวเลข (ยังไม่ commit)** `DateField`/`TimeField` ใน `components/ui.tsx` + `maskDate`/`maskTime`/`fromThaiDate`/`toThaiDate` ใน `lib/input.ts` · ฐานข้อมูลยังเก็บ ค.ศ. เหมือนเดิม · เทสต์ 48 ข้อผ่าน
 - **หน้าวันนี้ตอนไม่มีคาบ/หมดคาบ/งดสอนทั้งวัน ใช้จอเขียว "> ตอนนี้ว่าง" แล้ว (ยังไม่ commit)** ลงตรงตามคำขอเจ้าของ ไม่ได้ทำ mockup
@@ -51,5 +51,5 @@
 - เทสกับของจริง: ขั้น 1 ผ่าน · ขั้น 2 ผ่านครบ (VAPID ใส่แล้ว · `send-push` deploy แล้ว verify_jwt ปิด · push เด้งใน Edge localhost) · ขั้น 3 ผ่าน · หน้าต่างเบราว์เซอร์ใน Claude ปิด `confirm()` อัตโนมัติ → เทสปุ่มลบใน Chrome จริง
 - แก้ระหว่างเทส: `+html.tsx` ต้องวาง `headNodes/bodyNodes` (SDK 58 ไม่งั้นเว็บว่าง) · migration ขั้น 6 `$`→`$$` · คะแนนคิดตามงาน (ได้รวม/เต็มรวม × เต็มของส่วน, งานยังไม่กรอกไม่นับ, เต็มของส่วนเว้นว่าง = สัดส่วน)
 - ข้อมูลทดสอบในบัญชีเจ้าของ: เทอมเริ่มถูกเลื่อนเป็นก่อน 9 พ.ย. + คาบคณิตถูกย้ายเป็น ส. 01:00–03:00 + เพิ่มคาบ อา. 00:30–02:30 + งาน "ทดสอบตรายาง (ลบได้)" ส่งวันนี้ 00:10 = เลยกำหนด (8 พ.ย.) → เทสเสร็จลบทั้งสองแล้วเปลี่ยนกลับ (จ. 10:00)
-- Vercel ขึ้นแล้ว https://studyquest-tau.vercel.app (Production = `feat/stage6-rooms`, เปลี่ยนกลับ `main` หลัง merge) · sprite/ไอคอน placeholder · ขั้น 7 ต้องคุยก่อน
+- Vercel ขึ้นแล้ว https://lecturelich.vercel.app (เปลี่ยนโดเมน 8 พ.ย. · Production = `feat/stage6-rooms`, เปลี่ยนกลับ `main` หลัง merge) · sprite/ไอคอน placeholder · ขั้น 7 ต้องคุยก่อน
 - อ้างอิง: XP ด้วย trigger `xp_value()` + `xp_overview()` · ห้อง: `is_room_member/owner()` · แก้/ลบงานห้อง = คนสร้าง+เจ้าของห้อง (ยืนยันแล้ว) · เพดาน XP 60 · เทสต์ 42 ข้อ

@@ -5,7 +5,7 @@ branch `feat/stage6-rooms` · push แล้วถึง commit `3fd7801` (branc
 ## งานล่าสุด (8 พ.ย. ค่ำ) อ่านก่อนหัวข้ออื่น
 - branch `feat/stage6-rooms` · commit ถึงงาน Classroom เฟส 1 แล้ว **ยังไม่ push** (push ล่าสุดคือ `3fd7801`)
 - **แก้ตามผลเทส Vercel แล้ว รอเทสบนมือถือ:** จอซูมตอนจดหัวข้อ · แป้นพิมพ์เด้งตอนเพิ่มงาน · ติ๊กงานค้างจนเปลี่ยนหน้า · เปลี่ยนแท็บกลับบนสุด · ขยายตัวหนังสือ · ขยายปุ่มกลับ
-- **Classroom เฟส 1:** ลงโค้ดแล้ว ยังไม่ได้เทสจริง ทำตามหัวข้อ "Classroom เฟส 1" ด้านล่าง **ห้าม push ก่อนรัน migration 8**
+- **Classroom เฟส 1:** migration 8 รันแล้ว · redirect URI เพิ่มแล้ว · function `classroom` deploy แล้ว พร้อมโดเมนใหม่ `lecturelich.vercel.app` · ยังไม่ push และยังไม่ได้กดเชื่อมจริง · secrets, Site URL ของ Supabase และหน้า Audience เจ้าของต้องเช็กเอง
 - **ค้างถามเจ้าของ:** ส่งงานใน Classroom แล้วให้ติ๊กส่งเองพร้อม XP ไหม (แนะนำให้ทำ) · deploy function และ push ต้องถามก่อน
 - **พักไว้:** หน้ารายละเอียดงานแบบ A (`a-task-detail.html`) · เฟส 2 งานห้องร่วม หลังเจ้าของลองใช้แอป
 - ข้อความ `refresh_token` เคยติดในภาพแชท เจ้าของถอนสิทธิ์ Playground แล้ว
