@@ -26,10 +26,12 @@ export function useLoot() {
     queryKey: lootKey,
     retry: false, // ยังไม่รัน migration = error ถาวร ไม่ต้องลองซ้ำ
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("loot_state");
+      // คลาส (migration ขั้น 9) ยังไม่รัน = error ข้ามไป ตัวละครเป็นร่างเดิม
+      const [{ data, error }, cls] = await Promise.all([supabase.rpc("loot_state"), supabase.rpc("class_state")]);
       if (error) throw error;
       const d = data as Omit<LootState, "look"> & { look: Record<string, string> };
-      return { ...d, look: fullLook(d.look) } as LootState;
+      const k = (cls.data ?? null) as { class_id?: string | null; ascendancy_id?: string | null } | null;
+      return { ...d, look: { ...fullLook(d.look), cls: k?.class_id ?? null, asc: k?.ascendancy_id ?? null } } as LootState;
     },
   });
 }
