@@ -38,15 +38,11 @@ export function TaskRow({ task, subjectName, today, first, stamp, onTick }: {
         <View style={[s.check, task.done && s.checked]}>{task.done && <Tick />}</View>
       </Pressable>
       <Pressable style={{ flex: 1 }} disabled={!task.link} onPress={() => task.link && Linking.openURL(task.link)}>
-        <Text style={[T.body, task.done && s.doneText]}>{task.title}</Text>
+        <Text style={[s.title, task.done && s.doneText]}>{task.title}</Text>
         <Text style={T.muted}>{meta}</Text>
+        {task.due_at && <Text style={[s.due, soon && !task.done && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>}
       </Pressable>
-      {task.due_at && (
-        <View style={{ alignItems: "flex-end", gap: 4 }}>
-          {stamp && <Stamp>เลยกำหนด</Stamp>}
-          <Text style={[s.due, soon && !task.done && s.dueSoon]}>{dueLabel(task.due_at, today)}</Text>
-        </View>
-      )}
+      {stamp && <Stamp>เลยกำหนด</Stamp>}
       <Pressable onPress={() => !temp && setOpen(true)} style={s.hit} accessibilityRole="button"
         accessibilityLabel={`ตัวเลือกงาน ${task.title}`}>
         <Text style={s.dots}>⋯</Text>
@@ -90,7 +86,8 @@ function TaskSheet({ task, meta, onClose }: { task: Assignment; meta: string; on
 }
 
 const s = StyleSheet.create({
-  row: { flexDirection: "row", alignItems: "center", gap: space.sm, paddingVertical: 2 },
+  row: { flexDirection: "row", alignItems: "center", gap: space.sm, paddingVertical: 8 },
+  title: { fontFamily: font.bodyBold, fontSize: 17, lineHeight: 25, color: color.paper },
   divider: { borderTopWidth: 1, borderTopColor: color.rule },
   hit: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
   // ช่องติ๊กวาดมือ · ติ๊กแล้ว = ✓ ปากกาน้ำเงิน
@@ -100,7 +97,7 @@ const s = StyleSheet.create({
   },
   checked: { borderColor: color.pen },
   doneText: { color: color.faint }, // ไม่ขีดฆ่า: เส้นทับสระบนไทยอ่านยาก
-  due: { fontFamily: font.bodyBold, fontSize: 14, color: color.muted },
+  due: { fontFamily: font.bodyBold, fontSize: 15, color: color.muted },
   dueSoon: { color: color.danger },
   dots: { fontSize: 20, color: color.muted },
   dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },
@@ -111,7 +108,7 @@ const s = StyleSheet.create({
   },
   grab: { width: 40, height: 4, backgroundColor: color.rule2, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
   lock: {
-    fontFamily: font.body, fontSize: 14, color: color.muted, backgroundColor: color.field, borderWidth: 1, borderColor: color.rule2,
+    fontFamily: font.body, fontSize: 15, color: color.muted, backgroundColor: color.field, borderWidth: 1, borderColor: color.rule2,
     borderRadius: radius.md, padding: space.md, marginTop: space.md,
   },
 });

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Btn, Card, confirmAction, Crt, CrtBig, CrtLabel, Skeleton, T, Tick, UndoBar } from "@/components/ui";
+import { Btn, Card, confirmAction, Crt, CrtBig, CrtLabel, PenScribble, Readout, Section, Skeleton, T, Tick, UndoBar } from "@/components/ui";
 import { CrtStage, useCrtFx } from "@/components/game/CrtFx";
 import { PapBoyBuddy } from "@/components/game/PapBoySprite";
 import { KIND, statusOf } from "@/components/game/Review";
@@ -179,10 +179,7 @@ export default function Today() {
               </Pressable>
             )}
 
-            <View style={s.h}>
-              <Text style={s.hTitle} accessibilityRole="header">ต้องทำ</Text>
-              <Text style={s.hSide}><Text style={s.tyMuted}>{unnoted.length + openTasks.filter((a) => !a.done).length}</Text> เรื่อง</Text>
-            </View>
+            <Section count={{ n: unnoted.length + openTasks.filter((a) => !a.done).length, unit: "เรื่อง" }}>ต้องทำ</Section>
 
             {unnoted.map((slot) => (
               <View key={slot.id} style={s.entry}>
@@ -286,19 +283,20 @@ function TodayReview({ termId, today, nameOf }: { termId: string; today: string;
   const ready = exam ? examReady(exam, exams, topics) : null;
   const days = exam ? daysUntil(exam.date, today) : 0;
   const left = queue.filter((t) => !pressed.some((p) => p.id === t.id)).length;
+  const firstLate = queue.find((t) => statusOf(t, today).late)?.id;
 
   return (
     <View role="region" aria-label="ทวนวันนี้">
-      <View style={s.h}>
-        <Text style={s.hTitle} accessibilityRole="header">ทวนวันนี้</Text>
-        <Text style={s.hSide}>เหลือ <Text style={s.tyMuted}>{left}</Text> หัวข้อ</Text>
-      </View>
+      <Section count={{ n: left, unit: "หัวข้อ" }}>ทวนวันนี้</Section>
       {exam && (
-        <Text style={s.exam}>
-          <Text style={s.examName}>{KIND[exam.kind]} {nameOf(exam.subject_id)}</Text>
-          {" · "}{days === 0 ? "สอบวันนี้" : <>อีก <Text style={s.ty}>{days}</Text> วัน</>}
-          {ready !== null && <> · พร้อมสอบ <Text style={s.ty}>{ready}%</Text></>}
-        </Text>
+        <View style={s.examRow}>
+          <Text style={s.exam}>
+            <Text style={s.examName}>{KIND[exam.kind]} {nameOf(exam.subject_id)}</Text>
+            {"\n"}{days === 0 ? "สอบวันนี้" : <>อีก <Text style={s.ty}>{days}</Text> วัน</>}
+            {ready !== null && " · พร้อมสอบ"}
+          </Text>
+          {ready !== null && <Readout>{ready}%</Readout>}
+        </View>
       )}
       {(open ? queue : queue.slice(0, 3)).map((t) => {
         const st = statusOf(t, today);
@@ -306,8 +304,9 @@ function TodayReview({ termId, today, nameOf }: { termId: string; today: string;
           <View key={t.id} style={s.entry}>
             <Pressable style={s.reviewOpen} onPress={() => router.push(`/subject/${t.subject_id}`)} accessibilityRole="link"
               accessibilityLabel={`${t.is_starred ? "ออกสอบ " : ""}${t.title} ${st.text} เปิดหน้าวิชา ${nameOf(t.subject_id)}`}>
-              <Text style={[s.what, s.reviewLink]}>{t.is_starred && <Text style={s.star}>★ </Text>}{t.title}</Text>
+              <Text style={s.what}>{t.is_starred && <Text style={s.star}>★ </Text>}{t.title}</Text>
               <Text style={s.sub}>{nameOf(t.subject_id)} · <Text style={st.late && s.late}>{st.text}</Text></Text>
+              {t.id === firstLate && <PenScribble />}
             </Pressable>
             {pressed.some((p) => p.id === t.id) ? (
               <View style={s.reviewed}><Tick /><Text style={s.reviewedText}>ทวนแล้ว</Text></View>
@@ -421,7 +420,7 @@ const s = StyleSheet.create({
   buddy: { marginTop: -8, marginBottom: -8, marginRight: -6 },
   bubble: {
     position: "absolute", right: 86, top: 6, backgroundColor: color.field, borderWidth: 1.5, borderColor: color.paper, borderRadius: 3,
-    fontFamily: font.bodyMedium, fontSize: 14, color: color.paper, paddingHorizontal: 10, paddingVertical: 3, transform: [{ rotate: "-2deg" }],
+    fontFamily: font.bodyMedium, fontSize: 15, color: color.paper, paddingHorizontal: 10, paddingVertical: 3, transform: [{ rotate: "-2deg" }],
   },
   // ป้ายพิมพ์นูน (จุดเดียวต่อจอ) · letter-spacing ได้เพราะเป็นตัวอังกฤษ
   dymo: {
@@ -430,42 +429,38 @@ const s = StyleSheet.create({
     textShadowColor: "#000", textShadowOffset: { width: 0, height: -1 }, textShadowRadius: 0,
   },
   h2: { fontFamily: font.title, fontSize: 32, lineHeight: 44, color: color.paper, marginTop: 6 },
-  date: { fontFamily: font.typeBold, fontSize: 15, color: color.paper },
+  date: { fontFamily: font.typeBold, fontSize: 16, color: color.paper },
   dateTerm: { fontFamily: font.bodyMedium },
 
-  k: { fontFamily: font.body, fontSize: 14, color: color.crtDim, ...crtGlow.dim },
+  k: { fontFamily: font.body, fontSize: 15, color: color.crtDim, ...crtGlow.dim },
   subj: { fontFamily: font.bodyBold, fontSize: 19, lineHeight: 26, color: color.crtOn, marginTop: 2, ...crtGlow.title },
   subjRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", columnGap: 6 },
-  tag: { fontFamily: font.body, fontSize: 14, color: color.crtOn, borderWidth: 1, borderColor: "#2F6B42", borderRadius: 2, paddingHorizontal: 8, paddingVertical: 2 },
-  meta: { fontFamily: font.body, fontSize: 14, color: color.crtDim, marginTop: 2 },
+  tag: { fontFamily: font.body, fontSize: 15, color: color.crtOn, borderWidth: 1, borderColor: "#2F6B42", borderRadius: 2, paddingHorizontal: 8, paddingVertical: 2 },
+  meta: { fontFamily: font.body, fontSize: 15, color: color.crtDim, marginTop: 2 },
   vt: { fontFamily: font.num, fontSize: 19, color: color.crtOn },
   att: { flexDirection: "row", gap: 8, marginTop: 14 },
   attBtn: { flex: 1, minHeight: minTouch, borderWidth: 1, borderColor: "#2F6B42", borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
   attOn: { backgroundColor: color.crtOn, borderColor: color.crtOn },
-  attText: { fontFamily: font.bodyBold, fontSize: 15, color: color.crtOn },
+  attText: { fontFamily: font.bodyBold, fontSize: 16, color: color.crtOn },
   saved: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 12 },
 
-  next: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: 12 },
+  next: { fontFamily: font.body, fontSize: 16, color: color.muted, marginTop: 12 },
   dayOffLink: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start", marginTop: 4 },
-  dayOffText: { fontFamily: font.body, fontSize: 15, color: color.muted, textDecorationLine: "underline" },
+  dayOffText: { fontFamily: font.body, fontSize: 16, color: color.pen, textDecorationLine: "underline" },
   ty: { fontFamily: font.typeBold, color: color.paper },
-  tyMuted: { fontFamily: font.typeBold, color: color.muted },
 
-  h: { flexDirection: "row", alignItems: "baseline", gap: 10, paddingTop: 30, paddingBottom: 4 },
-  hTitle: { fontFamily: font.title, fontSize: 19, lineHeight: 28, color: color.paper },
-  hSide: { fontFamily: font.body, fontSize: 14, color: color.faint },
-  entry: { flexDirection: "row", alignItems: "center", gap: 10, minHeight: 60, paddingVertical: 8, borderTopWidth: 1, borderTopColor: color.rule },
+  entry: { flexDirection: "row", alignItems: "center", gap: 10, minHeight: 68, paddingVertical: 12, borderTopWidth: 1, borderTopColor: color.rule },
   rule: { height: 1, backgroundColor: color.rule },
-  t: { width: 44, fontFamily: font.typeBold, fontSize: 14, color: color.warn, alignSelf: "flex-start", marginTop: 2 },
-  what: { fontFamily: font.bodyBold, fontSize: 15, lineHeight: 21, color: color.paper },
-  sub: { fontFamily: font.body, fontSize: 14, color: color.muted },
+  t: { width: 56, fontFamily: font.typeBold, fontSize: 16, color: color.warn, alignSelf: "flex-start", marginTop: 2 },
+  what: { fontFamily: font.bodyBold, fontSize: 17, lineHeight: 25, color: color.paper },
+  sub: { fontFamily: font.body, fontSize: 15, color: color.muted },
   doneText: { color: color.faint }, // ไม่ขีดฆ่า: เส้นทับสระบนไทยอ่านยาก
   links: { flexDirection: "row", gap: space.lg },
   miniLink: { minHeight: minTouch, justifyContent: "center" },
-  miniText: { fontFamily: font.body, fontSize: 14, color: color.muted, textDecorationLine: "underline" },
+  miniText: { fontFamily: font.body, fontSize: 15, color: color.pen, textDecorationLine: "underline" },
   miniOn: { color: color.pen, fontFamily: font.bodyBold, textDecorationLine: "none" },
-  act: { minHeight: minTouch, paddingHorizontal: 16, borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.sm, justifyContent: "center" },
-  actText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
+  act: { minHeight: minTouch, paddingHorizontal: 13, borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.sm, justifyContent: "center", backgroundColor: color.deck, shadowColor: color.rule2, shadowOffset: { width: 2, height: 2 }, shadowOpacity: 1, shadowRadius: 0 },
+  actText: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
   // ช่องติ๊ก 22px (วาดมือ) แต่พื้นที่กด 44
   tick: { width: 44, height: 44, marginLeft: -10, alignItems: "center", justifyContent: "center" },
   box: {
@@ -474,20 +469,20 @@ const s = StyleSheet.create({
   },
   // ตรายาง (จุดเดียวต่อจอ)
   stamp: {
-    fontFamily: font.bodyBold, fontSize: 14, color: color.red, borderWidth: 2, borderColor: color.red, borderRadius: 4,
+    fontFamily: font.bodyBold, fontSize: 15, color: color.red, borderWidth: 2, borderColor: color.red, borderRadius: 4,
     paddingHorizontal: 9, paddingVertical: 1, transform: [{ rotate: "-6deg" }], opacity: 0.92,
   },
 
-  exam: { fontFamily: font.body, fontSize: 15, color: color.muted, paddingTop: 2, paddingBottom: 8 },
+  examRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10, paddingTop: 2, paddingBottom: 8 },
+  exam: { fontFamily: font.body, fontSize: 16, lineHeight: 24, color: color.muted },
   examName: { fontFamily: font.bodyBold, color: color.paper },
   reviewOpen: { flex: 1, minWidth: 0, minHeight: minTouch, justifyContent: "center" },
-  reviewLink: { textDecorationLine: "underline", textDecorationColor: color.rule2 },
   star: { color: color.red },
   late: { color: color.warn },
   reviewed: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: minTouch, paddingHorizontal: 4 },
-  reviewedText: { fontFamily: font.bodyBold, fontSize: 14, color: color.pen },
+  reviewedText: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen },
   more: { minHeight: minTouch, justifyContent: "center", borderTopWidth: 1, borderTopColor: color.rule },
-  moreText: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen, textDecorationLine: "underline" },
+  moreText: { fontFamily: font.bodyBold, fontSize: 16, color: color.pen, textDecorationLine: "underline" },
 
   qa: { flexDirection: "row", gap: 10, marginTop: 22 },
   quick: {
@@ -495,9 +490,9 @@ const s = StyleSheet.create({
     borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.sm, boxShadow: `2px 2px 0 ${color.paper}`,
   },
   quickDown: { transform: [{ translateX: 2 }, { translateY: 2 }], boxShadow: "none" },
-  quickText: { fontFamily: font.bodyMedium, fontSize: 14, color: color.paper },
+  quickText: { fontFamily: font.bodyMedium, fontSize: 15, color: color.paper },
 
   sum: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", minHeight: 48, marginTop: 18, borderTopWidth: 1, borderColor: color.rule },
-  sumText: { fontFamily: font.body, fontSize: 15, color: color.muted },
-  sumLink: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen },
+  sumText: { fontFamily: font.body, fontSize: 16, color: color.muted },
+  sumLink: { fontFamily: font.bodyBold, fontSize: 16, color: color.pen },
 });

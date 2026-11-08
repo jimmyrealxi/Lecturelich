@@ -126,16 +126,16 @@ export default function SubjectScreen() {
 
 const s = StyleSheet.create({
   edit: { position: "absolute", right: space.lg, top: space.md, minHeight: 52, minWidth: 72, alignItems: "flex-end", justifyContent: "center" },
-  topSub: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: 2 },
+  topSub: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: 2 },
   links: { flexDirection: "row", gap: space.sm, marginTop: space.md },
   link: {
     flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper,
     alignItems: "center", justifyContent: "center",
   },
-  linkText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
+  linkText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   big: { fontFamily: font.typeBold, fontSize: 32, color: color.paper },
-  bigSmall: { fontFamily: font.body, fontSize: 15, color: color.muted },
+  bigSmall: { fontFamily: font.body, fontSize: 16, color: color.muted },
   num: { fontFamily: font.typeBold, color: color.paper },
   bar: { height: 8, backgroundColor: "rgba(42,33,24,0.12)", borderRadius: 2, overflow: "hidden", marginTop: space.sm },
   barFill: { height: "100%", backgroundColor: color.pen },

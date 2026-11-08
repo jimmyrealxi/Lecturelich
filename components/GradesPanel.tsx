@@ -263,7 +263,7 @@ const s = StyleSheet.create({
   bar: { height: 8, backgroundColor: "rgba(42,33,24,0.12)", borderRadius: 2, overflow: "hidden", marginTop: space.sm },
   barFill: { height: "100%", backgroundColor: color.pen },
   // บนจอเขียว: ตัวเลขใหญ่ VT323 · ข้อความไทย Anuphan
-  needSmall: { fontFamily: font.body, fontSize: 14, color: color.crtDim },
+  needSmall: { fontFamily: font.body, fontSize: 15, color: color.crtDim },
   needBig: { fontFamily: font.num, fontSize: 40, lineHeight: 42, color: "#B8FFC9" },
   chips: { flexDirection: "row", gap: 4, marginTop: space.sm }, // 7 เกรดแถวเดียวตาม mockup (360px: ช่องละ ~38 กว้าง สูง 44)
   chip: {
@@ -271,11 +271,11 @@ const s = StyleSheet.create({
     alignItems: "center", justifyContent: "center",
   },
   chipOn: { backgroundColor: color.crtOn, borderColor: color.crtOn },
-  chipText: { fontFamily: font.bodyBold, fontSize: 15, color: color.crtOn },
+  chipText: { fontFamily: font.bodyBold, fontSize: 16, color: color.crtOn },
   row: { flexDirection: "row", gap: space.sm },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
   item: { flexDirection: "row", alignItems: "center", minHeight: minTouch, borderTopWidth: 1, borderTopColor: color.rule, gap: space.sm },
   x: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
-  label: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 6 },
-  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
+  label: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: space.md, marginBottom: 6 },
+  err: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
 });

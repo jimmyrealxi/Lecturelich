@@ -117,7 +117,7 @@ export default function Tasks() {
         ) : (
           groups.sections.filter((g) => g.items.length).map((g) => (
             <View key={g.title}>
-              <Section>{g.title}</Section>
+              <Section count={{ n: g.items.length, unit: "งาน" }}>{g.title}</Section>
               <View style={s.list}>
                 {g.items.map((a, i) => (
                   <TaskRow key={a.id} task={a} today={today} first={i === 0} stamp={a.id === groups.lateId}
@@ -165,23 +165,23 @@ function UrgentCrt({ task, today, nowMs, subject, onSend, overlay }: { task: Ass
 
 const s = StyleSheet.create({
   crtBtn: { minHeight: minTouch, marginTop: 12, borderWidth: 1, borderColor: "#2F6B42", borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
-  crtBtnText: { fontFamily: font.bodyBold, fontSize: 15, color: color.crtOn },
+  crtBtnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.crtOn },
   page: { padding: space.lg, paddingBottom: 96, width: "100%", maxWidth: 560, alignSelf: "center" },
   // แท็บสลับ: ที่เลือก = หมึกเต็ม
   seg: { flexDirection: "row", borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.md, overflow: "hidden" },
   segItem: { flex: 1, minHeight: 44, alignItems: "center", justifyContent: "center" },
   segOn: { backgroundColor: color.paper },
-  segText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
+  segText: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
   sync: { flexDirection: "row", alignItems: "center", gap: space.sm, minHeight: minTouch, marginTop: space.sm },
   syncBtn: { minHeight: minTouch, minWidth: 72, alignItems: "flex-end", justifyContent: "center" },
-  syncText: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen, textDecorationLine: "underline" },
+  syncText: { fontFamily: font.bodyBold, fontSize: 16, color: color.pen, textDecorationLine: "underline" },
   list: { borderBottomWidth: 1, borderBottomColor: color.rule },
   // FAB หมึกเต็ม + เงาแข็ง
   fab: {
     position: "absolute", right: space.lg, bottom: space.lg, minHeight: 52, paddingHorizontal: space.lg,
     borderRadius: radius.md, backgroundColor: color.paper, justifyContent: "center", boxShadow: `3px 3px 0 ${color.rule2}`,
   },
-  fabText: { fontFamily: font.bodyBold, fontSize: 15, color: color.deck },
+  fabText: { fontFamily: font.bodyBold, fontSize: 16, color: color.deck },
   dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },
   sheet: {
     position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: "90%", backgroundColor: color.deck,

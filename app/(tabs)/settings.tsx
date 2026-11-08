@@ -134,11 +134,11 @@ function TermForm({ term, onSaved }: { term: CurrentTerm | null; onSaved: () => 
 }
 
 const s = StyleSheet.create({
-  page: { padding: space.md, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
+  page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   between: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.sm },
   two: { flexDirection: "row", gap: space.sm },
   row: { flexDirection: "row", marginTop: space.md },
   step: { flex: 0, width: 44 },
   pct: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper, minWidth: 64, textAlign: "center" },
-  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
+  error: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
 });

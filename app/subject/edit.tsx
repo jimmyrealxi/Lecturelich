@@ -163,7 +163,7 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
 
 const s = StyleSheet.create({
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  label: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: space.md, marginBottom: 6 },
   swatches: { flexDirection: "row", flexWrap: "wrap", gap: 4 }, // 6 สีแถวเดียวที่ 360 (6×44 + 5×4 = 284)
   // พื้นที่กด 44 · สีข้างใน 30 · ที่เลือก = วงหมึก
   sw: { width: minTouch, height: minTouch, borderRadius: 22, borderWidth: 2, borderColor: "transparent", alignItems: "center", justifyContent: "center" },
@@ -172,9 +172,9 @@ const s = StyleSheet.create({
   slotbox: { backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule2, borderRadius: radius.lg, padding: space.sm, marginBottom: space.sm },
   days: { flexDirection: "row", gap: 4 },
   day: { flex: 1, minHeight: minTouch, borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
-  dayText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
+  dayText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   slotRow: { flexDirection: "row", gap: space.sm, alignItems: "flex-end" },
   x: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
-  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
+  error: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
   foot: { flexDirection: "row", gap: space.sm, padding: space.md, borderTopWidth: 1, borderTopColor: color.rule2, backgroundColor: color.deck },
 });

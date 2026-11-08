@@ -101,7 +101,7 @@ const s = StyleSheet.create({
   item: { flexDirection: "row", alignItems: "center", gap: space.md, minHeight: 60, paddingVertical: space.sm, borderTopWidth: 1, borderTopColor: color.rule },
   last: { borderBottomWidth: 1, borderBottomColor: color.rule },
   sq: { width: 14, height: 14, borderRadius: 2 },
-  what: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
+  what: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
   pct: { fontFamily: font.typeBold, fontSize: 19, color: color.paper },
-  pctSub: { fontFamily: font.body, fontSize: 14, color: color.muted },
+  pctSub: { fontFamily: font.body, fontSize: 15, color: color.muted },
 });
