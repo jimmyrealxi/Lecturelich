@@ -142,7 +142,7 @@ function ComponentCard({ subjectId, comp, sum, onEdit }: {
   return (
     <Card>
       <View style={s.between}>
-        <Text style={T.h3}>{comp.name}{comp.is_final ? "  · ปลายภาค" : ""}</Text>
+        <Text style={T.h3}>{comp.name}{comp.is_final && !comp.name.includes("ปลายภาค") ? "  · ปลายภาค" : ""}</Text>
         <Text style={T.muted}>
           {fmt(Number(comp.weight))}% · {sum == null ? "ยังไม่มีคะแนน"
             : `${fmt(comp.scores.reduce((t, x) => t + Number(x.score), 0))}/${fmt(comp.scores.reduce((t, x) => t + Number(x.max_score), 0))}`
@@ -164,6 +164,7 @@ function ComponentCard({ subjectId, comp, sum, onEdit }: {
         <Field label="ได้" value={score} onChangeText={setScore} keyboardType="decimal-pad" maxLength={6} error={tried ? errScore : null} />
         <Field label="เต็ม" value={max} onChangeText={setMax} keyboardType="decimal-pad" maxLength={6} error={tried ? errMax : null} />
       </View>
+      <Text style={[T.muted, { fontSize: 12, marginTop: 4 }]}>งานที่ได้ 0 ให้กรอก 0 ด้วย ไม่งั้นแอปจะไม่นับงานนั้น</Text>
       <View style={[s.row, { marginTop: space.sm }]}>
         <Btn label="แก้ส่วนนี้" onPress={onEdit} />
         <Btn kind="primary" label="+ เพิ่มคะแนน" onPress={onAdd} />

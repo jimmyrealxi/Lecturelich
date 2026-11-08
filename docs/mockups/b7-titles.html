@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ฉายาจากความสำเร็จ</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Anuphan:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ชุด 7c · ฉายาจากความสำเร็จ (ร่างให้เลือก) · โลกมืดตาม b5-game · ชื่อฉายาตั้งเองทั้งหมด */
+:root{--cave:#0F0D0C;--deep:#060504;--panel:#1A1613;--seam:#3B3027;--seam2:#54443A;--bone:#E8DFD0;--ash:#B0A28E;--gold:#C9A25B;
+  --normal:#E8E8E8;--magic:#8AB0FF;--rare:#F2C230;--unique:#EE8A3C}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2A2E2B;font:15px/1.5 Anuphan,sans-serif;color:#E4E6E2;padding:24px 16px}
+h1{font:700 22px/1.3 "Chakra Petch",Anuphan,sans-serif;color:#fff;margin-bottom:6px}
+p.note{color:#C6CCC7;font-size:14px;max-width:760px;margin-bottom:20px}
+.wrap{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.col{width:360px;max-width:100%}
+.cap{font:600 15px "Chakra Petch",Anuphan;color:#fff;margin-bottom:10px}
+.cap small{display:block;font:400 13px Anuphan;color:#C6CCC7}
+.phone{background:var(--cave);color:var(--bone);border:6px solid #060606;border-radius:28px;overflow:hidden;padding:14px 12px 18px}
+.who{display:flex;gap:14px;align-items:center;padding:4px 4px 12px}
+.lv{font:400 42px/1 VT323,monospace;color:var(--gold);text-align:center}.lv small{display:block;font:600 12px "Chakra Petch";color:var(--ash)}
+.nm{font:700 17px "Chakra Petch"}
+.tbtn{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;margin-top:2px;background:transparent;border:0;border-bottom:1px dashed var(--seam2);color:var(--rare);font:600 14px Anuphan;cursor:pointer;text-align:left}
+.tbtn span{margin-left:auto;color:var(--ash);font-size:13px;font-weight:400}
+.frame{background:var(--panel);border:1px solid var(--seam2);box-shadow:inset 0 0 0 2px var(--deep),inset 0 0 0 3px var(--seam);padding:6px 12px}
+.row{display:flex;align-items:center;gap:10px;min-height:56px;padding:6px 0;border-top:1px solid var(--seam);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.frame .row:first-child{border-top:0}
+.row b{display:block;font-size:15px;font-weight:600}
+.row small{display:block;font-size:13px;color:var(--ash)}
+.row[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--gold);padding-inline:8px}
+.row .n{margin-left:auto;font:400 20px VT323,monospace;color:var(--ash);white-space:nowrap}
+.row[disabled]{cursor:default}.row[disabled] b{color:var(--ash)}
+.m{color:var(--magic)}.r{color:var(--rare)}.u{color:var(--unique)}.w{color:var(--normal)}
+.opts{display:grid;gap:10px;font-size:14px}
+.opts div{background:#1F2321;border:1px solid #4A514C;padding:10px 12px}
+.opts b{color:#fff;display:block}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid #4A514C;vertical-align:top}
+th{color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+<h1>ฉายาจากความสำเร็จ (ร่างให้เลือก · ยังไม่ลงโค้ด)</h1>
+<p class="note">ไม่มีตารางใหม่: นับจากประวัติ XP ที่มีอยู่ ได้แล้วไม่หาย ไม่มี streak ไม่มีของรางวัลเพิ่ม แตะฉายาในหน้าเกมเพื่อเปลี่ยน ฉายาที่ยังไม่ได้ซ่อนชื่อเป็น ??? แต่บอกเงื่อนไข</p>
+<div class="wrap">
+  <div class="col">
+    <div class="cap">หน้าเกม<small>แทนบรรทัด "ฉายา: …" เดิม</small></div>
+    <div class="phone">
+      <div class="who">
+        <div class="lv"><small>LV</small>4</div>
+        <div style="flex:1">
+          <div class="nm">Pap-Boy</div>
+          <button class="tbtn" id="cur">จดจนกล้องร้อน<span>เปลี่ยน ›</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="cap">แตะแล้วเปิดรายการ<small>กดในกรอบได้เลย</small></div>
+    <div class="phone">
+      <div class="frame" id="list">
+        <button class="row" aria-pressed="false" data-c="w" data-n="นักเรียนฝึกหัด"><span><b class="w">นักเรียนฝึกหัด</b><small>ตั้งต้น</small></span></button>
+        <button class="row" aria-pressed="false" data-c="m" data-n="ตรงเวลาเข้าเรียน"><span><b class="m">ตรงเวลาเข้าเรียน</b><small>เข้าเรียนครบ 10 คาบ</small></span></button>
+        <button class="row" aria-pressed="true" data-c="r" data-n="จดจนกล้องร้อน"><span><b class="r">จดจนกล้องร้อน</b><small>จดมีรูปครบ 20 ครั้ง</small></span></button>
+        <button class="row" disabled><span><b>???</b><small>ส่งก่อนกำหนด 10 งาน</small></span><span class="n">4/10</span></button>
+        <button class="row" disabled><span><b>???</b><small>ทวนครบ 50 ครั้ง</small></span><span class="n">12/50</span></button>
+        <button class="row" disabled><span><b>???</b><small>ล้มบอสประจำเทอม</small></span><span class="n">0/1</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="col" style="width:420px">
+    <div class="cap">รายการที่เสนอ (8 ชื่อ แก้ได้)</div>
+    <table>
+      <tr><th>ฉายา</th><th>เงื่อนไข</th><th>สี</th></tr>
+      <tr><td>นักเรียนฝึกหัด</td><td>ตั้งต้น</td><td>ขาว</td></tr>
+      <tr><td>ตรงเวลาเข้าเรียน</td><td>เข้าเรียน 10 คาบ</td><td class="m">ฟ้า</td></tr>
+      <tr><td>เจ้าของเก้าอี้แถวหน้า</td><td>เข้าเรียน 50 คาบ</td><td class="r">เหลือง</td></tr>
+      <tr><td>มือไม่วางปากกา</td><td>จด 30 ครั้ง</td><td class="m">ฟ้า</td></tr>
+      <tr><td>จดจนกล้องร้อน</td><td>จดมีรูป 20 ครั้ง</td><td class="r">เหลือง</td></tr>
+      <tr><td>ส่งก่อนเดดไลน์จะตื่น</td><td>ส่งก่อนกำหนด 10 งาน</td><td class="r">เหลือง</td></tr>
+      <tr><td>ผู้กลับมาทวน</td><td>ทวน 50 ครั้ง</td><td class="r">เหลือง</td></tr>
+      <tr><td>ผู้ล้มกองข้อสอบ</td><td>ล้มบอสประจำเทอม</td><td class="u">ส้ม</td></tr>
+    </table>
+  </div>
+</div>
+<script>
+const cur=document.getElementById("cur");
+document.getElementById("list").addEventListener("click",e=>{
+  const b=e.target.closest("button:not([disabled])");if(!b)return;
+  document.querySelectorAll("#list button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  cur.firstChild.textContent=b.dataset.n;
+  cur.style.color=getComputedStyle(b.querySelector("b")).color;
+});
+</script>
+</body>
+</html>

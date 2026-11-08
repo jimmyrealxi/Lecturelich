@@ -1,24 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { router } from "expo-router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Animated, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Btn, Card, Crt, Skeleton, T, Tick } from "@/components/ui";
-import { LvChip } from "@/components/game/LvChip";
+import { PapBoyBuddy } from "@/components/game/PapBoySprite";
 import {
   useAssignments, useAttendance, useCurrentTerm, useSetAttendance, useSlots, useSubjects, useToggleDone,
   type AttendanceRow, type Assignment,
 } from "@/lib/queries/core";
+import { useLoot } from "@/lib/queries/loot";
 import { useNotedSlots } from "@/lib/queries/notes";
 import { useXpToday } from "@/lib/queries/xp";
 import {
   bangkokNow, currentOrNext, endedWithoutNote, slotsOn, toMinutes, type AttendanceStatus, type Slot,
 } from "@/lib/schedule";
 import { dueInfo, dur, hhmm, typedDate, weekdayName } from "@/lib/format";
+import { DEFAULT_LOOK, type Pose } from "@/lib/papboy";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 import { XP_CONFIG } from "@/lib/xp";
 
 // หน้าวันนี้ ธีม A (docs/mockups/a-today.html) · จอเขียวแปะเทปเฉพาะคาบตอนนี้/ถัดไป · ตรายางแดงอันเดียว (งานด่วนสุด)
-// ป้ายนูนอันเดียว (LECTURELICH) · XP วันนี้เป็นบรรทัดลิงก์ไปหน้าเกม · มุมขวาบนเว้นที่ Pap-Boy (ตอนนี้ LvChip)
+// ป้ายนูนอันเดียว (LECTURELICH) · XP วันนี้เป็นบรรทัดลิงก์ไปหน้าเกม · มุมขวาบน Pap-Boy เปลี่ยนท่าตามสิ่งที่ทำ (docs/mockups/inspire-anim.html)
 
 /** เวลาไทยปัจจุบัน อัปเดตทุกนาที */
 function useNow() {
@@ -41,6 +43,25 @@ export default function Today() {
   const setAttendance = useSetAttendance(term.data?.id ?? "");
   const toggle = useToggleDone();
   const xpToday = useXpToday(now.date);
+  const look = useLoot().data?.look ?? DEFAULT_LOOK;
+  // เปิดหน้า = แบห้านิ้ว แล้วกลับไปนั่งอ่าน · n แยกการทำซ้ำท่าเดิม
+  const [buddy, setBuddy] = useState<{ pose: Pose; say: string; n: number }>({ pose: "palm", say: "", n: 0 });
+  const act = useCallback((pose: Pose, say: string) => setBuddy((b) => ({ pose, say, n: b.n + 1 })), []);
+  useEffect(() => {
+    if (buddy.pose === "read") return;
+    const hush = setTimeout(() => setBuddy((b) => ({ ...b, say: "" })), 1300);
+    const idle = setTimeout(() => setBuddy((b) => ({ ...b, pose: "read" })), buddy.n ? 1600 : 2400);
+    return () => { clearTimeout(hush); clearTimeout(idle); };
+  }, [buddy.pose, buddy.n]);
+  // กด "จด" แล้วจอโน้ตบังหน้านี้ → โชว์ท่าเขียนตอนกลับมา
+  const fromNote = useRef(false);
+  useFocusEffect(useCallback(() => {
+    if (fromNote.current) { fromNote.current = false; act("write", "จด ๆ"); }
+  }, [act]));
+  const openNote = (slotId: string) => {
+    fromNote.current = true;
+    router.push({ pathname: "/note/[slotId]", params: { slotId, date: now.date } });
+  };
   // งานที่เพิ่งติ๊กในหน้านี้ ยังโชว์ไว้ (ไม่หายวับ) · toast = ยกเลิกได้ 3 วิ
   const [ticked, setTicked] = useState<string[]>([]);
   const [toast, setToast] = useState<Assignment | null>(null);
@@ -65,14 +86,17 @@ export default function Today() {
   const nearest = (tasks.data ?? []).find((a) => !a.done && a.due_at);
   const subjName = (id: string | null) => (id && subjectById.get(id)?.name) || "วิชา";
 
-  const check = (slot: Slot, status: AttendanceStatus) =>
+  const check = (slot: Slot, status: AttendanceStatus) => {
     setAttendance.mutate({ slot_id: slot.id, subject_id: slot.subject_id, date: now.date, status } as AttendanceRow);
+    if (status === "present") act("hand", "มาแล้วครับ!");
+  };
   const tick = (a: Assignment) => {
     if (a.id.startsWith("temp-")) return;
     toggle.mutate({ id: a.id, done: !a.done });
     if (!a.done) {
       setTicked((t) => [...t, a.id]);
       setToast(a);
+      act("cheer", "ส่งแล้ว!");
     } else setToast(null);
   };
   const undo = () => {
@@ -98,7 +122,10 @@ export default function Today() {
             {/* "เทอม 2/2569" ห้ามแยกบรรทัด (u00a0 = ช่องว่างไม่ตัดบรรทัด) */}
             <Text style={s.date}>{typedDate(now.date)}{termLabel ? <Text style={s.dateTerm}>{` · ${termLabel.replace(/ /g, "\u00a0")}`}</Text> : null}</Text>
           </View>
-          <LvChip />
+          <Pressable onPress={() => act("palm", "หวัดดี! พักบ้างนะ")} style={s.buddy} accessibilityRole="button" accessibilityLabel="Pap-Boy กดเพื่อทักทาย">
+            <PapBoyBuddy look={look} pose={buddy.pose} />
+          </Pressable>
+          {!!buddy.say && <Bubble key={buddy.n} text={buddy.say} />}
         </View>
 
         {loading ? (
@@ -158,7 +185,7 @@ export default function Today() {
                   </View>
                 </View>
                 <Pressable style={s.act} accessibilityRole="button" accessibilityLabel={`จดโน้ต ${subjName(slot.subject_id)}`}
-                  onPress={() => router.push({ pathname: "/note/[slotId]", params: { slotId: slot.id, date: now.date } })}>
+                  onPress={() => openNote(slot.id)}>
                   <Text style={s.actText}>จด</Text>
                 </Pressable>
               </View>
@@ -194,7 +221,7 @@ export default function Today() {
 
             <View style={s.qa} role="group" aria-label="ทางลัด">
               {noteSlot && (
-                <Quick label="จด" icon="note" onPress={() => router.push({ pathname: "/note/[slotId]", params: { slotId: noteSlot.id, date: now.date } })} />
+                <Quick label="จด" icon="note" onPress={() => openNote(noteSlot.id)} />
               )}
               <Quick label="เพิ่มงาน" icon="plus" onPress={() => router.push("/tasks")} />
               <Quick label="ตาราง" icon="today" onPress={() => router.push("/subjects")} />
@@ -223,6 +250,15 @@ export default function Today() {
       )}
     </View>
   );
+}
+
+/** ป้ายพูด Pap-Boy · เฟดเข้าอย่างเดียว (ไม่ขยับ จึงไม่ต้องแยกกรณีลดการเคลื่อนไหว) */
+function Bubble({ text }: { text: string }) {
+  const [fade] = useState(() => new Animated.Value(0));
+  useEffect(() => {
+    Animated.timing(fade, { toValue: 1, duration: 150, useNativeDriver: false }).start();
+  }, [fade]);
+  return <Animated.Text style={[s.bubble, { opacity: fade }]} accessibilityLiveRegion="polite" pointerEvents="none">{text}</Animated.Text>;
 }
 
 const QICON = {
@@ -299,6 +335,11 @@ const s = StyleSheet.create({
   mast: {
     flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: space.md, paddingBottom: 12,
     borderBottomWidth: 3, borderBottomColor: "rgba(42,33,24,0.75)", borderStyle: "double" as "solid",
+  },
+  buddy: { marginTop: -8, marginBottom: -8, marginRight: -6 },
+  bubble: {
+    position: "absolute", right: 86, top: 6, backgroundColor: color.field, borderWidth: 1.5, borderColor: color.paper, borderRadius: 3,
+    fontFamily: font.bodyMedium, fontSize: 13, color: color.paper, paddingHorizontal: 10, paddingVertical: 3, transform: [{ rotate: "-2deg" }],
   },
   // ป้ายพิมพ์นูน (จุดเดียวต่อจอ) · letter-spacing ได้เพราะเป็นตัวอังกฤษ
   dymo: {

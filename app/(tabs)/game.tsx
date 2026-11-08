@@ -6,7 +6,9 @@ import { Bar, Frame, H } from "@/components/game/Frame";
 import { BossPanel, PassiveTree, ReviewRow } from "@/components/game/Review";
 import { termBoss } from "@/lib/boss";
 import { DEFAULT_LOOK, itemById, RARITY_COLOR } from "@/lib/papboy";
-import { useLoot } from "@/lib/queries/loot";
+import { TitleList } from "@/components/game/TitleList";
+import { TITLES } from "@/lib/titles";
+import { useLoot, useTitles } from "@/lib/queries/loot";
 import { useCurrentTerm } from "@/lib/queries/core";
 import { useExams, useTopics } from "@/lib/queries/review";
 import { useXp, useXpToday } from "@/lib/queries/xp";
@@ -17,11 +19,6 @@ import { XP_CONFIG } from "@/lib/xp";
 
 // หน้าเกม "อีกโลก" ตาม docs/mockups/b5-game.html · Pap-Boy + บอสประจำเทอม บนสุด · สอบที่ใกล้ที่สุด · passive tree · ได้วันนี้ · LV วิชา
 
-// ฉายาตามช่วงเลเวล (ทุก 5 เลเวล) · shortcut: ฉายาจากความสำเร็จยังไม่ได้ออกแบบ → ใช้ตามเลเวลไปก่อน
-const TIERS = [
-  ["นักเรียนฝึกหัด", rarity.normal], ["ผู้ฝึกตน", rarity.normal], ["นักค้นคว้า", rarity.magic],
-  ["ผู้รอบรู้", rarity.rare], ["ปราชญ์", rarity.unique],
-] as const;
 const KIND = { midterm: "กลางภาค", final: "ปลายภาค" } as const;
 
 export default function Game() {
@@ -34,6 +31,8 @@ export default function Game() {
   const today = bangkokNow().date;
   const xpToday = useXpToday(today).data;
   const loot = useLoot().data; // undefined = ยังไม่รัน migration ขั้น 7 / ออฟไลน์ → ซ่อนส่วนกล่อง
+  const titles = useTitles().data;
+  const [pickTitle, setPickTitle] = useState(false);
 
   const next = upcomingExams(exams, today);
   const boss = next[0];
@@ -63,7 +62,7 @@ export default function Game() {
       })
     : null;
   const finalsLeft = finals.filter((x) => x >= today).length;
-  const tier = TIERS[Math.min(4, Math.floor((d.total.level - 1) / 5))];
+  const title = TITLES.find((t) => t.id === titles?.current) ?? TITLES[0];
 
   return (
     <ScrollView style={s.page} contentContainerStyle={s.content}>
@@ -81,10 +80,19 @@ export default function Game() {
             <Text style={s.name}>Pap-Boy</Text>
             <Text style={s.xpn}>XP {d.total.into}/{d.total.need}</Text>
           </View>
-          <Text style={[s.title, { color: tier[1] }]}>ฉายา: {tier[0]}</Text>
+          {titles ? (
+            <Pressable style={s.titleBtn} onPress={() => setPickTitle((v) => !v)} accessibilityRole="button"
+              accessibilityLabel={`ฉายา ${title.name} กดเพื่อเปลี่ยน`} aria-expanded={pickTitle}>
+              <Text style={[s.title, { color: RARITY_COLOR[title.r] }]}>{title.name}</Text>
+              <Text style={s.small}>เปลี่ยน ›</Text>
+            </Pressable>
+          ) : (
+            <Text style={[s.title, { color: RARITY_COLOR[title.r] }]}>ฉายา: {title.name}</Text>
+          )}
           <Bar value={d.total.into / d.total.need} />
         </View>
       </View>
+      {pickTitle && titles && <View style={{ marginTop: space.md }}><TitleList state={titles} onPicked={() => setPickTitle(false)} /></View>}
 
       {loot && (
         <View style={s.acts}>
@@ -157,10 +165,7 @@ export default function Game() {
         {!!loot?.today_boxes && (
           <View style={[s.loot, s.sep]}>
             <Text style={[s.ic, { color: color.gold, borderColor: color.gold }]}>▣</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={s.body}>กล่องเหล็ก</Text>
-              <Text style={s.small}>ครบทุก 50 XP</Text>
-            </View>
+            <Text style={[s.body, { flex: 1 }]}>กล่องใหม่</Text>
             <Text style={s.lootN}>×{loot.today_boxes}</Text>
           </View>
         )}
@@ -233,6 +238,7 @@ const s = StyleSheet.create({
   name: { fontFamily: font.bodyBold, fontSize: 18, color: color.bone },
   xpn: { fontFamily: font.pixel, fontSize: 12, color: color.ash, marginTop: 2 },
   title: { fontFamily: font.bodyBold, fontSize: 13 },
+  titleBtn: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", minHeight: minTouch },
   next: { paddingTop: space.sm, paddingHorizontal: space.lg },
   nextD: { fontFamily: font.pixel, fontSize: 13, color: color.bossSoft },
   chips: { gap: 6, paddingHorizontal: space.md, paddingBottom: 10 },

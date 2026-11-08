@@ -34,6 +34,42 @@ export function useLoot() {
   });
 }
 
+export type TitleState = { current: string | null; have: Record<string, number> };
+const titleKey = ["xp", "titles"] as const;
+
+/** ฉายา (migration 7c) · ยังไม่รัน = data เป็น undefined → หน้าเกมโชว์ฉายาตั้งต้น ไม่มีปุ่มเปลี่ยน */
+export function useTitles() {
+  return useQuery({
+    queryKey: titleKey,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("title_state");
+      if (error) throw error;
+      return data as TitleState;
+    },
+  });
+}
+
+/** เปลี่ยนฉายา (optimistic) */
+export function useSetTitle() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.rpc("set_title", { p_id: id });
+      if (error) throw error;
+    },
+    onMutate: async (id) => {
+      await qc.cancelQueries({ queryKey: titleKey });
+      const prev = qc.getQueryData<TitleState>(titleKey);
+      if (prev) qc.setQueryData<TitleState>(titleKey, { ...prev, current: id });
+      return { prev };
+    },
+    onError: (_e, _v, ctx) => {
+      if (ctx?.prev) qc.setQueryData(titleKey, ctx.prev);
+    },
+  });
+}
+
 /** เปิดกล่อง · ผลสุ่มมาจาก DB (ไม่ optimistic: ต้องรอผล) · โหลดสถานะใหม่หลังจอเล่นจบผ่าน invalidate ของ queryClient */
 export function useOpenBox() {
   return useMutation({

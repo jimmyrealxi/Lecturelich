@@ -141,18 +141,29 @@ function drawGround(f: number) {
 }
 /** มือซ้ายของภาพแบห้านิ้ว (กลางฝ่ามือ ≈ (19,27) ในกรอบ 64) · d = โบกซ้าย/ขวา */
 export const PALM = { x: 19, y: 27 } as const;
-function drawBody(f: number, b: number) {
+/** ท่าเปลี่ยนตามสิ่งที่ทำ (หน้าวันนี้ · docs/mockups/inspire-anim.html) · palm = ท่าประจำตัว */
+export type Pose = "palm" | "read" | "cheer" | "write" | "hand";
+function armsOf(pose: Pose, t: number, u: number, shirt: string): { back: Shape[]; front: Shape[] } {
+  const S = (x: number, y: number, w = 3, h = 3) => rr(x, y + u, w, h, shirt), H = (x: number, y: number, w = 3, h = 3) => rr(x, y + u, w, h, "#F4F6FA");
+  if (pose === "hand") return { back: [H(22, 45, 3, 2), S(22, 39, 3, 6), S(39, 36), S(41, 33), S(43, 29, 3, 5), S(44, 22 - t, 3, 8), H(44, 18 - t, 3, 4)], front: [] };
+  if (pose === "cheer") return { back: [S(22, 36), S(20, 33), S(18, 30), H(16, 27), S(39, 36), S(41, 33), S(43, 30), H(45, 27)], front: [] };
+  if (pose === "read") return { back: [S(22, 39, 3, 4), S(39, 39, 3, 4)], front: [rr(25, 40 + u, 14, 7, "#F3EAD2"), H(22, 42), H(39, 42)] };
+  if (pose === "write") return { back: [S(22, 39, 3, 4), S(39, 39, 3, 4)], front: [rr(23, 40 + u, 10, 8, "#FBF5E6"), H(22, 44), S(37, 43, 3, 2), H(33 + t * 2, 43)] };
+  // palm: แขนซ้ายของภาพยกเฉียงขึ้น · แขนขวาห้อยถือของ (ฝ่ามือวาดหลังหัวในวง drawBody)
+  return { back: [S(21, 37), S(20, 35), S(19, 33), S(18, 30, 3, 4), S(39, 39, 3, 6), H(39, 45, 3, 2)], front: [] };
+}
+function drawBody(f: number, b: number, pose: Pose) {
   const [shirt, shade] = OUTFIT[st.outfit] ?? OUTFIT.hoodie, helm = "#EEF1F5", list: Shape[] = [];
-  const d = f % 12 < 6 ? 0 : 1, G = "#F4F6FA";
+  const d = f % 12 < 6 ? 0 : 1, G = "#F4F6FA", arms = armsOf(pose, d, b, shirt);
+  const sy = pose === "read" ? -2 : pose === "cheer" ? b : 0; // เท้า: นั่ง = ยกขึ้นบนกองหนังสือ · ดีใจ = กระโดด
+  if (pose === "read") shapes([rr(21, 52, 22, 3, "#8A5A2B"), rr(23, 50, 18, 2, "#2B4A8A")]);
   if (st.ears === "cat") for (let i = 0; i < 6; i++) list.push(rr(22, 12 + i + b, i + 1, 1, helm), rr(42 - i, 12 + i + b, i + 1, 1, helm));
   if (st.ears === "bunny") list.push({ k: "e", x: 27, y: 9 + b, rx: 2, ry: 6, c: helm }, { k: "e", x: 37, y: 9 + b, rx: 2, ry: 6, c: helm });
   if (st.ears === "speaker") list.push(rr(18, 22 + b, 3, 9, "#8C97AA"), rr(43, 22 + b, 3, 9, "#8C97AA"));
   list.push(
-    rr(27, 47, 3, 6, "#2E3A55"), rr(34, 47, 3, 6, "#2E3A55"),
-    rr(26, 52, 4, 2, SHOE[st.shoes] ?? SHOE.plain), rr(34, 52, 4, 2, SHOE[st.shoes] ?? SHOE.plain),
-    // แขนซ้ายของภาพยกเฉียงขึ้น (ท่าแบห้านิ้ว) · แขนขวาห้อยถือของ
-    rr(21, 37 + b, 3, 3, shirt), rr(20, 35 + b, 3, 3, shirt), rr(19, 33 + b, 3, 3, shirt), rr(18, 30 + b, 3, 4, shirt),
-    rr(39, 39 + b, 3, 6, shirt), rr(39, 45 + b, 3, 2, G),
+    ...(pose === "read" ? [rr(27, 48, 3, 3, "#2E3A55"), rr(34, 48, 3, 3, "#2E3A55")] : [rr(27, 47 + sy, 3, 6, "#2E3A55"), rr(34, 47 + sy, 3, 6, "#2E3A55")]),
+    rr(26, 52 + sy, 4, 2, SHOE[st.shoes] ?? SHOE.plain), rr(34, 52 + sy, 4, 2, SHOE[st.shoes] ?? SHOE.plain),
+    ...arms.back,
     rr(25, 37 + b, 14, 12, shirt),
     { k: "d", x: 32, y: 26 + b, r: 11, c: helm },
   );
@@ -160,8 +171,8 @@ function drawBody(f: number, b: number) {
   if (st.ears === "cat") for (let i = 2; i < 5; i++) { R(23, 12 + i + b, i - 1, 1, "#FF8FC8"); R(43 - i + 1, 12 + i + b, i - 1, 1, "#FF8FC8"); }
   if (st.ears === "bunny") { R(27, 6 + b, 1, 6, "#FF8FC8"); R(37, 6 + b, 1, 6, "#FF8FC8"); }
   if (st.ears === "speaker") for (let y = 24; y < 30; y += 2) { P(19, y + b, OUT); P(44, y + b, OUT); }
-  if (st.shoes === "sneaker") { R(26, 53, 4, 1, "#F3F5F8"); R(34, 53, 4, 1, "#F3F5F8"); }
-  if (st.shoes === "gold") { P(27, 52, "#FFE680"); P(35, 52, "#FFE680"); }
+  if (st.shoes === "sneaker") { R(26, 53 + sy, 4, 1, "#F3F5F8"); R(34, 53 + sy, 4, 1, "#F3F5F8"); }
+  if (st.shoes === "gold") { P(27, 52 + sy, "#FFE680"); P(35, 52 + sy, "#FFE680"); }
   if (st.outfit === "hoodie") { R(28, 44 + b, 8, 3, shade); P(30, 38 + b, "#F3F5F8"); P(30, 39 + b, "#F3F5F8"); P(33, 38 + b, "#F3F5F8"); P(33, 39 + b, "#F3F5F8"); }
   if (st.outfit === "lab") { R(31, 37 + b, 1, 12, shade); R(34, 41 + b, 3, 3, shade); P(35, 40 + b, "#1E3D74"); R(25, 37 + b, 3, 2, shade); R(36, 37 + b, 3, 2, shade); }
   if (st.outfit === "jacket") { R(31, 37 + b, 2, 12, "#F2C230"); R(25, 47 + b, 14, 1, "#F2C230"); R(39, 44 + b, 3, 1, "#F2C230"); }
@@ -171,10 +182,15 @@ function drawBody(f: number, b: number) {
   const g = glowOf(st);
   R(24, 21 + b, 17, 11, "#0E1A2E"); P(24, 21 + b, "#EEF1F5"); P(40, 21 + b, "#EEF1F5"); P(24, 31 + b, "#EEF1F5"); P(40, 31 + b, "#EEF1F5");
   for (let y = 22; y < 31; y += 2) R(25, y + b, 15, 1, g, 0.06);
+  const down = pose === "read" || pose === "write", open = pose === "cheer" || pose === "hand";
   if (f % 48 > 45) { R(27, 25 + b, 2, 1, g); R(36, 25 + b, 2, 1, g); }
+  else if (down) { R(27, 26 + b, 2, 2, g); R(36, 26 + b, 2, 2, g); }
+  else if (pose === "hand") { R(27, 24 + b, 2, 3, g); R(36, 24 + b, 2, 3, g); P(27, 24 + b, "#FFFFFF", 0.7); P(36, 24 + b, "#FFFFFF", 0.7); }
   else ([[0, 1], [1, 0], [2, 1]] as const).forEach(([dx, dy]) => { P(26 + dx, 24 + dy + b, g); P(35 + dx, 24 + dy + b, g); });
   const m = st.mouth;
-  if (m === "cat") ([[29, 28], [30, 29], [31, 28], [32, 28], [33, 29], [34, 28]] as const).forEach(([x, y]) => P(x, y + b, g));
+  if (m === "smile" && open) R(30, 28 + b, 4, 2, g);
+  else if (m === "smile" && down) R(30, 29 + b, 4, 1, g);
+  else if (m === "cat") ([[29, 28], [30, 29], [31, 28], [32, 28], [33, 29], [34, 28]] as const).forEach(([x, y]) => P(x, y + b, g));
   else { P(29, 28 + b, g); R(30, 29 + b, 4, 1, g); P(34, 28 + b, g); if (m === "fang") P(33, 30 + b, "#FFFFFF"); if (m === "tongue") R(31, 30 + b, 2, 1, "#FF8FC8"); }
   if (st.eyes === "round") { box(25, 22 + b, 6, 6, "#C9A25B"); box(34, 22 + b, 6, 6, "#C9A25B"); R(31, 24 + b, 3, 1, "#C9A25B"); }
   if (st.eyes === "hud") { R(25, 22 + b, 15, 1, "#6FE3F0", 0.9); for (let x = 26; x < 40; x += 3) P(x, 23 + b, "#6FE3F0", 0.6); P(39, (f % 8 < 4 ? 24 : 25) + b, "#FF5A5A"); }
@@ -182,7 +198,14 @@ function drawBody(f: number, b: number) {
   if (st.hat === "beanie") { for (let y = -9; y <= 0; y++) for (let x = -10; x <= 10; x++) if (x * x + y * y <= 96) P(32 + x, 21 + y + b, "#C2372C"); R(22, 19 + b, 21, 2, "#F3F5F8"); disc(32, 10 + b, 2, "#F3F5F8"); }
   if (st.hat === "grad") { R(27, 14 + b, 11, 3, OUT); R(20, 13 + b, 25, 2, OUT); R(21, 13 + b, 23, 1, "#2B2B3A"); R(43, 14 + b, 1, 5, "#F2C230"); R(42, 19 + b, 3, 2, "#F2C230"); }
   // ฝ่ามือ 4 นิ้ว + นิ้วโป้ง (ช่องระหว่างนิ้ว = สีขอบ) ทับขอบหัว
-  shapes([rr(16 - d, 24 + b, 7, 6, G), rr(22 - d, 21 + b, 1, 4, G), rr(20 - d, 20 + b, 1, 5, G), rr(18 - d, 20 + b, 1, 5, G), rr(16 - d, 21 + b, 1, 4, G), rr(23 - d, 27 + b, 2, 2, G)]);
+  if (pose === "palm") shapes([rr(16 - d, 24 + b, 7, 6, G), rr(22 - d, 21 + b, 1, 4, G), rr(20 - d, 20 + b, 1, 5, G), rr(18 - d, 20 + b, 1, 5, G), rr(16 - d, 21 + b, 1, 4, G), rr(23 - d, 27 + b, 2, 2, G)]);
+  else {
+    shapes(arms.front);
+    if (pose === "read") { R(31, 40 + b, 2, 7, "#8C7B60"); for (let y = 42; y < 46; y += 2) { R(26, y + b, 4, 1, "#B9A985"); R(34, y + b, 4 - (d && y === 44 ? 2 : 0), 1, "#B9A985"); } }
+    if (pose === "write") { for (let y = 42; y < 47; y += 2) R(24, y + b, 8, 1, "#8FA6CC"); const px = 35 + d * 2; for (let i = 0; i < 5; i++) P(px + i, 43 + b - i, i < 4 ? "#F2C230" : "#FF8FC8"); P(px - 1, 44 + b, OUT); }
+    if (pose === "cheer" && d) ([[14, 22], [50, 22], [12, 30], [52, 30]] as const).forEach(([x, y]) => { P(x, y, "#F2C230"); P(x - 1, y, "#F2C230", 0.6); P(x + 1, y, "#F2C230", 0.6); P(x, y - 1, "#F2C230", 0.6); P(x, y + 1, "#F2C230", 0.6); });
+    return; // มือไม่ว่าง: ไม่วาดของถือ
+  }
   if (st.held === "pencil") { P(41, 47 + b, OUT); for (let i = 1; i < 9; i++) { P(41 + i, 47 - i + b, "#F2C230"); P(42 + i, 47 - i + b, "#C9A25B"); } P(50, 38 + b, "#FF8FC8"); P(51, 38 + b, "#FF8FC8"); }
   if (st.held === "laser") { for (let i = 0; i < 7; i++) P(42 + i, 46 - i + b, "#AEB6C4"); P(49, 39 + b, "#FF5A5A"); if (f % 6 < 4) { P(50, 38 + b, "#FF5A5A", 0.6); P(49, 38 + b, "#FF5A5A", 0.4); P(50, 39 + b, "#FF5A5A", 0.4); } }
 }
@@ -203,19 +226,19 @@ function drawFront(f: number) {
 }
 
 /** วาด Pap-Boy 1 เฟรมลงกรอบ 64×64 ที่ (0,0) ของ ctx (ตั้ง translate ก่อนเรียก) */
-export function drawPapBoy(ctx: CanvasRenderingContext2D, look: Look, f: number, withBg = false) {
+export function drawPapBoy(ctx: CanvasRenderingContext2D, look: Look, f: number, withBg = false, pose: Pose = "palm") {
   c = ctx; st = look;
-  const b = f % 12 < 6 ? 0 : 1;
+  const t = f % 12 < 6 ? 0 : 1, b = pose === "read" ? 2 : pose === "cheer" ? -2 * t : pose === "palm" ? t : 0;
   if (withBg) drawBg(f);
-  drawBack(f); drawWings(f, b); drawGround(f); drawBody(f, b); drawFront(f);
+  drawBack(f); drawWings(f, b); drawGround(f); drawBody(f, b, pose); drawFront(f);
   c.globalAlpha = 1;
 }
 
 /** sprite sheet แนวนอน FRAMES เฟรม × 64px · วาดครั้งเดียวต่อชุด (เว็บเท่านั้น) */
-export function buildSheet(look: Look, withBg = false): HTMLCanvasElement {
+export function buildSheet(look: Look, withBg = false, pose: Pose = "palm"): HTMLCanvasElement {
   const sheet = document.createElement("canvas");
   sheet.width = 64 * FRAMES; sheet.height = 64;
   const ctx = sheet.getContext("2d")!;
-  for (let f = 0; f < FRAMES; f++) { ctx.save(); ctx.translate(f * 64, 0); drawPapBoy(ctx, look, f, withBg); ctx.restore(); }
+  for (let f = 0; f < FRAMES; f++) { ctx.save(); ctx.translate(f * 64, 0); drawPapBoy(ctx, look, f, withBg, pose); ctx.restore(); }
   return sheet;
 }
