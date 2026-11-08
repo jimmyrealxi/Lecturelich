@@ -132,13 +132,13 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
 
 const s = StyleSheet.create({
   grab: { width: 40, height: 4, backgroundColor: color.rule, borderRadius: 2, alignSelf: "center", marginBottom: space.sm },
-  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 6 },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
   chip: {
     minHeight: minTouch, paddingHorizontal: space.md, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper,
     justifyContent: "center",
   },
   chipOn: pick.on as object, // วงปากกาน้ำเงิน
-  chipText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
+  chipText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   two: { flexDirection: "row", gap: space.sm },
 });

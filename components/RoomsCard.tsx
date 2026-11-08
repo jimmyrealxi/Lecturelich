@@ -83,5 +83,5 @@ const s = StyleSheet.create({
     fontFamily: font.typeBold, fontSize: 15, color: color.paper, letterSpacing: 1,
     borderWidth: 1.5, borderColor: color.paper, borderRadius: 2, paddingHorizontal: 6, paddingVertical: 1,
   },
-  err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
+  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
 });

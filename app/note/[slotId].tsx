@@ -115,7 +115,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
   return (
     <View style={s.screen}>
       <View style={head.top}>
-        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/today"))} style={s.back} accessibilityRole="button">
+        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/today"))} style={head.backBtn} accessibilityRole="button">
           <Text style={head.back}>‹ ปิด</Text>
         </Pressable>
         <Text style={head.title} accessibilityRole="header">{existing ? "แก้โน้ต" : "จดหลังคาบ"}</Text>
@@ -149,7 +149,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
             </>
           )}
         </View>
-        {photoCount > 0 && <Text style={[T.muted, { fontSize: 12, marginTop: 4 }]}>แตะรูปเพื่อดูหรือลบ</Text>}
+        {photoCount > 0 && <Text style={[T.muted, { marginTop: 4 }]}>แตะรูปเพื่อดูหรือลบ</Text>}
 
         <Section side="กด ★ = อาจารย์บอกออกสอบ">หัวข้อที่เรียน</Section>
         {topics.map((t, i) => (
@@ -183,7 +183,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 
       <View style={s.foot}>
         <Btn kind="primary" label={save.isPending ? "กำลังบันทึก…" : "บันทึก"} onPress={onSave} />
-        {empty && <Text style={[T.muted, { textAlign: "center", marginTop: 6, fontSize: 12 }]}>พิมพ์ข้อความ ใส่รูป หรือเพิ่มหัวข้ออย่างน้อย 1 อย่าง</Text>}
+        {empty && <Text style={[T.muted, { textAlign: "center", marginTop: 6 }]}>พิมพ์ข้อความ ใส่รูป หรือเพิ่มหัวข้ออย่างน้อย 1 อย่าง</Text>}
       </View>
 
       {viewing !== null && (
@@ -209,10 +209,9 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 
 const s = StyleSheet.create({
   screen: { flex: 1 },
-  back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  topSub: { fontFamily: font.body, fontSize: 13, color: color.muted },
+  topSub: { fontFamily: font.body, fontSize: 14, color: color.muted },
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
-  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 6 },
   textarea: {
     minHeight: 96, borderWidth: 1.5, borderColor: color.rule2, borderRadius: radius.md, padding: space.md, backgroundColor: color.field,
     fontFamily: font.body, fontSize: 16, color: color.paper, textAlignVertical: "top",
@@ -232,12 +231,12 @@ const s = StyleSheet.create({
   topicInput: { flex: 1, minHeight: minTouch, fontSize: 16 }, // iPhone ซูมจอเองถ้าช่องกรอกเล็กกว่า 16,
   exam: { minHeight: minTouch, paddingHorizontal: 8, borderRadius: radius.sm, borderWidth: 1.5, borderColor: color.paper, justifyContent: "center" },
   examOn: pick.on as object,
-  examText: { fontFamily: font.bodyBold, fontSize: 12, color: color.paper },
+  examText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
   star: { width: minTouch, height: minTouch, borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
   // ★ ที่เลือก = วงปากกาแดง
   starOn: { borderWidth: 2, borderColor: color.red, borderRadius: 22 },
   starText: { fontSize: 20, color: color.muted },
-  error: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
+  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
   foot: { padding: space.md, borderTopWidth: 1, borderTopColor: color.rule2, backgroundColor: color.deck },
   dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },
   sheet: {

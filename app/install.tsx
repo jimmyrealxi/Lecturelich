@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { head, T } from "@/components/ui";
-import { color, font, minTouch, space } from "@/lib/theme";
+import { color, font, space } from "@/lib/theme";
 
 const STEPS: { title: string; steps: string[] }[] = [
   {
@@ -28,7 +28,7 @@ export default function Install() {
   return (
     <View style={{ flex: 1 }}>
       <View style={head.top}>
-        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/settings"))} style={s.back} accessibilityRole="button">
+        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/settings"))} style={head.backBtn} accessibilityRole="button">
           <Text style={head.back}>‹ กลับ</Text>
         </Pressable>
         <Text style={head.title} accessibilityRole="header">ติดตั้ง Lecturelich</Text>
@@ -51,7 +51,6 @@ export default function Install() {
 }
 
 const s = StyleSheet.create({
-  back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   // แถวบนกระดาษมีเส้นบรรทัดคั่น (mockup a-settings จอ 6) ไม่ใช้การ์ด
   group: { marginBottom: space.xl },

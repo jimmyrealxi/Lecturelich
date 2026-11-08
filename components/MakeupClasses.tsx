@@ -97,8 +97,8 @@ const s = StyleSheet.create({
   when: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   time: { fontFamily: font.typeBold }, // Courier Prime ไม่มีตัวไทย → ใช้เฉพาะตัวเลขเวลา
   del: { minHeight: minTouch, minWidth: minTouch, alignItems: "center", justifyContent: "center" },
-  delText: { fontFamily: font.bodyBold, fontSize: 14, color: color.danger },
-  err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
+  delText: { fontFamily: font.bodyBold, fontSize: 15, color: color.danger },
+  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
   title: { fontFamily: font.title, fontSize: 19, lineHeight: 28, color: color.paper },
   two: { flexDirection: "row", gap: space.sm },
   dim: { flex: 1, backgroundColor: "rgba(42,33,24,0.45)" },

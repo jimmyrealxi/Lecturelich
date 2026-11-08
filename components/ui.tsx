@@ -183,13 +183,14 @@ export const head = StyleSheet.create({
     borderBottomWidth: 3, borderBottomColor: "rgba(42,33,24,0.75)", borderStyle: "double" as "solid",
   },
   title: { fontFamily: font.title, fontSize: 26, lineHeight: 34, color: color.paper },
-  back: { fontFamily: font.bodyMedium, fontSize: 15, color: color.paper },
+  backBtn: { minHeight: 52, minWidth: 96, marginLeft: -8, paddingHorizontal: 8, justifyContent: "center", alignSelf: "flex-start" },
+  back: { fontFamily: font.bodyBold, fontSize: 18, color: color.paper },
 });
 
 export const T = StyleSheet.create({
-  h3: { fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
-  body: { fontFamily: font.body, fontSize: 14, color: color.paper },
-  muted: { fontFamily: font.body, fontSize: 13, color: color.muted },
+  h3: { fontFamily: font.bodyBold, fontSize: 18, color: color.paper },
+  body: { fontFamily: font.body, fontSize: 16, color: color.paper },
+  muted: { fontFamily: font.body, fontSize: 14, color: color.muted },
 });
 
 const s = StyleSheet.create({
@@ -199,14 +200,14 @@ const s = StyleSheet.create({
   },
   section: { fontFamily: font.title, fontSize: 18, lineHeight: 26, color: color.paper, marginTop: space.lg, marginBottom: space.sm },
   sectionRow: { flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", columnGap: 10, marginTop: space.lg, marginBottom: space.xs },
-  sectionSide: { fontFamily: font.body, fontSize: 13, color: color.faint },
+  sectionSide: { fontFamily: font.body, fontSize: 14, color: color.faint },
   dymo: {
     alignSelf: "flex-start", backgroundColor: "#1A1A1A", color: "#F2F2F2", fontFamily: font.typeBold, fontSize: 12, lineHeight: 14,
     paddingHorizontal: 8, paddingTop: 4, paddingBottom: 3, borderRadius: 2, overflow: "hidden",
     textShadowColor: "#000", textShadowOffset: { width: 0, height: -1 }, textShadowRadius: 0,
   },
   stamp: {
-    alignSelf: "center", fontFamily: font.bodyBold, fontSize: 13, borderWidth: 2, borderRadius: 4,
+    alignSelf: "center", fontFamily: font.bodyBold, fontSize: 14, borderWidth: 2, borderRadius: 4,
     paddingHorizontal: 9, paddingVertical: 1, transform: [{ rotate: "-6deg" }], opacity: 0.92,
   },
   crt: {
@@ -214,7 +215,7 @@ const s = StyleSheet.create({
     boxShadow: "inset 0 0 0 2px #0F2717, inset 0 0 28px rgba(0,0,0,0.85), 0 3px 0 #2B2117",
   },
   crtBig: { fontFamily: font.num, fontSize: 36, lineHeight: 36, color: "#B8FFC9", ...crtGlow.big },
-  crtK: { fontFamily: font.body, fontSize: 13, color: color.crtDim, ...crtGlow.dim },
+  crtK: { fontFamily: font.body, fontSize: 14, color: color.crtDim, ...crtGlow.dim },
   crtTitle: { fontFamily: font.bodyBold, fontSize: 19, lineHeight: 26, color: color.crtOn, marginTop: 2, ...crtGlow.title },
   cursor: { width: 8, height: 14, backgroundColor: color.crtOn },
   toast: {
@@ -222,9 +223,9 @@ const s = StyleSheet.create({
     flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, borderRadius: radius.sm,
     backgroundColor: color.paper, paddingVertical: 6, paddingRight: 6, paddingLeft: 14,
   },
-  toastText: { flex: 1, fontFamily: font.body, fontSize: 14, color: color.on },
+  toastText: { flex: 1, fontFamily: font.body, fontSize: 15, color: color.on },
   toastBtn: { minHeight: minTouch, paddingHorizontal: 14, justifyContent: "center" },
-  toastBtnText: { fontFamily: font.bodyBold, fontSize: 14, color: color.go },
+  toastBtnText: { fontFamily: font.bodyBold, fontSize: 15, color: color.go },
   tape: { position: "absolute", top: -10, width: 72, height: 22, backgroundColor: "rgba(232,221,186,0.82)" },
   sheetTape: {
     position: "absolute", top: -11, left: "50%", marginLeft: -37, width: 74, height: 22,
@@ -244,7 +245,7 @@ const s = StyleSheet.create({
   btnPriDown: { transform: [{ translateX: 2 }, { translateY: 2 }], boxShadow: "none" },
   btnRed: { borderColor: color.danger },
   btnRedFill: { backgroundColor: color.danger },
-  btnText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
+  btnText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   skeleton: { backgroundColor: "rgba(42,33,24,0.10)", borderRadius: radius.lg, marginBottom: space.md },
 });
 
@@ -282,10 +283,10 @@ export function confirmAction(message: string, onYes: () => void) {
 }
 
 const f = StyleSheet.create({
-  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
+  label: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 6 },
   input: {
     minHeight: minTouch, borderWidth: 1.5, borderColor: color.rule2, borderRadius: radius.md, paddingHorizontal: space.md,
     fontFamily: font.body, fontSize: 16, color: color.paper, backgroundColor: color.field,
   },
-  error: { fontFamily: font.body, fontSize: 12, color: color.danger, marginTop: 4 },
+  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: 4 },
 });

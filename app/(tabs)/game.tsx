@@ -194,7 +194,7 @@ export default function Game() {
         <View style={s.grid}>
           {d.subjects.map((sub) => (
             <Frame key={sub.subject_id} style={s.cell}>
-              <Text style={[s.body, { fontSize: 13 }]} numberOfLines={1}>{sub.name}</Text>
+              <Text style={[s.body, { fontSize: 14 }]} numberOfLines={1}>{sub.name}</Text>
               <Text style={s.cellLv}>LV {sub.level}</Text>
               <Bar value={sub.into / sub.need} />
               <Text style={s.xpn}>{sub.into}/{sub.need}</Text>
@@ -231,27 +231,27 @@ const s = StyleSheet.create({
   skel: { marginHorizontal: space.md, backgroundColor: color.gamePanel, opacity: 0.6 },
   pad: { paddingHorizontal: space.lg },
   in: { paddingVertical: space.md, paddingHorizontal: 14 },
-  small: { fontFamily: font.body, fontSize: 13, color: color.ash },
-  body: { fontFamily: font.body, fontSize: 14, color: color.bone },
+  small: { fontFamily: font.body, fontSize: 14, color: color.ash },
+  body: { fontFamily: font.body, fontSize: 15, color: color.bone },
   who: { flexDirection: "row", gap: 14, alignItems: "center", paddingTop: 10, paddingHorizontal: space.lg, paddingBottom: 14, borderBottomWidth: 1, borderBottomColor: color.seam },
   lvSmall: { fontFamily: font.pixel, fontSize: 11, color: color.ash, letterSpacing: 1 },
   lvBig: { fontFamily: font.pixel, fontSize: 34, lineHeight: 38, color: color.gold },
   nm: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", gap: space.sm },
   name: { fontFamily: font.bodyBold, fontSize: 18, color: color.bone },
   xpn: { fontFamily: font.pixel, fontSize: 12, color: color.ash, marginTop: 2 },
-  title: { fontFamily: font.bodyBold, fontSize: 13 },
+  title: { fontFamily: font.bodyBold, fontSize: 14 },
   titleBtn: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", minHeight: minTouch },
   next: { paddingTop: space.sm, paddingHorizontal: space.lg },
   nextD: { fontFamily: font.pixel, fontSize: 13, color: color.bossSoft },
   chips: { gap: 6, paddingHorizontal: space.md, paddingBottom: 10 },
   chip: { minHeight: minTouch, paddingHorizontal: space.md, borderWidth: 1, borderColor: color.seam2, justifyContent: "center" },
   chipOn: { borderColor: color.gold, backgroundColor: color.gamePanel },
-  chipT: { fontFamily: font.bodyMedium, fontSize: 13, color: color.bone },
+  chipT: { fontFamily: font.bodyMedium, fontSize: 14, color: color.bone },
   sep: { borderTopWidth: 1, borderTopColor: color.seam },
   acts: { flexDirection: "row", gap: space.sm, paddingTop: space.md, paddingHorizontal: space.lg },
   btn: { flex: 1, flexDirection: "row", gap: 6, minHeight: minTouch, borderWidth: 1, borderColor: color.seam2, alignItems: "center", justifyContent: "center", paddingHorizontal: 14 },
   gold: { borderColor: color.gold, backgroundColor: color.gamePanel },
-  btnT: { fontFamily: font.bodyBold, fontSize: 14, color: color.bone },
+  btnT: { fontFamily: font.bodyBold, fontSize: 15, color: color.bone },
   badge: { minWidth: 22, paddingHorizontal: 5, textAlign: "center", backgroundColor: color.gold, color: color.gameDeep, fontFamily: font.pixel, fontSize: 13, lineHeight: 20 },
   loot: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10, paddingHorizontal: 14, minHeight: 52 },
   ic: { width: 26, height: 26, borderWidth: 1, textAlign: "center", lineHeight: 24, fontFamily: font.pixel, fontSize: 14 },

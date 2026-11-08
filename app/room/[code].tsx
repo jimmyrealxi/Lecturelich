@@ -45,5 +45,5 @@ const s = StyleSheet.create({
   // โค้ดห้องบนจอเขียว (ตัวอังกฤษ/ตัวเลข letter-spacing ได้)
   code: { fontFamily: font.num, fontSize: 36, lineHeight: 40, color: color.crtOn, letterSpacing: 4, textAlign: "center" },
   row: { flexDirection: "row", gap: space.sm, marginTop: space.md },
-  err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
+  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
 });

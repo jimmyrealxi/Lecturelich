@@ -421,7 +421,7 @@ const s = StyleSheet.create({
   buddy: { marginTop: -8, marginBottom: -8, marginRight: -6 },
   bubble: {
     position: "absolute", right: 86, top: 6, backgroundColor: color.field, borderWidth: 1.5, borderColor: color.paper, borderRadius: 3,
-    fontFamily: font.bodyMedium, fontSize: 13, color: color.paper, paddingHorizontal: 10, paddingVertical: 3, transform: [{ rotate: "-2deg" }],
+    fontFamily: font.bodyMedium, fontSize: 14, color: color.paper, paddingHorizontal: 10, paddingVertical: 3, transform: [{ rotate: "-2deg" }],
   },
   // ป้ายพิมพ์นูน (จุดเดียวต่อจอ) · letter-spacing ได้เพราะเป็นตัวอังกฤษ
   dymo: {
@@ -433,11 +433,11 @@ const s = StyleSheet.create({
   date: { fontFamily: font.typeBold, fontSize: 15, color: color.paper },
   dateTerm: { fontFamily: font.bodyMedium },
 
-  k: { fontFamily: font.body, fontSize: 13, color: color.crtDim, ...crtGlow.dim },
+  k: { fontFamily: font.body, fontSize: 14, color: color.crtDim, ...crtGlow.dim },
   subj: { fontFamily: font.bodyBold, fontSize: 19, lineHeight: 26, color: color.crtOn, marginTop: 2, ...crtGlow.title },
   subjRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", columnGap: 6 },
-  tag: { fontFamily: font.body, fontSize: 13, color: color.crtOn, borderWidth: 1, borderColor: "#2F6B42", borderRadius: 2, paddingHorizontal: 8, paddingVertical: 2 },
-  meta: { fontFamily: font.body, fontSize: 13, color: color.crtDim, marginTop: 2 },
+  tag: { fontFamily: font.body, fontSize: 14, color: color.crtOn, borderWidth: 1, borderColor: "#2F6B42", borderRadius: 2, paddingHorizontal: 8, paddingVertical: 2 },
+  meta: { fontFamily: font.body, fontSize: 14, color: color.crtDim, marginTop: 2 },
   vt: { fontFamily: font.num, fontSize: 19, color: color.crtOn },
   att: { flexDirection: "row", gap: 8, marginTop: 14 },
   attBtn: { flex: 1, minHeight: minTouch, borderWidth: 1, borderColor: "#2F6B42", borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
@@ -445,27 +445,27 @@ const s = StyleSheet.create({
   attText: { fontFamily: font.bodyBold, fontSize: 15, color: color.crtOn },
   saved: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 12 },
 
-  next: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: 12 },
+  next: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: 12 },
   dayOffLink: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start", marginTop: 4 },
-  dayOffText: { fontFamily: font.body, fontSize: 14, color: color.muted, textDecorationLine: "underline" },
+  dayOffText: { fontFamily: font.body, fontSize: 15, color: color.muted, textDecorationLine: "underline" },
   ty: { fontFamily: font.typeBold, color: color.paper },
   tyMuted: { fontFamily: font.typeBold, color: color.muted },
 
   h: { flexDirection: "row", alignItems: "baseline", gap: 10, paddingTop: 30, paddingBottom: 4 },
   hTitle: { fontFamily: font.title, fontSize: 19, lineHeight: 28, color: color.paper },
-  hSide: { fontFamily: font.body, fontSize: 13, color: color.faint },
+  hSide: { fontFamily: font.body, fontSize: 14, color: color.faint },
   entry: { flexDirection: "row", alignItems: "center", gap: 10, minHeight: 60, paddingVertical: 8, borderTopWidth: 1, borderTopColor: color.rule },
   rule: { height: 1, backgroundColor: color.rule },
   t: { width: 44, fontFamily: font.typeBold, fontSize: 14, color: color.warn, alignSelf: "flex-start", marginTop: 2 },
   what: { fontFamily: font.bodyBold, fontSize: 15, lineHeight: 21, color: color.paper },
-  sub: { fontFamily: font.body, fontSize: 13, color: color.muted },
+  sub: { fontFamily: font.body, fontSize: 14, color: color.muted },
   doneText: { color: color.faint }, // ไม่ขีดฆ่า: เส้นทับสระบนไทยอ่านยาก
   links: { flexDirection: "row", gap: space.lg },
   miniLink: { minHeight: minTouch, justifyContent: "center" },
-  miniText: { fontFamily: font.body, fontSize: 13, color: color.muted, textDecorationLine: "underline" },
+  miniText: { fontFamily: font.body, fontSize: 14, color: color.muted, textDecorationLine: "underline" },
   miniOn: { color: color.pen, fontFamily: font.bodyBold, textDecorationLine: "none" },
   act: { minHeight: minTouch, paddingHorizontal: 16, borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.sm, justifyContent: "center" },
-  actText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
+  actText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   // ช่องติ๊ก 22px (วาดมือ) แต่พื้นที่กด 44
   tick: { width: 44, height: 44, marginLeft: -10, alignItems: "center", justifyContent: "center" },
   box: {
@@ -474,20 +474,20 @@ const s = StyleSheet.create({
   },
   // ตรายาง (จุดเดียวต่อจอ)
   stamp: {
-    fontFamily: font.bodyBold, fontSize: 13, color: color.red, borderWidth: 2, borderColor: color.red, borderRadius: 4,
+    fontFamily: font.bodyBold, fontSize: 14, color: color.red, borderWidth: 2, borderColor: color.red, borderRadius: 4,
     paddingHorizontal: 9, paddingVertical: 1, transform: [{ rotate: "-6deg" }], opacity: 0.92,
   },
 
-  exam: { fontFamily: font.body, fontSize: 14, color: color.muted, paddingTop: 2, paddingBottom: 8 },
+  exam: { fontFamily: font.body, fontSize: 15, color: color.muted, paddingTop: 2, paddingBottom: 8 },
   examName: { fontFamily: font.bodyBold, color: color.paper },
   reviewOpen: { flex: 1, minWidth: 0, minHeight: minTouch, justifyContent: "center" },
   reviewLink: { textDecorationLine: "underline", textDecorationColor: color.rule2 },
   star: { color: color.red },
   late: { color: color.warn },
   reviewed: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: minTouch, paddingHorizontal: 4 },
-  reviewedText: { fontFamily: font.bodyBold, fontSize: 13, color: color.pen },
+  reviewedText: { fontFamily: font.bodyBold, fontSize: 14, color: color.pen },
   more: { minHeight: minTouch, justifyContent: "center", borderTopWidth: 1, borderTopColor: color.rule },
-  moreText: { fontFamily: font.bodyBold, fontSize: 14, color: color.pen, textDecorationLine: "underline" },
+  moreText: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen, textDecorationLine: "underline" },
 
   qa: { flexDirection: "row", gap: 10, marginTop: 22 },
   quick: {
@@ -495,9 +495,9 @@ const s = StyleSheet.create({
     borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.sm, boxShadow: `2px 2px 0 ${color.paper}`,
   },
   quickDown: { transform: [{ translateX: 2 }, { translateY: 2 }], boxShadow: "none" },
-  quickText: { fontFamily: font.bodyMedium, fontSize: 13, color: color.paper },
+  quickText: { fontFamily: font.bodyMedium, fontSize: 14, color: color.paper },
 
   sum: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", minHeight: 48, marginTop: 18, borderTopWidth: 1, borderColor: color.rule },
-  sumText: { fontFamily: font.body, fontSize: 14, color: color.muted },
-  sumLink: { fontFamily: font.bodyBold, fontSize: 14, color: color.pen },
+  sumText: { fontFamily: font.body, fontSize: 15, color: color.muted },
+  sumLink: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen },
 });

@@ -103,5 +103,5 @@ const s = StyleSheet.create({
   sq: { width: 14, height: 14, borderRadius: 2 },
   what: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   pct: { fontFamily: font.typeBold, fontSize: 19, color: color.paper },
-  pctSub: { fontFamily: font.body, fontSize: 12, color: color.muted },
+  pctSub: { fontFamily: font.body, fontSize: 14, color: color.muted },
 });

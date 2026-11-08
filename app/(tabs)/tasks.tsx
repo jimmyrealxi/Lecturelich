@@ -154,7 +154,7 @@ const s = StyleSheet.create({
   seg: { flexDirection: "row", borderWidth: 1.5, borderColor: color.paper, borderRadius: radius.md, overflow: "hidden" },
   segItem: { flex: 1, minHeight: 44, alignItems: "center", justifyContent: "center" },
   segOn: { backgroundColor: color.paper },
-  segText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
+  segText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   list: { borderBottomWidth: 1, borderBottomColor: color.rule },
   // FAB หมึกเต็ม + เงาแข็ง
   fab: {

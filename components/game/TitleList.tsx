@@ -36,6 +36,6 @@ const s = StyleSheet.create({
   sep: { borderTopWidth: 1, borderTopColor: color.seam },
   on: { borderWidth: 1, borderColor: color.gold },
   name: { fontFamily: font.bodyBold, fontSize: 15 },
-  small: { fontFamily: font.body, fontSize: 13, color: color.ash },
+  small: { fontFamily: font.body, fontSize: 14, color: color.ash },
   n: { fontFamily: font.pixel, fontSize: 15, color: color.ash },
 });

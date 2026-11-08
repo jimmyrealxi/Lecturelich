@@ -189,14 +189,14 @@ const s = StyleSheet.create({
   scene: { position: "relative", backgroundColor: color.gameBar, borderBottomWidth: 1, borderBottomColor: color.seam, minHeight: 120 },
   bossbar: { position: "absolute", left: 10, right: 10, top: 8 },
   bn: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", gap: 8 },
-  bname: { flex: 1, fontFamily: font.bodyBold, fontSize: 13, color: color.bossText, ...shadow },
+  bname: { flex: 1, fontFamily: font.bodyBold, fontSize: 14, color: color.bossText, ...shadow },
   bpct: { fontFamily: font.pixel, fontSize: 14, color: color.bossNum, ...shadow },
   hp: { height: 8, marginTop: 3, backgroundColor: color.gameDeep, borderWidth: 1, borderColor: color.bossLine },
   hpFill: { height: "100%", width: "100%", backgroundColor: color.blood, transformOrigin: "left" },
   ph: { position: "absolute", top: -3, bottom: -3, width: 2, backgroundColor: color.bone },
-  st2: { fontFamily: font.body, fontSize: 12, color: color.bossSoft, marginTop: 2, ...shadow },
+  st2: { fontFamily: font.body, fontSize: 14, color: color.bossSoft, marginTop: 2, ...shadow },
   skill: {
-    position: "absolute", left: 10, bottom: 6, fontFamily: font.bodyBold, fontSize: 12, color: color.gold,
+    position: "absolute", left: 10, bottom: 6, fontFamily: font.bodyBold, fontSize: 14, color: color.gold,
     backgroundColor: "rgba(6,5,4,0.8)", paddingHorizontal: 10, paddingVertical: 4,
   },
 });

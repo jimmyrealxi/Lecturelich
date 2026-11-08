@@ -44,8 +44,8 @@ export function TopBar({ back, title, onBack, right }: { back: string; title: st
 
 const s = StyleSheet.create({
   top: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: space.sm, paddingVertical: 4, borderBottomWidth: 1, borderBottomColor: color.seam, backgroundColor: color.cave },
-  backBtn: { minHeight: 44, minWidth: 44, justifyContent: "center", paddingHorizontal: space.sm },
-  back: { fontFamily: font.bodyMedium, fontSize: 14, color: color.bone },
+  backBtn: { minHeight: 52, minWidth: 96, justifyContent: "center", paddingHorizontal: space.sm },
+  back: { fontFamily: font.bodyBold, fontSize: 18, color: color.bone },
   topT: { fontFamily: font.bodyBold, fontSize: 17, color: color.gold },
   right: { minWidth: 88, alignItems: "flex-end", paddingRight: space.sm },
   h: { flexDirection: "row", alignItems: "center", gap: 10, paddingTop: 22, paddingBottom: 10, paddingHorizontal: space.lg },

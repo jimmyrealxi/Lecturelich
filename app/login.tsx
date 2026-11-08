@@ -32,7 +32,7 @@ export default function Login() {
 const s = StyleSheet.create({
   wrap: { flex: 1, justifyContent: "center", padding: space.xl, width: "100%", maxWidth: 420, alignSelf: "center" },
   title: { fontFamily: font.title, fontSize: 40, lineHeight: 52, color: color.paper },
-  sub: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.sm },
+  sub: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: space.sm },
   // ขีดหมึกแดงใต้ชื่อ (mockup a-settings จอ 5)
   stroke: { width: 72, height: 2, backgroundColor: color.red, marginTop: 18, transform: [{ rotate: "-1.5deg" }] },
   btn: {
@@ -41,5 +41,5 @@ const s = StyleSheet.create({
     boxShadow: `2px 2px 0 ${color.rule2}`,
   },
   btnText: { fontFamily: font.bodyBold, fontSize: 16, color: color.deck },
-  error: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.lg },
+  error: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.lg },
 });

@@ -51,7 +51,7 @@ export default function SubjectScreen() {
   return (
     <View style={{ flex: 1 }}>
       <View style={head.top}>
-        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/subjects"))} style={s.back}
+        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace("/subjects"))} style={head.backBtn}
           accessibilityRole="button" accessibilityLabel="ย้อนกลับ">
           <Text style={head.back}>‹ วิชา</Text>
         </Pressable>
@@ -125,15 +125,14 @@ export default function SubjectScreen() {
 }
 
 const s = StyleSheet.create({
-  back: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start" },
-  edit: { position: "absolute", right: space.lg, top: space.md, minHeight: minTouch, minWidth: minTouch, alignItems: "flex-end", justifyContent: "center" },
-  topSub: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: 2 },
+  edit: { position: "absolute", right: space.lg, top: space.md, minHeight: 52, minWidth: 72, alignItems: "flex-end", justifyContent: "center" },
+  topSub: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: 2 },
   links: { flexDirection: "row", gap: space.sm, marginTop: space.md },
   link: {
     flex: 1, minHeight: minTouch, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper,
     alignItems: "center", justifyContent: "center",
   },
-  linkText: { fontFamily: font.bodyBold, fontSize: 13, color: color.paper },
+  linkText: { fontFamily: font.bodyBold, fontSize: 14, color: color.paper },
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   big: { fontFamily: font.typeBold, fontSize: 32, color: color.paper },
   bigSmall: { fontFamily: font.body, fontSize: 15, color: color.muted },

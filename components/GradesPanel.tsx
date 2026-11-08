@@ -164,7 +164,7 @@ function ComponentCard({ subjectId, comp, sum, onEdit }: {
         <Field label="ได้" value={score} onChangeText={setScore} keyboardType="decimal-pad" maxLength={6} error={tried ? errScore : null} />
         <Field label="เต็ม" value={max} onChangeText={setMax} keyboardType="decimal-pad" maxLength={6} error={tried ? errMax : null} />
       </View>
-      <Text style={[T.muted, { fontSize: 12, marginTop: 4 }]}>งานที่ได้ 0 ให้กรอก 0 ด้วย ไม่งั้นแอปจะไม่นับงานนั้น</Text>
+      <Text style={[T.muted, { marginTop: 4 }]}>งานที่ได้ 0 ให้กรอก 0 ด้วย ไม่งั้นแอปจะไม่นับงานนั้น</Text>
       <View style={[s.row, { marginTop: space.sm }]}>
         <Btn label="แก้ส่วนนี้" onPress={onEdit} />
         <Btn kind="primary" label="+ เพิ่มคะแนน" onPress={onAdd} />
@@ -204,7 +204,7 @@ function ComponentForm({ subjectId, existing, sort, onDone }: {
         <Field label="คะแนนเต็ม (ไม่รู้ก็เว้นว่าง)" value={max} onChangeText={setMax} keyboardType="decimal-pad" maxLength={6}
           placeholder={weight || "30"} error={tried ? errMax : null} />
       </View>
-      <Text style={[T.muted, { fontSize: 12, marginTop: 4 }]}>
+      <Text style={[T.muted, { marginTop: 4 }]}>
         กรอกคะแนนทีละงานตามที่อาจารย์ให้ (เช่น 8/10) แอปจะแปลงเป็นสัดส่วนของส่วนนี้เอง
       </Text>
       <Text style={s.label}>ใช้คำนวณ &quot;ปลายภาคต้องได้เท่าไหร่&quot;</Text>
@@ -263,7 +263,7 @@ const s = StyleSheet.create({
   bar: { height: 8, backgroundColor: "rgba(42,33,24,0.12)", borderRadius: 2, overflow: "hidden", marginTop: space.sm },
   barFill: { height: "100%", backgroundColor: color.pen },
   // บนจอเขียว: ตัวเลขใหญ่ VT323 · ข้อความไทย Anuphan
-  needSmall: { fontFamily: font.body, fontSize: 13, color: color.crtDim },
+  needSmall: { fontFamily: font.body, fontSize: 14, color: color.crtDim },
   needBig: { fontFamily: font.num, fontSize: 40, lineHeight: 42, color: "#B8FFC9" },
   chips: { flexDirection: "row", gap: 4, marginTop: space.sm }, // 7 เกรดแถวเดียวตาม mockup (360px: ช่องละ ~38 กว้าง สูง 44)
   chip: {
@@ -271,11 +271,11 @@ const s = StyleSheet.create({
     alignItems: "center", justifyContent: "center",
   },
   chipOn: { backgroundColor: color.crtOn, borderColor: color.crtOn },
-  chipText: { fontFamily: font.bodyBold, fontSize: 14, color: color.crtOn },
+  chipText: { fontFamily: font.bodyBold, fontSize: 15, color: color.crtOn },
   row: { flexDirection: "row", gap: space.sm },
   between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
   item: { flexDirection: "row", alignItems: "center", minHeight: minTouch, borderTopWidth: 1, borderTopColor: color.rule, gap: space.sm },
   x: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
-  label: { fontFamily: font.body, fontSize: 13, color: color.muted, marginTop: space.md, marginBottom: 6 },
-  err: { fontFamily: font.body, fontSize: 13, color: color.danger, marginTop: space.sm },
+  label: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 6 },
+  err: { fontFamily: font.body, fontSize: 14, color: color.danger, marginTop: space.sm },
 });

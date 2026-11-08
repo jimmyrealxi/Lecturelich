@@ -163,14 +163,14 @@ function Act({ label, onPress, selected = false, grow = true }: { label: string;
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: color.paper },
   top: { flexDirection: "row", alignItems: "center", gap: space.sm, paddingHorizontal: space.md, minHeight: 56 },
-  close: { minHeight: minTouch, minWidth: minTouch, justifyContent: "center" },
-  closeText: { fontFamily: font.bodyMedium, fontSize: 14, color: color.on },
-  title: { flex: 1, textAlign: "center", fontFamily: font.body, fontSize: 13, color: color.onMuted },
+  close: { minHeight: 52, minWidth: 96, justifyContent: "center" },
+  closeText: { fontFamily: font.bodyBold, fontSize: 18, color: color.on },
+  title: { flex: 1, textAlign: "center", fontFamily: font.body, fontSize: 14, color: color.onMuted },
   count: { fontFamily: font.typeBold, fontSize: 15, color: color.on, minWidth: 34, textAlign: "right" },
   stage: { flex: 1, minHeight: 0 },
   fail: { margin: "auto", paddingHorizontal: space.xl, alignItems: "center", gap: space.md },
-  failText: { fontFamily: font.body, fontSize: 14, color: color.on, textAlign: "center" },
-  status: { fontFamily: font.body, fontSize: 13, color: color.onMuted, textAlign: "center", minHeight: 20 },
+  failText: { fontFamily: font.body, fontSize: 15, color: color.on, textAlign: "center" },
+  status: { fontFamily: font.body, fontSize: 14, color: color.onMuted, textAlign: "center", minHeight: 20 },
   foot: { width: "100%", maxWidth: 560, alignSelf: "center", padding: space.md, paddingTop: space.sm, gap: 6 },
   bar: { flexDirection: "row", gap: 6 },
   act: {
@@ -179,5 +179,5 @@ const s = StyleSheet.create({
   },
   actOn: { backgroundColor: color.on, borderColor: color.on },
   actOff: { borderStyle: "dashed" },
-  actText: { fontFamily: font.bodyBold, fontSize: 14, color: color.on },
+  actText: { fontFamily: font.bodyBold, fontSize: 15, color: color.on },
 });

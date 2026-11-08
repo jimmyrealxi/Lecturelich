@@ -93,7 +93,7 @@ const s = StyleSheet.create({
   topics: { flexDirection: "row", flexWrap: "wrap", gap: 4, marginTop: 6 },
   topic: { backgroundColor: color.field, borderWidth: 1, borderColor: color.rule2, borderRadius: 2, paddingHorizontal: 7, paddingVertical: 2 },
   topicStar: { borderColor: color.red },
-  topicText: { fontFamily: font.body, fontSize: 12, color: color.paper },
+  topicText: { fontFamily: font.body, fontSize: 14, color: color.paper },
   photos: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 6 },
   thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: color.rule },
 });
