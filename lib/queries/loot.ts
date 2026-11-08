@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { fullLook, type Look, type Rarity, type Slot } from "@/lib/papboy";
+import { fitsClass } from "@/lib/classes";
+import { DEFAULT_LOOK, fullLook, type Look, type Rarity, type Slot } from "@/lib/papboy";
 
 // กล่อง + ของแต่งตัว (ขั้น 7 · migration 20261113090000_stage7_loot.sql) · สุ่ม/ปลดล็อก/ใส่ของ ทำใน RPC ทั้งหมด
 // key ขึ้นต้น "xp" → ได้ XP แล้ว (invalidate ["xp"] หลังทุก mutation) กล่องใหม่โผล่เอง
@@ -31,7 +32,9 @@ export function useLoot() {
       if (error) throw error;
       const d = data as Omit<LootState, "look"> & { look: Record<string, string> };
       const k = (cls.data ?? null) as { class_id?: string | null; ascendancy_id?: string | null } | null;
-      return { ...d, look: { ...fullLook(d.look), cls: k?.class_id ?? null, asc: k?.ascendancy_id ?? null } } as LootState;
+      const look: Look = { ...fullLook(d.look), cls: k?.class_id ?? null, asc: k?.ascendancy_id ?? null };
+      if (!fitsClass({ k: "held", v: look.held, isDefault: look.held === DEFAULT_LOOK.held }, look.cls)) look.held = DEFAULT_LOOK.held; // อาวุธของคลาสเทอมก่อน: เก็บไว้ แต่ไม่ถือ
+      return { ...d, look } as LootState;
     },
   });
 }

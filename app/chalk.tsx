@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { Frame, H, TopBar } from "@/components/game/Frame";
+import { fitsClass } from "@/lib/classes";
 import { ITEMS, LOOT_CONFIG, RARITY_COLOR, RARITY_NAME, type Item, type Rarity } from "@/lib/papboy";
 import { useCraft, useLoot } from "@/lib/queries/loot";
 import { color, font, space } from "@/lib/theme";
@@ -30,7 +31,7 @@ export default function Chalk() {
   }
 
   const owned = new Set(d.owned);
-  const list = ITEMS.filter((i) => !i.isDefault && !owned.has(i.id)).sort((a, b) => ORDER.indexOf(a.r) - ORDER.indexOf(b.r));
+  const list = ITEMS.filter((i) => !i.isDefault && !owned.has(i.id) && fitsClass(i, d.look.cls)).sort((a, b) => ORDER.indexOf(a.r) - ORDER.indexOf(b.r));
   const buy = () => {
     if (!sel || craft.isPending) return;
     const it = sel;
