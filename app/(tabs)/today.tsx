@@ -5,6 +5,7 @@ import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Btn, Card, confirmAction, Crt, CrtBig, CrtLabel, PenScribble, Readout, Section, Skeleton, T, Tick, UndoBar } from "@/components/ui";
 import { CrtStage, useCrtFx } from "@/components/game/CrtFx";
+import { EmptyScene } from "@/components/EmptyScene";
 import { PapBoyBuddy } from "@/components/game/PapBoySprite";
 import { KIND, statusOf } from "@/components/game/Review";
 import {
@@ -179,7 +180,7 @@ export default function Today() {
               </Pressable>
             )}
 
-            <Section count={{ n: unnoted.length + openTasks.filter((a) => !a.done).length, unit: "เรื่อง" }}>ต้องทำ</Section>
+            <Section count={{ n: unnoted.length + (tasks.data ?? []).filter((a) => !a.done).length, unit: "เรื่อง" }}>ต้องทำ</Section>
 
             {unnoted.map((slot) => (
               <View key={slot.id} style={s.entry}>
@@ -229,7 +230,7 @@ export default function Today() {
               })
             )}
             {!tasks.isPending && unnoted.length + openTasks.length === 0 && (
-              <View style={s.entry}><Text style={s.sub}>ไม่มีอะไรค้าง</Text></View>
+              <EmptyScene kind="today" fact="ไม่มีอะไรค้าง" />
             )}
             <View style={s.rule} />
 

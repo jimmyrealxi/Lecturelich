@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ฉากตอนหน้าว่าง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#4A3C2C;--faint:#64523F;--stain:#6B3F16;--pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;--olive:#5B6B2F;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B}
+*{box-sizing:border-box}
+html{background:#3A2F24}
+body{margin:0;background:#3A2F24;color:var(--paper);font:400 16px/1.55 Anuphan,sans-serif}
+::selection{background:var(--paper);color:var(--deck)}
+.intro{max-width:760px;margin:0 auto;padding:28px 16px 8px;color:var(--deck)}
+.intro h1{font:400 30px/1.4 Chonburi,serif;margin:0 0 6px}
+.intro p{margin:0;color:#CDBE9E;max-width:62ch}
+.wall{display:flex;flex-wrap:wrap;gap:28px 24px;justify-content:center;padding:20px 0 48px;align-items:flex-start}
+.item{width:360px;max-width:100%}
+.phone{background-color:var(--ink);background-image:linear-gradient(90deg,transparent 19px,rgba(160,40,29,.55) 19px,rgba(160,40,29,.55) 20px,transparent 20px),repeating-linear-gradient(0deg,transparent 0 31px,var(--rule) 31px 32px);padding:18px 16px 26px 34px;min-height:430px;position:relative;border-radius:3px}
+.phone::before{content:"";position:absolute;left:6px;top:40px;width:8px;height:8px;border-radius:50%;background:#3A2F24;box-shadow:0 150px 0 #3A2F24,0 300px 0 #3A2F24}
+.head{font:400 30px/1.35 Chonburi,serif;margin:0}
+.seg{display:flex;gap:18px;margin:8px 0 2px;font-weight:500}
+.seg span{padding:10px 0;color:var(--faint)}
+.seg .on{color:var(--paper);border-bottom:2px solid var(--paper)}
+.tape{display:inline-flex;align-items:center;height:46px;padding:0 26px 0 18px;margin:14px 0 2px -8px;background:var(--red);color:var(--deck);font:400 23px/1 Chonburi,serif;clip-path:polygon(0 8%,3% 0,100% 6%,97% 28%,100% 52%,96% 76%,99% 100%,2% 94%,0 62%,2% 34%);transform:rotate(-1.2deg)}
+.tape.g{background:var(--olive);transform:rotate(.9deg);margin-left:-4px}
+.tape.b{background:var(--pen);transform:rotate(-.7deg)}
+.scene{display:block;width:100%;height:auto;margin-top:10px}
+.joke{font:400 20px/1.55 Chonburi,serif;text-align:center;margin:6px 0 2px;text-wrap:balance;min-height:62px}
+.fact{color:var(--muted);font-size:15px;text-align:center;margin:0;text-wrap:balance}
+.note{padding:14px 16px 0;color:var(--deck)}
+.note h2{font:600 17px/1.5 Anuphan,sans-serif;margin:0 0 8px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button{min-height:44px;text-align:left;padding:8px 12px;background:transparent;color:#CDBE9E;border:1px solid #6d5f4b;border-radius:3px;font:400 15px/1.45 Anuphan,sans-serif;cursor:pointer}
+.opts button[aria-pressed=true]{color:var(--deck);border-color:var(--deck)}
+.opts button:focus-visible{outline:2px solid var(--deck);outline-offset:2px}
+.scope{max-width:760px;margin:0 auto;padding:0 16px 48px;color:#CDBE9E;font-size:15px}
+.scope h2{font:400 22px/1.5 Chonburi,serif;color:var(--deck);margin:0 0 6px}
+.scope ul{margin:0;padding-left:20px}
+.scope li{margin:4px 0}
+
+svg .ln{fill:none;stroke:var(--paper);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+svg .thin{stroke-width:1.3}
+svg .soft{stroke:var(--faint)}
+svg .rust{stroke:var(--stain)}
+svg .an{transform-box:fill-box;transform-origin:center}
+
+/* ใบไม้ */
+.drift{animation:drift 9s linear infinite}
+.d2{animation-delay:-3.2s;animation-duration:10.5s}
+.d3{animation-delay:-6.4s;animation-duration:8.2s}
+.flut{animation:flut 2.6s ease-in-out infinite}
+.d2 .flut{animation-duration:3.3s;animation-direction:reverse}
+.d3 .flut{animation-duration:2.2s}
+.gust{animation:gust 9s ease-out infinite}
+.gust.g2{animation-delay:-3.2s}
+.swing{transform-origin:50% 0;animation:swing 4.5s ease-in-out infinite}
+@keyframes drift{0%{transform:translateX(-46px);opacity:0}7%{opacity:1}68%{opacity:1}76%,100%{transform:translateX(345px);opacity:0}}
+@keyframes flut{0%{transform:translateY(0) rotate(-20deg)}25%{transform:translateY(-13px) rotate(70deg)}50%{transform:translateY(6px) rotate(160deg)}75%{transform:translateY(-9px) rotate(250deg)}100%{transform:translateY(0) rotate(340deg)}}
+@keyframes gust{0%{transform:translateX(-24px);opacity:0}12%{opacity:.8}34%,100%{transform:translateX(70px);opacity:0}}
+@keyframes swing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(6deg)}}
+
+/* แมงมุม */
+.thread{transform-origin:50% 0;animation:thread 7s cubic-bezier(.45,0,.2,1) infinite}
+.spider{animation:spider 7s cubic-bezier(.45,0,.2,1) infinite}
+@keyframes thread{0%,18%,100%{transform:scaleY(.7)}48%,66%{transform:scaleY(1.3)}}
+@keyframes spider{0%,18%,100%{transform:translateY(-8px)}48%,66%{transform:translateY(8px)}}
+
+/* ไอกาแฟ */
+.steam{animation:steam 4.2s ease-out infinite;opacity:0}
+.s2{animation-delay:-1.4s}.s3{animation-delay:-2.8s}
+@keyframes steam{0%{transform:translateY(8px) scaleY(.75);opacity:0}25%{opacity:.8}100%{transform:translateY(-20px) scaleY(1.1);opacity:0}}
+
+/* ดินสอลังเล */
+.pencil{transform-origin:6% 94%;animation:tap 5.4s ease-in-out infinite}
+.dot{animation:dot 5.4s step-end infinite;opacity:0}
+.dot.b{animation-name:dot2}.dot.c{animation-name:dot3}
+@keyframes tap{0%,100%{transform:rotate(0)}12%{transform:rotate(-7deg)}20%{transform:rotate(0)}32%{transform:rotate(-7deg)}40%{transform:rotate(0)}52%{transform:rotate(-7deg)}60%{transform:rotate(0)}}
+@keyframes dot{0%,19%{opacity:0}20%,86%{opacity:1}87%,100%{opacity:0}}
+@keyframes dot2{0%,39%{opacity:0}40%,86%{opacity:1}87%,100%{opacity:0}}
+@keyframes dot3{0%,59%{opacity:0}60%,86%{opacity:1}87%,100%{opacity:0}}
+
+/* เครื่องคิดเลข */
+.cur{animation:blink 1.1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.key{transform-origin:50% 0;animation:swing 3.4s ease-in-out infinite}
+
+@media (prefers-reduced-motion:reduce){
+  svg *{animation:none!important}
+  .drift{opacity:1;transform:translateX(120px)}.d2{transform:translateX(190px)}.d3{transform:translateX(40px)}
+  .steam{opacity:.7}.dot{opacity:1}
+  .gust{opacity:0}
+}
+@media (max-width:400px){.wall{padding-left:0;padding-right:0}.item{width:100%}}
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>ฉากตอนหน้าว่าง</h1>
+  <p>ภาพหมึกวาดมือบนสมุดเก่า ขยับเบา ๆ พร้อมคำขำ ใต้ภาพยังคงข้อความบอกจริงเหมือนเดิม กดเลือกคำใต้แต่ละจอเพื่อลองดูได้</p>
+</div>
+
+<div class="wall">
+
+<!-- งานค้างว่าง -->
+<section class="item">
+  <div class="phone">
+    <h2 class="head">งาน</h2>
+    <div class="seg"><span class="on">ยังไม่ส่ง</span><span>ส่งแล้ว</span></div>
+    <svg class="scene" viewBox="0 0 300 150" aria-hidden="true">
+      <!-- ซากตึก -->
+      <path class="ln soft" d="M204 130V92l11-9v-13l13 7V58l14 12 9-7 8 11v56"/>
+      <path class="ln thin soft" d="M216 100h12v13h-12zM216 100l12 13M238 92h11v14h-11zM249 92l-11 14"/>
+      <path class="ln thin rust" d="M204 112l-7 5M259 96l8-4M251 74l6-7"/>
+      <!-- เสาไฟงอ -->
+      <path class="ln" d="M76 131L83 62C85 42 98 30 118 33"/>
+      <path class="ln thin" d="M74 131h14M80 106l5 1"/>
+      <g class="an swing"><path class="ln" d="M118 33v5m-10 0h20l5 13h-30z"/><path class="ln thin rust" d="M111 45l9 6M122 42l5 7"/></g>
+      <!-- พื้นแตก -->
+      <path class="ln" d="M6 131c44-4 92 3 138-1s104 3 150-2"/>
+      <path class="ln thin soft" d="M30 139h24M96 141h40M178 138h30M240 141h22"/>
+      <path class="ln thin" d="M42 131l-3-8M46 131l1-10M50 131l4-7M168 130l-3-7M172 130l2-9"/>
+      <!-- เส้นลม -->
+      <g class="gust"><path class="ln thin soft" d="M20 62c20-5 36 5 58 0M36 76c14-4 26 3 42 0"/></g>
+      <g class="gust g2"><path class="ln thin soft" d="M120 96c20-5 36 5 58 0"/></g>
+      <!-- ใบไม้ -->
+      <g class="drift"><g transform="translate(0 72)"><g class="an flut"><path d="M0 0C6-8 18-8 24 0 18 8 6 8 0 0Z" fill="#A0281D" stroke="#2A2118" stroke-width="1.5"/><path class="ln thin" d="M0 0H20M-5 3L0 0"/></g></g></g>
+      <g class="drift d2"><g transform="translate(0 104)"><g class="an flut"><path d="M0 0C5-7 15-7 20 0 15 7 5 7 0 0Z" fill="#5B6B2F" stroke="#2A2118" stroke-width="1.5"/><path class="ln thin" d="M0 0H17"/></g></g></g>
+      <g class="drift d3"><g transform="translate(0 46)"><g class="an flut"><path d="M0 0C4-6 12-6 16 0 12 6 4 6 0 0Z" fill="#8A3F08" stroke="#2A2118" stroke-width="1.5"/><path class="ln thin" d="M0 0H13"/></g></g></g>
+    </svg>
+    <p class="joke" data-j="a">ลมพัดผ่าน ไม่มีงานติดมาด้วย</p>
+    <p class="fact">ไม่มีงานค้าง พักได้</p>
+  </div>
+  <div class="note"><h2>หน้างาน · ยังไม่ส่ง (ใช้ในหน้าวิชาย่อย "ยังไม่มีงาน" ด้วย)</h2><div class="opts" data-for="a"><button>ลมพัดผ่าน ไม่มีงานติดมาด้วย</button><button>โล่งจนใบไม้ต้องแวะมาดู</button><button>งานหมดแล้ว อาจารย์ยังไม่รู้ตัว</button></div></div>
+</section>
+
+<!-- ส่งแล้วว่าง -->
+<section class="item">
+  <div class="phone">
+    <h2 class="head">งาน</h2>
+    <div class="seg"><span>ยังไม่ส่ง</span><span class="on">ส่งแล้ว</span></div>
+    <svg class="scene" viewBox="0 0 300 150" aria-hidden="true">
+      <path class="ln" d="M6 131c44-4 92 3 138-1s104 3 150-2"/>
+      <path class="ln" d="M139 131l3-54M151 130l-1-53"/>
+      <path class="ln thin" d="M126 131l15-16M164 130l-14-15"/>
+      <!-- ตู้สนิม -->
+      <path class="ln" d="M100 76V46c0-11 8-19 19-19h48c11 0 19 8 19 19v30z"/>
+      <path class="ln" d="M100 46c0-11 8-19 19-19s19 8 19 19v30"/>
+      <path class="ln thin" d="M146 44h30"/>
+      <path class="ln thin rust" d="M108 60l6 7M116 52l4 5M170 62l8 9M160 68l5 5M177 34l5 6"/>
+      <text x="161" y="62" text-anchor="middle" font-family="Anuphan" font-weight="600" font-size="13" fill="#2A2118">ส่งงาน</text>
+      <!-- ธงตก -->
+      <path class="ln" d="M186 54h12v-1"/><path d="M198 53l13 10-5 3-12-9z" fill="#A0281D" stroke="#2A2118" stroke-width="1.5" stroke-linejoin="round"/>
+      <!-- แมงมุม -->
+      <path class="ln thin an thread" d="M124 76v26"/>
+      <g class="spider">
+        <circle cx="124" cy="107" r="5.5" fill="#2A2118"/><circle cx="124" cy="100" r="3" fill="#2A2118"/>
+        <path class="ln thin" d="M119 103l-8-5M118 106l-9 0M118 109l-8 5M120 112l-5 7M129 103l8-5M130 106l9 0M130 109l8 5M128 112l5 7"/>
+      </g>
+      <path class="ln thin soft" d="M30 139h24M96 141h40M178 138h30M240 141h22"/>
+    </svg>
+    <p class="joke" data-j="b">ตู้ส่งงานยังว่าง แมงมุมจองแล้ว</p>
+    <p class="fact">ยังไม่มีงานที่ส่งแล้ว</p>
+  </div>
+  <div class="note"><h2>หน้างาน · ส่งแล้ว</h2><div class="opts" data-for="b"><button>ตู้ส่งงานยังว่าง แมงมุมจองแล้ว</button><button>ยังไม่ได้ส่งอะไร แมงมุมเลยย้ายเข้า</button><button>ตู้นี้รอจดหมายฉบับแรกจากคุณ</button></div></div>
+</section>
+
+<!-- วันนี้ -->
+<section class="item">
+  <div class="phone">
+    <h2 class="head">วันนี้</h2>
+    <div class="tape">ต้องทำ</div>
+    <svg class="scene" viewBox="0 0 300 150" aria-hidden="true">
+      <!-- รอยแก้ว -->
+      <ellipse class="ln thin rust" cx="208" cy="124" rx="31" ry="10" stroke-dasharray="46 5 22 7"/>
+      <path class="ln" d="M6 131c44-4 92 3 138-1s104 3 150-2" opacity=".35"/>
+      <!-- ไอ -->
+      <path class="ln soft steam" d="M126 50c-7-7 7-12 0-20s6-11 1-17"/>
+      <path class="ln soft steam s2" d="M146 50c-7-7 7-12 0-20s6-11 1-17"/>
+      <path class="ln soft steam s3" d="M166 50c-7-7 7-12 0-20s6-11 1-17"/>
+      <!-- แก้วสังกะสี -->
+      <path class="ln" d="M108 58l3 62c0 6 13 10 35 10s35-4 35-10l3-62"/>
+      <ellipse class="ln" cx="146" cy="58" rx="38" ry="9"/>
+      <path d="M116 60c8 4 52 4 60 0-8-3-52-3-60 0z" fill="#2A2118"/>
+      <path class="ln" d="M183 72c20-5 28 6 25 19s-16 18-28 14"/><path class="ln" d="M182 83c11-3 15 2 13 9s-7 8-14 7"/>
+      <path class="ln thin rust" d="M115 86l7 9M170 110l6-7M126 118l5-5"/>
+      <path class="ln thin soft" d="M136 92c6 8 13 8 19 0-3 12-16 12-19 0z"/>
+      <circle cx="136" cy="84" r="2" fill="#64523F"/><circle cx="155" cy="84" r="2" fill="#64523F"/>
+      <path class="ln thin" d="M60 131l-3-7M64 131l1-9M254 130l3-8M250 130l-2-7"/>
+    </svg>
+    <p class="joke" data-j="c">วันนี้ไม่มีอะไรไล่ล่า จิบกาแฟก่อน</p>
+    <p class="fact">วันนี้ไม่มีเรื่องต้องทำ</p>
+  </div>
+  <div class="note"><h2>หน้าวันนี้ · ต้องทำว่าง</h2><div class="opts" data-for="c"><button>วันนี้ไม่มีอะไรไล่ล่า จิบกาแฟก่อน</button><button>โลกล่มแล้ว แต่งานวันนี้ไม่มี</button><button>กาแฟยังร้อน งานยังไม่มา</button></div></div>
+</section>
+
+<!-- โน้ต -->
+<section class="item">
+  <div class="phone">
+    <h2 class="head">คณิต</h2>
+    <div class="tape g">โน้ต</div>
+    <svg class="scene" viewBox="0 0 300 150" aria-hidden="true">
+      <!-- สมุดเปิด -->
+      <path d="M60 36c28-8 62-6 90 8v92c-28-14-62-16-90-8z" fill="#F3EAD2" stroke="#2A2118" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M240 36c-28-8-62-6-90 8v92c28-14 62-16 90-8z" fill="#F3EAD2" stroke="#2A2118" stroke-width="2" stroke-linejoin="round"/>
+      <path class="ln thin soft" d="M72 56c22-5 46-3 66 5M72 74c22-5 46-3 66 5M72 92c22-5 46-3 66 5M72 110c22-5 46-3 66 5M228 56c-22-5-46-3-66 5M228 74c-22-5-46-3-66 5M228 92c-22-5-46-3-66 5M228 110c-22-5-46-3-66 5"/>
+      <path class="ln thin rust" d="M222 40l-8 7M76 124l9-3"/>
+      <!-- จุดลังเล -->
+      <circle class="dot" cx="172" cy="100" r="2.4" fill="#2A2118"/>
+      <circle class="dot b" cx="182" cy="103" r="2.4" fill="#2A2118"/>
+      <circle class="dot c" cx="192" cy="106" r="2.4" fill="#2A2118"/>
+      <!-- ดินสอกุด -->
+      <g class="an pencil">
+        <path d="M193 104l5-16 33-34 11 11-33 34z" fill="#C9772E" stroke="#2A2118" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M193 104l5-16 11 11z" fill="#F3EAD2" stroke="#2A2118" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M193 104l1.8-6 4.2 4z" fill="#2A2118"/>
+        <path d="M231 54l5-5c2-2 5-2 7 0l4 4c2 2 2 5 0 7l-5 5z" fill="#A0281D" stroke="#2A2118" stroke-width="2" stroke-linejoin="round"/>
+        <path class="ln thin" d="M204 83l11 11M224 62l11 11"/>
+      </g>
+    </svg>
+    <p class="joke" data-j="d">หน้านี้ยังขาวกว่าอนาคต</p>
+    <p class="fact">ยังไม่มีโน้ต · จดได้จากการ์ด “ยังไม่ได้จด” ในหน้าวันนี้หลังเลิกคาบ</p>
+  </div>
+  <div class="note"><h2>หน้าวิชาย่อย · โน้ต</h2><div class="opts" data-for="d"><button>หน้านี้ยังขาวกว่าอนาคต</button><button>ดินสอพร้อม เนื้อหายังไม่พร้อม</button><button>จดแรกของเทอมยังรอคุณอยู่</button></div></div>
+</section>
+
+<!-- คะแนน -->
+<section class="item">
+  <div class="phone">
+    <h2 class="head">คณิต</h2>
+    <div class="tape b">คะแนน</div>
+    <svg class="scene" viewBox="0 0 300 150" aria-hidden="true">
+      <path class="ln" d="M6 134c44-4 92 3 138-1s104 3 150-2" opacity=".35"/>
+      <g transform="rotate(-4 150 80)">
+        <path d="M100 22h100c3 0 5 2 5 5v101c0 3-2 5-5 5H100c-3 0-5-2-5-5V27c0-3 2-5 5-5z" fill="#F3EAD2" stroke="#2A2118" stroke-width="2"/>
+        <rect x="106" y="32" width="88" height="30" rx="6" fill="#08130C"/>
+        <text x="182" y="55" text-anchor="end" font-family="VT323" font-size="25" fill="#9EF0B4">0.00</text>
+        <rect class="cur" x="184" y="39" width="5" height="17" fill="#9EF0B4"/>
+        <g class="ln"><rect x="108" y="72" width="18" height="14" rx="2"/><rect x="133" y="72" width="18" height="14" rx="2"/><rect x="158" y="72" width="18" height="14" rx="2"/>
+        <rect x="108" y="92" width="18" height="14" rx="2"/><rect x="158" y="92" width="18" height="14" rx="2"/>
+        <rect x="108" y="112" width="18" height="14" rx="2"/><rect x="133" y="112" width="18" height="14" rx="2"/><rect x="158" y="112" width="18" height="14" rx="2"/></g>
+        <path class="ln thin soft" d="M183 72v54"/>
+        <path d="M136 92h12v12h-12z" fill="#2A2118"/>
+        <path class="ln thin rust" d="M198 112l-6 8M99 40l5 7M99 118l6-5"/>
+        <!-- ปุ่มห้อยสาย -->
+        <g class="an key"><path class="ln thin" d="M142 104v14c0 4 5 4 5 8v10"/><rect x="137" y="136" width="20" height="15" rx="2" fill="#F3EAD2" stroke="#2A2118" stroke-width="2"/></g>
+      </g>
+    </svg>
+    <p class="joke" data-j="e">ยังไม่มีคะแนนให้ลุ้น หัวใจยังปกติดี</p>
+    <p class="fact">ยังไม่มีส่วนคะแนน</p>
+  </div>
+  <div class="note"><h2>หน้าวิชาย่อย · คะแนน</h2><div class="opts" data-for="e"><button>ยังไม่มีคะแนนให้ลุ้น หัวใจยังปกติดี</button><button>เครื่องคิดเลขว่างงาน</button><button>ศูนย์ตอนนี้ ยังไม่ใช่ศูนย์จริง</button></div></div>
+</section>
+
+</div>
+
+<div class="scope">
+  <h2>ที่จะไม่ใส่ฉาก</h2>
+  <ul>
+    <li>ข้อความเล็กในฟอร์ม เช่น "ยังไม่มีคาบชดเชย" เพราะพื้นที่น้อย</li>
+    <li>หน้า "ยังไม่มีเทอม" เพราะต้องบอกขั้นตอนให้ชัด</li>
+    <li>หน้าเกม เพราะเป็นอีกโลกที่ไม่แตะ</li>
+  </ul>
+</div>
+
+<script>
+document.querySelectorAll('.opts').forEach(function(g){
+  var j=document.querySelector('[data-j="'+g.dataset.for+'"]'),bs=g.querySelectorAll('button');
+  bs.forEach(function(b,i){
+    b.setAttribute('aria-pressed',i===0);
+    b.onclick=function(){bs.forEach(function(x){x.setAttribute('aria-pressed',x===b)});j.textContent=b.textContent};
+  });
+});
+</script>
+</body>
+</html>

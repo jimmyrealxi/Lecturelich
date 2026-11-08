@@ -1,12 +1,16 @@
 import { useTabTop } from "@/lib/useTabTop";
 import { useState } from "react";
-import { router } from "expo-router";
+import { router, type Href } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { BossScene } from "@/components/game/BossScene";
 import { Bar, Frame, H } from "@/components/game/Frame";
 import { BossPanel, PassiveTree, ReviewRow } from "@/components/game/Review";
 import { termBoss } from "@/lib/boss";
-import { DEFAULT_LOOK, itemById, RARITY_COLOR } from "@/lib/papboy";
+import { DEFAULT_LOOK, itemById, RARITY_COLOR, type Look } from "@/lib/papboy";
+import { PapBoySprite } from "@/components/game/PapBoySprite";
+import { ascById, classById } from "@/lib/classes";
+import { thaiDate } from "@/lib/format";
+import { useClassState, type ClassState } from "@/lib/queries/classes";
 import { TitleList } from "@/components/game/TitleList";
 import { TITLES } from "@/lib/titles";
 import { useLoot, useTitles } from "@/lib/queries/loot";
@@ -22,6 +26,25 @@ import { XP_CONFIG } from "@/lib/xp";
 
 const KIND = { midterm: "กลางภาค", final: "ปลายภาค" } as const;
 
+function ClassStrip({ st, look }: { st: ClassState; look: Look }) {
+  const k = classById(st.class_id), a = ascById(st.ascendancy_id);
+  const can = !k || (st.asc_open && !a); // มีอะไรให้เลือกตอนนี้ ถึงกดได้
+  const name = a?.name ?? k?.name ?? "ยังไม่ได้เลือกคลาส";
+  const sub = !k ? "เลือกคลาสเทอมนี้ ›" : a ? `สายย่อยของ${k.name}` : st.asc_open ? "เลือกสายย่อยได้แล้ว ›" : st.asc_on ? `เลือกสายย่อยได้ ${thaiDate(st.asc_on)}` : k.vibe;
+  const body = (
+    <>
+      <PapBoySprite look={look} size={64} label="" />
+      <View style={{ flex: 1 }}>
+        <Text style={s.clsN}>{name}</Text>
+        <Text style={[s.small, can && { color: color.gold }]}>{sub}</Text>
+      </View>
+    </>
+  );
+  return can
+    ? <Pressable style={s.clsS} onPress={() => router.push("/class" as Href)} accessibilityRole="button">{body}</Pressable>
+    : <View style={s.clsS}>{body}</View>;
+}
+
 export default function Game() {
   const top = useTabTop();
   const q = useXp();
@@ -34,6 +57,7 @@ export default function Game() {
   const xpToday = useXpToday(today).data;
   const loot = useLoot().data; // undefined = ยังไม่รัน migration ขั้น 7 / ออฟไลน์ → ซ่อนส่วนกล่อง
   const titles = useTitles().data;
+  const cls = useClassState().data; // undefined = ยังไม่รัน migration ขั้น 9 → ซ่อนแถบคลาส
   const [pickTitle, setPickTitle] = useState(false);
 
   const next = upcomingExams(exams, today);
@@ -95,6 +119,8 @@ export default function Game() {
         </View>
       </View>
       {pickTitle && titles && <View style={{ marginTop: space.md }}><TitleList state={titles} onPicked={() => setPickTitle(false)} /></View>}
+
+      {cls?.term_id && <ClassStrip st={cls} look={look} />}
 
       {loot && (
         <View style={s.acts}>
@@ -227,6 +253,8 @@ export default function Game() {
 
 const s = StyleSheet.create({
   page: { backgroundColor: color.cave },
+  clsS: { flexDirection: "row", alignItems: "center", gap: space.sm, marginHorizontal: space.md, marginTop: space.md, paddingRight: space.md, minHeight: minTouch, backgroundColor: color.gamePanel, borderWidth: 1, borderColor: color.seam },
+  clsN: { fontFamily: font.title, fontSize: 18, lineHeight: 27, color: color.bone },
   content: { paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   skel: { marginHorizontal: space.md, backgroundColor: color.gamePanel, opacity: 0.6 },
   pad: { paddingHorizontal: space.lg },
