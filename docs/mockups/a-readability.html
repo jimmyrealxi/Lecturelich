@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich อ่านง่าย + สมุดรอดจากซากเมือง</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* หน้าวันนี้ เทียบของเดิมกับแบบใหม่ที่ 360px · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#574735;--muted2:#4A3C2C;--faint:#64523F;--pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;--on:#F3EAD2;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B;--teal:#1F5A63}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--pen);color:var(--on)}
+html{scrollbar-color:var(--rule2) #1C1915}
+body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:24px 16px 48px}
+.head{max-width:1160px;margin:0 auto 20px}
+.head h1{font:400 22px/1.5 Chonburi,serif;color:var(--deck)}
+.head p{color:#C9BFAA;max-width:70ch;margin-top:4px}
+.wrap{max-width:1160px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.col h2{font:600 16px/1.5 Anuphan;color:#fff;margin-bottom:8px}
+.col small{display:block;font-size:14px;color:#C9BFAA;margin-top:8px}
+.phone{position:relative;width:360px;max-width:100%;overflow:hidden;color:var(--paper);border-radius:6px;padding:0 16px 28px 38px;background:
+  radial-gradient(circle at 7px 7px,#3a3128 4.5px,transparent 5.5px) 6px 72px/14px 60px repeat-y,
+  linear-gradient(90deg,transparent 24px,rgba(160,40,29,.42) 24px 26px,transparent 26px),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
+  radial-gradient(140% 100% at 50% 40%,transparent 60%,rgba(110,70,20,.26) 100%),
+  var(--ink)}
+.tail{height:14px;margin:0 0 12px;background:var(--crt);border-radius:0 0 14px 14px}
+.ty{font:700 1em "Courier Prime",monospace}
+
+/* ของเดิม: ค่าจาก today.tsx */
+.old .next,.old .off,.old .exam{font-size:15px;color:var(--muted)}
+.old .off{margin-top:12px;text-decoration:underline;text-underline-offset:3px}
+.old .h{display:flex;align-items:baseline;gap:10px;padding:30px 0 4px}
+.old .h h3{font:400 19px/28px Chonburi,serif}
+.old .h span{font-size:14px;color:var(--faint)}
+.old .row{display:flex;align-items:center;gap:10px;min-height:60px;padding:8px 0;border-top:1px solid var(--rule)}
+.old .grow{flex:1;min-width:0}
+.old .slot{width:44px;flex:none;font:700 14px "Courier Prime",monospace;color:var(--warn);align-self:flex-start;margin-top:2px}
+.old .slot.b{display:flex;justify-content:center;align-self:center;margin:0 0 0 -10px}
+.old .what{font-weight:600;font-size:15px;line-height:21px}
+.old a.what{display:block;text-decoration:underline;text-decoration-color:var(--rule2);text-underline-offset:3px}
+.old .sub{font-size:14px;color:var(--muted)}
+.old .links{display:flex;gap:16px;font-size:14px;min-height:44px;align-items:center}
+.old .on{color:var(--pen);font-weight:600}
+.old .u{color:var(--muted);text-decoration:underline}
+.old .act{min-height:44px;padding:0 16px;border:1.5px solid var(--paper);border-radius:3px;font:600 15px/41px Anuphan;flex:none}
+.old .stamp{font:600 14px Anuphan;color:var(--red);border:2px solid var(--red);border-radius:4px;padding:0 6px;transform:rotate(-6deg);flex:none}
+.old .more{min-height:44px;border-top:1px solid var(--rule);font:600 15px/44px Anuphan;color:var(--pen);text-decoration:underline}
+
+.box{display:block;width:22px;height:22px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px}
+.late{color:var(--warn)}
+.star{color:var(--red)}
+
+/* แบบใหม่ */
+.new>*{position:relative;z-index:1}
+.new .fx{position:absolute;z-index:0;pointer-events:none}
+.scorch{right:-84px;bottom:-84px;width:190px;height:190px;background:radial-gradient(circle at 62% 62%,rgba(38,20,6,.72) 0 22%,rgba(92,48,14,.34) 42%,transparent 68%);filter:url(#rough)}
+.rust{left:276px;top:392px;width:110px;height:120px;background:radial-gradient(ellipse at 42% 40%,rgba(140,70,20,.15),transparent 66%);filter:url(#rough)}
+.ring{right:-66px;top:22px;width:136px;height:136px}
+.new .next,.new .off{font-size:16px;line-height:24px;color:var(--muted2)}
+.new .off{display:inline-block;margin-top:8px;line-height:44px;color:var(--pen);text-decoration:underline;text-underline-offset:4px}
+
+/* เทปกู้ซาก: ขึ้นส่วนใหม่ เห็นได้ทันทีโดยไม่ต้องอ่าน */
+.tag{position:relative;display:flex;align-items:center;gap:10px;margin:36px -16px 4px -6px;padding:7px 16px 7px 20px;color:var(--on);
+  background:repeating-linear-gradient(92deg,rgba(255,255,255,.05) 0 2px,transparent 2px 7px),var(--c);
+  clip-path:polygon(0 8%,2% 0,100% 0,100% 100%,3% 100%,0 88%,1.6% 66%,0 44%,1.8% 24%);transform:rotate(-.5deg)}
+.tag h3{flex:1;font:400 23px/34px Chonburi,serif}
+.tag .w{font-size:15px;font-weight:500}
+.rust-tag{--c:var(--red)}
+.teal-tag{--c:var(--teal)}
+.screen{flex:none;min-width:38px;padding:0 8px;text-align:center;background:var(--crt);border:2px solid #15110D;border-radius:5px;color:var(--crtOn);font:24px/30px VT323,monospace;box-shadow:inset 0 0 8px rgba(158,240,180,.3);text-shadow:0 0 6px rgba(158,240,180,.65)}
+.new .row{display:flex;align-items:center;gap:10px;min-height:68px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.new .grow{flex:1;min-width:0}
+.new .slot{width:44px;flex:none;margin-left:-6px;text-align:center}
+.new .slot.t{font:700 16px "Courier Prime",monospace;color:var(--warn);align-self:flex-start;margin-top:2px}
+.new .box{margin:0 auto;width:24px;height:24px;background:rgba(243,234,210,.55)}
+.new .what{display:block;font-weight:600;font-size:17px;line-height:25px}
+.new .sub{font-size:15px;line-height:23px;color:var(--muted2)}
+.new .links{display:flex;gap:18px;font-size:15px;min-height:44px;align-items:center}
+.new .on{color:var(--pen);font-weight:600}
+.new .u{color:var(--pen);text-decoration:underline;text-underline-offset:4px}
+.new .act{min-height:44px;padding:0 13px;border:1.5px solid var(--paper);border-radius:3px;background:var(--deck);box-shadow:2px 2px 0 var(--rule2);font:600 16px/41px Anuphan;flex:none}
+.new .stamp{font:600 15px/24px Anuphan;color:var(--red);border:2px solid var(--red);border-radius:4px;padding:0 7px;transform:rotate(-6deg);flex:none}
+.new .exam{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:16px;line-height:24px}
+.new .exam b{font-weight:600}
+.new .more{min-height:48px;font:600 16px/48px Anuphan;color:var(--pen);text-decoration:underline;text-underline-offset:4px}
+.scrib{display:block;width:108px;height:6px;margin-top:-2px}
+
+.side{flex:1;min-width:280px;max-width:380px}
+.side h2{font:600 16px/1.5 Anuphan;color:#fff;margin-bottom:8px}
+.side h2+ul+h2{margin-top:20px}
+.side ul{padding-left:18px;font-size:15px;color:#D8D0BE}
+.side li{margin-bottom:8px}
+@media(max-width:420px){body{padding:16px 8px 40px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="7"/><feDisplacementMap in="SourceGraphic" scale="16"/></filter></svg>
+
+<div class="head">
+  <h1>หน้าวันนี้: อ่านง่ายขึ้น + สมุดรอดจากซากเมือง (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>ข้อความเดียวกับของจริง กว้าง 360px ฝั่งซ้ายใช้ค่าจากโค้ดตอนนี้ ฝั่งขวาคือแบบที่เสนอ</p>
+</div>
+
+<div class="wrap">
+  <section class="col">
+    <h2>ตอนนี้</h2>
+    <div class="phone old" id="a">
+      <div class="tail"></div>
+      <p class="next">ถัดไป <span class="ty">23:52</span> ภาษาไทย · จำลอง</p>
+      <p class="off">วันนี้งดสอนทั้งวัน</p>
+      <div class="h"><h3>ต้องทำ</h3><span><span class="ty">4</span> เรื่อง</span></div>
+      <div class="row"><div class="slot">10:00</div><div class="grow"><div class="what">จดหลังคาบ ภาษาไทย</div><div class="sub">จดวันนี้ได้ <b>+10</b> XP · มีรูป <b>+5</b></div><div class="links"><span class="on">บันทึกแล้ว: ขาดคาบนี้</span><span class="u">งดสอน</span></div></div><div class="act">จด</div></div>
+      <div class="row"><div class="slot b"><i class="box"></i></div><div class="grow"><div class="what">ทดสอบตรายาง (ลบได้)</div><div class="sub">คณิต · วันนี้ <span class="ty">00:10</span></div></div><div class="stamp">วันนี้!</div></div>
+      <div class="row"><div class="slot b"><i class="box"></i></div><div class="grow"><div class="what">จำลอง: ควิซใกล้หมดเวลา</div><div class="sub">คณิต · วันนี้ <span class="ty">17:56</span></div></div></div>
+      <div class="row"><div class="slot b"><i class="box"></i></div><div class="grow"><div class="what">จำลอง: สรุปบทที่ 2</div><div class="sub">ภาษาไทย · อีก <span class="ty">2</span> วัน</div></div></div>
+      <div class="h"><h3>ทวนวันนี้</h3><span>เหลือ <span class="ty">5</span> หัวข้อ</span></div>
+      <p class="exam"><b style="color:var(--paper)">กลางภาค คณิต</b> · อีก <span class="ty">12</span> วัน · พร้อมสอบ <span class="ty">38%</span></p>
+      <div class="row"><div class="grow"><a class="what"><span class="star">★</span> จำลอง: กฎลูกโซ่</a><div class="sub">คณิต · <span class="late">เลยรอบทวน 3 วัน</span></div></div><div class="act">ทวนแล้ว</div></div>
+      <div class="row"><div class="grow"><a class="what"><span class="star">★</span> จำลอง: อินทิเกรตเบื้องต้น</a><div class="sub">คณิต · ยังไม่ทวน</div></div><div class="act">ทวนแล้ว</div></div>
+      <div class="row"><div class="grow"><a class="what">จำลอง: เวกเตอร์</a><div class="sub">คณิต · <span class="late">เลยรอบทวน 1 วัน</span></div></div><div class="act">ทวนแล้ว</div></div>
+      <div class="more">ดูอีก 2 หัวข้อ</div>
+    </div>
+    <small id="ah"></small>
+  </section>
+
+  <section class="col">
+    <h2>แบบใหม่</h2>
+    <div class="phone new" id="b">
+      <div class="fx scorch"></div>
+      <div class="fx rust"></div>
+      <svg class="fx ring" viewBox="0 0 136 136" aria-hidden="true"><g fill="none" stroke="#6B3F16" filter="url(#rough)"><circle cx="68" cy="68" r="52" stroke-width="7" stroke-opacity=".17" stroke-dasharray="210 26 66 24"/><circle cx="68" cy="68" r="46" stroke-width="1.5" stroke-opacity=".2"/></g></svg>
+
+      <div class="tail"></div>
+      <p class="next">ถัดไป <span class="ty">23:52</span> ภาษาไทย · จำลอง</p>
+      <span class="off">วันนี้งดสอนทั้งวัน</span>
+
+      <div class="tag rust-tag"><h3>ต้องทำ</h3><span class="screen">4</span><span class="w">เรื่อง</span></div>
+      <div class="row"><div class="slot t">10:00</div><div class="grow"><span class="what">จดหลังคาบ ภาษาไทย</span><span class="sub">จดวันนี้ได้ <b>+10</b> XP · มีรูป <b>+5</b></span><div class="links"><span class="on">บันทึกแล้ว: ขาดคาบนี้</span><span class="u">งดสอน</span></div></div><div class="act">จด</div></div>
+      <div class="row"><div class="slot"><i class="box"></i></div><div class="grow"><span class="what">ทดสอบตรายาง (ลบได้)</span><span class="sub">คณิต · วันนี้ <span class="ty">00:10</span></span></div><div class="stamp">วันนี้!</div></div>
+      <div class="row"><div class="slot"><i class="box"></i></div><div class="grow"><span class="what">จำลอง: ควิซใกล้หมดเวลา</span><span class="sub">คณิต · วันนี้ <span class="ty">17:56</span></span></div></div>
+      <div class="row"><div class="slot"><i class="box"></i></div><div class="grow"><span class="what">จำลอง: สรุปบทที่ 2</span><span class="sub">ภาษาไทย · อีก <span class="ty">2</span> วัน</span></div></div>
+
+      <div class="tag teal-tag"><h3>ทวนวันนี้</h3><span class="screen">5</span><span class="w">หัวข้อ</span></div>
+      <div class="exam"><span><b>กลางภาค คณิต</b><br>อีก <span class="ty">12</span> วัน · พร้อมสอบ</span><span class="screen">38%</span></div>
+      <div class="row"><div class="grow"><span class="what"><span class="star">★</span> จำลอง: กฎลูกโซ่</span><span class="sub">คณิต · <span class="late">เลยรอบทวน 3 วัน</span></span><svg class="scrib" viewBox="0 0 108 6" aria-hidden="true"><path d="M2 4c9-3 15 2 24 0s14-3 24 0 15 1 24-1 18 2 32 0" fill="none" stroke="#A0281D" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="act">ทวนแล้ว</div></div>
+      <div class="row"><div class="grow"><span class="what"><span class="star">★</span> จำลอง: อินทิเกรตเบื้องต้น</span><span class="sub">คณิต · ยังไม่ทวน</span></div><div class="act">ทวนแล้ว</div></div>
+      <div class="row"><div class="grow"><span class="what">จำลอง: เวกเตอร์</span><span class="sub">คณิต · <span class="late">เลยรอบทวน 1 วัน</span></span></div><div class="act">ทวนแล้ว</div></div>
+      <div class="more">ดูอีก 2 หัวข้อ</div>
+    </div>
+    <small id="bh"></small>
+  </section>
+
+  <aside class="side">
+    <h2>อ่านง่ายขึ้น</h2>
+    <ul>
+      <li>หัวข้อ 19 เป็น 23 อยู่บนเทปสี จึงเห็นทันทีว่าขึ้นเรื่องใหม่</li>
+      <li>ชื่องาน 15 เป็น 17 · ข้อความรอง 14 เป็น 15 และเข้มขึ้น</li>
+      <li>เส้นใต้เหลือเฉพาะลิงก์จริง ชื่อหัวข้อทวนไม่ขีดแล้ว</li>
+      <li>แถวสูงขึ้น เว้นระยะมากขึ้น ปุ่มยังสูงอย่างน้อย 44px</li>
+    </ul>
+    <h2>ฟีลซากเมือง + เทคโนโลยีเฉพาะจุด</h2>
+    <ul>
+      <li>เทปสีขอบฉีก: สนิมแดง = ต้องทำ · เขียวหม่น = ทวน</li>
+      <li>จอเขียวจิ๋วบอกตัวเลขสำคัญ เหมือนของที่ยังใช้งานได้ในซากเมือง</li>
+      <li>รอยแก้วกาแฟ คราบสนิม ขอบไหม้ และรอยปากกาแดง วางเลี่ยงตัวหนังสือ</li>
+      <li>วาดเองทั้งหมด ไม่ใช้ภาพ ไอคอน ชื่อ หรือฟอนต์ของ Fallout</li>
+    </ul>
+    <h2>ต้องตัดสินใจ</h2>
+    <ul>
+      <li>แบบนี้ขัดกฎเดิม "ลูกเล่นจุดละครั้งต่อจอ" ถ้าชอบ ผมจะแก้กติกาใน DESIGN.md ด้วย</li>
+    </ul>
+  </aside>
+</div>
+<script>
+for (const [p, s] of [["a", "ah"], ["b", "bh"]]) document.getElementById(s).textContent = "ความสูง " + document.getElementById(p).offsetHeight + " px";
+</script>
+</body>
+</html>
