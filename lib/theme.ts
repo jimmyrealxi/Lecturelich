@@ -1,5 +1,13 @@
 // design tokens ที่เดียวของแอป — กติกาการใช้อยู่ใน docs/DESIGN.md (ธีม A สมุดเก่า + จอเขียวแปะเทป)
 
+/** แสงเรืองของตัวหนังสือบนจอเขียว */
+const glow = (c: string, radius: number) => ({ textShadowColor: c, textShadowOffset: { width: 0, height: 0 }, textShadowRadius: radius });
+export const crtGlow = {
+  dim: glow("rgba(115,196,139,0.35)", 6),
+  title: glow("rgba(158,240,180,0.45)", 7),
+  big: glow("rgba(184,255,201,0.55)", 9),
+};
+
 export const color = {
   // หน้าใช้งานธีม A "สมุดเก่า + จอเขียวแปะเทป" (mockup e2-terminal-notebook.html ฝั่ง A + a-*.html)
   ink: "#E9DDBF", // พื้นกระดาษ

@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { grantXp, levelFromXp, submitXp, XP_CONFIG } from "./xp.ts";
-import { afterReview, bossStatus, daysUntil, examOf, isMastered, nodeState, REVIEW_DAYS, upcomingExams, type Topic } from "./review.ts";
+import { afterReview, bossStatus, daysUntil, examOf, examReady, isMastered, nearExam, nodeState, REVIEW_DAYS, reviewQueue, upcomingExams, type Topic } from "./review.ts";
 
 test("levelFromXp: ขึ้นเลเวลถัดไปใช้ 50 × เลเวลปัจจุบัน", () => {
   assert.deepEqual(levelFromXp(0), { level: 1, into: 0, need: 50 });
@@ -96,6 +96,41 @@ test("upcomingExams + daysUntil", () => {
   assert.deepEqual(upcomingExams(ex, "2026-11-09").map((e) => e.subject_id), ["b", "a"]);
   assert.equal(daysUntil("2026-11-21", "2026-11-09"), 12);
   assert.equal(daysUntil("2026-11-09", "2026-11-09"), 0);
+});
+
+test("nearExam + examReady", () => {
+  const exams = [
+    { subject_id: "a", kind: "midterm" as const, date: "2026-11-23" },
+    { subject_id: "b", kind: "final" as const, date: "2026-11-24" },
+  ];
+  assert.equal(nearExam(exams, "2026-11-09")?.subject_id, "a"); // อีก 14 วันพอดี
+  assert.equal(nearExam(exams, "2026-11-08"), undefined);
+  const t = (id: string, stage: number, exam: "midterm" | "final" | null) => ({
+    ...topic(id, false, stage, stage ? day(9) : null), subject_id: "a", exam, note_date: null,
+  });
+  assert.equal(examReady(exams[0], exams, [t("x", 1, "midterm"), t("y", 0, "midterm"), t("z", 0, "final")], day(0)), 50);
+  assert.equal(examReady(exams[1], exams, [t("x", 1, "midterm")], day(0)), null);
+});
+
+test("reviewQueue: ไม่เอาที่ยังอยู่ในรอบ · ★ > สอบใกล้สุด > เลยรอบนานสุด > ยังไม่ทวน", () => {
+  const t = (id: string, subject_id: string, star: boolean, stage: number, next: Date | null) => ({ ...topic(id, star, stage, next), subject_id });
+  const topics = [
+    t("lit", "near", true, 1, day(9)),
+    t("noExam", "none", false, 1, day(-5)),
+    t("never", "near", false, 0, null),
+    t("late1", "near", false, 1, day(-1)),
+    t("late3", "near", false, 1, day(-3)),
+    t("farStar", "far", true, 0, null),
+    t("nearStar", "near", true, 0, null),
+  ];
+  const exams = [
+    { subject_id: "near", kind: "midterm" as const, date: "2026-11-18" },
+    { subject_id: "far", kind: "midterm" as const, date: "2026-12-01" },
+    { subject_id: "none", kind: "midterm" as const, date: "2026-11-01" }, // สอบผ่านไปแล้ว = ไม่นับ
+  ];
+  assert.deepEqual(reviewQueue(topics, exams, "2026-11-09", day(0)).map((x) => x.id),
+    ["nearStar", "farStar", "late3", "late1", "never", "noExam"]);
+  assert.equal(topics[0].id, "lit"); // ไม่แก้ลำดับข้อมูลต้นทาง
 });
 
 test("รอบทวนฝั่ง DB (review_topic ใน migration ขั้น 5) ตรงกับ REVIEW_DAYS", async () => {

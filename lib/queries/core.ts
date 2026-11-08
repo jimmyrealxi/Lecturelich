@@ -77,7 +77,7 @@ export function useSlots(termId: string | undefined) {
       must(
         await supabase
           .from("class_slots")
-          .select("id,subject_id,weekday,start_time,end_time,room,subjects!inner(term_id)")
+          .select("id,subject_id,weekday,start_time,end_time,room,makeup_date,subjects!inner(term_id)")
           .eq("subjects.term_id", termId!),
       ).map(({ subjects: _s, ...slot }: Slot & { subjects: unknown }) => slot) as Slot[],
   });
@@ -120,6 +120,36 @@ export function useSetAttendance(termId: string) {
       return { prev };
     },
     onError: (_e, _row, ctx) => qc.setQueryData(key, ctx?.prev),
+    onSettled: () => qc.invalidateQueries({ queryKey: key }),
+  });
+}
+
+/** งดสอนทั้งวัน: off = บันทึก no_class ทุกคาบที่ส่งมา · ไม่ off = ล้างกลับเป็นยังไม่เช็ก */
+export function useSetDayOff(termId: string) {
+  const qc = useQueryClient();
+  const key = keys.attendance(termId);
+  return useMutation({
+    mutationFn: async ({ slots, date, off }: { slots: Slot[]; date: string; off: boolean }) =>
+      must(
+        await (off
+          ? supabase.from("attendance").upsert(
+              slots.map((s) => ({ slot_id: s.id, subject_id: s.subject_id, date, status: "no_class", updated_at: new Date().toISOString() })),
+              { onConflict: "user_id,slot_id,date" },
+            )
+          : supabase.from("attendance").delete().eq("date", date).in("slot_id", slots.map((s) => s.id))
+        ).select("slot_id"),
+      ),
+    onMutate: async ({ slots, date, off }) => {
+      await qc.cancelQueries({ queryKey: key });
+      const prev = qc.getQueryData<AttendanceRow[]>(key);
+      const ids = new Set(slots.map((s) => s.id));
+      qc.setQueryData<AttendanceRow[]>(key, (old = []) => [
+        ...old.filter((r) => !(r.date === date && ids.has(r.slot_id))),
+        ...(off ? slots.map((s) => ({ slot_id: s.id, subject_id: s.subject_id, date, status: "no_class" as const })) : []),
+      ]);
+      return { prev };
+    },
+    onError: (_e, _v, ctx) => qc.setQueryData(key, ctx?.prev),
     onSettled: () => qc.invalidateQueries({ queryKey: key }),
   });
 }

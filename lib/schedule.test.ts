@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  attendanceRisk,
   attendanceStats,
   bangkokNow,
   classState,
@@ -9,6 +10,7 @@ import {
   currentOrNext,
   endedWithoutNote,
   slotsOn,
+  urgentTask,
   type Slot,
 } from "./schedule.ts";
 
@@ -22,6 +24,33 @@ const slots = [slot("oop", 1, "10:00:00", "12:00:00"), slot("dis", 1, "08:00", "
 test("bangkokNow แปลงเวลา UTC เป็นเวลาไทย ข้ามวันถูก", () => {
   // 2026-11-08 20:30 UTC = จันทร์ 9 พ.ย. 03:30 ไทย
   assert.deepEqual(bangkokNow(new Date("2026-11-08T20:30:00Z")), { date: "2026-11-09", weekday: 1, minutes: 210 });
+});
+
+test("urgentTask: เลยกำหนดนานสุดก่อน แล้วใกล้ส่งสุดภายใน 3 วัน ไม่รวมงานส่งแล้ว/ไม่มีกำหนด", () => {
+  const t = (id: string, due_at: string | null, done = false) => ({ id, due_at, done });
+  const today = "2026-11-09";
+  const late = t("late", "2026-11-07T10:00:00+07:00");
+  const soon = t("soon", "2026-11-10T10:00:00+07:00");
+  const edge = t("edge", "2026-11-12T23:59:00+07:00"); // อีก 3 วันพอดี
+  const far = t("far", "2026-11-13T00:00:00+07:00");
+  assert.equal(urgentTask([soon, late, far], today)?.id, "late");
+  assert.equal(urgentTask([far, soon], today)?.id, "soon");
+  assert.equal(urgentTask([far, edge], today)?.id, "edge");
+  assert.equal(urgentTask([far, t("done", "2026-11-09T10:00:00+07:00", true), t("none", null)], today), null);
+});
+
+test("attendanceRisk: ต้องขาดแล้ว · ขาดได้อีกน้อยสุดมาก่อน", () => {
+  const r = (id: string, absent: number, remaining: number) => ({ id, stats: { absent, remaining } });
+  assert.equal(attendanceRisk([r("a", 2, 1), r("b", 4, -1), r("c", 1, 2), { id: "x", stats: null }])?.id, "b");
+  assert.equal(attendanceRisk([r("a", 0, 1), r("c", 1, 2)]), null); // ยังไม่เคยขาด ไม่เตือน
+});
+
+test("คาบชดเชย: ขึ้นเฉพาะวันนั้น นับครั้งเดียว นอกเทอมไม่นับ", () => {
+  const makeup = { ...slot("mk", 6, "13:00", "15:00"), makeup_date: "2026-11-21" };
+  assert.deepEqual(slotsOn("2026-11-21", [makeup], term).map((s) => s.id), ["mk"]);
+  assert.deepEqual(slotsOn("2026-11-28", [makeup], term), []); // เสาร์ถัดไปไม่มี
+  assert.equal(countSessions([slot("a", 1, "10:00", "12:00"), makeup], term), 18);
+  assert.equal(countSessions([{ ...makeup, makeup_date: "2027-04-03" }], term), 0);
 });
 
 test("slotsOn เรียงตามเวลา และนอกเทอมไม่มีคาบ", () => {

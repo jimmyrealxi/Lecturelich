@@ -7,6 +7,7 @@ export type Slot = {
   start_time: string; // "HH:MM" หรือ "HH:MM:SS" (Postgres time)
   end_time: string;
   room: string | null;
+  makeup_date?: string | null; // มีค่า = คาบชดเชยครั้งเดียววันนั้น · ไม่มี = ซ้ำทุกสัปดาห์
 };
 export type Term = { start_date: string; end_date: string }; // "YYYY-MM-DD"
 export type AttendanceStatus = "present" | "absent" | "no_class";
@@ -34,7 +35,7 @@ export function inTerm(date: string, term: Term): boolean {
   return date >= term.start_date && date <= term.end_date;
 }
 
-function weekdayOf(date: string): number {
+export function weekdayOf(date: string): number {
   return new Date(date + "T00:00:00Z").getUTCDay();
 }
 
@@ -43,7 +44,7 @@ export function slotsOn(date: string, slots: Slot[], term: Term | null): Slot[] 
   if (!term || !inTerm(date, term)) return [];
   const wd = weekdayOf(date);
   return slots
-    .filter((s) => s.weekday === wd)
+    .filter((s) => (s.makeup_date ? s.makeup_date === date : s.weekday === wd))
     .sort((a, b) => toMinutes(a.start_time) - toMinutes(b.start_time));
 }
 
@@ -74,16 +75,34 @@ export function endedWithoutNote(
   );
 }
 
-/** จำนวนคาบทั้งเทอมของวิชาหนึ่ง (นับจาก slots ของวิชานั้น) */
+/** จำนวนคาบทั้งเทอมของวิชาหนึ่ง (นับจาก slots ของวิชานั้น · คาบชดเชยนับครั้งเดียว) */
 export function countSessions(subjectSlots: Slot[], term: Term): number {
   const perWeekday = new Array(7).fill(0);
-  for (const s of subjectSlots) perWeekday[s.weekday]++;
   let n = 0;
+  for (const s of subjectSlots) {
+    if (!s.makeup_date) perWeekday[s.weekday]++;
+    else if (inTerm(s.makeup_date, term)) n++;
+  }
   const end = Date.parse(term.end_date + "T00:00:00Z");
   for (let t = Date.parse(term.start_date + "T00:00:00Z"); t <= end; t += DAY_MS) {
     n += perWeekday[new Date(t).getUTCDay()];
   }
   return n;
+}
+
+/** งานขึ้นจอเขียวแท็บงาน: เลยกำหนดนานสุด หรือใกล้ส่งสุดภายใน 3 วัน (กำหนดเก่าสุดมาก่อนจึงครอบทั้งสองกรณี) */
+export function urgentTask<T extends { done: boolean; due_at: string | null }>(tasks: T[], today: string): T | null {
+  const limit = Date.parse(today + "T23:59:59+07:00") + 3 * DAY_MS;
+  return tasks
+    .filter((a) => !a.done && a.due_at && Date.parse(a.due_at) <= limit)
+    .sort((a, b) => Date.parse(a.due_at!) - Date.parse(b.due_at!))[0] ?? null;
+}
+
+/** วิชาขึ้นจอเขียวแท็บวิชา: ขาดแล้วและขาดได้อีกไม่เกิน 1 ครั้ง · เหลือน้อยสุดมาก่อน */
+export function attendanceRisk<T extends { stats: { absent: number; remaining: number } | null }>(rows: T[]): T | null {
+  return rows
+    .filter((r) => r.stats && r.stats.absent > 0 && r.stats.remaining <= 1)
+    .sort((a, b) => a.stats!.remaining - b.stats!.remaining)[0] ?? null;
 }
 
 /**

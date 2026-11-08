@@ -6,6 +6,7 @@ import { TaskRow } from "@/components/TaskRow";
 import { NotesTimeline } from "@/components/NotesTimeline";
 import { GradesPanel } from "@/components/GradesPanel";
 import { ExamDatesCard } from "@/components/ExamDatesCard";
+import { MakeupClasses } from "@/components/MakeupClasses";
 import { useExams } from "@/lib/queries/review";
 import { useAssignments, useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
 import { useProfile } from "@/lib/queries/setup";
@@ -59,7 +60,7 @@ export default function SubjectScreen() {
         </Pressable>
         <Text style={head.title} accessibilityRole="header">{subject?.name ?? "…"}</Text>
         <Text style={s.topSub}>
-          {[subject?.code, ...mySlots.map((sl) => `${DAY[sl.weekday]} ${hhmm(sl.start_time)}–${hhmm(sl.end_time)}${sl.room ? " · " + sl.room : ""}`)].filter(Boolean).join(" · ")}
+          {[subject?.code, ...mySlots.filter((sl) => !sl.makeup_date).map((sl) => `${DAY[sl.weekday]} ${hhmm(sl.start_time)}–${hhmm(sl.end_time)}${sl.room ? " · " + sl.room : ""}`)].filter(Boolean).join(" · ")}
         </Text>
         {links.length > 0 && (
           <View style={s.links}>
@@ -92,6 +93,8 @@ export default function SubjectScreen() {
 
         {subject && term.data && (
           <>
+            <MakeupClasses subjectId={subject.id} term={term.data} slots={mySlots} />
+
             <Section side="ตั้งแล้วจะเกิดบอส">วันสอบ</Section>
             {exams.data ? (
               <ExamDatesCard key={myExams.map((e) => e.kind + e.date).join()} subjectId={subject.id} termId={term.data.id}

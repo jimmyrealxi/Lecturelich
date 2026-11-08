@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { AddBtn, Btn, Field, head, pick, Section, Skeleton, confirmAction } from "@/components/ui";
+import { AddBtn, Btn, Field, head, pick, Section, Skeleton, TimeField, confirmAction } from "@/components/ui";
 import { useCurrentTerm, useSlots, useSubjects, type Subject } from "@/lib/queries/core";
 import type { Slot } from "@/lib/schedule";
 import { useDeleteSubject, useSaveSubject, type SlotInput } from "@/lib/queries/setup";
@@ -35,7 +35,7 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
   const id = existing?.id;
   const save = useSaveSubject(termId);
   const del = useDeleteSubject(termId);
-  const mine = existingSlots.filter((s) => s.subject_id === id);
+  const mine = existingSlots.filter((s) => s.subject_id === id && !s.makeup_date); // คาบชดเชยจัดการในหน้าวิชา
 
   const [code, setCode] = useState(existing?.code ?? "");
   const [name, setName] = useState(existing?.name ?? "");
@@ -127,8 +127,8 @@ function SubjectForm({ termId, existing, existingSlots }: { termId: string; exis
               ))}
             </View>
             <View style={s.slotRow}>
-              <Field label="เริ่ม" value={d.start} onChangeText={(v) => patch(i, { start: v })} placeholder="10:00" maxLength={5} />
-              <Field label="จบ" value={d.end} onChangeText={(v) => patch(i, { end: v })} placeholder="12:00" maxLength={5} />
+              <TimeField label="เริ่ม" value={d.start} onChangeText={(v) => patch(i, { start: v })} placeholder="10:00" />
+              <TimeField label="จบ" value={d.end} onChangeText={(v) => patch(i, { end: v })} placeholder="12:00" />
               {drafts.length > 1 && (
                 <Pressable onPress={() => removeSlot(i)} style={s.x} accessibilityRole="button" accessibilityLabel="ลบช่วงเวลานี้">
                   <Text style={{ color: color.danger, fontSize: 18 }}>✕</Text>

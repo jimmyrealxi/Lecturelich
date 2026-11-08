@@ -1,7 +1,15 @@
 /// <reference types="node" />
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { dueInfo, dur, shortDate, thaiDate, typedDate, weekdayName } from "./format.ts";
+import { countdown, dueInfo, dur, shortDate, thaiDate, typedDate, weekdayName } from "./format.ts";
+
+test("countdown: นาที / ชม. / วัน", () => {
+  assert.deepEqual(countdown(14), { n: "14", unit: "นาที" });
+  assert.deepEqual(countdown(106), { n: "1:46", unit: "ชม." });
+  assert.deepEqual(countdown(1439), { n: "23:59", unit: "ชม." });
+  assert.deepEqual(countdown(2900), { n: "2", unit: "วัน" });
+  assert.deepEqual(countdown(-3), { n: "0", unit: "นาที" });
+});
 
 test("วันที่แบบไทย", () => {
   assert.equal(thaiDate("2026-11-07"), "เสาร์ 7 พ.ย.");

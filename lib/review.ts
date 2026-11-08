@@ -62,3 +62,27 @@ export const daysUntil = (date: string, today: string) => Math.round((Date.parse
 /** บอสที่ยังไม่ผ่าน (สอบวันนี้หรือหลังจากนี้) เรียงจากใกล้สุด */
 export const upcomingExams = <E extends ExamRow>(exams: E[], today: string) =>
   exams.filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+
+/** สอบที่ใกล้สุดภายใน 14 วัน */
+export const nearExam = <E extends ExamRow>(exams: E[], today: string) =>
+  upcomingExams(exams, today).find((e) => daysUntil(e.date, today) <= 14);
+
+/** % พร้อมสอบของสอบหนึ่ง (แบ่งหัวข้อกลาง/ปลายภาคแบบเดียวกับบอส) · ยังไม่มีหัวข้อของสอบนี้ = null */
+export function examReady<T extends Topic & { subject_id: string; exam: ExamKind | null; note_date: string | null }>(
+  exam: ExamRow, exams: ExamRow[], topics: T[], now?: Date,
+) {
+  const midterm = exams.find((e) => e.subject_id === exam.subject_id && e.kind === "midterm")?.date ?? null;
+  const mine = topics.filter((t) => t.subject_id === exam.subject_id && examOf(t.exam, t.note_date, midterm) === exam.kind);
+  return mine.length ? bossStatus(mine, now).ready : null;
+}
+
+/** คิว "ทวนวันนี้": เฉพาะที่เลยรอบ/ยังไม่ทวน · ★ ก่อน > วิชาที่สอบใกล้สุด > เลยรอบนานสุด > ยังไม่เคยทวน (ลำดับเดิม) */
+export function reviewQueue<T extends Topic & { subject_id: string }>(topics: T[], exams: ExamRow[], today: string, now: Date = new Date()) {
+  const examAt = new Map<string, string>();
+  for (const e of upcomingExams(exams, today)) if (!examAt.has(e.subject_id)) examAt.set(e.subject_id, e.date);
+  const exam = (t: T) => examAt.get(t.subject_id) ?? "9999-12-31";
+  const dueAt = (t: T) => (nodeState(t, now) === "fading" ? Date.parse(t.next_review_at!) : Number.MAX_SAFE_INTEGER);
+  return topics
+    .filter((t) => nodeState(t, now) !== "lit")
+    .sort((a, b) => Number(b.is_starred) - Number(a.is_starred) || exam(a).localeCompare(exam(b)) || dueAt(a) - dueAt(b));
+}

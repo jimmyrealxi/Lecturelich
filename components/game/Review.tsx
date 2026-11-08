@@ -8,10 +8,10 @@ import { color, font, minTouch, rarity, space } from "@/lib/theme";
 
 // บอสสอบ + passive tree + ปุ่ม "ทวนแล้ว" (ขั้น 5 · หน้าตาตาม b5-game.html)
 
-const KIND = { midterm: "กลางภาค", final: "ปลายภาค" } as const;
+export const KIND = { midterm: "กลางภาค", final: "ปลายภาค" } as const;
 
 /** บรรทัดสถานะใต้ชื่อหัวข้อ: ยังไม่ทวน / เลยรอบทวน N วัน / ทวนแล้ว · รอบถัดไป ... */
-function statusOf(t: TopicFull, today: string) {
+export function statusOf(t: TopicFull, today: string) {
   const st = nodeState(t);
   if (st === "dark") return { text: "ยังไม่ทวน", late: false };
   const next = bangkokNow(new Date(t.next_review_at!)).date;

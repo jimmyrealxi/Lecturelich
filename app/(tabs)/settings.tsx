@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { Btn, Card, Field, Section, Skeleton, T } from "@/components/ui";
+import { Btn, Card, DateField, Field, Section, Skeleton, T } from "@/components/ui";
 import { useCurrentTerm, type CurrentTerm } from "@/lib/queries/core";
 import { useProfile, useSaveTerm, useUpdateProfile } from "@/lib/queries/setup";
 import { PushCard } from "@/components/PushCard";
 import { RoomsCard } from "@/components/RoomsCard";
 import { signOut, useSession } from "@/lib/auth";
-import { isDate } from "@/lib/input";
+import { DATE_ERR, fromThaiDate, toThaiDate } from "@/lib/input";
 import { thaiDate } from "@/lib/format";
 import { color, font, space } from "@/lib/theme";
 
@@ -94,18 +94,20 @@ function Stepper({ label, value, onMinus, onPlus }: { label: string; value: stri
 function TermForm({ term, onSaved }: { term: CurrentTerm | null; onSaved: () => void }) {
   const saveTerm = useSaveTerm();
   const [name, setName] = useState(term?.name ?? "");
-  const [start, setStart] = useState(term?.start_date ?? "");
-  const [end, setEnd] = useState(term?.end_date ?? "");
+  const [start, setStart] = useState(term ? toThaiDate(term.start_date) : "");
+  const [end, setEnd] = useState(term ? toThaiDate(term.end_date) : "");
   const [tried, setTried] = useState(false);
 
+  const startIso = fromThaiDate(start);
+  const endIso = fromThaiDate(end);
   const errName = !name.trim() ? "ใส่ชื่อเทอม" : null;
-  const errStart = !isDate(start) ? "รูปแบบ ปปปป-ดด-วว เช่น 2026-11-09" : null;
-  const errEnd = !isDate(end) ? "รูปแบบ ปปปป-ดด-วว" : !errStart && end < start ? "ต้องไม่ก่อนวันเปิดเทอม" : null;
+  const errStart = !startIso ? DATE_ERR : null;
+  const errEnd = !endIso ? DATE_ERR : startIso && endIso < startIso ? "ต้องไม่ก่อนวันเปิดเทอม" : null;
 
   const onSave = () => {
     setTried(true);
     if (errName || errStart || errEnd) return;
-    saveTerm.mutate({ id: term?.id, name: name.trim(), start_date: start, end_date: end }, { onSuccess: onSaved });
+    saveTerm.mutate({ id: term?.id, name: name.trim(), start_date: startIso!, end_date: endIso! }, { onSuccess: onSaved });
   };
 
   return (
@@ -114,10 +116,8 @@ function TermForm({ term, onSaved }: { term: CurrentTerm | null; onSaved: () => 
       <Field label="ชื่อเทอม" value={name} onChangeText={setName} placeholder="เทอม 2/2569" maxLength={60}
         error={tried ? errName : null} />
       <View style={s.two}>
-        <Field label="วันเปิดเทอม" value={start} onChangeText={setStart} placeholder="2026-11-09"
-          error={tried ? errStart : null} />
-        <Field label="วันปิดเทอม" value={end} onChangeText={setEnd} placeholder="2027-03-07"
-          error={tried ? errEnd : null} />
+        <DateField label="วันเปิดเทอม" value={start} onChangeText={setStart} placeholder="09/11/2569" error={tried ? errStart : null} />
+        <DateField label="วันปิดเทอม" value={end} onChangeText={setEnd} placeholder="07/03/2570" error={tried ? errEnd : null} />
       </View>
       {saveTerm.error && <Text style={s.error}>บันทึกไม่สำเร็จ: {saveTerm.error.message}</Text>}
       <View style={s.row}>

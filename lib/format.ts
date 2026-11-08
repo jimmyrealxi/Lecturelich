@@ -30,6 +30,12 @@ export const shortDate = (date: string) => {
 /** นาที → "1:46" */
 export const dur = (min: number) => `${Math.floor(min / 60)}:${String(Math.max(0, min) % 60).padStart(2, "0")}`;
 
+/** นาที → ตัวเลข + หน่วยบนจอเขียว: 14 นาที / 1:46 ชม. / 2 วัน */
+export const countdown = (min: number) =>
+  min >= 1440 ? { n: String(Math.floor(min / 1440)), unit: "วัน" }
+    : min < 60 ? { n: String(Math.max(0, min)), unit: "นาที" }
+    : { n: dur(min), unit: "ชม." };
+
 /** กำหนดส่งแยกส่วน: day = "วันนี้"/"พรุ่งนี้"/"อ. 11 พ.ย."/"เลยกำหนด" · time = "23:59" (เวลาไทย) · days = อีกกี่วัน */
 export function dueInfo(dueAt: string, todayDate: string) {
   const bkk = new Date(Date.parse(dueAt) + 7 * 3600_000).toISOString(); // Asia/Bangkok ไม่มีเวลาออมแสง

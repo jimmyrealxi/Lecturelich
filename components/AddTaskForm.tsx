@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Btn, Field, pick, T } from "@/components/ui";
+import { Btn, DateField, Field, pick, T, TimeField } from "@/components/ui";
 import { useAddAssignment, useDeleteAssignment, useUpdateAssignment, type Assignment } from "@/lib/queries/core";
 import { useRooms } from "@/lib/queries/rooms";
-import { bangkokIso, bangkokParts, isDate, normTime, normUrl } from "@/lib/input";
+import { bangkokIso, bangkokParts, DATE_ERR, fromThaiDate, normTime, normUrl, toThaiDate } from "@/lib/input";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 
 const SOURCES: { value: Assignment["source"]; label: string }[] = [
@@ -30,14 +30,15 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
   const [roomId, setRoomId] = useState<string | null>(null);
   const [title, setTitle] = useState(task?.title ?? "");
   const [subjectId, setSubjectId] = useState<string | null>(task ? task.subject_id : (defaultSubjectId ?? null));
-  const [date, setDate] = useState(initDue?.date ?? "");
+  const [date, setDate] = useState(initDue ? toThaiDate(initDue.date) : "");
   const [time, setTime] = useState(initDue?.time ?? "23:59");
   const [source, setSource] = useState<Assignment["source"]>(task?.source ?? defaultSource);
   const [link, setLink] = useState(task?.link ?? "");
   const [tried, setTried] = useState(false);
 
   const errTitle = !title.trim() ? "ใส่ชื่องาน" : null;
-  const errDate = date && !isDate(date) ? "รูปแบบ ปปปป-ดด-วว" : date && date < today && date !== initDue?.date ? "วันนี้หรือหลังจากนี้" : null;
+  const iso = fromThaiDate(date);
+  const errDate = date && !iso ? DATE_ERR : iso && iso < today && iso !== initDue?.date ? "วันนี้หรือหลังจากนี้" : null;
   const errTime = date && !normTime(time) ? "เช่น 23:59" : null;
   const url = normUrl(link);
 
@@ -46,7 +47,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
     if (errTitle || errDate || errTime || url === undefined) return;
     const fields = {
       title: title.trim(), source, link: url ?? null,
-      due_at: date ? bangkokIso(date, normTime(time)!) : null,
+      due_at: iso ? bangkokIso(iso, normTime(time)!) : null,
     };
     if (task) {
       // ส่ง subject_id เฉพาะตอนเปลี่ยน: ค่าที่เห็นเป็นวิชา "ของเรา" (งานห้องอาจผูกวิชาเพื่อน) อย่าเขียนทับ
@@ -106,8 +107,8 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
       )}
 
       <View style={s.two}>
-        <Field label="กำหนดส่ง (ไม่ใส่ก็ได้)" value={date} onChangeText={setDate} placeholder="ปปปป-ดด-วว" error={tried ? errDate : null} />
-        <Field label="เวลา" value={time} onChangeText={setTime} placeholder="23:59" maxLength={5} error={tried ? errTime : null}
+        <DateField label="กำหนดส่ง (ไม่ใส่ก็ได้)" value={date} onChangeText={setDate} error={tried ? errDate : null} />
+        <TimeField label="เวลา" value={time} onChangeText={setTime} placeholder="23:59" error={tried ? errTime : null}
           style={{ flex: 0.6 }} />
       </View>
 

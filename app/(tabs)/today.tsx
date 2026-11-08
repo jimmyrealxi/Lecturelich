@@ -2,35 +2,31 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Btn, Card, Crt, Skeleton, T, Tick } from "@/components/ui";
+import { Btn, Card, confirmAction, Crt, CrtBig, CrtLabel, Skeleton, T, Tick, UndoBar } from "@/components/ui";
+import { CrtStage, useCrtFx } from "@/components/game/CrtFx";
 import { PapBoyBuddy } from "@/components/game/PapBoySprite";
+import { KIND, statusOf } from "@/components/game/Review";
 import {
-  useAssignments, useAttendance, useCurrentTerm, useSetAttendance, useSlots, useSubjects, useToggleDone,
+  useAssignments, useAttendance, useCurrentTerm, useSetAttendance, useSetDayOff, useSlots, useSubjects, useToggleDone,
   type AttendanceRow, type Assignment,
 } from "@/lib/queries/core";
 import { useLoot } from "@/lib/queries/loot";
 import { useNotedSlots } from "@/lib/queries/notes";
+import { useExams, useReviewTopic, useTopics, type TopicFull } from "@/lib/queries/review";
+import { useProfile } from "@/lib/queries/setup";
 import { useXpToday } from "@/lib/queries/xp";
+import { daysUntil, examReady, nearExam, reviewQueue } from "@/lib/review";
+import { useNow } from "@/lib/useNow";
 import {
-  bangkokNow, currentOrNext, endedWithoutNote, slotsOn, toMinutes, type AttendanceStatus, type Slot,
+  attendanceStats, countSessions, currentOrNext, endedWithoutNote, slotsOn, toMinutes, type AttendanceStatus, type Slot,
 } from "@/lib/schedule";
-import { dueInfo, dur, hhmm, typedDate, weekdayName } from "@/lib/format";
+import { countdown, dueInfo, hhmm, typedDate, weekdayName } from "@/lib/format";
 import { DEFAULT_LOOK, type Pose } from "@/lib/papboy";
-import { color, font, minTouch, radius, space } from "@/lib/theme";
+import { color, crtGlow, font, minTouch, radius, space } from "@/lib/theme";
 import { XP_CONFIG } from "@/lib/xp";
 
 // หน้าวันนี้ ธีม A (docs/mockups/a-today.html) · จอเขียวแปะเทปเฉพาะคาบตอนนี้/ถัดไป · ตรายางแดงอันเดียว (งานด่วนสุด)
 // ป้ายนูนอันเดียว (LECTURELICH) · XP วันนี้เป็นบรรทัดลิงก์ไปหน้าเกม · มุมขวาบน Pap-Boy เปลี่ยนท่าตามสิ่งที่ทำ (docs/mockups/inspire-anim.html)
-
-/** เวลาไทยปัจจุบัน อัปเดตทุกนาที */
-function useNow() {
-  const [now, setNow] = useState(() => bangkokNow());
-  useEffect(() => {
-    const t = setInterval(() => setNow(bangkokNow()), 60_000);
-    return () => clearInterval(t);
-  }, []);
-  return now;
-}
 
 export default function Today() {
   const insets = useSafeAreaInsets();
@@ -41,6 +37,8 @@ export default function Today() {
   const attendance = useAttendance(term.data);
   const tasks = useAssignments();
   const setAttendance = useSetAttendance(term.data?.id ?? "");
+  const setDayOff = useSetDayOff(term.data?.id ?? "");
+  const minPct = useProfile().data?.min_attendance_pct ?? 80;
   const toggle = useToggleDone();
   const xpToday = useXpToday(now.date);
   const look = useLoot().data?.look ?? DEFAULT_LOOK;
@@ -65,11 +63,6 @@ export default function Today() {
   // งานที่เพิ่งติ๊กในหน้านี้ ยังโชว์ไว้ (ไม่หายวับ) · toast = ยกเลิกได้ 3 วิ
   const [ticked, setTicked] = useState<string[]>([]);
   const [toast, setToast] = useState<Assignment | null>(null);
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 3000);
-    return () => clearTimeout(t);
-  }, [toast]);
 
   const subjectById = useMemo(() => new Map((subjects.data ?? []).map((s) => [s.id, s])), [subjects.data]);
   const today = useMemo(() => slotsOn(now.date, slots.data ?? [], term.data ?? null), [now.date, slots.data, term.data]);
@@ -78,7 +71,8 @@ export default function Today() {
     [attendance.data, now.date],
   );
   const noted = useNotedSlots(now.date);
-  const focus = currentOrNext(today, now.minutes);
+  const dayOff = today.length >= 2 && today.every((x) => statusToday.get(x.id) === "no_class");
+  const focus = dayOff ? null : currentOrNext(today, now.minutes);
   const notedSet = useMemo(() => new Set(noted.data ?? []), [noted.data]);
   // ยังโหลดไม่เสร็จ = ยังไม่โชว์ (กันบรรทัดแวบขึ้นแล้วหาย)
   const unnoted = noted.data ? endedWithoutNote(today, now.minutes, notedSet, statusToday) : [];
@@ -89,6 +83,20 @@ export default function Today() {
   const check = (slot: Slot, status: AttendanceStatus) => {
     setAttendance.mutate({ slot_id: slot.id, subject_id: slot.subject_id, date: now.date, status } as AttendanceRow);
     if (status === "present") act("hand", "มาแล้วครับ!");
+  };
+  /** ข้อความในภาพตอนกด "ขาด": นับรวมคาบนี้เป็นขาดแล้ว */
+  const absentLeft = (slot: Slot) => {
+    const mine = (slots.data ?? []).filter((x) => x.subject_id === slot.subject_id);
+    const rows = (attendance.data ?? []).filter((r) => r.subject_id === slot.subject_id && !(r.slot_id === slot.id && r.date === now.date));
+    const { remaining } = attendanceStats([...rows.map((r) => r.status), "absent"], term.data ? countSessions(mine, term.data) : 0, minPct);
+    return remaining >= 0 ? `ขาดได้อีก ${remaining}` : `เกินเกณฑ์ ${-remaining}`;
+  };
+  const toggleDayOff = () => {
+    const go = () => setDayOff.mutate({ slots: today, date: now.date, off: !dayOff });
+    // เช็กชื่อไว้แล้ว (มาเรียน/ขาด) จะถูกเขียนทับ ต้องถามก่อน
+    if (!dayOff && today.some((x) => statusToday.has(x.id) && statusToday.get(x.id) !== "no_class")) {
+      confirmAction("มีคาบที่เช็กชื่อแล้ว เปลี่ยนเป็นงดสอนทั้งหมด?", go);
+    } else go();
   };
   const tick = (a: Assignment) => {
     if (a.id.startsWith("temp-")) return;
@@ -147,20 +155,26 @@ export default function Today() {
               <Screen
                 slot={focus.slot} live={focus.state === "live"} minutes={now.minutes}
                 subject={subjectById.get(focus.slot.subject_id)} status={statusToday.get(focus.slot.id)}
-                onCheck={(st) => check(focus.slot, st)}
+                onCheck={(st) => check(focus.slot, st)} absentLeft={() => absentLeft(focus.slot)}
               />
             ) : (
-              <View style={s.free}>
-                <Text style={s.freeTitle}>{today.length ? "หมดคาบแล้ววันนี้" : "วันนี้ไม่มีคาบเรียน"}</Text>
-                <Text style={s.freeText}>
+              <Crt style={{ marginTop: 26 }}>
+                <CrtLabel>ตอนนี้ว่าง</CrtLabel>
+                <Text style={s.subj}>{dayOff ? "วันนี้งดสอนทั้งวัน" : today.length ? "หมดคาบแล้ววันนี้" : "วันนี้ไม่มีคาบเรียน"}</Text>
+                <Text style={s.meta}>
                   {nearest?.due_at ? (
-                    <>งานใกล้สุด: {nearest.title} ส่ง{dueInfo(nearest.due_at, now.date).day} <Text style={s.ty}>{dueInfo(nearest.due_at, now.date).time}</Text></>
+                    <>งานใกล้สุด: {nearest.title} ส่ง{dueInfo(nearest.due_at, now.date).day} <Text style={s.vt}>{dueInfo(nearest.due_at, now.date).time}</Text></>
                   ) : "ไม่มีงานค้าง พักได้"}
                 </Text>
-              </View>
+              </Crt>
             )}
             {nextAfter && (
               <Text style={s.next}>ถัดไป <Text style={s.ty}>{hhmm(nextAfter.start_time)}</Text> {subjName(nextAfter.subject_id)}{nextAfter.room ? ` · ${nextAfter.room}` : ""}</Text>
+            )}
+            {today.length >= 2 && (
+              <Pressable onPress={toggleDayOff} style={s.dayOffLink} accessibilityRole="button" accessibilityState={{ selected: dayOff }}>
+                <Text style={[s.dayOffText, dayOff && s.miniOn]}>{dayOff ? "บันทึกแล้ว: งดสอนทั้งวัน" : "วันนี้งดสอนทั้งวัน"}</Text>
+              </Pressable>
             )}
 
             <View style={s.h}>
@@ -220,6 +234,8 @@ export default function Today() {
             )}
             <View style={s.rule} />
 
+            <TodayReview termId={term.data.id} today={now.date} nameOf={subjName} />
+
             <View style={s.qa} role="group" aria-label="ทางลัด">
               {noteSlot && (
                 <Quick label="จด" icon="note" onPress={() => openNote(noteSlot.id)} />
@@ -241,14 +257,71 @@ export default function Today() {
         )}
       </ScrollView>
 
-      {toast && (
-        <View style={s.toast} accessibilityLiveRegion="polite" role="status">
-          <Text style={s.toastText} numberOfLines={2}>ส่ง “{toast.title}” แล้ว</Text>
-          <Pressable onPress={undo} style={s.toastBtn} accessibilityRole="button">
-            <Text style={s.toastBtnText}>ยกเลิก</Text>
-          </Pressable>
-        </View>
+      {toast && <UndoBar key={toast.id} text={`ส่ง “${toast.title}” แล้ว`} onUndo={undo} onClose={setToast} />}
+    </View>
+  );
+}
+
+/** ทวนวันนี้ (docs/mockups/a-today-review.html) · ไม่มีหัวข้อต้องทวน = ซ่อนทั้งส่วน */
+function TodayReview({ termId, today, nameOf }: { termId: string; today: string; nameOf: (id: string) => string }) {
+  const topics = useTopics(termId).data ?? [];
+  const exams = useExams(termId).data ?? [];
+  const review = useReviewTopic(termId);
+  const [open, setOpen] = useState(false);
+  // เก็บค่าก่อนกด: แถวที่เพิ่งทวนอยู่ที่เดิมจนออกจากหน้า ไม่หายวับ
+  const [pressed, setPressed] = useState<TopicFull[]>([]);
+  useFocusEffect(useCallback(() => () => setPressed([]), []));
+  const press = (t: TopicFull) => {
+    setPressed((p) => [...p, t]);
+    // mutateAsync: กดหลายแถวติดกัน แต่ละแถวต้องย้อนเองได้ถ้าบันทึกไม่สำเร็จ
+    review.mutateAsync(t.id).catch(() => setPressed((p) => p.filter((x) => x.id !== t.id)));
+  };
+
+  const queue = reviewQueue(topics.map((t) => pressed.find((p) => p.id === t.id) ?? t), exams, today);
+  if (!queue.length) return null;
+
+  const exam = nearExam(exams, today);
+  const ready = exam ? examReady(exam, exams, topics) : null;
+  const days = exam ? daysUntil(exam.date, today) : 0;
+  const left = queue.filter((t) => !pressed.some((p) => p.id === t.id)).length;
+
+  return (
+    <View role="region" aria-label="ทวนวันนี้">
+      <View style={s.h}>
+        <Text style={s.hTitle} accessibilityRole="header">ทวนวันนี้</Text>
+        <Text style={s.hSide}>เหลือ <Text style={s.tyMuted}>{left}</Text> หัวข้อ</Text>
+      </View>
+      {exam && (
+        <Text style={s.exam}>
+          <Text style={s.examName}>{KIND[exam.kind]} {nameOf(exam.subject_id)}</Text>
+          {" · "}{days === 0 ? "สอบวันนี้" : <>อีก <Text style={s.ty}>{days}</Text> วัน</>}
+          {ready !== null && <> · พร้อมสอบ <Text style={s.ty}>{ready}%</Text></>}
+        </Text>
       )}
+      {(open ? queue : queue.slice(0, 3)).map((t) => {
+        const st = statusOf(t, today);
+        return (
+          <View key={t.id} style={s.entry}>
+            <Pressable style={s.reviewOpen} onPress={() => router.push(`/subject/${t.subject_id}`)} accessibilityRole="link"
+              accessibilityLabel={`${t.is_starred ? "ออกสอบ " : ""}${t.title} ${st.text} เปิดหน้าวิชา ${nameOf(t.subject_id)}`}>
+              <Text style={[s.what, s.reviewLink]}>{t.is_starred && <Text style={s.star}>★ </Text>}{t.title}</Text>
+              <Text style={s.sub}>{nameOf(t.subject_id)} · <Text style={st.late && s.late}>{st.text}</Text></Text>
+            </Pressable>
+            {pressed.some((p) => p.id === t.id) ? (
+              <View style={s.reviewed}><Tick /><Text style={s.reviewedText}>ทวนแล้ว</Text></View>
+            ) : (
+              <Pressable style={s.act} onPress={() => press(t)} accessibilityRole="button" accessibilityLabel={`ทวน ${t.title} แล้ว`}>
+                <Text style={s.actText}>ทวนแล้ว</Text>
+              </Pressable>
+            )}
+          </View>
+        );
+      })}
+      {!open && queue.length > 3 ? (
+        <Pressable style={s.more} onPress={() => setOpen(true)} accessibilityRole="button">
+          <Text style={s.moreText}>ดูอีก {queue.length - 3} หัวข้อ</Text>
+        </Pressable>
+      ) : <View style={s.rule} />}
     </View>
   );
 }
@@ -281,30 +354,36 @@ function Quick({ label, icon, onPress }: { label: string; icon: keyof typeof QIC
 }
 
 const LABEL: Record<AttendanceStatus, string> = { present: "มาเรียน", absent: "ขาด", no_class: "งดสอน" };
-/** นาที → "14" นาที หรือ "1:46" ชม. */
-const left = (min: number) => (min < 60 ? { n: String(Math.max(0, min)), unit: "นาที" } : { n: dur(min), unit: "ชม." });
-
 /** จอเขียวแปะเทป (จุดเดียวต่อจอ): คาบตอนนี้ + เช็กชื่อ / คาบถัดไป + นับถอยหลัง */
-function Screen({ slot, live, minutes, subject, status, onCheck }: {
+function Screen({ slot, live, minutes, subject, status, onCheck, absentLeft }: {
   slot: Slot; live: boolean; minutes: number; subject?: { name: string; code: string | null };
-  status?: AttendanceStatus; onCheck: (st: AttendanceStatus) => void;
+  status?: AttendanceStatus; onCheck: (st: AttendanceStatus) => void; absentLeft: () => string;
 }) {
+  const fx = useCrtFx();
+  const press = (st: AttendanceStatus) => {
+    // กดซ้ำค่าเดิมไม่เล่นภาพ · บันทึกทันทีไม่รอภาพจบ
+    if (st !== status) fx.start(st, st === "present" ? `+${XP_CONFIG.attend} XP` : st === "no_class" ? "ไม่นับขาด" : absentLeft());
+    onCheck(st);
+  };
   const start = toMinutes(slot.start_time);
   const end = toMinutes(slot.end_time);
-  const rest = left(live ? end - minutes : start - minutes);
+  const rest = countdown(live ? end - minutes : start - minutes);
   const where = [subject?.code, slot.room].filter(Boolean).join(" · ");
   return (
-    <Crt style={{ marginTop: 26 }}>
+    <Crt style={{ marginTop: 26 }} overlay={fx.play && <CrtStage key={fx.play.n} play={fx.play} onEnd={fx.stop} />}>
       <View accessibilityLabel={live ? "คาบที่กำลังเรียน" : "คาบถัดไป"}>
         <View style={{ flexDirection: "row", gap: 12 }}>
           <View style={{ flex: 1, minWidth: 0 }}>
-            <Text style={s.k}>{live ? "> คาบตอนนี้" : "> คาบถัดไป"}</Text>
-            <Text style={s.subj}>{subject?.name ?? "วิชา"}</Text>
+            <CrtLabel>{live ? "คาบตอนนี้" : "คาบถัดไป"}</CrtLabel>
+            <View style={s.subjRow}>
+              <Text style={s.subj}>{subject?.name ?? "วิชา"}</Text>
+              {!!slot.makeup_date && <Text style={s.tag}>ชดเชย</Text>}
+            </View>
             <Text style={s.meta}><Text style={s.vt}>{hhmm(slot.start_time)}–{hhmm(slot.end_time)}</Text>{where ? ` · ${where}` : ""}</Text>
           </View>
           <View style={{ alignItems: "flex-end" }}>
             <Text style={s.k}>{live ? "เหลือ" : "อีก"}</Text>
-            <Text style={s.big}>{rest.n}</Text>
+            <CrtBig text={rest.n} />
             <Text style={s.k}>{rest.unit}</Text>
           </View>
         </View>
@@ -312,7 +391,7 @@ function Screen({ slot, live, minutes, subject, status, onCheck }: {
           <>
             <View style={s.att} role="group" aria-label="เช็กชื่อคาบนี้">
               {(["present", "absent", "no_class"] as const).map((st) => (
-                <Pressable key={st} onPress={() => onCheck(st)} accessibilityRole="button" accessibilityState={{ selected: status === st }}
+                <Pressable key={st} onPress={() => press(st)} accessibilityRole="button" accessibilityState={{ selected: status === st }}
                   style={({ pressed }) => [s.attBtn, status === st && s.attOn, pressed && { transform: [{ scale: 0.97 }] }]}>
                   <Text style={[s.attText, status === st && { color: color.crt }, !!status && status !== st && { color: color.crtDim }]}>{LABEL[st]}</Text>
                 </Pressable>
@@ -352,11 +431,12 @@ const s = StyleSheet.create({
   date: { fontFamily: font.typeBold, fontSize: 15, color: color.paper },
   dateTerm: { fontFamily: font.bodyMedium },
 
-  k: { fontFamily: font.body, fontSize: 13, color: color.crtDim },
-  subj: { fontFamily: font.bodyBold, fontSize: 19, lineHeight: 26, color: color.crtOn, marginTop: 2 },
+  k: { fontFamily: font.body, fontSize: 13, color: color.crtDim, ...crtGlow.dim },
+  subj: { fontFamily: font.bodyBold, fontSize: 19, lineHeight: 26, color: color.crtOn, marginTop: 2, ...crtGlow.title },
+  subjRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", columnGap: 6 },
+  tag: { fontFamily: font.body, fontSize: 13, color: color.crtOn, borderWidth: 1, borderColor: "#2F6B42", borderRadius: 2, paddingHorizontal: 8, paddingVertical: 2 },
   meta: { fontFamily: font.body, fontSize: 13, color: color.crtDim, marginTop: 2 },
   vt: { fontFamily: font.num, fontSize: 19, color: color.crtOn },
-  big: { fontFamily: font.num, fontSize: 36, lineHeight: 36, color: "#B8FFC9" },
   att: { flexDirection: "row", gap: 8, marginTop: 14 },
   attBtn: { flex: 1, minHeight: minTouch, borderWidth: 1, borderColor: "#2F6B42", borderRadius: radius.sm, alignItems: "center", justifyContent: "center" },
   attOn: { backgroundColor: color.crtOn, borderColor: color.crtOn },
@@ -364,9 +444,8 @@ const s = StyleSheet.create({
   saved: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 12 },
 
   next: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: 12 },
-  free: { marginTop: 26 },
-  freeTitle: { fontFamily: font.title, fontSize: 19, lineHeight: 28, color: color.paper },
-  freeText: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: 2 },
+  dayOffLink: { minHeight: minTouch, justifyContent: "center", alignSelf: "flex-start", marginTop: 4 },
+  dayOffText: { fontFamily: font.body, fontSize: 14, color: color.muted, textDecorationLine: "underline" },
   ty: { fontFamily: font.typeBold, color: color.paper },
   tyMuted: { fontFamily: font.typeBold, color: color.muted },
 
@@ -397,6 +476,17 @@ const s = StyleSheet.create({
     paddingHorizontal: 9, paddingVertical: 1, transform: [{ rotate: "-6deg" }], opacity: 0.92,
   },
 
+  exam: { fontFamily: font.body, fontSize: 14, color: color.muted, paddingTop: 2, paddingBottom: 8 },
+  examName: { fontFamily: font.bodyBold, color: color.paper },
+  reviewOpen: { flex: 1, minWidth: 0, minHeight: minTouch, justifyContent: "center" },
+  reviewLink: { textDecorationLine: "underline", textDecorationColor: color.rule2 },
+  star: { color: color.red },
+  late: { color: color.warn },
+  reviewed: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: minTouch, paddingHorizontal: 4 },
+  reviewedText: { fontFamily: font.bodyBold, fontSize: 13, color: color.pen },
+  more: { minHeight: minTouch, justifyContent: "center", borderTopWidth: 1, borderTopColor: color.rule },
+  moreText: { fontFamily: font.bodyBold, fontSize: 14, color: color.pen, textDecorationLine: "underline" },
+
   qa: { flexDirection: "row", gap: 10, marginTop: 22 },
   quick: {
     flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", gap: 3, backgroundColor: color.deck,
@@ -408,13 +498,4 @@ const s = StyleSheet.create({
   sum: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", minHeight: 48, marginTop: 18, borderTopWidth: 1, borderColor: color.rule },
   sumText: { fontFamily: font.body, fontSize: 14, color: color.muted },
   sumLink: { fontFamily: font.bodyBold, fontSize: 14, color: color.pen },
-
-  toast: {
-    position: "absolute", left: 12, right: 12, bottom: 12, maxWidth: 536, alignSelf: "center",
-    flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, borderRadius: radius.sm,
-    backgroundColor: color.paper, paddingVertical: 6, paddingRight: 6, paddingLeft: 14,
-  },
-  toastText: { flex: 1, fontFamily: font.body, fontSize: 14, color: color.on },
-  toastBtn: { minHeight: minTouch, paddingHorizontal: 14, justifyContent: "center" },
-  toastBtnText: { fontFamily: font.bodyBold, fontSize: 14, color: color.go },
 });

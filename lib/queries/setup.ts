@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { currentUserId, supabase } from "@/lib/supabase";
 import { keys, type Subject } from "@/lib/queries/core";
-import type { Slot } from "@/lib/schedule";
+import { weekdayOf, type Slot } from "@/lib/schedule";
 
 // ตั้งค่า: เทอม · วิชา + ช่วงเวลาเรียน · โปรไฟล์ (ไม่ใช่การกดบ่อย → รอผลจากเซิร์ฟเวอร์ ไม่ทำ optimistic)
 
@@ -81,7 +81,8 @@ export function useSaveSubject(termId: string) {
 
       const keep = slots.filter((s) => s.id).map((s) => s.id as string);
       if (id) {
-        let del = supabase.from("class_slots").delete().eq("subject_id", saved.id);
+        // คาบชดเชยไม่อยู่ในฟอร์มแก้วิชา ห้ามถูกลบตามไปด้วย
+        let del = supabase.from("class_slots").delete().eq("subject_id", saved.id).is("makeup_date", null);
         if (keep.length) del = del.not("id", "in", `(${keep.join(",")})`);
         check(await del.select("id"));
       }
@@ -98,6 +99,29 @@ export function useSaveSubject(termId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: keys.subjects(termId) });
       qc.invalidateQueries({ queryKey: keys.slots(termId) });
+    },
+  });
+}
+
+export type MakeupInput = Pick<Slot, "subject_id" | "start_time" | "end_time" | "room"> & { makeup_date: string };
+
+export function useAddMakeup(termId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (m: MakeupInput) =>
+      check(await supabase.from("class_slots").insert({ ...m, weekday: weekdayOf(m.makeup_date) }).select("id")),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.slots(termId) }),
+  });
+}
+
+/** ลบคาบชดเชย: การเช็กชื่อของคาบนั้นหายตาม (cascade) โน้ตยังอยู่ (set null) */
+export function useDeleteMakeup(termId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => check(await supabase.from("class_slots").delete().eq("id", id).select("id")),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: keys.slots(termId) });
+      qc.invalidateQueries({ queryKey: keys.attendance(termId) });
     },
   });
 }

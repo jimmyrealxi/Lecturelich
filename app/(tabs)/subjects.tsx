@@ -1,11 +1,14 @@
 import { useMemo } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
-import { AddBtn, Btn, Card, Dymo, Section, Skeleton, Stamp, T } from "@/components/ui";
+import { KIND } from "@/components/game/Review";
+import { AddBtn, Btn, Card, CrtFocus, Dymo, Section, Skeleton, Stamp, T } from "@/components/ui";
 import { useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
+import { useExams, useTopics } from "@/lib/queries/review";
 import { useProfile } from "@/lib/queries/setup";
-import { attendanceStats, countSessions } from "@/lib/schedule";
-import { hhmm } from "@/lib/format";
+import { daysUntil, examReady, nearExam } from "@/lib/review";
+import { attendanceRisk, attendanceStats, bangkokNow, countSessions } from "@/lib/schedule";
+import { hhmm, shortDate } from "@/lib/format";
 import { color, font, inkColor, space } from "@/lib/theme";
 
 export const DAY_SHORT = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
@@ -16,13 +19,16 @@ export default function Subjects() {
   const slots = useSlots(term.data?.id);
   const attendance = useAttendance(term.data);
   const minPct = useProfile().data?.min_attendance_pct ?? 80;
+  const exams = useExams(term.data?.id).data ?? [];
+  const topics = useTopics(term.data?.id).data ?? [];
+  const today = bangkokNow().date;
 
   const rows = useMemo(() => (subjects.data ?? []).map((subj) => {
     const mine = (slots.data ?? []).filter((s) => s.subject_id === subj.id)
       .sort((a, b) => a.weekday - b.weekday || a.start_time.localeCompare(b.start_time));
     const marks = (attendance.data ?? []).filter((r) => r.subject_id === subj.id);
     const stats = term.data && marks.length ? attendanceStats(marks.map((r) => r.status), countSessions(mine, term.data), minPct) : null;
-    return { subj, when: mine.map((s) => `${DAY_SHORT[s.weekday]} ${hhmm(s.start_time)}`).join(" · "), stats };
+    return { subj, when: mine.filter((s) => !s.makeup_date).map((s) => `${DAY_SHORT[s.weekday]} ${hhmm(s.start_time)}`).join(" · "), stats };
   }), [subjects.data, slots.data, attendance.data, term.data, minPct]);
 
   if (term.isPending || (term.data && subjects.isPending)) {
@@ -40,9 +46,28 @@ export default function Subjects() {
     );
   }
 
+  // จอเขียว (docs/mockups/a-crt-focus.html): สอบใกล้สุดภายใน 14 วัน > วิชาใกล้เกินเกณฑ์ขาด > ไม่มี = ซ่อน
+  const exam = nearExam(exams, today);
+  const examName = exam && rows.find((r) => r.subj.id === exam.subject_id)?.subj.name;
+  const ready = exam ? examReady(exam, exams, topics) : null;
+  const risk = attendanceRisk(rows);
+  const openSubject = (id: string) => router.push(`/subject/${id}`);
+
   return (
     <ScrollView contentContainerStyle={s.page}>
       <View style={s.meta}><Dymo>{term.data.name}</Dymo><Text style={T.muted}>· {rows.length} วิชา</Text></View>
+      {exam && examName ? (
+        <Pressable onPress={() => openSubject(exam.subject_id)} accessibilityRole="button" accessibilityLabel={`เปิดหน้าวิชา ${examName}`}>
+          <CrtFocus label="สอบใกล้สุด" title={examName} big={`D-${daysUntil(exam.date, today)}`}
+            detail={`${KIND[exam.kind]} · ${shortDate(exam.date)}${ready === null ? "" : ` · พร้อมสอบ ${ready}%`}`} />
+        </Pressable>
+      ) : risk?.stats ? (
+        <Pressable onPress={() => openSubject(risk.subj.id)} accessibilityRole="button" accessibilityLabel={`เปิดหน้าวิชา ${risk.subj.name}`}>
+          <CrtFocus label={risk.stats.remaining < 0 ? "เกินเกณฑ์ขาด" : "ใกล้เกินเกณฑ์ขาด"} title={risk.subj.name}
+            detail={`ขาดแล้ว ${risk.stats.absent} ครั้ง · ขาดได้ไม่เกิน ${risk.stats.maxAbsent}`}
+            big={String(Math.abs(risk.stats.remaining))} unit="ครั้ง" />
+        </Pressable>
+      ) : null}
       {rows.length > 0 && <Section side="เวลาเรียน · เข้าเรียน">เทอมนี้</Section>}
       {rows.map(({ subj, when, stats }, i) => (
         <Pressable key={subj.id} style={[s.item, i === rows.length - 1 && s.last]} onPress={() => router.push(`/subject/${subj.id}`)}

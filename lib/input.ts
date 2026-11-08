@@ -14,6 +14,44 @@ export function normTime(s: string): string | null {
   return m[1].padStart(2, "0") + ":" + m[2];
 }
 
+/**
+ * จัดรูปตอนพิมพ์: ผู้ใช้พิมพ์แค่ตัวเลข ตัวคั่นมาเอง · ไม่เติมตัวคั่นท้ายสุด (ลบถอยหลังได้ไม่ติด)
+ * lens = ยาวสุดของแต่ละช่อง · oneDigitAbove = เลขตัวแรกมากกว่านี้ ช่องนั้นเต็มที่ 1 หลัก (เช่นวันที่ขึ้นต้น 8 = วันที่ 8)
+ */
+function mask(raw: string, sep: string, lens: number[], oneDigitAbove: number[]) {
+  const parts = lens.map(() => "");
+  let i = 0;
+  const full = () => parts[i].length === lens[i] || (parts[i].length === 1 && +parts[i] > oneDigitAbove[i]);
+  for (const c of raw) {
+    if (/\d/.test(c)) {
+      if (full()) {
+        if (i === lens.length - 1) break;
+        i++;
+      }
+      parts[i] += c;
+    } else if (/[/:.-]/.test(c) && parts[i] && !full() && i < lens.length - 1) i++; // พิมพ์ตัวคั่นเองหลังเลขหลักเดียว เช่น 1/
+  }
+  return parts.slice(0, i + 1).join(sep);
+}
+export const maskDate = (raw: string) => mask(raw, "/", [2, 2, 4], [3, 1, Infinity]);
+export const maskTime = (raw: string) => mask(raw, ":", [2, 2], [2, Infinity]);
+
+export const DATE_ERR = "เช่น 08/11/2569";
+
+/** "8/11/2569" (พ.ศ.) → "2026-11-08" · ไม่ใช่วันที่จริง หรือไม่ใช่ปี พ.ศ. = null */
+export function fromThaiDate(s: string): string | null {
+  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s.trim());
+  if (!m || +m[3] < 2400 || +m[3] > 2700) return null;
+  const iso = `${+m[3] - 543}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+  return isDate(iso) ? iso : null;
+}
+
+/** "2026-11-08" → "8/11/2569" (เติมฟอร์มแก้ไข) */
+export const toThaiDate = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${d}/${m}/${y + 543}`;
+};
+
 /** ลิงก์ว่าง = null · ไม่มี http(s) = เติม https:// · อย่างอื่น (javascript: ฯลฯ) = ไม่รับ */
 export function normUrl(s: string): string | null | undefined {
   const t = s.trim();

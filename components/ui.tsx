@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Alert, Platform, Pressable, StyleSheet, Text, TextInput, View, type StyleProp, type TextInputProps, type ViewStyle } from "react-native";
-import { color, font, minTouch, radius, space } from "@/lib/theme";
+import { maskDate, maskTime } from "@/lib/input";
+import { color, crtGlow, font, minTouch, radius, space } from "@/lib/theme";
 
 // ชิ้นส่วนพื้นฐานที่ใช้ร่วมทุกหน้า (ธีม A สมุดเก่า · docs/DESIGN.md + docs/mockups/a-*.html)
 
@@ -30,15 +31,87 @@ export function Stamp({ children, tone = "red" }: { children: ReactNode; tone?: 
   return <Text style={[s.stamp, { color: c, borderColor: c }]}>{children}</Text>;
 }
 
-/** จอเขียวแปะเทป 2 มุม (จุดเดียวต่อจอ) · เส้นสแกนทับบนสุด ไม่รับการแตะ */
-export function Crt({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
+// shortcut: เส้นสแกนใช้ CSS ของเว็บ แอป native จะไม่มีเส้น ถ้าทำ native ค่อยเปลี่ยนเป็นรูป
+const SCAN = {
+  backgroundImage: "repeating-linear-gradient(to bottom, rgba(0,0,0,0.28) 0 1px, transparent 1px 3px), radial-gradient(120% 110% at 50% 50%, transparent 58%, rgba(0,0,0,0.5) 100%)",
+} as ViewStyle;
+
+/** กะพริบติด-ดับทุก ms · ลดการเคลื่อนไหว = ติดนิ่ง */
+function useBlink(ms: number, enabled = true) {
+  const [reduced] = useState(() => typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
+  const [on, setOn] = useState(true);
+  useEffect(() => {
+    if (!enabled || reduced) return;
+    const t = setInterval(() => setOn((v) => !v), ms);
+    return () => clearInterval(t);
+  }, [ms, enabled, reduced]);
+  return on || !enabled || reduced;
+}
+
+/** ตัวเลขใหญ่บนจอเขียว (VT323 ห้ามมีคำไทย) · ตัวเลขนิ่ง กะพริบเฉพาะโคลอน */
+export function CrtBig({ text }: { text: string }) {
+  const [left, right] = text.split(":");
+  const on = useBlink(500, right !== undefined);
+  return <Text style={s.crtBig}>{left}{right !== undefined && <><Text style={{ opacity: on ? 1 : 0 }}>:</Text>{right}</>}</Text>;
+}
+
+/** ป้ายบรรทัดแรกบนจอเขียว "> ..." + เคอร์เซอร์กะพริบ */
+export function CrtLabel({ children }: { children: string }) {
+  const on = useBlink(550);
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+      <Text style={s.crtK}>{`> ${children}`}</Text>
+      <View aria-hidden style={[s.cursor, { opacity: on ? 1 : 0 }]} />
+    </View>
+  );
+}
+
+/** จอเขียวเรื่องสำคัญ: ซ้ายบอกว่าเรื่องอะไร ขวาตัวเลขใหญ่ · children = ปุ่มใต้ข้อมูล · overlay = ภาพตอนกด */
+export function CrtFocus({ label, title, detail, big, unit, children, overlay }: {
+  label: string; title: string; detail: string; big: string; unit?: string; children?: ReactNode; overlay?: ReactNode;
+}) {
+  return (
+    <Crt style={{ marginTop: 22, marginBottom: 4 }} overlay={overlay}>
+      <View style={{ flexDirection: "row", gap: 12 }}>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <CrtLabel>{label}</CrtLabel>
+          <Text style={s.crtTitle}>{title}</Text>
+          <Text style={s.crtK}>{detail}</Text>
+        </View>
+        <View style={{ alignItems: "flex-end" }}>
+          <CrtBig text={big} />
+          {!!unit && <Text style={s.crtK}>{unit}</Text>}
+        </View>
+      </View>
+      {children}
+    </Crt>
+  );
+}
+
+/** แถบ "ยกเลิก" 3 วินาทีหลังติ๊กส่งงาน · onClose ต้องเป็นฟังก์ชันคงที่ (setState) ให้นับเวลาไม่เริ่มใหม่ */
+export function UndoBar({ text, onUndo, onClose }: { text: string; onUndo: () => void; onClose: (v: null) => void }) {
+  useEffect(() => {
+    const t = setTimeout(() => onClose(null), 3000);
+    return () => clearTimeout(t);
+  }, [onClose]);
+  return (
+    <View style={s.toast} accessibilityLiveRegion="polite" role="status">
+      <Text style={s.toastText} numberOfLines={2}>{text}</Text>
+      <Pressable onPress={onUndo} style={s.toastBtn} accessibilityRole="button">
+        <Text style={s.toastBtnText}>ยกเลิก</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+/** จอเขียวแปะเทป 2 มุม (จุดเดียวต่อจอ) · เส้นสแกนทับบนสุด ไม่รับการแตะ · overlay = ภาพตอนกด ซ่อนเนื้อหาแต่คงความสูงการ์ด */
+export function Crt({ children, style, overlay }: { children: ReactNode; style?: StyleProp<ViewStyle>; overlay?: ReactNode }) {
   return (
     <View style={[{ marginHorizontal: -4 }, style]}>
       <View style={s.crt}>
-        {children}
-        <View pointerEvents="none" style={StyleSheet.absoluteFill} aria-hidden>
-          {Array.from({ length: 120 }, (_, i) => <View key={i} style={[s.scan, { top: i * 3 }]} />)}
-        </View>
+        <View style={overlay ? { opacity: 0 } : undefined} pointerEvents={overlay ? "none" : undefined} aria-hidden={!!overlay}>{children}</View>
+        {overlay}
+        <View pointerEvents="none" style={[StyleSheet.absoluteFill, SCAN]} aria-hidden />
       </View>
       <View style={[s.tape, { left: -14, transform: [{ rotate: "-28deg" }] }]} />
       <View style={[s.tape, { right: -14, transform: [{ rotate: "26deg" }] }]} />
@@ -140,7 +213,18 @@ const s = StyleSheet.create({
     backgroundColor: color.crt, borderRadius: 14, padding: 14, overflow: "hidden",
     boxShadow: "inset 0 0 0 2px #0F2717, inset 0 0 28px rgba(0,0,0,0.85), 0 3px 0 #2B2117",
   },
-  scan: { position: "absolute", left: 0, right: 0, height: 1, backgroundColor: "rgba(0,0,0,0.28)" },
+  crtBig: { fontFamily: font.num, fontSize: 36, lineHeight: 36, color: "#B8FFC9", ...crtGlow.big },
+  crtK: { fontFamily: font.body, fontSize: 13, color: color.crtDim, ...crtGlow.dim },
+  crtTitle: { fontFamily: font.bodyBold, fontSize: 19, lineHeight: 26, color: color.crtOn, marginTop: 2, ...crtGlow.title },
+  cursor: { width: 8, height: 14, backgroundColor: color.crtOn },
+  toast: {
+    position: "absolute", left: 12, right: 12, bottom: 12, maxWidth: 536, alignSelf: "center",
+    flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, borderRadius: radius.sm,
+    backgroundColor: color.paper, paddingVertical: 6, paddingRight: 6, paddingLeft: 14,
+  },
+  toastText: { flex: 1, fontFamily: font.body, fontSize: 14, color: color.on },
+  toastBtn: { minHeight: minTouch, paddingHorizontal: 14, justifyContent: "center" },
+  toastBtnText: { fontFamily: font.bodyBold, fontSize: 14, color: color.go },
   tape: { position: "absolute", top: -10, width: 72, height: 22, backgroundColor: "rgba(232,221,186,0.82)" },
   sheetTape: {
     position: "absolute", top: -11, left: "50%", marginLeft: -37, width: 74, height: 22,
@@ -175,6 +259,18 @@ export function Field({ label, error, style, ...input }: TextInputProps & { labe
     </View>
   );
 }
+
+type MaskedProps = TextInputProps & { label: string; error?: string | null; onChangeText: (v: string) => void };
+
+/** ช่องวันที่ พ.ศ. · พิมพ์แค่ตัวเลข / มาเอง (แปลงเป็น ISO ด้วย fromThaiDate) */
+export const DateField = ({ onChangeText, ...p }: MaskedProps) => (
+  <Field placeholder="08/11/2569" maxLength={10} keyboardType="number-pad" {...p} onChangeText={(v) => onChangeText(maskDate(v))} />
+);
+
+/** ช่องเวลา · พิมพ์แค่ตัวเลข : มาเอง */
+export const TimeField = ({ onChangeText, ...p }: MaskedProps) => (
+  <Field maxLength={5} keyboardType="number-pad" {...p} onChangeText={(v) => onChangeText(maskTime(v))} />
+);
 
 /** ถามยืนยันก่อนทำสิ่งที่ย้อนไม่ได้ (เว็บใช้ confirm ของเบราว์เซอร์ เพราะ Alert ปุ่มเดียวบนเว็บ) */
 export function confirmAction(message: string, onYes: () => void) {
