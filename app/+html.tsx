@@ -24,6 +24,8 @@ export default function Root({ children }: PropsWithChildren) {
         <ScrollViewStyleReset />
         <style dangerouslySetInnerHTML={{ __html: webAppCss }} />
         {headNodes}
+        {/* ต้องอยู่หลัง headNodes เบราว์เซอร์จึงใช้ตัวนี้แทน /favicon.ico ที่ Expo ใส่ และไม่ใช้รูปเก่าที่จำไว้ */}
+        <link rel="icon" href="/favicon.ico?v=2" />
       </head>
       <body {...bodyAttributes}>
         {children}
