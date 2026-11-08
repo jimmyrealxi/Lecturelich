@@ -33,6 +33,21 @@ const rest = (path: string, init: RequestInit = {}) =>
 type Sub = { id: string; endpoint: string; p256dh: string; auth: string };
 const UUID = /^[0-9a-f-]{36}$/i;
 
+/** งานที่ยังไม่ส่ง นับแบบเดียวกับเลขบนแท็บงาน · อ่านไม่ได้ = undefined แล้วเลขบนไอคอนคงเดิม */
+async function pendingCount(user: string): Promise<number | undefined> {
+  try {
+    const mRes = await rest(`room_members?user_id=eq.${user}&select=room_id`);
+    if (!mRes.ok) return undefined;
+    const rooms = (await mRes.json() as { room_id: string }[]).map((m) => m.room_id);
+    const scope = [`and(created_by.eq.${user},room_id.is.null)`, ...(rooms.length ? [`room_id.in.(${rooms.join(",")})`] : [])].join(",");
+    const res = await rest(`assignments?or=(${scope})&select=id,assignment_status(done)&assignment_status.user_id=eq.${user}`);
+    if (!res.ok) return undefined;
+    return (await res.json() as { assignment_status: { done: boolean }[] }[]).filter((a) => !a.assignment_status[0]?.done).length;
+  } catch {
+    return undefined;
+  }
+}
+
 async function pushNotification(id: string) {
   const recent = encodeURIComponent(new Date(Date.now() - 2 * 60 * 1000).toISOString());
   const nRes = await rest(`notifications?id=eq.${id}&created_at=gte.${recent}&select=id,user_id,title,body,url`);
@@ -41,11 +56,12 @@ async function pushNotification(id: string) {
   const sRes = await rest(`push_subscriptions?user_id=eq.${n.user_id}&select=id,endpoint,p256dh,auth`);
   const subs: Sub[] = sRes.ok ? await sRes.json() : [];
 
+  const badge = await pendingCount(n.user_id);
   const gone: string[] = [];
   let sent = 0;
   await Promise.all(subs.map(async (s) => {
     try {
-      const status = await sendPush(s, { title: n.title, body: n.body, url: n.url, tag: n.id }, VAPID);
+      const status = await sendPush(s, { title: n.title, body: n.body, url: n.url, tag: n.id, badge }, VAPID);
       if (status === 404 || status === 410) gone.push(s.id); // เครื่องเลิกรับแล้ว
       else if (status >= 200 && status < 300) sent++;
       else console.warn("push status", status, new URL(s.endpoint).host);

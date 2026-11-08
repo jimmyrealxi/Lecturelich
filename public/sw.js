@@ -55,7 +55,11 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener("push", (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch { data = { body: event.data && event.data.text() }; }
-  event.waitUntil(
+  const badge = typeof data.badge === "number" && self.navigator.setAppBadge
+    ? self.navigator.setAppBadge(data.badge).catch(() => {})
+    : undefined;
+  event.waitUntil(Promise.all([
+    badge,
     self.registration.showNotification(data.title || "Lecturelich", {
       body: data.body || "",
       icon: "/icons/icon-192.png",
@@ -63,7 +67,7 @@ self.addEventListener("push", (event) => {
       lang: "th",
       data: { url: data.url || "/today" },
     }),
-  );
+  ]));
 });
 
 self.addEventListener("notificationclick", (event) => {

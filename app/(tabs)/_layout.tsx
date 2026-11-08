@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { Redirect, Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "@/lib/auth";
 import { useAssignments } from "@/lib/queries/core";
 import { TabIcon } from "@/components/TabIcon";
+import { setIconBadge } from "@/lib/web/appBadge";
 import { Platform } from "react-native";
 import { color, font, PAPER_INSET } from "@/lib/theme";
 
@@ -10,9 +12,14 @@ export default function TabsLayout() {
   const session = useSession();
   const insets = useSafeAreaInsets();
   const tasks = useAssignments();
+  const pending = (tasks.data ?? []).filter((a) => !a.done).length;
+  const loaded = tasks.data !== undefined;
+  useEffect(() => {
+    if (session === null) setIconBadge(0); // ออกจากระบบ
+    else if (session && loaded) setIconBadge(pending);
+  }, [session, loaded, pending]);
   if (session === undefined) return null; // อ่าน session จากเครื่อง (เร็วมาก)
   if (!session) return <Redirect href="/login" />;
-  const pending = (tasks.data ?? []).filter((a) => !a.done).length;
 
   return (
     <Tabs
