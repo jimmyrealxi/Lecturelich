@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { TopBar } from "@/components/game/Frame";
 import { Thumb } from "@/components/game/LootArt";
 import { PapBoySprite } from "@/components/game/PapBoySprite";
+import { fitsClass } from "@/lib/classes";
 import { ITEMS, RARITY_COLOR, SLOTS, type Item, type Slot } from "@/lib/papboy";
 import { useEquip, useLoot } from "@/lib/queries/loot";
 import { color, font, minTouch, space } from "@/lib/theme";
@@ -14,7 +15,7 @@ const GROUPS: [string, Slot[]][] = [
   ["หน้า", ["glow", "mouth", "eyes"]], ["หัว", ["ears", "hat"]], ["ตัว", ["outfit", "scarf", "shoes"]],
   ["ปีก/ของถือ", ["wings", "held", "pet"]], ["ออร่า", ["back", "ground", "fx", "bg"]],
 ];
-const SHOWN = ITEMS.filter((i) => i.v !== "none"); // "ไม่ใส่" ไม่ต้องมีช่อง (ถอดได้จากปุ่มถอด)
+const BASE = ITEMS.filter((i) => i.v !== "none"); // "ไม่ใส่" ไม่ต้องมีช่อง (ถอดได้จากปุ่มถอด)
 
 export default function Wardrobe() {
   const loot = useLoot();
@@ -34,7 +35,8 @@ export default function Wardrobe() {
   }
 
   const owned = new Set(d.owned);
-  const own = (it: Item) => it.isDefault || owned.has(it.id);
+  const SHOWN = BASE.filter((i) => fitsClass(i, d.look.cls)); // อาวุธเห็นเฉพาะของคลาสเทอมนี้
+  const own =(it: Item) => it.isDefault || owned.has(it.id);
   const look = sel && own(sel) ? { ...d.look, [sel.k]: sel.v } : d.look; // ของที่ยังไม่ได้ = ไม่ให้ลองใส่จริง เห็นแค่เงา
   const worn = SLOTS.filter((x) => d.look[x.k] !== x.o[0][0]).length;
   const on = sel ? d.look[sel.k] === sel.v : false;

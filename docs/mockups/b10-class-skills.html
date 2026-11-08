@@ -1,0 +1,1179 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เอฟเฟกต์ยิงตามคลาส</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Silkscreen&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--cave:#0F0D0C;--panel:#1B1613;--deep:#141110;--seam:#3B3027;--bone:#E8DFCB;--ash:#B5A88F;--gold:#C9A25B;--blood:#A0281D}
+*{box-sizing:border-box}html,body{background:#050404}
+body{margin:0;color:var(--bone);font:400 16px/1.55 Anuphan,sans-serif}
+::selection{background:var(--gold);color:var(--cave)}
+.intro{max-width:1160px;margin:0 auto;padding:26px 16px 4px;color:var(--ash)}
+.intro h1{font:400 28px/1.4 Chonburi,serif;color:var(--gold);margin:0}.intro p{margin:0}
+.wall{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;padding:18px 0 48px;align-items:flex-start}
+.item{width:360px;max-width:100%}
+.cap{font-weight:500;color:var(--ash);padding:0 16px 8px;margin:0}
+.ph{background:var(--cave);padding:18px 16px 24px;border-radius:3px}
+canvas{display:block;image-rendering:pixelated}
+.scene{position:relative;margin:-18px -16px 14px;background:#0B0908;border-bottom:1px solid var(--seam)}
+.scene canvas{width:100%;aspect-ratio:128/72}
+.bar{position:absolute;left:10px;right:10px;top:8px;pointer-events:none}
+.bn{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:600;font-size:14px;color:#F0E6D2;text-shadow:0 1px 0 #000}
+.bn span:last-child{font:400 14px Silkscreen,sans-serif;color:#FFD7CF}
+.hp{height:8px;margin-top:3px;background:var(--deep);border:1px solid #6A3A30}
+.hp i{display:block;height:100%;width:100%;background:var(--blood);transform:scaleX(.68);transform-origin:left}
+.skill{position:absolute;left:10px;bottom:6px;font-weight:600;font-size:14px;color:var(--gold);background:rgba(6,5,4,.8);padding:4px 10px}
+h2.l{font-weight:600;font-size:15px;color:var(--ash);margin:14px 0 6px}
+h2.l:first-of-type{margin-top:0}
+button{font-family:inherit;color:var(--bone);cursor:pointer}
+button:focus-visible{outline:2px solid var(--bone);outline-offset:2px}
+.row{display:grid;gap:8px}
+.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:repeat(3,1fr)}.c4{grid-template-columns:repeat(4,1fr)}
+.pick{min-height:44px;background:var(--panel);border:1px solid var(--seam);border-radius:3px;padding:4px 6px;font-weight:500;font-size:15px;line-height:1.3}
+.pick[aria-pressed=true]{border-color:var(--gold);color:var(--gold);background:#251D15}
+.cls{display:flex;align-items:center;gap:4px;text-align:left;min-height:60px;padding:2px 6px 2px 0}
+.wp{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:96px;padding:6px 4px}
+.wp span{color:inherit}.wp small{font-size:14px;line-height:1.2;font-weight:600}
+.sw{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:14px;padding:6px 2px}
+.sw i{width:14px;height:14px;border-radius:2px;display:block}
+.fine{font-size:15px;color:var(--ash);margin:12px 0 0}
+.k{display:flex;align-items:center;gap:6px;margin-top:14px}
+.k:first-child{margin-top:0}
+.k h2{font:400 20px/1.4 Chonburi,serif;margin:0}
+.k p{margin:0;font-size:15px;color:var(--ash)}
+.w{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--seam)}
+.w b{display:block;font-weight:600}.w em{display:block;font-style:normal;font-size:15px;color:var(--ash);line-height:1.35}
+.w canvas{flex:none;width:48px;height:48px;background:var(--deep);border-radius:3px}
+.map{margin:0}
+.map dt{font:400 18px/1.45 Chonburi,serif;color:var(--gold);margin-top:14px}
+.map dt:first-child{margin-top:0}
+.map dd{margin:0;color:var(--bone)}
+.stamp{margin:18px 0 0;padding:10px 12px;background:var(--deep);border:1px dashed var(--seam);border-radius:3px;color:var(--ash);font-size:15px}
+</style></head><body>
+<div class="intro"><h1>เอฟเฟกต์ยิงตามคลาส</h1><p>กดคลาส ช่วงเทอม อาวุธ และของอื่นในจอซ้ายได้เลย</p></div>
+<div class="wall">
+<section class="item"><p class="cap">ฉากบอสในแท็บเกม</p><div class="ph">
+ <div class="scene">
+  <canvas id="sc" width="128" height="72" role="img"></canvas>
+  <div class="bar"><div class="bn"><span>อสูรกองข้อสอบ</span><span>68%</span></div><div class="hp"><i></i></div></div>
+  <div class="skill" id="sk"></div>
+ </div>
+ <h2 class="l">คลาส</h2><div class="row c2" id="cl"></div>
+ <h2 class="l">ช่วงเทอม</h2><div class="row c3" id="st"></div>
+ <h2 class="l">อาวุธของคลาสนี้</h2><div class="row c3" id="we"></div>
+ <h2 class="l">สีจอหน้า</h2><div class="row c4" id="gl"></div>
+ <h2 class="l">อนุภาค</h2><div class="row c3" id="fx"></div>
+ <p class="fine">ดูเฉย ๆ ไม่ต้องกดยิง เหมือนเดิม</p>
+</div></section>
+<section class="item"><p class="cap">คลังอาวุธ แยกตามคลาส</p><div class="ph" id="arm"></div></section>
+<section class="item"><p class="cap">ของชิ้นไหนเปลี่ยนอะไร</p><div class="ph">
+ <dl class="map">
+  <dt>คลาส + ช่วงเทอม</dt><dd>ท่าสกิล คลาสละ 3 ท่า เปลี่ยนตามต้น กลาง ปลายเทอม</dd>
+  <dt>อาวุธ</dt><dd>ของที่ถืออยู่ และสิ่งที่พุ่งออกไป</dd>
+  <dt>ปกติ</dt><dd>กระสุนเปล่า หางสั้นมาก</dd>
+  <dt style="color:#8AB0FF">magic</dt><dd>หางยาวขึ้น มีแสงที่ปลายอาวุธ</dd>
+  <dt style="color:#F2C230">rare</dt><dd>กระสุนใหญ่ 2 เท่า ยิงซ้อน 2 นัด วงกระแทกที่บอส แสงใต้เท้า</dd>
+  <dt style="color:#EE8A3C">unique</dt><dd>ยิง 3 นัด จอสะเทือน ออร่าลอยรอบตัว และปล่อยไม้ตายเป็นระยะ ห้องมืดลงแล้วลำแสงเต็มจอ</dd>
+  <dt>คลาส</dt><dd>หางและแรงกระแทกต่างกัน นักจดหมึกหยด เดดไลน์เส้นความเร็ว ผู้รอดควันฝุ่น หมอผีวิญญาณลอย</dd>
+  <dt>สีจอหน้า</dt><dd>สีแสงและสีประกาย</dd>
+  <dt>อนุภาค</dt><dd>เศษที่ลอยตามหลังกระสุน</dd>
+  <dt>ของอื่น</dt><dd>หมวก เสื้อ ปีก ออร่า เปลี่ยนแค่ตัวละคร ไม่แตะกระสุน</dd>
+ </dl>
+ <p class="stamp">ทั้งหมดนี้เป็นแค่หน้าตา อาวุธแรงแค่ไหนเลือดบอสก็ลดตามที่เรียนจริงเท่าเดิม ไม่แตะ XP เกรด คะแนนห้อง</p>
+ <p class="stamp">เสนอ: กล่องดรอปเฉพาะอาวุธคลาสที่เลือกเทอมนี้ อาวุธเทอมก่อนเก็บในตู้ ใส่ได้เมื่อกลับมาเป็นคลาสนั้น</p>
+</div></section>
+</div>
+<script>
+
+// Pap-Boy v1 (วาดเองทั้งหมด · พอร์ตจาก docs/mockups/papboy-v1.html + b5-game.html) — parody ไม่ใช้ภาพ/ชื่อ/ฟอนต์ของเกมใด
+// ของแต่งตัว + ค่ากล่อง (LOOT_CONFIG ต้องตรงกับ loot_value() ใน migration ขั้น 7 — มีเทสต์เทียบ)
+// ท่าประจำ = แบห้านิ้ว (มือซ้ายของภาพยกขึ้นโบก) ไม่ใช่ชูนิ้วโป้ง
+// วาดพิกเซลลง canvas ครั้งเดียวต่อชุดเป็น sprite sheet (FRAMES เฟรม) แล้วต่อเฟรมแค่ drawImage
+const RARITY_COLOR = { n: "#E8E8E8", m: "#8AB0FF", r: "#F2C230", u: "#EE8A3C" };
+const RARITY_NAME = { n: "ปกติ", m: "magic", r: "rare", u: "unique" };
+// ตัวแรกของแต่ละช่อง = ของพื้นฐาน (มีตั้งแต่แรก ไม่ดรอป)
+const SLOTS = [
+    { k: "glow", l: "สีจอหน้า", o: [["yellow", "เหลือง", "n"], ["green", "เขียว", "n"], ["cyan", "ฟ้าน้ำแข็ง", "m"], ["pink", "ชมพู", "r"]] },
+    { k: "mouth", l: "ปาก", o: [["smile", "ยิ้ม", "n"], ["cat", "ปากแมว", "m"], ["fang", "เขี้ยว", "m"], ["tongue", "แลบลิ้น", "r"]] },
+    { k: "eyes", l: "แว่น", o: [["none", "ไม่ใส่", "n"], ["round", "แว่นกลม", "m"], ["hud", "จอ HUD", "u"]] },
+    { k: "ears", l: "หู", o: [["none", "ไม่มี", "n"], ["cat", "หูแมว", "m"], ["bunny", "หูกระต่าย", "r"], ["speaker", "หูลำโพง", "r"]] },
+    { k: "hat", l: "หมวก", o: [["none", "ไม่ใส่", "n"], ["beanie", "ไหมพรม", "n"], ["grad", "หมวกบัณฑิต", "u"]] },
+    { k: "outfit", l: "เสื้อ", o: [["hoodie", "ฮู้ดส้ม", "n"], ["lab", "เสื้อกาวน์", "m"], ["jacket", "แจ็กเก็ตทอง", "r"]] },
+    { k: "scarf", l: "ผ้าพันคอ", o: [["none", "ไม่มี", "n"], ["red", "แดงปลิว", "m"]] },
+    { k: "shoes", l: "รองเท้า", o: [["plain", "ธรรมดา", "n"], ["sneaker", "ผ้าใบแดง", "m"], ["gold", "บูตทอง", "r"]] },
+    { k: "held", l: "ของถือ", o: [["none", "มือเปล่า", "n"], ["pencil", "ดินสอยักษ์", "r"], ["laser", "ปากกาเลเซอร์", "u"]] },
+    { k: "wings", l: "ปีก", o: [["none", "ไม่มี", "n"], ["paper", "ปีกกระดาษ", "r"], ["pixel", "ปีกพิกเซล", "m"], ["light", "ปีกแสง", "u"]] },
+    { k: "back", l: "ออร่าหลัง", o: [["none", "ไม่มี", "n"], ["ring", "วงแหวน", "m"], ["flame", "เปลวทอง", "r"], ["stars", "ดาวหมุน", "u"]] },
+    { k: "ground", l: "ออร่าพื้น", o: [["none", "ไม่มี", "n"], ["bloom", "ดอกไม้", "n"], ["ripple", "คลื่นน้ำ", "m"], ["rune", "วงเวท", "r"], ["fire", "ไฟใต้เท้า", "u"]] },
+    { k: "fx", l: "อนุภาค", o: [["none", "ไม่มี", "n"], ["spark", "ประกาย", "m"], ["binary", "เลข 0/1", "r"]] },
+    { k: "pet", l: "สัตว์เลี้ยง", o: [["none", "ไม่มี", "n"], ["floppy", "ดิสก์บิน", "r"]] },
+    { k: "bg", l: "ฉากหลัง", o: [["plain", "ห้องน้ำเงิน", "n"], ["stars", "ฟ้ากลางคืน", "m"]] },
+];
+const DEFAULT_LOOK = Object.fromEntries(SLOTS.map((s) => [s.k, s.o[0][0]]));
+const ITEMS = SLOTS.flatMap((s) => s.o.map(([v, name, r], i) => ({ id: `${s.k}.${v}`, k: s.k, v, name, r, slot: s.l, isDefault: i === 0 })));
+const itemById = (id) => ITEMS.find((i) => i.id === id);
+/** ชุดที่เก็บใน DB อาจมีช่องไม่ครบ/ค่าแปลก → เติมของพื้นฐาน */
+function fullLook(look) {
+    const out = { ...DEFAULT_LOOK };
+    for (const s of SLOTS) {
+        const v = look?.[s.k];
+        if (v && itemById(`${s.k}.${v}`))
+            out[s.k] = v;
+    }
+    return out;
+}
+const LOOT_CONFIG = {
+    ironEvery: 50, // กล่องเหล็ก 1 ใบต่อ XP สะสมทุก 50
+    oddsN: 60, oddsM: 28, oddsR: 10, oddsU: 2, // % ในกล่องเหล็ก
+    pity: 10, // ไม่เจอ rare ขึ้นไปติดกัน 10 กล่อง → ใบถัดไป rare แน่นอน
+    dupN: 5, dupM: 15, dupR: 40, dupU: 120, // ได้ซ้ำ → เศษชอล์ก
+    silverAttend: 10, silverPhoto: 5, silverEarly: 3, silverReview: 10, // กล่องเงิน: เข้าเรียน · จดมีรูป · ส่งก่อน ≥1 วัน · ทวน
+    craftN: 10, craftM: 30, craftR: 80, craftU: 200, // แลกเศษชอล์กเป็นของที่ยังไม่มี
+};
+// ---------- วาด ----------
+const FRAMES = 48; // วง 4 วิที่ 12 ครั้ง/วิ · ทุกจังหวะในตัวปรับให้ลงตัวกับ 48
+const OUT = "#14213A";
+const GLOW = { yellow: "#F2C230", green: "#86D99B", cyan: "#6FE3F0", pink: "#FF8FC8" };
+const glowOf = (look) => (look.glow === DEFAULT_LOOK.glow && artOf(look)?.glow) || (GLOW[look.glow] ?? GLOW.yellow);
+const OUTFIT = { hoodie: ["#E07A3F", "#B85A26"], lab: ["#F3F5F8", "#C7CDD6"], jacket: ["#1E3D74", "#152C55"] };
+const SHOE = { plain: "#2B2B3A", sneaker: "#C2372C", gold: "#C9A25B" };
+const rnd = (i) => { const x = Math.sin(i * 127.1) * 43758.5453; return x - Math.floor(x); };
+let c;
+let st;
+let art = null; // ร่างของคลาสที่กำลังวาด
+let A = 1; // ความทึบรวมของตัว (ร่างผี)
+function P(x, y, col, a = 1) { c.globalAlpha = a * A; c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), 1, 1); }
+function R(x, y, w, h, col, a = 1) { c.globalAlpha = a * A; c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); }
+function disc(cx, cy, r, col, a = 1) { for (let y = -r; y <= r; y++)
+    for (let x = -r; x <= r; x++)
+        if (x * x + y * y <= r * r + r * 0.6)
+            P(cx + x, cy + y, col, a); }
+function ell(cx, cy, rx, ry, col, a = 1, ring = false) {
+    for (let y = -ry - 1; y <= ry + 1; y++)
+        for (let x = -rx - 1; x <= rx + 1; x++) {
+            const v = (x * x) / (rx * rx) + (y * y) / (ry * ry);
+            if (ring ? Math.abs(v - 1) < (1.3 / Math.min(rx, ry)) * 1.4 : v <= 1)
+                P(cx + x, cy + y, col, a);
+        }
+}
+function box(x, y, w, h, col) { R(x, y, w, 1, col); R(x, y + h - 1, w, 1, col); R(x, y, 1, h, col); R(x + w - 1, y, 1, h, col); }
+const rr = (x, y, w, h, col) => ({ k: "r", x, y, w, h, c: col });
+/** หลายชิ้นขอบรวมเป็นเงาเดียว: ขอบก่อน แล้วค่อยเติมสี */
+function shapes(list) {
+    for (const s of list)
+        s.k === "r" ? R(s.x - 1, s.y - 1, s.w + 2, s.h + 2, OUT) : s.k === "d" ? disc(s.x, s.y, s.r + 1, OUT) : ell(s.x, s.y, s.rx + 1, s.ry + 1, OUT);
+    for (const s of list)
+        s.k === "r" ? R(s.x, s.y, s.w, s.h, s.c) : s.k === "d" ? disc(s.x, s.y, s.r, s.c) : ell(s.x, s.y, s.rx, s.ry, s.c);
+}
+function drawBg(f) {
+    R(0, 0, 64, 64, "#13233D");
+    if (st.bg === "stars") {
+        R(0, 0, 64, 64, "#0B1530");
+        for (let i = 0; i < 26; i++)
+            P(rnd(i) * 64, rnd(i + 50) * 48, "#F4F6FA", (f + i * 7) % 48 < 40 ? 0.9 : 0.25);
+    }
+    R(0, 56, 64, 8, "#0E1A2E");
+    for (let x = 0; x < 64; x += 8)
+        R(x, 56, 1, 8, "#1A2C4E");
+    R(0, 56, 64, 1, "#22365A");
+}
+function drawBack(f) {
+    const cx = 32, cy = 29;
+    if (st.back === "ring") {
+        disc(cx, cy, 17, "#8AB0FF", 0.1);
+        for (let a = 0; a < Math.PI * 2; a += 0.045)
+            P(cx + Math.cos(a) * 20, cy + Math.sin(a) * 20, "#8AB0FF", Math.floor((a + f * (0.7 / 48) * 5) / 0.35) % 2 === 0 ? 0.95 : 0.25);
+        for (let a = 0; a < Math.PI * 2; a += 0.06)
+            P(cx + Math.cos(a) * 15, cy + Math.sin(a) * 15, "#C9DAFF", 0.35);
+    }
+    if (st.back === "flame")
+        for (let x = 12; x <= 52; x++) {
+            const h = 17 + 5 * Math.sin(x * 0.55 + f * ((2 * Math.PI * 5) / 48)) + 3 * Math.sin(x * 1.3 - f * ((2 * Math.PI * 7) / 48)) - Math.abs(x - 32) * 0.45;
+            for (let y = 0; y < h; y++) {
+                const t = y / h;
+                P(x, 52 - y, t < 0.45 ? "#EE8A3C" : t < 0.8 ? "#F2C230" : "#FFE680", 0.5 * (1 - t * 0.5));
+            }
+        }
+    if (st.back === "stars") {
+        disc(cx, 27, 16, "#FFE680", 0.1);
+        disc(cx, 27, 12, "#FFE680", 0.12);
+        for (let i = 0; i < 8; i++) {
+            const a = (i * Math.PI) / 4 + f * (Math.PI / 4 / 48), x = cx + Math.cos(a) * 22, y = 28 + Math.sin(a) * 15, col = i % 2 ? "#FFE680" : "#EE8A3C";
+            P(x, y, col);
+            if ((f + i * 3) % 12 < 8) {
+                P(x - 1, y, col, 0.8);
+                P(x + 1, y, col, 0.8);
+                P(x, y - 1, col, 0.8);
+                P(x, y + 1, col, 0.8);
+            }
+        }
+    }
+}
+function drawWings(f, b) {
+    if (st.wings === "none")
+        return;
+    const flap = f % 8 < 4 ? 0 : 1, L = [5, 8, 10, 12, 12, 11, 10, 8, 6, 4, 3, 2], rows = [];
+    L.forEach((len, i) => { const y = 29 + i + b - (i < 4 ? flap : 0); rows.push([24 - len, y, len], [40, y, len]); });
+    rows.forEach(([x, y, w]) => R(x - 1, y - 1, w + 2, 3, OUT));
+    rows.forEach(([x, y, w], j) => {
+        const i = j >> 1;
+        for (let k = 0; k < w; k++) {
+            const px = x + k, near = (px < 32 ? x + w - 1 - px : px - x) / w;
+            let col, a = 1;
+            if (st.wings === "paper") {
+                col = i % 3 === 2 ? "#8AB0FF" : "#F3F5F8";
+                if (Math.abs(px - 32) === 9)
+                    col = "#C2372C";
+            }
+            else if (st.wings === "pixel")
+                col = (px + y) % 2 ? "#8AB0FF" : "#5B7FD6";
+            else {
+                col = near < 0.35 ? "#FFE680" : near < 0.7 ? "#F2C230" : "#EE8A3C";
+                a = 0.92;
+            }
+            P(px, y, col, a);
+        }
+    });
+    if (st.wings === "light")
+        for (let i = 0; i < 4; i++)
+            if ((f + i * 4) % 12 < 6) {
+                P(10 + i * 2, 30 + i * 3 + b, "#FFF6C8");
+                P(54 - i * 2, 30 + i * 3 + b, "#FFF6C8");
+            }
+}
+function drawGround(f) {
+    ell(32, 55, 11, 2, "#000", 0.28);
+    const g = st.ground;
+    if (g === "rune") {
+        ell(32, 55, 17, 4, "#8AB0FF", 0.9, true);
+        ell(32, 55, 12, 3, "#8AB0FF", 0.5, true);
+        for (let i = 0; i < 6; i++) {
+            const a = (i * Math.PI) / 3 + f * ((Math.PI / 144) * 5);
+            P(32 + Math.cos(a) * 17, 55 + Math.sin(a) * 4, "#E8F0FF");
+            P(32 + Math.cos(a) * 17 + 1, 55 + Math.sin(a) * 4, "#E8F0FF", 0.6);
+        }
+    }
+    if (g === "ripple")
+        for (let k = 0; k < 3; k++) {
+            const rx = 5 + ((f * 0.375 + k * 6) % 18);
+            ell(32, 55, rx, Math.max(1, rx / 4), "#6FE3F0", Math.max(0, 0.9 - rx / 20), true);
+        }
+    if (g === "fire") {
+        ell(32, 55, 16, 3, "#EE8A3C", 0.3);
+        for (let x = 17; x <= 47; x += 2) {
+            const h = 2 + ((f + x * 3) % 6);
+            for (let y = 0; y < h; y++)
+                P(x, 57 - y, y < h - 2 ? "#EE8A3C" : "#FFE680", 0.85);
+        }
+    }
+    if (g === "bloom")
+        [[19, "#FF8FC8"], [23, "#F2C230"], [41, "#FF8FC8"], [45, "#8AB0FF"], [16, null], [27, null], [38, null], [48, null]].forEach(([x, col], i) => {
+            const sw = ((f >> 2) + i) % 2;
+            P(x, 56, "#5FBF6A");
+            P(x + sw, 55, "#5FBF6A");
+            if (col) {
+                P(x + sw, 54, col);
+                P(x + sw - 1, 54, col, 0.7);
+                P(x + sw + 1, 54, col, 0.7);
+                P(x + sw, 53, col, 0.7);
+            }
+        });
+}
+/** มือซ้ายของภาพแบห้านิ้ว (กลางฝ่ามือ ≈ (19,27) ในกรอบ 64) · d = โบกซ้าย/ขวา */
+const PALM = { x: 19, y: 27 };
+function armsOf(pose, t, u, shirt, hx = 39) {
+    const S = (x, y, w = 3, h = 3) => rr(x, y + u, w, h, shirt), H = (x, y, w = 3, h = 3) => rr(x, y + u, w, h, "#F4F6FA");
+    if (pose === "hand")
+        return { back: [H(22, 45, 3, 2), S(22, 39, 3, 6), S(39, 36), S(41, 33), S(43, 29, 3, 5), S(44, 22 - t, 3, 8), H(44, 18 - t, 3, 4)], front: [] };
+    if (pose === "cheer")
+        return { back: [S(22, 36), S(20, 33), S(18, 30), H(16, 27), S(39, 36), S(41, 33), S(43, 30), H(45, 27)], front: [] };
+    if (pose === "read")
+        return { back: [S(22, 39, 3, 4), S(39, 39, 3, 4)], front: [rr(25, 40 + u, 14, 7, "#F3EAD2"), H(22, 42), H(39, 42)] };
+    if (pose === "write")
+        return { back: [S(22, 39, 3, 4), S(39, 39, 3, 4)], front: [rr(23, 40 + u, 10, 8, "#FBF5E6"), H(22, 44), S(37, 43, 3, 2), H(33 + t * 2, 43)] };
+    // palm: แขนซ้ายของภาพยกเฉียงขึ้น · แขนขวาห้อยถือของ (ฝ่ามือวาดหลังหัวในวง drawBody)
+    return { back: [S(21, 37), S(20, 35), S(19, 33), S(18, 30, 3, 4), S(hx, 39, 3, 6), H(hx, 45, 3, 2)], front: [] };
+}
+function drawBody(f, b, pose) {
+    const k = art, classFit = !!k && st.outfit === DEFAULT_LOOK.outfit; // ใส่ของดรอป = ใช้ของนั้น · ยังไม่ใส่ = ชุดประจำคลาส
+    const [shirt, shade] = k && classFit ? [k.shirt, k.shade] : OUTFIT[st.outfit] ?? OUTFIT.hoodie, helm = k?.helm ?? "#EEF1F5", list = [];
+    const hx = k?.build === "wide" ? 42 : 39, shoe = (st.shoes === DEFAULT_LOOK.shoes && k?.shoe) || (SHOE[st.shoes] ?? SHOE.plain);
+    const d = f % 12 < 6 ? 0 : 1, G = "#F4F6FA", arms = armsOf(pose, d, b, shirt, hx);
+    const sy = pose === "read" ? -2 : pose === "cheer" ? b : 0; // เท้า: นั่ง = ยกขึ้นบนกองหนังสือ · ดีใจ = กระโดด
+    if (pose === "read")
+        shapes([rr(21, 52, 22, 3, "#8A5A2B"), rr(23, 50, 18, 2, "#2B4A8A")]);
+    if (st.ears === "cat")
+        for (let i = 0; i < 6; i++)
+            list.push(rr(22, 12 + i + b, i + 1, 1, helm), rr(42 - i, 12 + i + b, i + 1, 1, helm));
+    if (st.ears === "bunny")
+        list.push({ k: "e", x: 27, y: 9 + b, rx: 2, ry: 6, c: helm }, { k: "e", x: 37, y: 9 + b, rx: 2, ry: 6, c: helm });
+    if (st.ears === "speaker")
+        list.push(rr(18, 22 + b, 3, 9, "#8C97AA"), rr(43, 22 + b, 3, 9, "#8C97AA"));
+    list.push(...(k ? legsOf(k, shoe, sy) : [
+        ...(pose === "read" ? [rr(27, 48, 3, 3, "#2E3A55"), rr(34, 48, 3, 3, "#2E3A55")] : [rr(27, 47 + sy, 3, 6, "#2E3A55"), rr(34, 47 + sy, 3, 6, "#2E3A55")]),
+        rr(26, 52 + sy, 4, 2, shoe), rr(34, 52 + sy, 4, 2, shoe),
+    ]), ...arms.back, ...(k ? torsoOf(k, shirt, shade, b) : [rr(25, 37 + b, 14, 12, shirt)]), { k: "d", x: 32, y: 26 + b, r: 11, c: helm });
+    shapes(list);
+    if (k) {
+        hemOf(k, shirt, f, b);
+        k.head?.(f, b);
+    }
+    if (st.ears === "cat")
+        for (let i = 2; i < 5; i++) {
+            R(23, 12 + i + b, i - 1, 1, "#FF8FC8");
+            R(43 - i + 1, 12 + i + b, i - 1, 1, "#FF8FC8");
+        }
+    if (st.ears === "bunny") {
+        R(27, 6 + b, 1, 6, "#FF8FC8");
+        R(37, 6 + b, 1, 6, "#FF8FC8");
+    }
+    if (st.ears === "speaker")
+        for (let y = 24; y < 30; y += 2) {
+            P(19, y + b, OUT);
+            P(44, y + b, OUT);
+        }
+    if (st.shoes === "sneaker") {
+        R(26, 53 + sy, 4, 1, "#F3F5F8");
+        R(34, 53 + sy, 4, 1, "#F3F5F8");
+    }
+    if (st.shoes === "gold") {
+        P(27, 52 + sy, "#FFE680");
+        P(35, 52 + sy, "#FFE680");
+    }
+    if (st.outfit === "hoodie" && !classFit) {
+        R(28, 44 + b, 8, 3, shade);
+        P(30, 38 + b, "#F3F5F8");
+        P(30, 39 + b, "#F3F5F8");
+        P(33, 38 + b, "#F3F5F8");
+        P(33, 39 + b, "#F3F5F8");
+    }
+    if (st.outfit === "lab") {
+        R(31, 37 + b, 1, 12, shade);
+        R(34, 41 + b, 3, 3, shade);
+        P(35, 40 + b, "#1E3D74");
+        R(25, 37 + b, 3, 2, shade);
+        R(36, 37 + b, 3, 2, shade);
+    }
+    if (st.outfit === "jacket") {
+        R(31, 37 + b, 2, 12, "#F2C230");
+        R(25, 47 + b, 14, 1, "#F2C230");
+        R(39, 44 + b, 3, 1, "#F2C230");
+    }
+    for (let x = 24; x <= 40; x++)
+        P(x, 35 + b, "#C9D0DB");
+    P(25, 19 + b, "#FFFFFF");
+    P(26, 18 + b, "#FFFFFF");
+    P(27, 18 + b, "#FFFFFF");
+    // จอหน้า (ท่าแบห้านิ้ว = ตายิ้ม ^ ^ แต่ยังกะพริบ)
+    const g = glowOf(st);
+    R(24, 21 + b, 17, 11, "#0E1A2E");
+    P(24, 21 + b, helm);
+    P(40, 21 + b, helm);
+    P(24, 31 + b, helm);
+    P(40, 31 + b, helm);
+    for (let y = 22; y < 31; y += 2)
+        R(25, y + b, 15, 1, g, 0.06);
+    k?.screen?.(f, b, g);
+    const down = pose === "read" || pose === "write", open = pose === "cheer" || pose === "hand";
+    if (pose === "palm" && k?.eye)
+        k.eye(f, b, g);
+    else if (f % 48 > 45) {
+        R(27, 25 + b, 2, 1, g);
+        R(36, 25 + b, 2, 1, g);
+    }
+    else if (down) {
+        R(27, 26 + b, 2, 2, g);
+        R(36, 26 + b, 2, 2, g);
+    }
+    else if (pose === "hand") {
+        R(27, 24 + b, 2, 3, g);
+        R(36, 24 + b, 2, 3, g);
+        P(27, 24 + b, "#FFFFFF", 0.7);
+        P(36, 24 + b, "#FFFFFF", 0.7);
+    }
+    else
+        [[0, 1], [1, 0], [2, 1]].forEach(([dx, dy]) => { P(26 + dx, 24 + dy + b, g); P(35 + dx, 24 + dy + b, g); });
+    const m = pose === "palm" && st.mouth === DEFAULT_LOOK.mouth && k?.mouth ? k.mouth : st.mouth;
+    if (m === "flat")
+        R(30, 29 + b, 5, 1, g);
+    else if (m === "o")
+        R(31, 28 + b, 2, 2, g);
+    else if (m === "smile" && open)
+        R(30, 28 + b, 4, 2, g);
+    else if (m === "smile" && down)
+        R(30, 29 + b, 4, 1, g);
+    else if (m === "cat")
+        [[29, 28], [30, 29], [31, 28], [32, 28], [33, 29], [34, 28]].forEach(([x, y]) => P(x, y + b, g));
+    else {
+        P(29, 28 + b, g);
+        R(30, 29 + b, 4, 1, g);
+        P(34, 28 + b, g);
+        if (m === "fang")
+            P(33, 30 + b, "#FFFFFF");
+        if (m === "tongue")
+            R(31, 30 + b, 2, 1, "#FF8FC8");
+    }
+    if (st.eyes === "round") {
+        box(25, 22 + b, 6, 6, "#C9A25B");
+        box(34, 22 + b, 6, 6, "#C9A25B");
+        R(31, 24 + b, 3, 1, "#C9A25B");
+    }
+    if (st.eyes === "hud") {
+        R(25, 22 + b, 15, 1, "#6FE3F0", 0.9);
+        for (let x = 26; x < 40; x += 3)
+            P(x, 23 + b, "#6FE3F0", 0.6);
+        P(39, (f % 8 < 4 ? 24 : 25) + b, "#FF5A5A");
+    }
+    if (st.scarf === "red") {
+        R(25, 36 + b, 14, 2, "#C2372C");
+        const w = f % 8 < 4 ? 0 : 1;
+        R(36 + w, 38 + b, 2, 4, "#C2372C");
+        P(38 + w, 41 + b, "#8F2620");
+    }
+    if (st.hat === "beanie") {
+        for (let y = -9; y <= 0; y++)
+            for (let x = -10; x <= 10; x++)
+                if (x * x + y * y <= 96)
+                    P(32 + x, 21 + y + b, "#C2372C");
+        R(22, 19 + b, 21, 2, "#F3F5F8");
+        disc(32, 10 + b, 2, "#F3F5F8");
+    }
+    if (st.hat === "grad") {
+        R(27, 14 + b, 11, 3, OUT);
+        R(20, 13 + b, 25, 2, OUT);
+        R(21, 13 + b, 23, 1, "#2B2B3A");
+        R(43, 14 + b, 1, 5, "#F2C230");
+        R(42, 19 + b, 3, 2, "#F2C230");
+    }
+    if (k && classFit)
+        k.outfit?.(f, b);
+    if (k && st.hat === DEFAULT_LOOK.hat)
+        k.hat?.(f, b);
+    // ฝ่ามือ 4 นิ้ว + นิ้วโป้ง (ช่องระหว่างนิ้ว = สีขอบ) ทับขอบหัว
+    if (pose === "palm")
+        shapes([rr(16 - d, 24 + b, 7, 6, G), rr(22 - d, 21 + b, 1, 4, G), rr(20 - d, 20 + b, 1, 5, G), rr(18 - d, 20 + b, 1, 5, G), rr(16 - d, 21 + b, 1, 4, G), rr(23 - d, 27 + b, 2, 2, G)]);
+    else {
+        shapes(arms.front);
+        if (pose === "read") {
+            R(31, 40 + b, 2, 7, "#8C7B60");
+            for (let y = 42; y < 46; y += 2) {
+                R(26, y + b, 4, 1, "#B9A985");
+                R(34, y + b, 4 - (d && y === 44 ? 2 : 0), 1, "#B9A985");
+            }
+        }
+        if (pose === "write") {
+            for (let y = 42; y < 47; y += 2)
+                R(24, y + b, 8, 1, "#8FA6CC");
+            const px = 35 + d * 2;
+            for (let i = 0; i < 5; i++)
+                P(px + i, 43 + b - i, i < 4 ? "#F2C230" : "#FF8FC8");
+            P(px - 1, 44 + b, OUT);
+        }
+        if (pose === "cheer" && d)
+            [[14, 22], [50, 22], [12, 30], [52, 30]].forEach(([x, y]) => { P(x, y, "#F2C230"); P(x - 1, y, "#F2C230", 0.6); P(x + 1, y, "#F2C230", 0.6); P(x, y - 1, "#F2C230", 0.6); P(x, y + 1, "#F2C230", 0.6); });
+        return; // มือไม่ว่าง: ไม่วาดของถือ
+    }
+    c.save();
+    c.translate(hx - 39, 0); // ตัวบึกแขนอยู่ห่างออกไป
+    if (k && st.held === DEFAULT_LOOK.held)
+        k.held?.(f, b);
+    if (st.held === "pencil") {
+        P(41, 47 + b, OUT);
+        for (let i = 1; i < 9; i++) {
+            P(41 + i, 47 - i + b, "#F2C230");
+            P(42 + i, 47 - i + b, "#C9A25B");
+        }
+        P(50, 38 + b, "#FF8FC8");
+        P(51, 38 + b, "#FF8FC8");
+    }
+    if (st.held === "laser") {
+        for (let i = 0; i < 7; i++)
+            P(42 + i, 46 - i + b, "#AEB6C4");
+        P(49, 39 + b, "#FF5A5A");
+        if (f % 6 < 4) {
+            P(50, 38 + b, "#FF5A5A", 0.6);
+            P(49, 38 + b, "#FF5A5A", 0.4);
+            P(50, 39 + b, "#FF5A5A", 0.4);
+        }
+    }
+    c.restore();
+}
+function drawFront(f) {
+    if (st.fx === "spark")
+        for (let i = 0; i < 7; i++) {
+            const x = 16 + ((i * 41) % 32), y = 54 - ((f * (38 / 48) + i * 9) % 38), a = 1 - (54 - y) / 40;
+            P(x, y, "#FFE680", a);
+            if ((f + i) % 6 < 4) {
+                P(x - 1, y, "#FFE680", a * 0.6);
+                P(x + 1, y, "#FFE680", a * 0.6);
+                P(x, y - 1, "#FFE680", a * 0.6);
+                P(x, y + 1, "#FFE680", a * 0.6);
+            }
+        }
+    if (st.fx === "binary")
+        for (let i = 0; i < 7; i++) {
+            const x = 12 + ((i * 37) % 40), y = 54 - ((f * (42 / 48) + i * 11) % 42), a = Math.max(0, 1 - (54 - y) / 44), col = glowOf(st);
+            if (i % 2)
+                R(x + 1, y, 1, 5, col, a);
+            else {
+                R(x, y, 3, 1, col, a);
+                R(x, y + 4, 3, 1, col, a);
+                R(x, y, 1, 5, col, a);
+                R(x + 2, y, 1, 5, col, a);
+            }
+        }
+    if (st.pet === "floppy") {
+        const x = 52, y = 22 + (f % 12 < 6 ? 0 : 1), w = f % 4 < 2;
+        R(x - 5, y - 5, 11, 11, OUT);
+        R(x - 4, y - 4, 9, 9, "#1E3D74");
+        R(x - 3, y - 4, 7, 4, "#F3F5F8");
+        P(x - 2, y - 3, OUT);
+        P(x + 2, y - 3, OUT);
+        R(x - 2, y + 1, 5, 3, "#AEB6C4");
+        P(x + 1, y + 2, "#1E3D74");
+        R(x - 7, y - 2 + (w ? 0 : 1), 2, 1, "#F4F6FA");
+        R(x + 6, y - 2 + (w ? 0 : 1), 2, 1, "#F4F6FA");
+    }
+}
+const artOf = (look) => CLASS_ART[look.asc ?? ""] ?? CLASS_ART[look.cls ?? ""] ?? null;
+const dd = (x, y, r, col) => ({ k: "d", x, y, r, c: col });
+const cap = (col, b, top = -11, end = -3) => { for (let y = top; y <= end; y++)
+    for (let x = -11; x <= 11; x++)
+        if (x * x + y * y <= 128)
+            P(32 + x, 26 + b + y, col); };
+const dots = (list, b, col) => list.forEach(([x, y]) => P(x, y + b, col));
+const orbit = (f, n, rx, ry, cy, fn) => { for (let i = 0; i < n; i++) {
+    const a = (i * 2 * Math.PI) / n + (f * Math.PI) / 24;
+    fn(32 + Math.cos(a) * rx, cy + Math.sin(a) * ry, Math.sin(a) > -0.3);
+} };
+const MOVE = { coat: (f) => (f % 24 < 12 ? 1 : 2), lean: (f) => (f % 6 < 3 ? 0 : 1), wide: (f) => (f % 48 < 24 ? 0 : 1), float: (f) => Math.round(Math.sin((f * Math.PI) / 24) * 2) - 2 };
+const LEG = "#2E3A55";
+function legsOf(k, shoe, sy) {
+    if (k.noLegs || k.build === "float")
+        return [];
+    if (k.build === "wide")
+        return [rr(25, 50 + sy, 5, 4, LEG), rr(34, 50 + sy, 5, 4, LEG), rr(24, 53 + sy, 7, 2, shoe), rr(33, 53 + sy, 7, 2, shoe)];
+    if (k.build === "lean")
+        return [rr(28, 49 + sy, 2, 5, LEG), rr(34, 49 + sy, 2, 5, LEG), rr(27, 54 + sy, 4, 1, shoe), rr(33, 54 + sy, 4, 1, shoe)];
+    return [rr(27, 53 + sy, 3, 1, LEG), rr(34, 53 + sy, 3, 1, LEG), rr(26, 54 + sy, 5, 1, shoe), rr(33, 54 + sy, 5, 1, shoe)];
+}
+function torsoOf(k, S, D, b) {
+    if (k.build === "wide")
+        return [rr(22, 37 + b, 20, 13, S), rr(18, 35 + b, 7, 5, D), rr(39, 35 + b, 7, 5, D)];
+    if (k.build === "lean")
+        return [rr(26, 37 + b, 12, 6, S), rr(28, 43 + b, 8, 6, S)];
+    if (k.build === "coat")
+        return [rr(25, 37 + b, 14, 12, S), rr(23, 48 + b, 18, 5, S), rr(24, 34 + b, 3, 4, D), rr(37, 34 + b, 3, 4, D)];
+    return [rr(25, 37 + b, 14, 10, S), rr(24, 46 + b, 16, 6, S)];
+}
+function hemOf(k, S, f, b) {
+    if (k.build === "coat")
+        for (let x = 23; x < 41; x += 3)
+            R(x, 53 + b, 2, 1 + (x % 2), S);
+    if (k.build === "float" || k.noLegs)
+        for (let x = 24; x < 40; x += 3)
+            R(x, 52 + b, 2, 2 + (((f >> 2) + x) % 4), S);
+}
+const pencilArt = (_f, b) => { P(41, 47 + b, OUT); for (let i = 1; i < 11; i++) {
+    P(41 + i, 47 - i + b, "#F2C230");
+    P(42 + i, 47 - i + b, "#C9A25B");
+} P(52, 36 + b, "#FF8FC8"); P(53, 36 + b, "#FF8FC8"); };
+const textRows = (f, b, g) => { for (let i = 0; i < 5; i++)
+    R(25 + ((i * 7) % 5), 22 + ((i * 2 + (f >> 3)) % 9) + b, 5 + ((i * 3) % 7), 1, g, 0.3); };
+const scrollBack = () => { shapes([rr(41, 29, 8, 17, "#5A3E22"), rr(42, 23, 3, 7, "#F3EAD2"), rr(46, 20, 3, 10, "#E0D3B4")]); R(41, 33, 8, 1, "#8A5A2B"); P(43, 27, "#A0281D"); P(47, 24, "#A0281D"); };
+const wallClock = (x, y, r, f, sp) => {
+    shapes([dd(x, y, r, "#F3EAD2")]);
+    for (let i = 0; i < 12; i += 3)
+        P(x + Math.round(Math.cos(i * 0.5236) * (r - 1)), y + Math.round(Math.sin(i * 0.5236) * (r - 1)), OUT);
+    const a = (f * Math.PI) / sp;
+    for (let i = 1; i < r; i++)
+        P(x + Math.round(Math.cos(a) * i), y + Math.round(Math.sin(a) * i), "#A0281D");
+    for (let i = 1; i < r - 3; i++)
+        P(x + Math.round(Math.cos(a / 12) * i), y + Math.round(Math.sin(a / 12) * i), OUT);
+};
+const drain = (f, b) => R(25, 30 + b, Math.max(1, 15 - (f * 15) / 48), 1, "#FF5A5A");
+const deskBack = () => { shapes([rr(14, 17, 36, 28, "#8A5A2B")]); R(14, 21, 36, 1, "#5A3E22"); R(14, 38, 36, 1, "#5A3E22"); R(16, 24, 5, 1, "#F3EAD2"); R(44, 27, 4, 1, "#F3EAD2"); R(17, 33, 3, 1, "#F3EAD2"); shapes([rr(16, 11, 3, 6, "#5A626F"), rr(45, 11, 3, 6, "#5A626F")]); };
+const battery = (f, b, g) => { const n = 1 + ((f >> 3) % 5); for (let i = 0; i < n; i++)
+    R(26 + i * 3, 22 + b, 2, 2, g, 0.4); };
+const grimoire = (f) => { const y = 25 + Math.round(Math.sin((f * Math.PI) / 24) * 2); shapes([rr(46, y, 6, 12, "#4B2E6B"), rr(52, y, 6, 12, "#35204C")]); R(51, y, 2, 12, "#C9A25B"); P(48, y + 4, "#FF8FC8"); R(47, y + 7, 3, 1, "#C9A25B"); R(54, y + 3, 3, 1, "#C9A25B"); };
+const rune = (f, b, g) => { for (let i = 0; i < 8; i++) {
+    const a = i * 0.785 + f * 0.1309;
+    P(32 + Math.cos(a) * 7, 26 + b + Math.sin(a) * 4, g, 0.5);
+} };
+const rivets = (_f, b) => dots([[23, 20], [42, 20], [23, 31], [42, 31]], b, OUT);
+const cards = (f, front) => orbit(f, 6, 25, 11, 30, (x, y, fr) => { if (fr === front)
+    shapes([rr(x - 2, y - 1, 4, 3, "#F3EAD2")]); });
+const CLASS_ART = {
+    scribe: {
+        build: "coat", helm: "#E6DCC4", glow: "#86D99B", shirt: "#5B6B2F", shade: "#3F4C20", shoe: "#5A3E22", screen: textRows, back: scrollBack,
+        head: (_f, b) => { R(27, 17 + b, 4, 1, "#2B4A8A"); R(33, 18 + b, 6, 1, "#2B4A8A"); R(29, 19 + b, 3, 1, "#2B4A8A"); R(22, 27 + b, 1, 3, "#2B4A8A"); },
+        hat: (f, b) => { cap("#4F5A26", b, -11, -7); R(21, 19 + b, 23, 2, "#3F4C20"); R(44, 19 + b + (f % 8 < 4 ? 0 : 1), 4, 1, "#3F4C20"); },
+        outfit: (_f, b) => { for (let i = 0; i < 10; i++)
+            P(26 + i, 38 + i + b, "#8A5A2B"); shapes([rr(23, 43 + b, 7, 6, "#8A5A2B")]); R(24, 41 + b, 5, 2, "#F3EAD2"); },
+        held: pencilArt,
+    },
+    wild_scribe: {
+        build: "coat", noLegs: true, helm: "#E6DCC4", glow: "#86D99B", shirt: "#2C2A3A", shade: "#1E1D29", screen: textRows,
+        head: (_f, b) => { R(21, 20 + b, 4, 10, OUT, 0.75); R(38, 16 + b, 5, 4, OUT, 0.75); },
+        eye: (f, b, g) => { dots([[26, 23], [27, 24], [28, 25], [27, 26], [26, 27]], b, g); if (f % 12 < 7)
+            R(35, 23 + b, 3, 5, g); },
+        back: (f) => { shapes([rr(8, 9, 23, 30, "#3A2A20"), rr(33, 9, 23, 30, "#3A2A20")]); R(10, 11, 21, 26, "#F3EAD2"); R(33, 11, 21, 26, "#F3EAD2"); for (let y = 14; y < 34; y += 3) {
+            R(12, y, 14, 1, "#64523F");
+            R(38, y, 14, 1, "#64523F");
+        } const t = (f >> 2) % 6; R(31 - t, 11, t * 2 + 2, 26, "#E0D3B4"); },
+        fx: (f, b) => { for (let i = 0; i < 4; i++) {
+            const t = (f + i * 12) % 48;
+            R(25 + i * 5, 54 + b + t / 5, 1, 2, "#2B4A8A", 1 - t / 48);
+        } },
+        held: (_f, b) => { shapes([rr(41, 27 + b, 1, 20, "#F3EAD2")]); R(42, 27 + b, 3, 8, "#F3EAD2"); R(40, 28 + b, 1, 6, "#D9CDB2"); },
+    },
+    board_decoder: {
+        build: "coat", helm: "#E6DCC4", glow: "#6FE3F0", shirt: "#2F5A63", shade: "#1F3E45", shoe: "#2B2B3A",
+        head: (_f, b) => { R(26, 17 + b, 8, 1, "#F4F6FA"); R(38, 28 + b, 4, 3, "#F4F6FA", 0.6); },
+        screen: (f, b, g) => [[25, 23, 3], [29, 27, 4], [25, 29, 6]].forEach(([x, y, w], i) => R(x, y + b, w, 1, g, (f + i * 9) % 24 < 14 ? 0.4 : 0.15)),
+        eye: (f, b, g) => { R(27, 25 + b, 2, 2, g); shapes([dd(37, 26 + b, 5, "#C9A25B")]); disc(37, 26 + b, 4, "#0E1A2E"); disc(37, 26 + b, 1 + (f % 24 < 12 ? 1 : 0), g); P(35, 24 + b, "#FFFFFF"); R(41, 30 + b, 3, 1, "#C9A25B"); R(43, 31 + b, 2, 1, "#C9A25B"); },
+        back: (f) => { shapes([rr(9, 6, 46, 32, "#8A5A2B")]); R(11, 8, 42, 28, "#1F3A2D"); [[13, 11, 10], [13, 15, 6], [13, 20, 12], [42, 11, 8], [44, 16, 6], [40, 25, 10], [13, 28, 8]].forEach(([x, y, w], i) => R(x, y, (f >> 1) % 12 > i ? w : Math.max(1, w - 4), 1, "#E8E8E8", 0.85)); },
+        hat: (_f, b) => cap("#5A3E22", b, -11, -8),
+        held: (f, b) => { shapes([rr(43, 41 + b, 6, 2, "#F4F6FA")]); for (let i = 0; i < 4; i++) {
+            const t = (f + i * 12) % 48;
+            P(47 + i, 40 - t / 5, "#E8E8E8", 1 - t / 48);
+        } },
+    },
+    deadline: {
+        build: "lean", glow: "#F2C230", shirt: "#8F2A1F", shade: "#6A1E16", shoe: "#2B2B3A",
+        head: (_f, b) => { for (let x = 23; x < 31; x += 3)
+            R(x, 17 + b, 1, 3, "#A0281D"); R(23, 18 + b, 8, 1, "#A0281D", 0.7); },
+        screen: (f, b) => drain(f, b), back: (f) => wallClock(46, 23, 11, f, 4),
+        hat: (f, b) => { R(21, 20 + b, 23, 2, "#C2372C"); R(43, 20 + b + (f % 8 < 4 ? 0 : 1), 5, 1, "#C2372C"); },
+        held: (_f, b) => { shapes([dd(45, 45 + b, 3, "#F3EAD2")]); P(45, 45 + b, "#A0281D"); },
+    },
+    last_minute: {
+        build: "lean", glow: "#FF5A5A", mouth: "flat", shirt: "#6B4A2A", shade: "#4B331C", shoe: "#5A3E22",
+        head: (_f, b) => { R(35, 16 + b, 1, 20, "#A0281D"); R(24, 31 + b, 4, 1, "#A0281D"); },
+        screen: (f, b, g) => { R(25, 26 + b, 15, 1, g, 0.3); R(32, 22 + b, 1, 9, g, 0.3); drain(f, b); },
+        eye: (_f, b, g) => { R(27, 25 + b, 3, 1, g); R(35, 24 + b, 3, 3, g); P(36, 25 + b, "#0E1A2E"); },
+        back: (f) => { for (let a = 0; a < 6.28; a += 0.05)
+            P(32 + Math.cos(a) * 22, 26 + Math.sin(a) * 22, "#FF5A5A", Math.floor((a + f * 0.1309) / 0.52) % 2 ? 0.75 : 0.12); R(32, 1, 1, 7, "#FF5A5A"); R(32, 44, 1, 7, "#FF5A5A"); R(7, 26, 7, 1, "#FF5A5A"); R(50, 26, 7, 1, "#FF5A5A"); shapes([rr(18, 36, 8, 12, "#6A1E16"), rr(14, 46 + (f % 8 < 4 ? 0 : 1), 8, 5, "#6A1E16")]); },
+        hat: (_f, b) => { shapes([rr(25, 8 + b, 15, 9, "#5A3E22"), rr(17, 16 + b, 31, 2, "#5A3E22")]); R(25, 14 + b, 15, 2, "#A0281D"); },
+        held: (f, b) => { shapes([rr(42, 42 + b, 10, 3, "#8C97AA"), rr(42, 45 + b, 3, 3, "#5A626F")]); if (f % 24 < 3)
+            R(53, 42 + b, 2, 3, "#FFE680"); },
+    },
+    early_courier: {
+        build: "lean", glow: "#86D99B", shirt: "#2B4A8A", shade: "#1E3560", shoe: "#E8DFCB",
+        screen: (f, b, g) => { for (let i = 0; i < 3; i++)
+            R(25 + ((f + i * 5) % 15), 23 + i * 3 + b, 3, 1, g, 0.3); },
+        eye: (_f, b, g) => [[0, 0], [1, 1], [2, 2], [1, 3], [0, 4]].forEach(([x, y]) => { P(26 + x, 23 + y + b, g); P(29 + x, 23 + y + b, g, 0.5); P(35 + x, 23 + y + b, g); P(38 + x, 23 + y + b, g, 0.5); }),
+        back: (f) => { for (let k = 2; k >= 1; k--)
+            for (let y = 28; y < 54; y++)
+                R(26 - k * 5, y, 12, 1, "#6FE3F0", 0.2 / k); const w = f % 6 < 3 ? 0 : 1; shapes([rr(52, 14 - w, 8, 3, "#F4F6FA"), rr(54, 17 - w, 5, 2, "#F4F6FA"), rr(33, 14 - w, 6, 3, "#F4F6FA")]); wallClock(46, 18, 9, f, 3); for (let i = 0; i < 3; i++) {
+            const t = (f + i * 16) % 48, x = 48 + t * 0.3, y = 40 - t * 0.4;
+            if (t < 34) {
+                shapes([rr(x, y, 5, 3, "#F3EAD2")]);
+                P(x + 2, y + 1, "#A0281D");
+            }
+        } },
+        hat: (_f, b) => { cap("#2B4A8A", b, -11, -7); R(38, 19 + b, 10, 2, "#1E3560"); },
+        outfit: (_f, b) => { for (let i = 0; i < 10; i++)
+            P(37 - i, 38 + i + b, "#8A5A2B"); shapes([rr(21, 44 + b, 7, 6, "#8A5A2B")]); R(21, 46 + b, 7, 1, "#5A3E22"); },
+    },
+    survivor: {
+        build: "wide", helm: "#AEB6C4", glow: "#F2C230", shirt: "#6F7A85", shade: "#505962", shoe: "#2B2B3A", screen: battery, back: deskBack,
+        head: (f, b) => { rivets(f, b); P(32, 16 + b, OUT); R(36, 16 + b, 4, 2, "#8C97AA"); },
+        hat: (_f, b) => { cap("#8C97AA", b, -12, -7); R(21, 19 + b, 23, 2, "#5A626F"); R(19, 17 + b, 3, 2, "#5A626F"); R(43, 17 + b, 3, 2, "#5A626F"); },
+    },
+    dawn_guard: {
+        build: "wide", helm: "#AEB6C4", glow: "#FFE680", shirt: "#C9772E", shade: "#A05A1E", shoe: "#5A3E22", head: rivets, screen: battery,
+        eye: (_f, b, g) => { R(26, 23 + b, 4, 4, g); R(35, 23 + b, 4, 4, g); P(28, 25 + b, "#0E1A2E"); P(37, 25 + b, "#0E1A2E"); },
+        back: (f) => { const r = 26; for (let y = -r; y <= 0; y++)
+            for (let x = -r; x <= r; x++)
+                if (x * x + y * y <= r * r)
+                    P(32 + x, 52 + y, "#EE8A3C", 0.3); for (let i = 0; i < 9; i++) {
+            const a = Math.PI + (i * Math.PI) / 8;
+            P(32 + Math.cos(a) * (r + 3), 52 + Math.sin(a) * (r + 3), "#F2C230", (f + i * 5) % 24 < 16 ? 0.9 : 0.3);
+        } },
+        fx: (f, b) => { const s = Math.round(Math.sin((f * Math.PI) / 24) * 4); for (let i = 0; i < 12; i++)
+            R(49 + i, 20 + b + (s * i) / 6 - i / 3, 1, 2 + i * 0.8, "#FFE680", 0.45 - i * 0.03); shapes([rr(43, 17 + b, 7, 6, "#5A626F")]); R(49, 18 + b, 1, 4, "#FFE680"); },
+        hat: (_f, b) => { cap("#F2C230", b, -12, -7); R(20, 19 + b, 25, 2, "#C9A25B"); },
+        outfit: (_f, b) => { R(22, 41 + b, 20, 2, "#F3EAD2"); R(22, 45 + b, 20, 1, "#F3EAD2"); },
+        held: (f, b) => { shapes([rr(42, 41 + b, 5, 7, "#5A626F")]); R(43, 42 + b, 3, 5, f % 12 < 6 ? "#FFE680" : "#F2C230"); },
+    },
+    back_row: {
+        build: "wide", noLegs: true, ghost: true, helm: "#B8BCCB", glow: "#6FE3F0", mouth: "o", shirt: "#4A4E63", shade: "#383B4C",
+        screen: (f, b, g) => { for (let i = 0; i < 14; i++)
+            P(25 + ((i * 37 + f * 5) % 15), 22 + ((i * 23 + f * 3) % 9) + b, g, 0.2); },
+        eye: (_f, b, g) => { R(26, 26 + b, 4, 1, g); R(35, 26 + b, 4, 1, g); },
+        back: () => shapes([rr(16, 4, 32, 4, "#8A5A2B"), rr(16, 8, 3, 47, "#8A5A2B"), rr(45, 8, 3, 47, "#8A5A2B"), rr(19, 20, 26, 3, "#5A3E22")]),
+        fx: (f) => { for (let i = 0; i < 3; i++) {
+            const t = (f + i * 16) % 48, x = 46 + t * 0.2, y = 26 - t * 0.45, o = 1 - t / 48;
+            R(x, y, 3, 1, "#6FE3F0", o);
+            P(x + 1, y + 1, "#6FE3F0", o);
+            R(x, y + 2, 3, 1, "#6FE3F0", o);
+        } },
+    },
+    necro: {
+        build: "float", helm: "#4A3A66", glow: "#FF8FC8", shirt: "#4B2E6B", shade: "#35204C", screen: rune, back: grimoire,
+        head: (_f, b) => dots([[25, 17], [26, 18], [26, 19], [27, 20], [40, 18]], b, OUT),
+        hat: (_f, b) => { cap("#35204C", b, -13, -8); for (let i = 0; i < 8; i++)
+            R(32 - (8 - i), 10 + b - i, (8 - i) * 2 + 1, 1, "#35204C"); P(30, 8 + b, "#F2C230"); P(35, 11 + b, "#F2C230"); },
+        held: (_f, b) => shapes([rr(44, 24 + b, 2, 28, "#5A3E22")]),
+    },
+    night_lich: {
+        build: "float", helm: "#D9D2BF", glow: "#6FE3F0", mouth: "fang", shirt: "#23193A", shade: "#160F26", screen: rune,
+        head: (_f, b) => dots([[24, 18], [25, 19], [26, 20], [39, 17], [40, 18]], b, OUT),
+        eye: (_f, b, g) => { R(27, 24 + b, 3, 3, g); R(36, 24 + b, 3, 3, g); P(28, 25 + b, "#FFFFFF"); P(37, 25 + b, "#FFFFFF"); },
+        back: (f) => { disc(32, 27, 23, "#6FE3F0", 0.05); for (let a = 0; a < 6.28; a += 0.05)
+            P(32 + Math.cos(a) * 25, 28 + Math.sin(a) * 25, "#7B5BD6", Math.floor((a + f * 0.1047) / 0.4) % 2 ? 0.65 : 0.15); cards(f, false); },
+        fx: (f) => cards(f, true),
+        hat: (_f, b) => { [[24, 11], [29, 8], [34, 8], [39, 11]].forEach(([x, y]) => { shapes([rr(x, y + b, 3, 6, "#C9A25B")]); P(x + 1, y + 1 + b, "#6FE3F0"); }); R(24, 15 + b, 18, 2, "#C9A25B"); },
+        held: (_f, b) => { shapes([rr(44, 20 + b, 2, 32, "#3A2A20"), rr(40, 12 + b, 10, 8, "#F3EAD2")]); R(41, 13 + b, 8, 1, "#5A3E22"); },
+    },
+    memory_shock: {
+        build: "float", helm: "#B4CFC0", glow: "#86D99B", shirt: "#E8E4D8", shade: "#C7C2B2",
+        head: (_f, b) => { R(22, 20 + b, 21, 1, OUT); for (let x = 24; x < 42; x += 4)
+            R(x, 19 + b, 1, 3, "#AEB6C4"); },
+        screen: (f, b, g) => { if (f % 12 < 7)
+            [[27, 1], [29, 3], [31, 2], [33, 4], [35, 2], [37, 3]].forEach(([x, h], i) => R(x, 23 + b + (i % 2) * h, 2, 1, g, 0.35)); },
+        eye: (_f, b, g) => { R(26, 24 + b, 2, 2, g); R(35, 23 + b, 5, 5, g); R(36, 24 + b, 3, 3, "#0E1A2E"); P(37, 25 + b, g); },
+        back: (f) => { const y = 26 + Math.round(Math.sin((f * Math.PI) / 24) * 2); shapes([rr(46, y, 11, 16, "#AFC9C4"), rr(45, y - 2, 13, 2, "#5A626F"), rr(45, y + 16, 13, 2, "#5A626F")]); disc(51, y + 7, 4, "#FF8FC8"); R(49, y + 6, 5, 1, "#C2588F"); P(52, y + 9, "#C2588F"); P(49, y + 14 - (f % 18) / 2, "#E8FFF6", 0.7); for (let i = 0; i < 6; i++) {
+            const q = (f + i * 8) % 48;
+            P(12 + ((i * 37) % 36), 50 - q * 0.8, "#86D99B", 1 - q / 48);
+        } },
+        hat: (f, b) => { R(31, 9 + b, 3, 6, "#8C97AA"); for (let y = 7; y < 15; y += 2)
+            R(29, y + b, 7, 1, "#C9772E"); if (f % 12 < 5)
+            dots([[33, 5], [35, 3], [33, 2], [36, 0], [29, 4], [27, 2], [29, 1]], b, "#86D99B"); },
+        outfit: (_f, b) => { R(31, 41 + b, 3, 5, "#C7C2B2"); P(36, 43 + b, "#2E6B3F"); },
+    },
+};
+/** วาด Pap-Boy 1 เฟรมลงกรอบ 64×64 ที่ (0,0) ของ ctx (ตั้ง translate ก่อนเรียก) */
+function drawPapBoy(ctx, look, f, withBg = false, pose = "palm") {
+    c = ctx;
+    st = look;
+    art = artOf(look);
+    A = 1;
+    const t = f % 12 < 6 ? 0 : 1, b = art && pose === "palm" ? MOVE[art.build](f) : pose === "read" ? 2 : pose === "cheer" ? -2 * t : pose === "palm" ? t : 0;
+    if (withBg)
+        drawBg(f);
+    drawBack(f);
+    art?.back?.(f);
+    drawWings(f, b);
+    drawGround(f);
+    A = art?.ghost ? 0.72 : 1;
+    drawBody(f, b, pose);
+    A = 1;
+    art?.fx?.(f, b);
+    drawFront(f);
+    c.globalAlpha = 1;
+}
+/** sprite sheet แนวนอน FRAMES เฟรม × 64px · วาดครั้งเดียวต่อชุด (เว็บเท่านั้น) */
+function buildSheet(look, withBg = false, pose = "palm") {
+    const sheet = document.createElement("canvas");
+    sheet.width = 64 * FRAMES;
+    sheet.height = 64;
+    const ctx = sheet.getContext("2d");
+    for (let f = 0; f < FRAMES; f++) {
+        ctx.save();
+        ctx.translate(f * 64, 0);
+        drawPapBoy(ctx, look, f, withBg, pose);
+        ctx.restore();
+    }
+    return sheet;
+}
+
+/** คลาสกับสายย่อย · มีผลแค่หน้าตา ไม่แตะ XP เกรด คะแนนห้อง
+ *  เพิ่มคลาสใหม่ = เพิ่มที่นี่ + ร่างใน CLASS_ART (lib/papboy.ts) + class_ascs() ใน migration ใหม่ (มีเทสต์เทียบรหัส) */
+const CLASSES = [
+    { id: "scribe", name: "นักจดซาก", vibe: "สายจด เก็บทุกอย่างที่เหลือรอด", asc: [
+            { id: "wild_scribe", name: "อาลักษณ์เถื่อน", desc: "หนังสือยักษ์กางบนหลัง ตาเป็นเคอร์เซอร์พิมพ์ ชายเสื้อหมึกหยด" },
+            { id: "board_decoder", name: "นักถอดรหัสกระดาน", desc: "แบกกระดานดำเต็มหลัง ตาข้างเดียวเป็นแว่นขยายใหญ่" },
+        ] },
+    { id: "deadline", name: "นักล่าเดดไลน์", vibe: "สายส่งงาน นับถอยหลังเป็นงานอดิเรก", asc: [
+            { id: "last_minute", name: "มือปืนนาทีสุดท้าย", desc: "ผ้าคลุมปลิวข้างหลัง วงเล็งหมุนหลังหัว ตาเล็งผ่านศูนย์เล็ง" },
+            { id: "early_courier", name: "ผู้ส่งล่วงหน้า", desc: "เงาค้างตามหลังเพราะวิ่งเร็ว นาฬิกามีปีก ตาเป็นลูกศร" },
+        ] },
+    { id: "survivor", name: "ผู้รอดหน้าห้อง", vibe: "สายเข้าเรียน มาก่อนใคร กลับหลังใคร", asc: [
+            { id: "dawn_guard", name: "ยามคาบเช้า", desc: "ไฟฉายยักษ์บนไหล่ พระอาทิตย์ขึ้นหลังตัว ตาเบิกโพลง" },
+            { id: "back_row", name: "เจ้าที่หลังห้อง", desc: "ผีโปร่งไม่มีขา ลอยติดเก้าอี้แถวสุดท้าย หลับตลอดคาบ" },
+        ] },
+    { id: "necro", name: "หมอผีทวน", vibe: "สายทวน ปลุกความรู้ที่ตายไปแล้ว", asc: [
+            { id: "night_lich", name: "ลิชคืนก่อนสอบ", desc: "ตายไปแล้วรอบหนึ่งแต่ยังอ่านไม่จบ บัตรคำหมุนรอบตัว" },
+            { id: "memory_shock", name: "ผู้ปลุกความจำ", desc: "หัวเย็บแม็กต่อกัน โหลสมองลอยข้างตัว ไฟช็อตวิ่งบนจอ" },
+        ] },
+];
+
+// ---- ส่วนใหม่ของ mockup นี้ · สกิล อาวุธ และชื่อทั้งหมดคิดเอง ไม่อิงเกมใด ----
+(() => {
+const W = 128, H = 72, MAX = 150;
+const BOSS = { x: 98, y: 39 }, PBX = -6, PBY = 8;
+const MZ = { x: PBX + 51, y: PBY + 38 }; // ปลายอาวุธในมือ
+const $ = (i) => document.getElementById(i);
+const el = (t, c) => { const e = document.createElement(t); if (c) e.className = c; return e; };
+const mk = (w, h) => { const v = document.createElement("canvas"); v.width = w; v.height = h; return [v, v.getContext("2d")]; };
+const rect = (S, x, y, w, h, col, a = 1) => { S.globalAlpha = a; S.fillStyle = col; S.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+const circ = (S, cx, cy, r, col, a = 1) => { for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (x * x + y * y <= r * r + r * 0.6) rect(S, cx + x, cy + y, 1, 1, col, a); };
+
+function drawRoom() {
+  const [cv, S] = mk(W, H);
+  rect(S, 0, 0, W, H, "#140F0D");
+  for (let y = 0; y < 60; y += 6) { for (let x = ((y / 6) % 2) * 6; x < W; x += 12) rect(S, x, y, 1, 6, "#1C1612"); rect(S, 0, y + 5, W, 1, "#1C1612"); }
+  rect(S, 0, 60, W, 12, "#1E1714"); for (let x = 0; x < W; x += 11) rect(S, x, 60, 1, 12, "#2C221B"); rect(S, 0, 60, W, 1, "#3B3027");
+  rect(S, 62, 32, 2, 6, "#54443A"); circ(S, 63, 30, 6, "#EE8A3C", 0.06);
+  return cv;
+}
+function drawBossSheet() {
+  const [cv, S] = mk(48 * FRAMES, 48);
+  for (let f = 0; f < FRAMES; f++) {
+    const cx = f * 48 + 24, cy = 24 + (f % 16 < 8 ? 0 : 1), w = f % 8 < 4 ? 0 : 1;
+    for (let x = -12; x <= 12; x++) rect(S, cx + x, 47, 1, 1, "#000", 0.35 * (1 - Math.abs(x) / 13));
+    rect(S, cx - 19, cy + 2 + w, 6, 3, "#2A211B"); rect(S, cx - 18, cy + 3 + w, 5, 1, "#D9CFBE");
+    rect(S, cx + 13, cy + 2 - w, 6, 3, "#2A211B"); rect(S, cx + 14, cy + 3 - w, 5, 1, "#D9CFBE");
+    rect(S, cx - 13, cy - 15, 26, 32, "#2A211B"); rect(S, cx - 12, cy - 14, 24, 30, "#BFB29C");
+    rect(S, cx - 11, cy - 16, 24, 30, "#2A211B"); rect(S, cx - 10, cy - 15, 22, 28, "#D9CFBE");
+    for (let y = cy - 11; y < cy + 12; y += 3) rect(S, cx - 8, y, 18, 1, "#9C8E7A", 0.8);
+    rect(S, cx + 3, cy - 13, 6, 1, "#C2372C"); rect(S, cx + 6, cy - 12, 1, 3, "#C2372C"); rect(S, cx - 8, cy + 8, 7, 1, "#C2372C"); rect(S, cx - 7, cy + 10, 10, 1, "#C2372C", 0.8);
+    circ(S, cx + 1, cy - 1, 6, "#2A211B"); circ(S, cx + 1, cy - 1, 5, "#120F0D");
+    if (f % 48 > 44) rect(S, cx - 3, cy - 1, 9, 1, "#E5392C");
+    else { circ(S, cx - 1, cy, 2, "#E5392C"); rect(S, cx - 2, cy - 1, 1, 1, "#FFB4AB"); }
+    circ(S, cx + 1, cy - 1, 9, "#C2372C", 0.05);
+  }
+  return cv;
+}
+
+// อาวุธแยกตามคลาส · r = ความหายาก (สีเดียวกับตู้แต่งตัว)
+const WEAPONS = {
+  scribe: [
+    { id: "pen", name: "ปากกาลูกลื่น", r: "n", shot: "สะบัดหยดหมึก" },
+    { id: "whiteout", name: "ลิควิดก้นขวด", r: "n", shot: "แถบขาวลบคำผิด" },
+    { id: "stamp", name: "ตรายางแดง", r: "m", shot: "ตรายางบินไปประทับ" },
+    { id: "pencil", name: "ดินสอยักษ์", r: "r", shot: "ดินสอพุ่งทั้งแท่ง" },
+    { id: "laser", name: "ปากกาเลเซอร์", r: "u", shot: "เส้นแสงแดง" },
+  ],
+  deadline: [
+    { id: "hand", name: "เข็มนาฬิกาหัก", r: "n", shot: "เข็มแทงตรงเป้า" },
+    { id: "rubber", name: "หนังยางมัดงาน", r: "n", shot: "ดีดหนังยาง" },
+    { id: "calendar", name: "ปฏิทินฉีก", r: "m", shot: "หน้าปฏิทินปลิวใส่" },
+    { id: "stapler", name: "ปืนแม็กเย็บ", r: "r", shot: "ลวดเย็บเป็นชุด" },
+    { id: "alarm", name: "นาฬิกาปลุกเถื่อน", r: "u", shot: "ทั้งเรือนบินไปปลุก" },
+  ],
+  survivor: [
+    { id: "eraser", name: "แปรงลบกระดาน", r: "n", shot: "ปาก้อนฝุ่นชอล์ก" },
+    { id: "bottle", name: "กระติกน้ำบุบ", r: "n", shot: "ขว้างฝากระติก" },
+    { id: "whistle", name: "นกหวีดหัวหน้าห้อง", r: "m", shot: "เสียงนกหวีดแหลม" },
+    { id: "torch", name: "ไฟฉายเก่า", r: "r", shot: "ลูกแสงกลม" },
+    { id: "bell", name: "กระดิ่งหน้าห้อง", r: "u", shot: "กระดิ่งทองเด้งไป" },
+  ],
+  necro: [
+    { id: "card", name: "บัตรคำขาด ๆ", r: "n", shot: "บัตรคำบิน" },
+    { id: "highlighter", name: "ไฮไลต์หมึกแห้ง", r: "n", shot: "ขีดสีเรืองแสง" },
+    { id: "sticky", name: "โน้ตแปะหลอน", r: "m", shot: "กระดาษโน้ตปลิวตาม" },
+    { id: "ruler", name: "ไม้บรรทัดปลุกผี", r: "r", shot: "ไม้บรรทัดควงสว่าน" },
+    { id: "sheet", name: "ชีตเก่าคืนชีพ", r: "u", shot: "แผ่นชีตเรืองแสง" },
+  ],
+};
+// บันไดความอลังการ: ปกติ = กระสุนเปล่า → magic หาง+แสงปลายอาวุธ → rare ใหญ่ ซ้อนนัด วงกระแทก → unique สามนัด ออร่า จอสะเทือน ไม้ตาย
+const POWER = {
+  n: { rank: 0, trail: 1, mul: 0.5, scale: 1, echo: 0, flash: 0, ring: 0 },
+  m: { rank: 1, trail: 3, mul: 1, scale: 1, echo: 0, flash: 2, ring: 0 },
+  r: { rank: 2, trail: 6, mul: 1.6, scale: 2, echo: 1, flash: 4, ring: 1 },
+  u: { rank: 3, trail: 9, mul: 2.4, scale: 2, echo: 2, flash: 7, ring: 2 },
+};
+// แรงกระแทกตามคลาส: หมึกร่วงหนัก · เศษพุ่งตรงเร็ว · ฝุ่นฟุ้งช้า · วิญญาณลอยขึ้น
+const PART = { scribe: { g: 0.16, v: 1.3, up: 0.6 }, deadline: { g: 0, v: 2.6, up: 0 }, survivor: { g: -0.01, v: 0.5, up: 0.1 }, necro: { g: -0.06, v: 0.6, up: 0.3 } };
+
+// ของในมือ · (x, y) = ตำแหน่งกำมือ เอียงขึ้นขวา
+function held(S, id, x, y, f) {
+  const diag = (n, c) => { for (let i = 0; i < n; i++) rect(S, x + i, y - i, 1, 1, c); };
+  if (id === "pen") { diag(8, "#2B4A8A"); rect(S, x + 8, y - 8, 1, 1, "#E8E8E8"); }
+  if (id === "whiteout") { rect(S, x, y - 6, 4, 7, "#F3F5F8"); rect(S, x + 1, y - 8, 2, 2, "#8AB0FF"); rect(S, x + 4, y - 5, 2, 1, "#F3F5F8"); }
+  if (id === "stamp") { rect(S, x + 2, y - 8, 3, 4, "#5A3E22"); rect(S, x, y - 4, 7, 2, "#2A211B"); rect(S, x, y - 2, 7, 1, "#C2372C"); }
+  if (id === "rubber") { rect(S, x, y - 7, 1, 8, "#C9772E"); rect(S, x + 6, y - 7, 1, 8, "#C9772E"); rect(S, x, y - 7, 7, 1, "#C9772E"); rect(S, x, y, 7, 1, "#C9772E"); }
+  if (id === "calendar") { rect(S, x, y - 9, 8, 10, "#F3EAD2"); rect(S, x, y - 9, 8, 3, "#C2372C"); rect(S, x + 3, y - 4, 2, 3, "#2A211B"); }
+  if (id === "bottle") { rect(S, x + 1, y - 10, 3, 2, "#5A626F"); rect(S, x, y - 8, 5, 9, "#6F7A85"); rect(S, x + 1, y - 6, 1, 5, "#AEB6C4"); }
+  if (id === "whistle") { circ(S, x + 3, y - 3, 3, "#AEB6C4"); rect(S, x + 5, y - 6, 6, 2, "#AEB6C4"); rect(S, x + 3, y - 3, 1, 1, "#2A211B"); }
+  if (id === "highlighter") { for (let i = 0; i < 9; i++) rect(S, x + i, y - i, 2, 1, "#FFE680"); rect(S, x + 9, y - 9, 2, 1, "#86D99B"); }
+  if (id === "sticky") { rect(S, x, y - 8, 8, 8, "#F2C230"); rect(S, x + 6, y - 2, 2, 2, "#C9A25B"); rect(S, x + 1, y - 6, 5, 1, "#8A5A2B"); rect(S, x + 1, y - 4, 4, 1, "#8A5A2B"); }
+  if (id === "pencil") { rect(S, x, y, 1, 1, "#14213A"); for (let i = 1; i < 9; i++) { rect(S, x + i, y - i, 1, 1, "#F2C230"); rect(S, x + i + 1, y - i, 1, 1, "#C9A25B"); } rect(S, x + 9, y - 9, 2, 1, "#FF8FC8"); }
+  if (id === "laser") { diag(7, "#AEB6C4"); rect(S, x + 7, y - 7, 1, 1, "#FF5A5A"); if (f % 6 < 4) rect(S, x + 8, y - 8, 1, 1, "#FF5A5A", 0.6); }
+  if (id === "hand") { diag(9, "#E8E8E8"); rect(S, x - 1, y - 1, 3, 3, "#AEB6C4"); }
+  if (id === "stapler") { rect(S, x, y - 6, 10, 3, "#8C97AA"); rect(S, x, y - 3, 3, 4, "#5A626F"); rect(S, x + 10, y - 6, 1, 3, "#DDE3EC"); }
+  if (id === "alarm") { rect(S, x + 2, y - 10, 2, 1, "#F2C230"); rect(S, x + 7, y - 10, 2, 1, "#F2C230"); circ(S, x + 5, y - 5, 4, "#C2372C"); circ(S, x + 5, y - 5, 3, "#F3EAD2"); rect(S, x + 5, y - 7, 1, 3, "#2A211B"); rect(S, x + 5, y - 5, 2, 1, "#2A211B"); }
+  if (id === "eraser") { rect(S, x, y - 6, 9, 4, "#8A5A2B"); rect(S, x, y - 2, 9, 2, "#F3EAD2"); }
+  if (id === "torch") { rect(S, x, y - 5, 7, 3, "#5A626F"); rect(S, x + 7, y - 6, 2, 5, "#AEB6C4"); rect(S, x + 9, y - 5, 1, 3, f % 12 < 8 ? "#FFE680" : "#F2C230"); }
+  if (id === "bell") { rect(S, x + 2, y - 1, 2, 3, "#5A3E22"); rect(S, x + 2, y - 8, 3, 1, "#F2C230"); rect(S, x + 1, y - 7, 5, 4, "#F2C230"); rect(S, x, y - 3, 7, 2, "#C9A25B"); }
+  if (id === "card") { rect(S, x, y - 8, 7, 9, "#2A211B"); rect(S, x + 1, y - 7, 5, 7, "#F3EAD2"); rect(S, x + 2, y - 5, 3, 1, "#6A3F8F"); rect(S, x + 2, y - 3, 2, 1, "#9C8E7A"); }
+  if (id === "ruler") { diag(11, "#C9A25B"); for (let i = 1; i < 11; i += 2) rect(S, x + i, y - i - 1, 1, 1, "#5A3E22"); }
+  if (id === "sheet") { rect(S, x - 1, y - 10, 9, 11, "#86D99B", f % 12 < 6 ? 0.28 : 0.14); rect(S, x, y - 9, 7, 9, "#F3EAD2"); for (let i = 0; i < 4; i++) rect(S, x + 1, y - 8 + i * 2, 5, 1, "#9C8E7A"); }
+}
+
+// กระสุน · ตรงกลางคือ (x, y) หันไปทางบอส
+function bullet(S, id, x, y, f, col) {
+  if (id === "pen") { circ(S, x, y, 1, col); rect(S, x, y, 1, 1, "#FFFFFF"); rect(S, x - 2, y, 1, 1, col, 0.7); }
+  if (id === "whiteout") { rect(S, x - 6, y, 9, 2, "#F3F5F8"); rect(S, x - 7, y, 1, 2, col, 0.7); }
+  if (id === "stamp") { rect(S, x - 1, y - 4, 3, 3, "#5A3E22"); rect(S, x - 3, y - 1, 7, 2, "#2A211B"); rect(S, x - 3, y + 1, 7, 1, "#C2372C"); }
+  if (id === "rubber") { rect(S, x - 5, y - 1, 9, 1, "#C9772E"); rect(S, x - 5, y + 1, 9, 1, "#C9772E"); rect(S, x + 4, y, 1, 1, "#C9772E"); rect(S, x - 6, y, 1, 1, "#C9772E"); }
+  if (id === "calendar") { const w = f % 4 < 2 ? 0 : 1; rect(S, x - 3, y - 4 + w, 7, 9, "#F3EAD2"); rect(S, x - 3, y - 4 + w, 7, 2, "#C2372C"); rect(S, x - 1, y + w, 3, 3, "#2A211B"); }
+  if (id === "bottle") { rect(S, x - 3, y - 1, 6, 3, "#5A626F"); rect(S, x - 2, y - 1, 4, 1, "#AEB6C4"); }
+  if (id === "whistle") { for (let i = 1; i <= 3; i++) rect(S, x - i * 3, y - 2, 1, 5, col, 0.9 - i * 0.25); rect(S, x, y - 1, 3, 3, "#AEB6C4"); }
+  if (id === "highlighter") { rect(S, x - 8, y - 1, 11, 3, "#FFE680", 0.55); rect(S, x + 3, y - 1, 2, 3, "#86D99B"); }
+  if (id === "sticky") { const w = f % 4 < 2 ? 0 : 1; rect(S, x - 3, y - 3 + w, 7, 7, "#F2C230"); rect(S, x + 2, y + 2 + w, 2, 2, "#C9A25B"); rect(S, x - 2, y - 1 + w, 5, 1, "#8A5A2B"); }
+  if (id === "pencil") { rect(S, x - 5, y, 7, 2, "#F2C230"); rect(S, x - 6, y, 1, 2, "#FF8FC8"); rect(S, x + 2, y, 1, 2, "#E6DCC4"); rect(S, x + 3, y, 1, 1, "#2A211B"); }
+  if (id === "laser") { rect(S, x - 9, y - 1, 11, 3, "#FF5A5A", 0.3); rect(S, x - 9, y, 11, 1, "#FF5A5A"); rect(S, x - 4, y, 6, 1, "#FFFFFF"); }
+  if (id === "hand") { rect(S, x - 6, y - 1, 2, 3, "#AEB6C4"); rect(S, x - 5, y, 8, 1, "#E8E8E8"); rect(S, x + 3, y, 2, 1, col); }
+  if (id === "stapler") { rect(S, x, y - 2, 1, 5, "#DDE3EC"); rect(S, x - 2, y - 2, 2, 1, "#DDE3EC"); rect(S, x - 2, y + 2, 2, 1, "#DDE3EC"); }
+  if (id === "alarm") { circ(S, x, y, 3, "#C2372C"); circ(S, x, y, 2, "#F3EAD2"); rect(S, x, y - 1, 1, 2, "#2A211B"); const o = f % 4 < 2 ? 5 : 6; rect(S, x + o, y - 2, 1, 5, col, 0.7); rect(S, x - o, y - 2, 1, 5, col, 0.7); }
+  if (id === "eraser") { rect(S, x - 2, y - 2, 5, 3, "#8A5A2B"); rect(S, x - 2, y + 1, 5, 1, "#F3EAD2"); rect(S, x - 4, y + (f % 2), 1, 1, "#F3EAD2", 0.7); }
+  if (id === "torch") { circ(S, x, y, 4, "#FFE680", 0.22); circ(S, x, y, 2, "#FFE680", 0.9); rect(S, x, y, 1, 1, "#FFFFFF"); }
+  if (id === "bell") { const w = f % 4 < 2 ? 0 : 1; rect(S, x - 1 + w, y - 3, 3, 1, "#F2C230"); rect(S, x - 2 + w, y - 2, 5, 3, "#F2C230"); rect(S, x - 3 + w, y + 1, 7, 1, "#C9A25B"); rect(S, x + w, y + 2, 1, 1, "#C2372C"); }
+  if (id === "card") { rect(S, x - 2, y - 3, 5, 7, "#2A211B"); rect(S, x - 1, y - 2, 3, 5, "#F3EAD2"); rect(S, x, y - 1, 2, 1, col); }
+  if (id === "ruler") { if (f % 4 < 2) { rect(S, x - 5, y, 11, 2, "#C9A25B"); rect(S, x - 3, y, 1, 1, "#5A3E22"); rect(S, x + 1, y, 1, 1, "#5A3E22"); } else { rect(S, x, y - 5, 2, 11, "#C9A25B"); rect(S, x, y - 2, 1, 1, "#5A3E22"); } }
+  if (id === "sheet") { rect(S, x - 4, y - 5, 9, 11, col, 0.3); rect(S, x - 3, y - 4, 7, 9, "#F3EAD2"); for (let i = 0; i < 4; i++) rect(S, x - 2, y - 3 + i * 2, 5, 1, "#9C8E7A"); }
+}
+
+const STAGES = [{ id: "start", name: "ต้นเทอม" }, { id: "mid", name: "กลางเทอม" }, { id: "end", name: "ใกล้ปลาย" }];
+const R01 = () => Math.random();
+
+// ท่าสกิล: คลาส × ช่วงเทอม · ทำงานทีละจังหวะ
+const SKILLS = {
+  scribe: {
+    start: { name: "จดเบา ๆ", tick: (f, q) => { if (f % 14 === 0) q.spawn({ arc: 8, dmg: 1 }); } },
+    mid: { name: "สามบรรทัดรวด", tick: (f, q) => { if (f % 18 === 0) [-6, 0, 6].forEach((d, i) => q.spawn({ t: -i * 0.1, v: 0.09, sy: MZ.y + d, ty: d, dmg: 2 })); } },
+    end: { name: "ถล่มทั้งสมุด", tick: (f, q) => { if (f % 4 === 0) { const x = 82 + R01() * 30; q.spawn({ sx: x + 10, sy: -8, tx: x, ty: R01() * 14 - 7, v: 0.1, dmg: 3 }); } } },
+  },
+  deadline: {
+    start: { name: "นัดเดียวตรงเวลา", tick: (f, q) => { if (f % 18 === 0) q.spawn({ v: 0.16, dmg: 2 }); } },
+    mid: { name: "นับถอยหลัง 3 2 1", tick: (f, q) => { if (f % 24 === 0) ["3", "2", "1"].forEach((tag, i) => q.spawn({ t: -i * 0.2, v: 0.13, tag, dmg: 2 })); } },
+    end: { name: "นาทีสุดท้าย", tick: (f, q) => { const p = f % 34; q.g.lock = p < 22 ? p + 1 : 0; if (p === 22) { q.g.beam = 5; q.impact(10, 9); } } },
+  },
+  survivor: {
+    start: { name: "เช็กชื่อ", tick: (f, q) => { if (f % 14 === 0) q.spawn({ arc: 16, dmg: 1 }); } },
+    mid: { name: "กริ่งเข้าแถว", tick: (f, q) => { if (f % 20 === 0) { q.g.rings.push({ r: 2, hit: false }); q.spawn({ arc: 6, dmg: 1 }); } } },
+    end: { name: "เปิดไฟทั้งห้อง", tick: (f, q) => { if (f % 40 === 0) q.g.cone = 20; if (q.g.cone > 0 && q.g.cone % 3 === 0) q.impact(4, 3); if (f % 14 === 0) q.spawn({ arc: 12, dmg: 2 }); } },
+  },
+  necro: {
+    start: { name: "ปลุกบัตรคำ", tick: (f, q) => { if (f % 16 === 0) q.spawn({ path: "wave", amp: 6, dmg: 1, ph: R01() * 6 }); } },
+    mid: { name: "ฝูงบัตรทวน", tick: (f, q) => { if (f % 34 === 0) for (let i = 0; i < 6; i++) q.spawn({ path: "orbit", ph: (i / 6) * 6.28, v: 0.032, dmg: 2 }); } },
+    end: { name: "ความรู้คืนชีพ", tick: (f, q) => { q.g.rune = true; if (f % 7 === 0) q.spawn({ sx: 46 + R01() * 34, sy: 63, arc: 22, v: 0.06, dmg: 3 }); } },
+  },
+};
+
+// ---- สถานะที่เลือก ----
+const sel = { cls: "scribe", stage: "mid", w: 3, glow: "yellow", fx: "none" };
+const room = drawRoom(), bossS = drawBossSheet();
+const sheets = new Map();
+const lookNow = () => ({ ...DEFAULT_LOOK, cls: sel.cls, held: "pencil", glow: sel.glow, fx: sel.fx });
+function sheet() {
+  const k = `${sel.cls}.${sel.glow}.${sel.fx}`;
+  if (!sheets.has(k)) sheets.set(k, buildSheet({ ...lookNow(), held: "weapon" }));
+  return sheets.get(k);
+}
+const fresh = () => ({ shots: [], sparks: [], nums: [], rings: [], pops: [], hit: 0, beam: 0, lock: 0, cone: 0, rune: false, flash: 0, shake: 0, fin: 0 });
+let g = fresh(), f = 0;
+const cv = $("sc"), S = cv.getContext("2d");
+
+function step() {
+  f++;
+  const w = WEAPONS[sel.cls][sel.w], col = glowOf(lookNow());
+  const P_ = POWER[w.r], m = PART[sel.cls];
+  const impact = (n, dmg) => {
+    g.hit = 4;
+    const cnt = Math.max(1, Math.round(n * P_.mul));
+    for (let i = 0; i < cnt && g.sparks.length < MAX; i++) { const a = R01() * 6.28, v = (0.4 + R01() * 0.9) * m.v; g.sparks.push({ x: BOSS.x - 6, y: BOSS.y + R01() * 10 - 5, vx: Math.cos(a) * v, vy: Math.sin(a) * v - m.up, life: (10 + R01() * 8) | 0, c: col, g: m.g, k: sel.cls }); }
+    if (R01() < 0.5 && g.nums.length < 8) g.nums.push({ x: BOSS.x + 4 + R01() * 12, y: BOSS.y - 14, life: 22, v: dmg });
+  };
+  const q = { g, impact, spawn: (o) => {
+    const base = { t: 0, v: 0.07, path: "line", arc: 0, ...o };
+    g.shots.push(base);
+    g.flash = Math.max(g.flash, P_.flash);
+    for (let i = 1; i <= P_.echo; i++) g.shots.push({ ...base, t: base.t - i * 0.13, ty: (base.ty ?? 0) + (i % 2 ? 6 : -6), dmg: 1 }); // นัดซ้อน
+  } };
+  g.rune = false;
+  SKILLS[sel.cls][sel.stage].tick(f, q);
+  for (const s of g.shots) s.t += s.v;
+  g.shots = g.shots.filter((s) => {
+    if (s.t < 1) return true;
+    impact(8, s.dmg);
+    for (let i = 0; i < P_.ring && g.pops.length < 8; i++) g.pops.push({ r: 2 - i * 5, life: 7 + i * 2 });
+    if (P_.rank === 3) g.shake = Math.max(g.shake, 2);
+    return false;
+  });
+  for (const r of g.rings) { r.r += 4; if (!r.hit && r.r >= BOSS.x - 6 - MZ.x) { r.hit = true; impact(6, 3); } }
+  g.rings = g.rings.filter((r) => r.r < 72);
+  for (const p of g.pops) { p.r += 2; p.life--; }
+  g.pops = g.pops.filter((p) => p.life > 0);
+  if (sel.fx === "spark") for (const s of g.shots) if (s.t > 0 && f % 2 === 0 && g.sparks.length < MAX) { const [x, y] = pos(s, s.t); g.sparks.push({ x, y, vx: -0.3 - R01() * 0.4, vy: R01() * 0.6 - 0.3, life: 8, c: col }); }
+  for (const p of g.sparks) { p.x += p.vx; p.y += p.vy; p.vy += p.g ?? 0.05; p.life--; }
+  g.sparks = g.sparks.filter((p) => p.life > 0);
+  for (const n of g.nums) { n.y -= 0.4; n.life--; }
+  g.nums = g.nums.filter((n) => n.life > 0);
+  if (g.hit > 0) g.hit--;
+  if (g.beam > 0) g.beam--;
+  if (g.cone > 0) g.cone--;
+  g.flash = Math.max(0, g.flash - 2);
+  if (g.shake > 0) g.shake--;
+  if (P_.rank === 3 && f % 46 === 0) { g.fin = 14; g.shake = 8; } // ไม้ตายของ unique
+  if (g.fin > 0) { if (g.fin % 3 === 0) { impact(8, 99); if (g.pops.length < 8) g.pops.push({ r: 3, life: 10 }); } g.fin--; }
+}
+
+function pos(s, t) {
+  const k = Math.max(0, Math.min(1, t));
+  const sx = s.sx ?? MZ.x, sy = s.sy ?? MZ.y, tx = s.tx ?? BOSS.x - 6, ty = BOSS.y + (s.ty ?? 0);
+  if (s.path === "orbit") {
+    const cx = MZ.x + 10, cy = MZ.y - 8;
+    if (k < 0.45) { const a = s.ph + (k / 0.45) * 6.28; return [cx + Math.cos(a) * 14, cy + Math.sin(a) * 9]; }
+    const u = (k - 0.45) / 0.55, ox = cx + Math.cos(s.ph) * 14, oy = cy + Math.sin(s.ph) * 9;
+    return [ox + (tx - ox) * u, oy + (ty - oy) * u];
+  }
+  const y = sy + (ty - sy) * k - Math.sin(k * Math.PI) * s.arc;
+  return [sx + (tx - sx) * k, s.path === "wave" ? y + Math.sin(k * 12 + s.ph) * s.amp * (1 - k * 0.5) : y];
+}
+
+function draw() {
+  const w = WEAPONS[sel.cls][sel.w], col = glowOf(lookNow());
+  const b = MOVE[CLASS_ART[sel.cls].build](f % FRAMES);
+  S.imageSmoothingEnabled = false;
+  S.save();
+  const P_ = POWER[w.r];
+  if ((g.beam > 0 && f % 2) || (g.shake > 0 && f % 2)) S.translate(g.shake > 4 ? 2 : 1, g.shake > 0 ? (f % 4 < 2 ? 1 : -1) : 0);
+  S.globalAlpha = 1; S.drawImage(room, 0, 0);
+  rect(S, 61, 29, 4, 3, "#EE8A3C", 0.9); rect(S, 62, 28 - (f % 6 < 3 ? 1 : 0), 2, 2, "#FFE680");
+  const bf = f % FRAMES, by = BOSS.y + (bf % 16 < 8 ? 0 : 1);
+  S.globalAlpha = 1; S.drawImage(bossS, bf * 48, 0, 48, 48, BOSS.x - 24, BOSS.y - 24, 48, 48);
+  for (let i = 0; i < 5; i++) { const a = f * 0.07 + i * 1.26, x = BOSS.x + Math.cos(a) * 21, y = by + Math.sin(a) * 9; rect(S, x, y, 3, 2, "#D9CFBE", 0.85); rect(S, x, y, 3, 1, "#9C8E7A", 0.85); }
+  if (g.hit > 0) rect(S, BOSS.x - 12, by - 15, 24, 29, "#FFFFFF", (0.35 * g.hit) / 4);
+  if (g.rune) for (let a = 0; a < 6.28; a += 0.08) rect(S, 62 + Math.cos(a + f * 0.05) * 22, 63 + Math.sin(a + f * 0.05) * 3, 1, 1, col, 0.7);
+  if (g.fin > 0) rect(S, 0, 0, W, H, "#000000", 0.5); // ไม้ตาย: ห้องมืดลงให้ลำแสงเด่น
+  if (P_.rank >= 2) for (let x = -18; x <= 18; x++) rect(S, 26 + x, 63, 1, 2, col, (1 - Math.abs(x) / 19) * (P_.rank === 3 ? 0.7 : 0.35));
+  if (P_.rank === 3) for (let i = 0; i < 9; i++) { const y = 62 - ((f * 1.4 + i * 9) % 44), x = 26 + Math.sin(i * 2.1 + f * 0.1) * 17; rect(S, x, y, 1, 2, col, Math.max(0, 1 - (62 - y) / 46)); }
+  S.globalAlpha = 1; S.drawImage(sheet(), bf * 64, 0, 64, 64, PBX, PBY, 64, 64);
+  held(S, w.id, PBX + 41, PBY + 47 + b, f);
+
+  if (g.cone > 0) for (let x = MZ.x; x < W; x++) {
+    const u = (x - MZ.x) / (BOSS.x - MZ.x), half = 2 + (x - MZ.x) * 0.36, cy = MZ.y + (BOSS.y - MZ.y) * u;
+    rect(S, x, cy - half, 1, half * 2, "#FFE680", 0.12); rect(S, x, cy - half / 2, 1, half, "#FFF6C8", 0.14);
+  }
+  for (const r of g.rings) for (let a = -0.9; a <= 0.9; a += 0.05) rect(S, MZ.x + Math.cos(a) * r.r, MZ.y + Math.sin(a) * r.r * 0.8, 1, 1, col, Math.max(0.15, 0.9 - r.r / 80));
+  for (const s of g.shots) {
+    if (s.t < 0) continue;
+    for (let k = 1; k <= P_.trail; k++) {
+      const [tx, ty] = pos(s, s.t - k * 0.03), a = Math.max(0.08, 0.6 - k * 0.06);
+      if (sel.cls === "scribe") rect(S, tx, ty + k * 0.7, 2, 2, col, a); // หมึกหยดลง
+      else if (sel.cls === "deadline") rect(S, tx - 5, ty, 7, 1, col, a); // เส้นความเร็ว
+      else if (sel.cls === "survivor") circ(S, tx, ty, k > 3 ? 2 : 1, col, a * 0.6); // ควันฝุ่น
+      else rect(S, tx, ty + Math.sin(k + f * 0.6) * 2, 2, 2, col, a); // วิญญาณส่าย
+      if (P_.scale > 1) rect(S, tx, ty - 2, 2, 5, col, a * 0.35);
+    }
+    if (sel.fx === "binary") for (let k = 1; k <= 3; k++) {
+      const [tx, ty] = pos(s, s.t - k * 0.05), a = 0.75 - k * 0.15;
+      if ((k + (f >> 2)) % 2) rect(S, tx, ty - 4, 1, 3, "#86D99B", a);
+      else { rect(S, tx, ty - 4, 3, 1, "#86D99B", a); rect(S, tx, ty - 2, 3, 1, "#86D99B", a); rect(S, tx, ty - 3, 1, 1, "#86D99B", a); rect(S, tx + 2, ty - 3, 1, 1, "#86D99B", a); }
+    }
+    const [x, y] = pos(s, s.t);
+    if (P_.rank === 3) circ(S, x, y, 8, col, 0.16);
+    if (P_.scale === 1) bullet(S, w.id, x, y, f, col);
+    else { S.save(); S.translate(Math.round(x), Math.round(y)); S.scale(P_.scale, P_.scale); bullet(S, w.id, 0, 0, f, col); S.restore(); }
+    if (s.tag) { S.globalAlpha = 1; S.font = "8px VT323, monospace"; S.textBaseline = "top"; S.fillStyle = "#000"; S.fillText(s.tag, x - 1, y - 11); S.fillStyle = "#FFE680"; S.fillText(s.tag, x - 2, y - 12); }
+  }
+  if (g.lock > 0) {
+    const r = Math.max(8, 26 - g.lock), c = g.lock % 4 < 2 ? "#FF5A5A" : "#FFE680", cx = BOSS.x - 2, cy = by;
+    for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { rect(S, cx + sx * r - (sx > 0 ? 3 : 0), cy + sy * r, 4, 1, c); rect(S, cx + sx * r, cy + sy * r - (sy > 0 ? 3 : 0), 1, 4, c); }
+    rect(S, cx - 1, cy, 3, 1, c); rect(S, cx, cy - 1, 1, 3, c);
+  }
+  if (g.beam > 0) for (let x = MZ.x; x < W; x++) {
+    const y = MZ.y + (BOSS.y - MZ.y) * ((x - MZ.x) / (BOSS.x - 6 - MZ.x));
+    rect(S, x, y - 2, 1, 5, col, 0.4); rect(S, x, y, 1, 1, "#FFFFFF");
+  }
+  if (g.flash > 0) {
+    circ(S, MZ.x, MZ.y, g.flash, col, 0.45); circ(S, MZ.x, MZ.y, Math.ceil(g.flash / 2), "#FFFFFF", 0.8);
+    if (P_.rank === 3) { rect(S, MZ.x - 9, MZ.y, 19, 1, "#FFFFFF", 0.7); rect(S, MZ.x, MZ.y - 9, 1, 19, "#FFFFFF", 0.7); }
+  }
+  if (g.fin > 0) for (let x = MZ.x; x < W; x++) {
+    const y = MZ.y + (BOSS.y - MZ.y) * ((x - MZ.x) / (BOSS.x - 6 - MZ.x)) + Math.sin(x * 0.5 + f);
+    rect(S, x, y - 7, 1, 15, col, 0.35); rect(S, x, y - 4, 1, 9, col, 0.8); rect(S, x, y - 1, 1, 3, "#FFFFFF");
+  }
+  for (const p of g.pops) if (p.r > 0) { for (let a = 0; a < 6.28; a += 0.12) rect(S, BOSS.x - 6 + Math.cos(a) * p.r, BOSS.y + Math.sin(a) * p.r, 1, 1, col, p.life / 8); }
+  for (const p of g.sparks) {
+    const a = Math.min(1, p.life / 14);
+    if (p.k === "scribe") { const z = p.life > 6 ? 2 : 1; rect(S, p.x, p.y, z, z, p.c, a); }
+    else if (p.k === "deadline") { rect(S, p.x - 1, p.y, 4, 1, "#FFFFFF", a); rect(S, p.x + 3, p.y, 1, 1, p.c, a); }
+    else if (p.k === "survivor") circ(S, p.x, p.y, p.life > 9 ? 1 : 2, p.c, a * 0.4);
+    else if (p.k === "necro") rect(S, p.x + Math.sin(p.life * 0.7), p.y, 1, 3, p.c, a);
+    else rect(S, p.x, p.y, 1, 1, p.c, a);
+  }
+  S.font = "8px VT323, monospace"; S.textBaseline = "top";
+  for (const n of g.nums) { S.globalAlpha = Math.min(1, n.life / 10); S.fillStyle = "#000"; S.fillText(String(n.v), n.x + 1, n.y + 1); S.fillStyle = "#FFE680"; S.fillText(String(n.v), n.x, n.y); }
+  S.restore();
+  S.globalAlpha = 1;
+}
+
+// ---- ปุ่ม ----
+function group(host, items, isOn, pick, paint, cls) {
+  const list = items.map((it) => {
+    const b = el("button", cls); b.type = "button"; paint(b, it);
+    b.onclick = () => { pick(it); sync(); };
+    host.append(b);
+    return [b, it];
+  });
+  const refresh = () => list.forEach(([b, it]) => b.setAttribute("aria-pressed", String(isOn(it))));
+  refresh();
+  return refresh;
+}
+function icon(id, f0 = 0) { const [v, x] = mk(16, 16); held(x, id, 3, 13, f0); v.setAttribute("role", "presentation"); return v; }
+function sprite(look, size, label) { const [v, x] = mk(64, 64); drawPapBoy(x, look, 0); v.style.width = v.style.height = `${size}px`; v.style.flex = "none"; v.setAttribute("role", "img"); v.setAttribute("aria-label", label); return v; }
+
+const refs = [
+  group($("cl"), CLASSES, (k) => k.id === sel.cls, (k) => { sel.cls = k.id; }, (b, k) => { b.append(sprite({ ...DEFAULT_LOOK, cls: k.id }, 48, ""), k.name); }, "pick cls"),
+  group($("st"), STAGES, (s) => s.id === sel.stage, (s) => { sel.stage = s.id; }, (b, s) => { b.textContent = s.name; }, "pick"),
+  group($("gl"), [["yellow", "ประจำคลาส", "#C9A25B"], ["green", "เขียว", "#86D99B"], ["cyan", "ฟ้า", "#6FE3F0"], ["pink", "ชมพู", "#FF8FC8"]], (o) => o[0] === sel.glow, (o) => { sel.glow = o[0]; }, (b, o) => { const i = el("i"); i.style.background = o[2]; b.append(i, o[1]); }, "pick sw"),
+  group($("fx"), [["none", "ไม่มี"], ["spark", "ประกาย"], ["binary", "เลข 0/1"]], (o) => o[0] === sel.fx, (o) => { sel.fx = o[0]; }, (b, o) => { b.textContent = o[1]; }, "pick"),
+];
+let refWeapon = () => {}, builtFor = "";
+function buildWeapons() {
+  const host = $("we"); host.replaceChildren();
+  refWeapon = group(host, WEAPONS[sel.cls], (w) => WEAPONS[sel.cls][sel.w] === w, (w) => { sel.w = WEAPONS[sel.cls].indexOf(w); }, (b, w) => {
+    const s = el("small"); s.textContent = w.name; s.style.color = RARITY_COLOR[w.r];
+    const v = icon(w.id); v.style.width = v.style.height = "32px";
+    b.append(v, s);
+  }, "pick wp");
+  builtFor = sel.cls;
+}
+function sync() {
+  if (builtFor !== sel.cls) buildWeapons();
+  refs.forEach((r) => r()); refWeapon();
+  const sk = SKILLS[sel.cls][sel.stage], k = CLASSES.find((x) => x.id === sel.cls), w = WEAPONS[sel.cls][sel.w];
+  $("sk").textContent = `สกิล: ${sk.name}${w.r === "u" ? " + ไม้ตาย" : ""}`;
+  cv.setAttribute("aria-label", `${k.name} ใช้${sk.name} ด้วย${w.name} ใส่บอส`);
+  g = fresh(); f = 0;
+  if (reduced) { for (let i = 0; i < 60; i++) step(); draw(); }
+}
+
+// คลังอาวุธ
+CLASSES.forEach((k) => {
+  const head = el("div", "k"), t = el("div"), h = el("h2"), p = el("p");
+  h.textContent = k.name; p.textContent = "ดรอปเฉพาะคลาสนี้";
+  t.append(h, p); head.append(sprite({ ...DEFAULT_LOOK, cls: k.id }, 64, k.name), t);
+  $("arm").append(head);
+  WEAPONS[k.id].forEach((w) => {
+    const row = el("div", "w"), d = el("div"), b = el("b"), e = el("em");
+    b.textContent = w.name; b.style.color = RARITY_COLOR[w.r];
+    e.textContent = `${RARITY_NAME[w.r]} · ${w.shot}`;
+    d.append(b, e); row.append(icon(w.id), d);
+    $("arm").append(row);
+  });
+});
+
+// ---- ลูปเดียวกับฉากจริง: 85ms ต่อจังหวะ หยุดเมื่อพ้นจอหรือซ่อน · ลดการเคลื่อนไหว = ภาพนิ่ง ----
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+sync();
+if (!reduced) {
+  let raf = 0, last = 0, acc = 0, seen = true;
+  const frame = (t) => {
+    acc += Math.min(250, last ? t - last : 0); last = t;
+    if (acc >= 85) { acc %= 85; step(); draw(); }
+    raf = requestAnimationFrame(frame);
+  };
+  const on = () => { const go = seen && !document.hidden; if (go && !raf) { last = 0; raf = requestAnimationFrame(frame); } else if (!go && raf) { cancelAnimationFrame(raf); raf = 0; } };
+  new IntersectionObserver(([e]) => { seen = e.isIntersecting; on(); }).observe(cv);
+  document.addEventListener("visibilitychange", on);
+  on();
+}
+})();
+</script></body></html>

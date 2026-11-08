@@ -18,7 +18,11 @@ export const SLOTS = [
   { k: "outfit", l: "เสื้อ", o: [["hoodie", "ฮู้ดส้ม", "n"], ["lab", "เสื้อกาวน์", "m"], ["jacket", "แจ็กเก็ตทอง", "r"]] },
   { k: "scarf", l: "ผ้าพันคอ", o: [["none", "ไม่มี", "n"], ["red", "แดงปลิว", "m"]] },
   { k: "shoes", l: "รองเท้า", o: [["plain", "ธรรมดา", "n"], ["sneaker", "ผ้าใบแดง", "m"], ["gold", "บูตทอง", "r"]] },
-  { k: "held", l: "ของถือ", o: [["none", "มือเปล่า", "n"], ["pencil", "ดินสอยักษ์", "r"], ["laser", "ปากกาเลเซอร์", "u"]] },
+  { k: "held", l: "ของถือ", o: [["none", "มือเปล่า", "n"],
+    ["pen", "ปากกาลูกลื่น", "n"], ["whiteout", "ลิควิดก้นขวด", "n"], ["stamp", "ตรายางแดง", "m"], ["pencil", "ดินสอยักษ์", "r"], ["laser", "ปากกาเลเซอร์", "u"],
+    ["hand", "เข็มนาฬิกาหัก", "n"], ["rubber", "หนังยางมัดงาน", "n"], ["calendar", "ปฏิทินฉีก", "m"], ["stapler", "ปืนแม็กเย็บ", "r"], ["alarm", "นาฬิกาปลุกเถื่อน", "u"],
+    ["eraser", "แปรงลบกระดาน", "n"], ["bottle", "กระติกน้ำบุบ", "n"], ["whistle", "นกหวีดหัวหน้าห้อง", "m"], ["torch", "ไฟฉายเก่า", "r"], ["bell", "กระดิ่งหน้าห้อง", "u"],
+    ["card", "บัตรคำขาด ๆ", "n"], ["highlighter", "ไฮไลต์หมึกแห้ง", "n"], ["sticky", "โน้ตแปะหลอน", "m"], ["ruler", "ไม้บรรทัดปลุกผี", "r"], ["sheet", "ชีตเก่าคืนชีพ", "u"]] },
   { k: "wings", l: "ปีก", o: [["none", "ไม่มี", "n"], ["paper", "ปีกกระดาษ", "r"], ["pixel", "ปีกพิกเซล", "m"], ["light", "ปีกแสง", "u"]] },
   { k: "back", l: "ออร่าหลัง", o: [["none", "ไม่มี", "n"], ["ring", "วงแหวน", "m"], ["flame", "เปลวทอง", "r"], ["stars", "ดาวหมุน", "u"]] },
   { k: "ground", l: "ออร่าพื้น", o: [["none", "ไม่มี", "n"], ["bloom", "ดอกไม้", "n"], ["ripple", "คลื่นน้ำ", "m"], ["rune", "วงเวท", "r"], ["fire", "ไฟใต้เท้า", "u"]] },
@@ -224,7 +228,32 @@ function drawBody(f: number, b: number, pose: Pose) {
   if (k && st.held === DEFAULT_LOOK.held) k.held?.(f, b);
   if (st.held === "pencil") { P(41, 47 + b, OUT); for (let i = 1; i < 9; i++) { P(41 + i, 47 - i + b, "#F2C230"); P(42 + i, 47 - i + b, "#C9A25B"); } P(50, 38 + b, "#FF8FC8"); P(51, 38 + b, "#FF8FC8"); }
   if (st.held === "laser") { for (let i = 0; i < 7; i++) P(42 + i, 46 - i + b, "#AEB6C4"); P(49, 39 + b, "#FF5A5A"); if (f % 6 < 4) { P(50, 38 + b, "#FF5A5A", 0.6); P(49, 38 + b, "#FF5A5A", 0.4); P(50, 39 + b, "#FF5A5A", 0.4); } }
+  weaponArt(st.held, f, b);
   c.restore();
+}
+/** อาวุธแยกคลาส (b10-class-skills.html) · กำมือที่ (41, 47) · ดินสอกับเลเซอร์วาดอยู่บรรทัดก่อนเรียกฟังก์ชันนี้ */
+function weaponArt(id: string, f: number, b: number) {
+  const x = 41, y = 47 + b, diag = (n: number, col: string) => { for (let i = 0; i < n; i++) P(x + i, y - i, col); };
+  switch (id) {
+    case "pen": diag(8, "#2B4A8A"); P(x + 8, y - 8, "#E8E8E8"); break;
+    case "whiteout": R(x, y - 6, 4, 7, "#F3F5F8"); R(x + 1, y - 8, 2, 2, "#8AB0FF"); R(x + 4, y - 5, 2, 1, "#F3F5F8"); break;
+    case "stamp": R(x + 2, y - 8, 3, 4, "#5A3E22"); R(x, y - 4, 7, 2, "#2A211B"); R(x, y - 2, 7, 1, "#C2372C"); break;
+    case "hand": diag(9, "#E8E8E8"); R(x - 1, y - 1, 3, 3, "#AEB6C4"); break;
+    case "rubber": R(x, y - 7, 1, 8, "#C9772E"); R(x + 6, y - 7, 1, 8, "#C9772E"); R(x, y - 7, 7, 1, "#C9772E"); R(x, y, 7, 1, "#C9772E"); break;
+    case "calendar": R(x, y - 9, 8, 10, "#F3EAD2"); R(x, y - 9, 8, 3, "#C2372C"); R(x + 3, y - 4, 2, 3, "#2A211B"); break;
+    case "stapler": R(x, y - 6, 10, 3, "#8C97AA"); R(x, y - 3, 3, 4, "#5A626F"); R(x + 10, y - 6, 1, 3, "#DDE3EC"); break;
+    case "alarm": R(x + 2, y - 10, 2, 1, "#F2C230"); R(x + 7, y - 10, 2, 1, "#F2C230"); disc(x + 5, y - 5, 4, "#C2372C"); disc(x + 5, y - 5, 3, "#F3EAD2"); R(x + 5, y - 7, 1, 3, "#2A211B"); R(x + 5, y - 5, 2, 1, "#2A211B"); break;
+    case "eraser": R(x, y - 6, 9, 4, "#8A5A2B"); R(x, y - 2, 9, 2, "#F3EAD2"); break;
+    case "bottle": R(x + 1, y - 10, 3, 2, "#5A626F"); R(x, y - 8, 5, 9, "#6F7A85"); R(x + 1, y - 6, 1, 5, "#AEB6C4"); break;
+    case "whistle": disc(x + 3, y - 3, 3, "#AEB6C4"); R(x + 5, y - 6, 6, 2, "#AEB6C4"); P(x + 3, y - 3, "#2A211B"); break;
+    case "torch": R(x, y - 5, 7, 3, "#5A626F"); R(x + 7, y - 6, 2, 5, "#AEB6C4"); R(x + 9, y - 5, 1, 3, f % 12 < 8 ? "#FFE680" : "#F2C230"); break;
+    case "bell": R(x + 2, y - 1, 2, 3, "#5A3E22"); R(x + 2, y - 8, 3, 1, "#F2C230"); R(x + 1, y - 7, 5, 4, "#F2C230"); R(x, y - 3, 7, 2, "#C9A25B"); break;
+    case "card": R(x, y - 8, 7, 9, "#2A211B"); R(x + 1, y - 7, 5, 7, "#F3EAD2"); R(x + 2, y - 5, 3, 1, "#6A3F8F"); R(x + 2, y - 3, 2, 1, "#9C8E7A"); break;
+    case "highlighter": for (let i = 0; i < 9; i++) R(x + i, y - i, 2, 1, "#FFE680"); R(x + 9, y - 9, 2, 1, "#86D99B"); break;
+    case "sticky": R(x, y - 8, 8, 8, "#F2C230"); R(x + 6, y - 2, 2, 2, "#C9A25B"); R(x + 1, y - 6, 5, 1, "#8A5A2B"); R(x + 1, y - 4, 4, 1, "#8A5A2B"); break;
+    case "ruler": diag(11, "#C9A25B"); for (let i = 1; i < 11; i += 2) P(x + i, y - i - 1, "#5A3E22"); break;
+    case "sheet": R(x - 1, y - 10, 9, 11, "#86D99B", f % 12 < 6 ? 0.28 : 0.14); R(x, y - 9, 7, 9, "#F3EAD2"); for (let i = 0; i < 4; i++) R(x + 1, y - 8 + i * 2, 5, 1, "#9C8E7A"); break;
+  }
 }
 function drawFront(f: number) {
   if (st.fx === "spark") for (let i = 0; i < 7; i++) {

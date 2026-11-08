@@ -25,6 +25,7 @@ test("papboy: LOOT_CONFIG + คลังของ ตรงกับ migration �
   const sqlB = readFileSync(new URL("../supabase/migrations/20261114090000_stage7b_boxes.sql", import.meta.url), "utf8");
   const db = Object.fromEntries([...sqlB.matchAll(/when '(\w+)' then (\d+)/g)].map((m) => [m[1], Number(m[2])]));
   assert.deepEqual(db, { ...LOOT_CONFIG });
-  const rows = [...sql.matchAll(/\('([\w.]+)', '(\w+)', '([^']+)', '([nmru])', (true|false)\)/g)].map((m) => m.slice(1).join("|"));
-  assert.deepEqual(rows, ITEMS.map((i) => [i.id, i.k, i.name, i.r, i.isDefault].join("|")));
+  const sql9 = readFileSync(new URL("../supabase/migrations/20261119090000_stage9b_class_weapons.sql", import.meta.url), "utf8"); // อาวุธแยกคลาส
+  const rows = [...new Set([...(sql + sql9).matchAll(/\('([\w.]+)', '(\w+)', '([^']+)', '([nmru])', (true|false)(?:, '\w+')?\)/g)].map((m) => m.slice(1, 6).join("|")))];
+  assert.deepEqual(rows.sort(), ITEMS.map((i) => [i.id, i.k, i.name, i.r, i.isDefault].join("|")).sort());
 });

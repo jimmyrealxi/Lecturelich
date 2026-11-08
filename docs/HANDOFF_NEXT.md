@@ -2,7 +2,22 @@
 
 รวมเข้า `main` แล้ว (PR #1) · Vercel Production = `main` · งานใหม่แตก branch จาก `main`
 
-## ส่งต่อล่าสุด (8 พ.ย. 22:30) อ่านก่อนหัวข้ออื่น
+## สกิลตามคลาส + อาวุธแยกคลาส (9 พ.ย.) อ่านก่อนหัวข้ออื่น
+**ก่อน merge:** เจ้าของรัน `supabase/migrations/20261119090000_stage9b_class_weapons.sql` ใน SQL Editor (ลองแบบ rollback ผ่านแล้ว) แล้วรันบรรทัดนี้ให้นาฬิกาปลุกที่ใส่อยู่เป็นของในตู้ด้วย:
+```sql
+insert into public.user_items (user_id, item_id) select id, 'held.alarm' from auth.users where email = 'armzascout@gmail.com' on conflict do nothing;
+```
+**บัญชีเจ้าของใส่ชุดเทสอยู่** (ของอลังการสุดทุกช่อง เสก 14 ชิ้น + `held.alarm`) ไว้เทสว่าเบียด บัง ล้นขอบไหม · **ก่อนใช้จริงคืนชุดเดิมด้วย SQL นี้** (ค่าเดิมก่อนเสก 9 พ.ย. · เศษชอล์ก 5 กับตัวนับไม่ได้แตะ):
+```sql
+with me as (select id from auth.users where email = 'armzascout@gmail.com')
+update public.papboy p set look = '{"back":"none","ears":"none","shoes":"plain","ground":"none"}'::jsonb from me where p.user_id = me.id;
+delete from public.user_items u using auth.users a where u.user_id = a.id and a.email = 'armzascout@gmail.com'
+  and u.item_id not in ('back.flame','ears.cat','ears.speaker','eyes.round','ground.bloom','shoes.sneaker');
+```
+เจ้าของบอกว่าตอนใช้จริงให้ reset ทุกอย่าง → รัน SQL นี้ก่อน แล้วล้างข้อมูลจำลองตาม SQL เดิมในไฟล์นี้ ถามเจ้าของก่อนทุกครั้ง · คลาสที่เจ้าของเลือกไว้ (นักล่าเดดไลน์) ยังอยู่ ถ้าจะเลือกใหม่ลบแถวใน `term_classes`
+**ยังไม่ได้ดูในแอปจริง:** ฉากบอส ตู้แต่งตัว แลกเศษชอล์ก · ยังไม่ได้วัดความลื่นระดับ unique บนมือถือ · เช็ก `/class` บนเว็บจริงหลัง PR #5 ด้วย
+
+## ส่งต่อล่าสุด (8 พ.ย. 22:30)
 **PR #4 `design/readability` เปิดอยู่ ยังไม่ merge** สไตล์ใหม่ทุกหน้า: เทปหัวข้อ 8 สีจัดมือใน `TAPE_LOOK` (`components/ui.tsx`) · `Readout` · รอยเก่าทั่วกระดาษ (`app/+html.tsx`) · กติกาใน `docs/DESIGN.md` · mockup `docs/mockups/a-readability.html`
 **ยังไม่ได้ดู:** เทปรอบสุดท้าย (สองฝั่ง เอียงต่างกัน) บนจอจริง · หน้ารายละเอียดวิชา หน้าจด หน้าแก้วิชา · มือถือจริง · หลัง merge เช็กเว็บจริง แล้วรับรายการหน้าที่เจ้าของอยากปรับ
 **เจ้าของต้องทำ:** เลิกเชื่อม Classroom แล้วเชื่อมใหม่ด้วย `@udru` 1 ครั้ง (OAuth เป็น In production แล้ว สิทธิ์เดิมออกตอน Testing) แล้วเลือก 3 ห้องใหม่ · ล็อกอินแอปด้วย Gmail เท่านั้น (`@udru` คือบัญชีแอปว่าง) · บน iPhone ลบไอคอนตัว A แล้วเพิ่มลงหน้าจอโฮมใหม่ ดูว่าได้ตรายางกะโหลกไหม แล้วกดรับแจ้งเตือน

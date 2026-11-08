@@ -418,9 +418,9 @@ const s = StyleSheet.create({
     flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: space.md, paddingBottom: 12,
     borderBottomWidth: 3, borderBottomColor: "rgba(42,33,24,0.75)", borderStyle: "double" as "solid",
   },
-  buddy: { marginTop: -8, marginBottom: -8, marginRight: -6 },
+  buddy: { marginTop: -12, marginBottom: -12 },
   bubble: {
-    position: "absolute", right: 86, top: 6, backgroundColor: color.field, borderWidth: 1.5, borderColor: color.paper, borderRadius: 3,
+    position: "absolute", right: 100, top: 6, backgroundColor: color.field, borderWidth: 1.5, borderColor: color.paper, borderRadius: 3,
     fontFamily: font.bodyMedium, fontSize: 15, color: color.paper, paddingHorizontal: 10, paddingVertical: 3, transform: [{ rotate: "-2deg" }],
   },
   // ป้ายพิมพ์นูน (จุดเดียวต่อจอ) · letter-spacing ได้เพราะเป็นตัวอังกฤษ
