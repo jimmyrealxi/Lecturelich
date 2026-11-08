@@ -54,9 +54,10 @@ body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:2
 /* แบบใหม่ */
 .new>*{position:relative;z-index:1}
 .new .fx{position:absolute;z-index:0;pointer-events:none}
-.scorch{right:-84px;bottom:-84px;width:190px;height:190px;background:radial-gradient(circle at 62% 62%,rgba(38,20,6,.72) 0 22%,rgba(92,48,14,.34) 42%,transparent 68%);filter:url(#rough)}
-.rust{left:276px;top:392px;width:110px;height:120px;background:radial-gradient(ellipse at 42% 40%,rgba(140,70,20,.15),transparent 66%);filter:url(#rough)}
-.ring{right:-66px;top:22px;width:136px;height:136px}
+/* รอยทุกชิ้นมีที่มา เส้นคม ไม่เบลอ: คลิปขึ้นสนิม แก้วที่วางทับ มุมที่พับ */
+.clip{right:10px;top:22px;width:26px;height:66px;transform:rotate(9deg)}
+.ring{left:284px;top:408px;width:96px;height:96px}
+.ear{right:0;bottom:0;width:38px;height:38px;background:linear-gradient(135deg,#CDBE98 0 49.4%,#8C7B60 49.4% 50.6%,#1C1915 50.6%)}
 .new .next,.new .off{font-size:16px;line-height:24px;color:var(--muted2)}
 .new .off{display:inline-block;margin-top:8px;line-height:44px;color:var(--pen);text-decoration:underline;text-underline-offset:4px}
 
@@ -95,8 +96,6 @@ body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:2
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="7"/><feDisplacementMap in="SourceGraphic" scale="16"/></filter></svg>
-
 <div class="head">
   <h1>หน้าวันนี้: อ่านง่ายขึ้น + สมุดรอดจากซากเมือง (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
   <p>ข้อความเดียวกับของจริง กว้าง 360px ฝั่งซ้ายใช้ค่าจากโค้ดตอนนี้ ฝั่งขวาคือแบบที่เสนอ</p>
@@ -127,9 +126,9 @@ body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:2
   <section class="col">
     <h2>แบบใหม่</h2>
     <div class="phone new" id="b">
-      <div class="fx scorch"></div>
-      <div class="fx rust"></div>
-      <svg class="fx ring" viewBox="0 0 136 136" aria-hidden="true"><g fill="none" stroke="#6B3F16" filter="url(#rough)"><circle cx="68" cy="68" r="52" stroke-width="7" stroke-opacity=".17" stroke-dasharray="210 26 66 24"/><circle cx="68" cy="68" r="46" stroke-width="1.5" stroke-opacity=".2"/></g></svg>
+      <div class="fx ear"></div>
+      <svg class="fx clip" viewBox="0 0 26 66" aria-hidden="true"><path d="M19 12v40a7 7 0 0 1-14 0V14a5 5 0 0 1 10 0v35a2.5 2.5 0 0 1-5 0V19" fill="none" stroke="#8A4A1E" stroke-opacity=".5" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="46 2 31 3 54 2"/><circle cx="19" cy="31" r="1.5" fill="#8A4A1E" fill-opacity=".38"/><circle cx="5" cy="47" r="1" fill="#8A4A1E" fill-opacity=".38"/></svg>
+      <svg class="fx ring" viewBox="0 0 96 96" aria-hidden="true"><g fill="none" stroke="#6B3F16" stroke-linecap="round"><path d="M48 6c24-.6 42 18 42 42S72 90.500 47 90 5.500 71 6 47 25 6.500 48 6Z" stroke-width="1.4" stroke-opacity=".34" stroke-dasharray="118 7 92 4 36"/><path d="M48 10.500c21 0 37.500 16 37.500 37.500S69 85.500 47.500 85.500 10.500 69 10.500 47.500 27 10.500 48 10.500Z" stroke-width="4.500" stroke-opacity=".12" stroke-dasharray="84 22 118 14"/></g><ellipse cx="14" cy="91" rx="3" ry="2.200" fill="#6B3F16" fill-opacity=".2"/></svg>
 
       <div class="tail"></div>
       <p class="next">ถัดไป <span class="ty">23:52</span> ภาษาไทย · จำลอง</p>
@@ -163,7 +162,7 @@ body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:2
     <ul>
       <li>เทปสีขอบฉีก: สนิมแดง = ต้องทำ · เขียวหม่น = ทวน</li>
       <li>จอเขียวจิ๋วบอกตัวเลขสำคัญ เหมือนของที่ยังใช้งานได้ในซากเมือง</li>
-      <li>รอยแก้วกาแฟ คราบสนิม ขอบไหม้ และรอยปากกาแดง วางเลี่ยงตัวหนังสือ</li>
+      <li>ทุกรอยมีที่มา: รอยสนิมจากคลิปหนีบ แก้ววางทับจนรอยหลุดขอบกระดาษ มุมกระดาษพับ และปากกาแดงขีดใต้งานที่เลยรอบ</li>
       <li>วาดเองทั้งหมด ไม่ใช้ภาพ ไอคอน ชื่อ หรือฟอนต์ของ Fallout</li>
     </ul>
     <h2>ต้องตัดสินใจ</h2>
@@ -173,7 +172,7 @@ body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:2
   </aside>
 </div>
 <script>
-for (const [p, s] of [["a", "ah"], ["b", "bh"]]) document.getElementById(s).textContent = "ความสูง " + document.getElementById(p).offsetHeight + " px";
+document.fonts.ready.then(() => { for (const [p, s] of [["a", "ah"], ["b", "bh"]]) document.getElementById(s).textContent = "ความสูง " + document.getElementById(p).offsetHeight + " px"; });
 </script>
 </body>
 </html>
