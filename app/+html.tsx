@@ -20,7 +20,7 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Lecturelich" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2" />
         <ScrollViewStyleReset />
         <style dangerouslySetInnerHTML={{ __html: webAppCss }} />
         {headNodes}
