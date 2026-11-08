@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich ทวนวันนี้</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* หน้าวันนี้ + ส่วน "ทวนวันนี้" · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#574735;--faint:#64523F;--pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;--on:#F3EAD2;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--pen);color:var(--on)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+.head{max-width:980px;margin:0 auto 18px}
+.head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
+.head p{color:#C9BFAA;font-size:14px;max-width:70ch;margin-top:4px}
+.sw{display:inline-flex;margin-top:12px;border:1.5px solid var(--rule2);border-radius:3px;overflow:hidden}
+.sw button{min-height:44px;padding:0 14px;font-size:14px;color:#E9E2D2}
+.sw button+button{border-left:1.5px solid var(--rule2)}
+.sw button[aria-pressed=true]{background:#F3EAD2;color:#2A2118;font-weight:600}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.phone{width:360px;max-width:100%;height:760px;border:6px solid #050505;border-radius:30px;overflow:hidden;background:var(--ink);color:var(--paper);flex:none}
+.scroll{height:100%;overflow-y:auto;padding:18px 16px 28px;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
+.dymo{display:inline-block;background:#1A1A1A;color:#F2F2F2;font:700 12px/1 "Courier Prime",monospace;letter-spacing:2px;padding:5px 9px 4px;border-radius:2px}
+.mast{padding-bottom:12px;border-bottom:3px double rgba(42,33,24,.75)}
+.mast h2{font:400 32px/44px Chonburi,serif;margin-top:6px}
+.date{font:700 15px "Courier Prime",monospace}
+.crt{background:var(--crt);color:var(--crtOn);border-radius:14px;padding:14px;margin-top:22px}
+.crt small{font-size:13px;color:var(--crtDim);display:block}
+.crt b{font-size:19px;font-weight:600}
+.h{display:flex;align-items:baseline;gap:10px;padding:26px 0 4px}
+.h h3{font:400 19px/28px Chonburi,serif}
+.h span{font-size:13px;color:var(--faint)}
+.ty{font:700 1em "Courier Prime",monospace}
+.entry{display:flex;align-items:center;gap:10px;min-height:60px;padding:8px 0;border-top:1px solid var(--rule)}
+.entry .grow{flex:1;min-width:0}
+.what{display:block;width:100%;text-align:left;font-weight:600;font-size:15px;line-height:21px}
+button.what{min-height:21px;text-decoration:underline;text-decoration-color:var(--rule2);text-underline-offset:3px}
+.sub{font-size:13px;color:var(--muted)}
+.late{color:var(--warn)}
+.star{color:var(--red);font-weight:600}
+.act{min-height:44px;padding:0 12px;border:1.5px solid var(--paper);border-radius:3px;font:600 14px Anuphan;flex:none;white-space:nowrap}
+.done{font:600 13px Anuphan;color:var(--pen);flex:none;min-height:44px;display:flex;align-items:center;gap:6px;padding:0 4px}
+.done svg{width:18px;height:18px}
+.line{height:1px;background:var(--rule)}
+.exam{font-size:14px;color:var(--muted);padding:2px 0 8px}
+.exam b{color:var(--paper);font-weight:600}
+.more{min-height:44px;font:600 14px Anuphan;color:var(--pen);text-decoration:underline;text-underline-offset:3px;border-top:1px solid var(--rule);width:100%;text-align:left}
+.sum{display:flex;justify-content:space-between;align-items:center;min-height:48px;margin-top:18px;border-top:1px solid var(--rule);font-size:14px;color:var(--muted)}
+.sum b{color:var(--pen);font-weight:600}
+.side{flex:1;min-width:280px;max-width:560px}
+.side h4{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
+.side ul{padding-left:18px;font-size:14px;color:#D8D0BE}
+.side li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>ทวนวันนี้บนหน้าวันนี้ (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>บอกว่าวันนี้ควรทวนหัวข้อไหนโดยไม่ต้องเข้าหน้าเกม ใช้ข้อมูลและปุ่ม "ทวนแล้ว" ชุดเดิม ไม่แตะฐานข้อมูล</p>
+  <div class="sw" role="group" aria-label="สถานการณ์ตัวอย่าง">
+    <button data-m="normal" aria-pressed="true">วันปกติ</button>
+    <button data-m="exam" aria-pressed="false">ใกล้สอบ</button>
+    <button data-m="empty" aria-pressed="false">ไม่มีต้องทวน</button>
+  </div>
+</div>
+<div class="wrap">
+  <div class="phone"><div class="scroll">
+    <div class="mast">
+      <span class="dymo">LECTURELICH</span>
+      <h2>วันจันทร์</h2>
+      <div class="date">09 พ.ย. 2569</div>
+    </div>
+    <div class="crt"><small>&gt; คาบถัดไป</small><b>โครงสร้างข้อมูล</b><small>10:00–12:00 · SC9-604</small></div>
+    <div class="h"><h3>ต้องทำ</h3><span><span class="ty">1</span> เรื่อง</span></div>
+    <div class="entry"><div class="grow"><span class="what">แบบฝึกหัด Graph</span><div class="sub">โครงสร้างข้อมูล · อีก 3 วัน</div></div></div>
+    <div class="line"></div>
+
+    <section id="sec" aria-label="ทวนวันนี้">
+      <div class="h"><h3>ทวนวันนี้</h3><span id="left"></span></div>
+      <div class="exam" id="exam" hidden><b>กลางภาค โครงสร้างข้อมูล</b> · อีก <span class="ty">9</span> วัน · พร้อมสอบ <span class="ty">40%</span></div>
+      <div id="list"></div>
+    </section>
+
+    <div class="sum"><span>วันนี้ได้ <span class="ty" id="xp">+0</span> XP</span><b>หน้าเกม ›</b></div>
+  </div></div>
+
+  <div class="side">
+    <h4>กติกาการเลือกหัวข้อ</h4>
+    <ul>
+      <li>แสดงหัวข้อที่เลยรอบทวน หรือยังไม่เคยทวน</li>
+      <li>เรียงตาม ★ ออกสอบก่อน แล้วตามวิชาที่สอบใกล้สุด แล้วตามที่เลยรอบนานสุด</li>
+      <li>โชว์ทีละ 3 หัวข้อไม่ให้ยาวเกิน กด "ดูอีก" เพื่อเปิดในหน้านี้</li>
+      <li>บรรทัดวันสอบขึ้นเมื่อเหลือไม่เกิน 14 วัน แสดงเฉพาะสอบที่ใกล้สุด</li>
+      <li>แตะชื่อหัวข้อเพื่อเปิดหน้าวิชาไปอ่านโน้ต แล้วค่อยกด "ทวนแล้ว"</li>
+      <li>ไม่มีหัวข้อต้องทวน ซ่อนทั้งส่วน หน้าไม่รก</li>
+      <li>กดแล้วแถวยังอยู่จนออกจากหน้า ขึ้น "ทวนแล้ว" ไม่หายวับ</li>
+    </ul>
+  </div>
+</div>
+<script>
+const SET={
+  normal:[["การแจกแจงเชิงความน่าจะเป็น","คณิต","เลยรอบทวน 2 วัน",1,1],["degree ของ graph","โครงสร้างข้อมูล","ยังไม่ทวน",1,0],["adjacency list","โครงสร้างข้อมูล","เลยรอบทวน 1 วัน",0,1],["คำราชาศัพท์","ภาษาไทย","ยังไม่ทวน",0,0],["การอ่านจับใจความ","ภาษาไทย","ยังไม่ทวน",0,0]],
+  exam:[["degree ของ graph","โครงสร้างข้อมูล","เลยรอบทวน 3 วัน",1,1],["BFS และ DFS","โครงสร้างข้อมูล","ยังไม่ทวน",1,0],["adjacency list","โครงสร้างข้อมูล","เลยรอบทวน 1 วัน",0,1],["inorder traversal","โครงสร้างข้อมูล","ยังไม่ทวน",0,0]],
+  empty:[]
+};
+const CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M4 13.5l5 5.5L20.5 5"/></svg>';
+let mode="normal",open=false,done=new Set(),xp=0;
+function esc(s){return s}
+function draw(){
+  const rows=SET[mode];
+  document.getElementById("sec").hidden=!rows.length;
+  document.getElementById("exam").hidden=mode!=="exam";
+  const left=rows.filter((_,i)=>!done.has(i)).length;
+  document.getElementById("left").innerHTML=`เหลือ <span class="ty">${left}</span> หัวข้อ`;
+  document.getElementById("xp").textContent="+"+xp;
+  const show=open?rows:rows.slice(0,3);
+  const L=document.getElementById("list");
+  L.innerHTML=show.map((r,i)=>`<div class="entry"><div class="grow"><button class="what">${r[3]?'<span class="star">★ </span>':""}${r[0]}</button><div class="sub">${r[1]} · <span class="${r[4]?"late":""}">${r[2]}</span></div></div>${done.has(i)?`<span class="done">${CHECK}ทวนแล้ว</span>`:`<button class="act" data-i="${i}" aria-label="ทวน ${r[0]} แล้ว">ทวนแล้ว</button>`}</div>`).join("")+(rows.length>3&&!open?`<button class="more" id="more">ดูอีก ${rows.length-3} หัวข้อ</button>`:'<div class="line"></div>');
+  L.querySelectorAll(".act").forEach(b=>b.onclick=()=>{done.add(+b.dataset.i);xp+=3;draw()});
+  const m=document.getElementById("more");if(m)m.onclick=()=>{open=true;draw()};
+}
+document.querySelectorAll(".sw button").forEach(b=>b.onclick=()=>{mode=b.dataset.m;open=false;done=new Set();xp=0;document.querySelectorAll(".sw button").forEach(x=>x.setAttribute("aria-pressed",x===b));draw()});
+draw();
+</script>
+</body>
+</html>

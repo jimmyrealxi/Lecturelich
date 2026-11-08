@@ -106,7 +106,7 @@ export default function SubjectScreen() {
         )}
 
         <Section>โน้ตแต่ละคาบ</Section>
-        <NotesTimeline subjectId={id} absentKeys={absentKeys} />
+        <NotesTimeline subjectId={id} subjectName={subject?.name ?? ""} absentKeys={absentKeys} />
 
         <Section>งานของวิชา</Section>
         <Card>

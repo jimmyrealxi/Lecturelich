@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich ดูรูปเต็ม</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ดูรูปกระดานขนาดเต็ม · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--rule2:#8C7B60;--paper:#2A2118;--muted:#574735;--faint:#64523F;--pen:#2B4A8A;--red:#A0281D;--on:#F3EAD2;--onMuted:#CDBE9E}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--pen);color:var(--on)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+.view :focus-visible{outline-color:var(--on)}
+body{background:#2A2E2B;font:15px/1.5 Anuphan,sans-serif;color:#E4E6E2;padding:28px 16px}
+h1{font:400 22px/1.4 Chonburi,serif;color:#fff;margin-bottom:6px}
+p.note{color:#C6CCC7;font-size:14px;max-width:760px;margin-bottom:24px}
+.wrap{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.col{width:360px;max-width:100%}
+.cap{font:600 15px Anuphan;color:#fff;margin-bottom:10px}
+.cap small{display:block;font:400 13px Anuphan;color:#C6CCC7}
+.phone{position:relative;height:680px;border:6px solid #060606;border-radius:28px;overflow:hidden;display:flex;flex-direction:column;background:var(--ink);color:var(--paper)}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+
+/* หน้ากระดาษ */
+.top{flex:none;padding:6px 16px 12px;border-bottom:1px solid var(--rule2)}
+.back{display:flex;align-items:center;min-height:44px;font:500 14px Anuphan}
+.top h2{font:400 22px/1.3 Chonburi,serif}
+.top p{font-size:13px;color:var(--muted)}
+.body{flex:1;overflow-y:auto;padding:16px;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
+.card{background:var(--deck);border:1px solid var(--rule2);border-radius:3px;padding:12px;margin-bottom:12px}
+.date{font:400 13px "Courier Prime",monospace;color:var(--muted)}
+.card p{font-size:15px;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.chip{font-size:12px;border:1px solid var(--rule2);border-radius:2px;padding:2px 7px}
+.chip.star{border-color:var(--red);font-weight:600}
+.thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.thumb{width:72px;height:56px;border-radius:3px;overflow:hidden;border:1px solid var(--rule2);display:block}
+.thumb svg{display:block;width:100%;height:100%}
+.label{font-size:13px;color:var(--muted);margin:14px 0 6px}
+.hint{font-size:12px;color:var(--muted);margin-top:4px}
+.fake{min-height:96px;border:1.5px solid var(--rule2);border-radius:3px;background:#FBF5E6;padding:12px;font-size:16px}
+
+/* จอดูรูป: พื้นหมึกเข้มทั้งจอ ให้รูปเด่นที่สุด */
+.view{background:var(--paper);color:var(--on)}
+.vtop{flex:none;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:0 12px;min-height:56px}
+.vtop .back{padding-right:8px}
+.vtop .what{font-size:13px;color:var(--onMuted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.count{font:700 15px "Courier Prime",monospace;min-width:34px;text-align:right}
+.stage{flex:1;min-height:0;overflow:auto;display:grid;place-items:center;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
+.shot{display:block;width:100%;cursor:zoom-in}
+.shot svg{display:block;width:100%;height:auto}
+.stage.zoom{place-items:start}
+.stage.zoom .shot{width:250%;cursor:zoom-out}
+.shot.loading svg{filter:blur(6px)}
+.state{font-size:14px;color:var(--on);text-align:center;padding:0 24px}
+.state .again{display:block;margin:12px auto 0}
+.status{flex:none;font-size:13px;color:var(--onMuted);text-align:center;min-height:20px}
+.bar{flex:none;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 12px 6px}
+.act,.again{min-height:48px;padding:0 12px;border:1.5px solid var(--rule2);border-radius:3px;font:600 14px Anuphan;color:var(--on);display:flex;align-items:center;justify-content:center;gap:4px}
+.bar[hidden]{display:none}
+.act svg{width:16px;height:16px;flex:none}
+.act[aria-pressed=true]{background:var(--on);border-color:var(--on);color:var(--paper)}
+.act:disabled{border-style:dashed;color:var(--onMuted);cursor:default}
+.del{margin:0 12px 12px;width:calc(100% - 24px)}
+.del[hidden]{display:none}
+.sw{display:flex;gap:6px;margin-top:10px}
+.sw button{flex:1;min-height:44px;border:1px solid #5A615C;color:#E4E6E2;font:600 13px Anuphan}
+.sw button[aria-pressed=true]{background:#E4E6E2;color:#1b1d1b}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #4A514C;vertical-align:top}
+th{color:#fff;font-weight:600}
+@media (prefers-reduced-motion:no-preference){.shot{transition:opacity .15s ease-out}}
+</style>
+</head>
+<body>
+<h1>ดูรูปกระดานขนาดเต็ม (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+<p class="note">แอปเก็บรูปเต็ม 1600px ไว้แล้ว แต่หน้าจอโหลดแค่รูปย่อ งานนี้เปิดรูปเต็มให้อ่านกระดานได้ ไม่แตะฐานข้อมูล กดรูปย่อในกรอบซ้ายหรือขวาเพื่อลองได้เลย</p>
+<div class="wrap">
+  <div class="col">
+    <div class="cap">หน้าวิชา<small>แตะรูป = ดูรูปเต็ม · แตะส่วนอื่นของการ์ด = แก้โน้ตเหมือนเดิม</small></div>
+    <div class="phone">
+      <div class="top">
+        <div class="back">‹ วิชา</div>
+        <h2>โครงสร้างข้อมูล</h2>
+        <p>โน้ตทุกคาบ</p>
+      </div>
+      <div class="body">
+        <div class="card">
+          <div class="date">18 พ.ย. 2569</div>
+          <p>Graph เบื้องต้น, degree อาจารย์บอกออกสอบ</p>
+          <div class="chips"><span class="chip star">★ degree</span><span class="chip">adjacency list</span></div>
+          <div class="thumbs" data-list="view"></div>
+        </div>
+        <div class="card">
+          <div class="date">11 พ.ย. 2569</div>
+          <p>ทบทวน tree และ traversal</p>
+          <div class="chips"><span class="chip">inorder</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="cap">จอดูรูป<small>แตะรูปหรือกด "ขยาย" เพื่ออ่านตัวหนังสือ แล้วเลื่อนดูส่วนอื่น</small></div>
+    <div class="phone view">
+      <div class="vtop">
+        <button class="back" id="close" aria-label="ปิดรูป">‹ ปิด</button>
+        <div class="what" id="what">โครงสร้างข้อมูล · 18 พ.ย. 2569</div>
+        <div class="count" id="count" aria-live="polite"></div>
+      </div>
+      <div class="stage" id="stage"></div>
+      <div class="status" id="status"></div>
+      <div class="bar" id="bar">
+        <button class="act" id="prev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>ก่อนหน้า</button>
+        <button class="act" id="zoom" aria-pressed="false">ขยาย</button>
+        <button class="act" id="next">ถัดไป<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+      </div>
+      <button class="act del" id="del" hidden>ลบรูปนี้</button>
+    </div>
+    <div class="sw" id="sw" role="group" aria-label="สถานะตัวอย่าง">
+      <button data-s="ok" aria-pressed="true">ปกติ</button>
+      <button data-s="loading" aria-pressed="false">กำลังโหลด</button>
+      <button data-s="fail" aria-pressed="false">โหลดไม่ได้</button>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="cap">หน้าจดหลังคาบ<small>เดิมแตะรูป = ลบทันที เปลี่ยนเป็นแตะเพื่อดู แล้วกด "ลบรูปนี้" ในจอดูรูป</small></div>
+    <div class="phone">
+      <div class="top">
+        <div class="back">‹ ปิด</div>
+        <h2>แก้โน้ต</h2>
+        <p>โครงสร้างข้อมูล · 18 พ.ย. 2569 10:00–12:00</p>
+      </div>
+      <div class="body">
+        <div class="label">วันนี้เรียนอะไร (สั้น ๆ)</div>
+        <div class="fake">Graph เบื้องต้น, degree อาจารย์บอกออกสอบ</div>
+        <div class="label">รูปกระดาน (ย่อรูปให้อัตโนมัติ · สูงสุด 6 รูป)</div>
+        <div class="thumbs" data-list="edit"></div>
+        <div class="hint">แตะรูปเพื่อดูหรือลบ</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="cap">สิ่งที่เปลี่ยน</div>
+      <table>
+        <tr><th>จุด</th><th>หลังแก้</th></tr>
+        <tr><td>รูปย่อหน้าวิชา</td><td>ใหญ่ขึ้นเป็น 72×56 ให้กดง่าย</td></tr>
+        <tr><td>โหลดรูปเต็ม</td><td>โหลดตอนเปิดดูเท่านั้น ระหว่างรอใช้รูปย่อแทน</td></tr>
+        <tr><td>บนคอม</td><td>ปุ่มลูกศรเปลี่ยนรูป · Esc ปิด</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// รูปตัวอย่างวาดเป็นกระดาน ไม่ใช่ข้อมูลจริง
+const C={w:"#ECE9DC",y:"#EBD98A",p:"#E8A9A0"};
+const T=(x,y,s,f,t)=>`<text x="${x}" y="${y}" font-family="Anuphan,sans-serif" font-size="${s}" fill="${f}">${t}</text>`;
+const board=(inner)=>`<svg viewBox="0 0 1600 1200" role="presentation" preserveAspectRatio="xMidYMid slice"><rect width="1600" height="1200" fill="#2C4538"/><rect x="0" y="1130" width="1600" height="70" fill="#6B5237"/><g transform="rotate(-.8 800 600)">${inner}</g></svg>`;
+const node=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="46" fill="none" stroke="${C.w}" stroke-width="6"/>`+T(x-14,y+18,52,C.w,n);
+const line=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="${C.w}" stroke-width="6"/>`;
+const shots=[
+  board(T(90,130,84,C.y,"Graph เบื้องต้น")+line(300,330,600,330)+line(300,330,300,640)+line(600,330,600,640)+line(300,640,600,640)+line(300,330,600,640)+node(300,330,"A")+node(600,330,"B")+node(300,640,"C")+node(600,640,"D")+T(800,330,58,C.w,"degree(v) = จำนวนเส้นที่ติด v")+T(800,430,58,C.w,"deg(A) = 3, deg(B) = 2")+T(800,530,58,C.p,"★ ออกสอบ! ผลรวม deg = 2|E|")+T(90,900,54,C.w,"|V| = 4   |E| = 5   ผลรวม deg = 10")),
+  board(T(90,130,84,C.y,"Adjacency List")+T(120,290,62,C.w,"A → B → C → D")+T(120,400,62,C.w,"B → A → D")+T(120,510,62,C.w,"C → A → D")+T(120,620,62,C.w,"D → A → B → C")+T(120,800,58,C.p,"ใช้พื้นที่ O(V + E)")+T(120,900,58,C.w,"เหมาะกับ graph ที่เส้นน้อย (sparse)")),
+  board(T(90,130,84,C.y,"BFS vs DFS")+T(120,300,62,C.w,"BFS ใช้ queue ไล่ทีละชั้น")+T(120,420,62,C.w,"DFS ใช้ stack ลงลึกก่อน")+T(120,600,58,C.p,"เวลาทั้งคู่ O(V + E)")+T(120,740,54,C.w,"ส่งงาน: เขียน BFS ภายในวันศุกร์")),
+];
+const $=(id)=>document.getElementById(id);
+let list=[0,1,2],edit=[0,1,2],mode="view",i=0,zoomed=false,state="ok";
+
+function thumbs(){
+  document.querySelectorAll("[data-list]").forEach(el=>{
+    const m=el.dataset.list,arr=m==="view"?list:edit;
+    el.innerHTML="";
+    arr.forEach((p,n)=>{
+      const b=document.createElement("button");
+      b.className="thumb";b.innerHTML=shots[p];b.setAttribute("aria-label",`ดูรูปที่ ${n+1} จาก ${arr.length}`);
+      b.onclick=()=>{mode=m;i=n;zoomed=false;draw()};
+      el.appendChild(b);
+    });
+  });
+}
+function draw(){
+  const arr=mode==="view"?list:edit,stage=$("stage");
+  $("del").hidden=mode!=="edit"||!arr.length;
+  if(!arr.length){stage.className="stage";stage.innerHTML='<div class="state">ไม่มีรูปแล้ว</div>';$("count").textContent="";$("bar").hidden=true;$("status").textContent="";return}
+  i=Math.min(i,arr.length-1);
+  $("count").textContent=`${i+1}/${arr.length}`;
+  $("prev").disabled=i===0;$("next").disabled=i===arr.length-1;
+  const canZoom=state!=="fail";
+  $("zoom").disabled=!canZoom;
+  if(state==="fail"){
+    stage.className="stage";
+    stage.innerHTML='<div class="state">โหลดรูปไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง<button class="again" id="again">ลองอีกครั้ง</button></div>';
+    $("again").onclick=()=>setState("ok");
+    $("status").textContent="";
+  }else{
+    stage.className="stage"+(zoomed?" zoom":"");
+    stage.innerHTML=`<button class="shot${state==="loading"?" loading":""}" aria-label="${zoomed?"ย่อรูปให้พอดีจอ":"ขยายรูป"}">${shots[arr[i]]}</button>`;
+    stage.firstChild.onclick=(e)=>toggleZoom(e);
+    $("status").textContent=state==="loading"?"กำลังโหลดรูปเต็ม…":zoomed?"เลื่อนเพื่อดูส่วนอื่น":"";
+  }
+  $("zoom").textContent=zoomed?"พอดีจอ":"ขยาย";
+  $("zoom").setAttribute("aria-pressed",zoomed);
+}
+function toggleZoom(e){
+  const stage=$("stage"),r=stage.firstChild.getBoundingClientRect();
+  // จำจุดที่แตะ แล้วเลื่อนจอให้จุดนั้นอยู่กลาง
+  const fx=e&&e.clientX?(e.clientX-r.left)/r.width:.5,fy=e&&e.clientY?(e.clientY-r.top)/r.height:.5;
+  zoomed=!zoomed;draw();
+  if(zoomed){const s=$("stage"),o=s.firstChild;s.scrollLeft=o.offsetWidth*fx-s.clientWidth/2;s.scrollTop=o.offsetHeight*fy-s.clientHeight/2}
+}
+function go(d){const arr=mode==="view"?list:edit;const n=i+d;if(n<0||n>=arr.length)return;i=n;zoomed=false;draw()}
+function setState(s){state=s;zoomed=false;document.querySelectorAll("#sw button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===s));draw()}
+$("prev").onclick=()=>go(-1);$("next").onclick=()=>go(1);$("zoom").onclick=()=>toggleZoom();
+$("close").onclick=()=>{zoomed=false;draw()};
+$("del").onclick=()=>{if(confirm("ลบรูปนี้?")){edit.splice(i,1);thumbs();$("bar").hidden=!edit.length;draw()}};
+document.querySelectorAll("#sw button").forEach(b=>b.onclick=()=>setState(b.dataset.s));
+addEventListener("keydown",e=>{if(e.key==="ArrowLeft")go(-1);if(e.key==="ArrowRight")go(1)});
+thumbs();draw();
+</script>
+</body>
+</html>

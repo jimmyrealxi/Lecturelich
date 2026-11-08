@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { AddBtn, Btn, head, pick, Section, Skeleton, T, Tape, confirmAction } from "@/components/ui";
 import { AddTaskForm } from "@/components/AddTaskForm";
+import { PhotoViewer } from "@/components/PhotoViewer";
 import { useCurrentTerm, useSlots, useSubjects, type Subject } from "@/lib/queries/core";
 import { useNote, useSaveNote, type Exam, type Note, type TopicRow } from "@/lib/queries/notes";
 import { pickPhoto, signedUrls, thumbPath } from "@/lib/photos";
@@ -57,6 +58,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
   const [removedTopicIds, setRemovedTopicIds] = useState<string[]>([]);
   const [topicDraft, setTopicDraft] = useState("");
   const [addingTask, setAddingTask] = useState(false);
+  const [viewing, setViewing] = useState<number | null>(null);
 
   const thumbs = useQuery({
     queryKey: ["thumbs", existing?.id, existing?.photo_paths],
@@ -70,6 +72,15 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
     const uri = await pickPhoto(camera);
     if (uri) setNewUris((u) => [...u, uri]);
   };
+  const removePhoto = (i: number) => confirmAction("ลบรูปนี้?", () => {
+    setViewing(photoCount === 1 ? null : Math.min(i, photoCount - 2));
+    if (i < kept.length) {
+      setRemovedPhotos((r) => [...r, kept[i]]);
+      setKept((k) => k.filter((_, j) => j !== i));
+    } else {
+      setNewUris((n) => n.filter((_, j) => j !== i - kept.length));
+    }
+  });
   const addTopic = () => {
     const title = topicDraft.trim();
     if (!title) return;
@@ -118,18 +129,15 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 
         <Text style={s.label}>รูปกระดาน (ย่อรูปให้อัตโนมัติ · สูงสุด {MAX_PHOTOS} รูป)</Text>
         <View style={s.photos}>
-          {kept.map((p) => (
-            <Pressable key={p} accessibilityLabel="ลบรูปนี้" onPress={() => confirmAction("ลบรูปนี้?", () => {
-              setKept((k) => k.filter((x) => x !== p));
-              setRemovedPhotos((r) => [...r, p]);
-            })}>
+          {kept.map((p, i) => (
+            <Pressable key={p} accessibilityRole="button" accessibilityLabel={`ดูรูปที่ ${i + 1}`} onPress={() => setViewing(i)}>
               {thumbs.data?.[thumbPath(p)]
                 ? <Image source={{ uri: thumbs.data[thumbPath(p)] }} style={s.thumb} />
                 : <View style={[s.thumb, s.thumbEmpty]} />}
             </Pressable>
           ))}
-          {newUris.map((u) => (
-            <Pressable key={u} accessibilityLabel="เอารูปนี้ออก" onPress={() => setNewUris((n) => n.filter((x) => x !== u))}>
+          {newUris.map((u, i) => (
+            <Pressable key={u} accessibilityRole="button" accessibilityLabel={`ดูรูปที่ ${kept.length + i + 1}`} onPress={() => setViewing(kept.length + i)}>
               <Image source={{ uri: u }} style={s.thumb} />
               <View style={s.thumbTape} />
             </Pressable>
@@ -141,7 +149,7 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
             </>
           )}
         </View>
-        {photoCount > 0 && <Text style={[T.muted, { fontSize: 12, marginTop: 4 }]}>แตะรูปเพื่อลบ</Text>}
+        {photoCount > 0 && <Text style={[T.muted, { fontSize: 12, marginTop: 4 }]}>แตะรูปเพื่อดูหรือลบ</Text>}
 
         <Section side="กด ★ = อาจารย์บอกออกสอบ">หัวข้อที่เรียน</Section>
         {topics.map((t, i) => (
@@ -177,6 +185,15 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
         <Btn kind="primary" label={save.isPending ? "กำลังบันทึก…" : "บันทึก"} onPress={onSave} />
         {empty && <Text style={[T.muted, { textAlign: "center", marginTop: 6, fontSize: 12 }]}>พิมพ์ข้อความ ใส่รูป หรือเพิ่มหัวข้ออย่างน้อย 1 อย่าง</Text>}
       </View>
+
+      {viewing !== null && (
+        <PhotoViewer title={`${subject.name} · ${thaiDate(date)}`} index={viewing}
+          photos={[
+            ...kept.map((p) => ({ id: p, thumb: thumbs.data?.[thumbPath(p)] })),
+            ...newUris.map((u) => ({ id: u, thumb: u, local: true })),
+          ]}
+          onIndex={setViewing} onClose={() => setViewing(null)} onDelete={removePhoto} />
+      )}
 
       <Modal visible={addingTask} transparent animationType="slide" onRequestClose={() => setAddingTask(false)}>
         <Pressable style={s.dim} onPress={() => setAddingTask(false)} accessibilityLabel="ปิด" />

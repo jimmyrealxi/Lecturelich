@@ -106,7 +106,8 @@ export default function Today() {
   };
 
   const loading = term.isPending || (term.data && (slots.isPending || subjects.isPending));
-  const termLabel = term.data ? (term.data.name.includes("เทอม") ? term.data.name : `เทอม ${term.data.name}`) : null;
+  const [dd, mon, yy] = typedDate(now.date).split(" "); // Courier Prime ไม่มีตัวไทย → เดือนต้องใช้ฟอนต์ไทย
+  const termLabel = term.data ?(term.data.name.includes("เทอม") ? term.data.name : `เทอม ${term.data.name}`) : null;
   const nextAfter = focus?.state === "live" ? today.find((x) => toMinutes(x.start_time) >= toMinutes(focus.slot.end_time)) : undefined;
   // ตรายางแดงจุดเดียวต่อจอ = งานด่วนสุด (ส่งภายในพรุ่งนี้ หรือเลยกำหนด)
   const urgent = openTasks.find((a) => !a.done && a.due_at && dueInfo(a.due_at, now.date).days <= 1);
@@ -120,7 +121,7 @@ export default function Today() {
             <Text style={s.dymo}>LECTURELICH</Text>
             <Text style={s.h2} accessibilityRole="header">{weekdayName(now.date)}</Text>
             {/* "เทอม 2/2569" ห้ามแยกบรรทัด (u00a0 = ช่องว่างไม่ตัดบรรทัด) */}
-            <Text style={s.date}>{typedDate(now.date)}{termLabel ? <Text style={s.dateTerm}>{` · ${termLabel.replace(/ /g, "\u00a0")}`}</Text> : null}</Text>
+            <Text style={s.date}>{dd} <Text style={s.dateTerm}>{mon}</Text> {yy}{termLabel ? <Text style={s.dateTerm}>{` · ${termLabel.replace(/ /g, "\u00a0")}`}</Text> : null}</Text>
           </View>
           <Pressable onPress={() => act("palm", "หวัดดี! พักบ้างนะ")} style={s.buddy} accessibilityRole="button" accessibilityLabel="Pap-Boy กดเพื่อทักทาย">
             <PapBoyBuddy look={look} pose={buddy.pose} />

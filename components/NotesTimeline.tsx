@@ -1,15 +1,18 @@
+import { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Card, Skeleton, T } from "@/components/ui";
+import { PhotoViewer } from "@/components/PhotoViewer";
 import { useSubjectNotes } from "@/lib/queries/notes";
 import { signedUrls, thumbPath } from "@/lib/photos";
 import { thaiDate } from "@/lib/format";
 import { color, font, radius, space } from "@/lib/theme";
 
 /** ไทม์ไลน์โน้ตทุกคาบของวิชา (ใหม่สุดก่อน) · แตะเพื่อแก้ · absentKeys = "slotId:date" ที่เช็กว่าขาด */
-export function NotesTimeline({ subjectId, absentKeys }: { subjectId: string; absentKeys: Set<string> }) {
+export function NotesTimeline({ subjectId, subjectName, absentKeys }: { subjectId: string; subjectName: string; absentKeys: Set<string> }) {
   const notes = useSubjectNotes(subjectId);
+  const [viewing, setViewing] = useState<{ noteId: string; index: number } | null>(null);
   const allThumbs = (notes.data ?? []).flatMap((n) => n.photo_paths.map(thumbPath));
   const thumbs = useQuery({
     queryKey: ["thumbs-subject", subjectId, allThumbs.join("|")],
@@ -21,6 +24,8 @@ export function NotesTimeline({ subjectId, absentKeys }: { subjectId: string; ab
   if (notes.isPending) return <Skeleton height={120} />;
   if (!notes.data?.length) return <Card><Text style={T.muted}>ยังไม่มีโน้ต · จดได้จากการ์ด “ยังไม่ได้จด” ในหน้าวันนี้หลังเลิกคาบ</Text></Card>;
 
+  const open = viewing && notes.data.find((n) => n.id === viewing.noteId);
+
   return (
     <View style={s.tl}>
       <View style={s.line} />
@@ -29,12 +34,13 @@ export function NotesTimeline({ subjectId, absentKeys }: { subjectId: string; ab
         return (
           <View key={n.id} style={s.item}>
             <View style={[s.dot, absent && { backgroundColor: color.danger }]} />
-            <Pressable
-              disabled={!n.slot_id}
-              onPress={() => n.slot_id && router.push({ pathname: "/note/[slotId]", params: { slotId: n.slot_id, date: n.date } })}
-              accessibilityRole="button" accessibilityLabel={`แก้โน้ต ${thaiDate(n.date)}`}
-            >
-              <Card style={{ marginBottom: 0 }}>
+            <Card style={{ marginBottom: 0 }}>
+              {/* รูปอยู่นอกปุ่มแก้โน้ต: ปุ่มซ้อนปุ่มไม่ได้ในเว็บ */}
+              <Pressable
+                disabled={!n.slot_id}
+                onPress={() => n.slot_id && router.push({ pathname: "/note/[slotId]", params: { slotId: n.slot_id, date: n.date } })}
+                accessibilityRole="button" accessibilityLabel={`แก้โน้ต ${thaiDate(n.date)}`}
+              >
                 <Text style={T.muted}>
                   {thaiDate(n.date)}
                   {absent && <Text style={{ color: color.danger, fontFamily: font.bodyBold }}> · ขาด</Text>}
@@ -49,19 +55,29 @@ export function NotesTimeline({ subjectId, absentKeys }: { subjectId: string; ab
                     ))}
                   </View>
                 )}
-                {n.photo_paths.length > 0 && (
-                  <View style={s.photos}>
-                    {n.photo_paths.map((p) => {
-                      const uri = thumbs.data?.[thumbPath(p)];
-                      return uri ? <Image key={p} source={{ uri }} style={s.thumb} /> : <View key={p} style={s.thumb} />;
-                    })}
-                  </View>
-                )}
-              </Card>
-            </Pressable>
+              </Pressable>
+              {n.photo_paths.length > 0 && (
+                <View style={s.photos}>
+                  {n.photo_paths.map((p, i) => {
+                    const uri = thumbs.data?.[thumbPath(p)];
+                    return (
+                      <Pressable key={p} onPress={() => setViewing({ noteId: n.id, index: i })}
+                        accessibilityRole="button" accessibilityLabel={`ดูรูปที่ ${i + 1} จาก ${n.photo_paths.length}`}>
+                        {uri ? <Image source={{ uri }} style={s.thumb} /> : <View style={s.thumb} />}
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              )}
+            </Card>
           </View>
         );
       })}
+      {viewing && open && (
+        <PhotoViewer title={`${subjectName} · ${thaiDate(open.date)}`} index={viewing.index}
+          photos={open.photo_paths.map((p) => ({ id: p, thumb: thumbs.data?.[thumbPath(p)] }))}
+          onIndex={(index) => setViewing({ noteId: open.id, index })} onClose={() => setViewing(null)} />
+      )}
     </View>
   );
 }
@@ -79,5 +95,5 @@ const s = StyleSheet.create({
   topicStar: { borderColor: color.red },
   topicText: { fontFamily: font.body, fontSize: 12, color: color.paper },
   photos: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 6 },
-  thumb: { width: 56, height: 42, borderRadius: radius.sm, backgroundColor: color.rule },
+  thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: color.rule },
 });

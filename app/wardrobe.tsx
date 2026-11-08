@@ -50,7 +50,7 @@ export default function Wardrobe() {
 
   return (
     <View style={s.page}>
-      <TopBar back="เกม" title="แต่งตัว" onBack={back} right={<Text style={s.count}>ใส่ {worn}/{SLOTS.length}</Text>} />
+      <TopBar back="เกม" title="แต่งตัว" onBack={back} right={<Text style={s.small}>ใส่ <Text style={s.count}>{worn}/{SLOTS.length}</Text></Text>} />
       <ScrollView contentContainerStyle={s.content}>
         <View style={s.stage}>
           <View style={{ alignSelf: "center" }}><PapBoySprite look={look} size={192} bg label="Pap-Boy ในชุดที่เลือก" /></View>

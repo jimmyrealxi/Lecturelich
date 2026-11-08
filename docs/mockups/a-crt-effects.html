@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich เอฟเฟกต์จอเขียว</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* จอเขียว: ปกตินิ่ง กดแล้วตอบสนองเป็นภาพพิกเซลที่วาดเอง · ยืมแค่บรรยากาศจอเก่า ไม่ใช้เลย์เอาต์/ไอคอน/ภาพ/ฟอนต์ของเกมใด · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--paper:#2A2118;--muted:#574735;--rule2:#8C7B60;--pen:#2B4A8A;--crt:#08130C;--crtOn:#9EF0B4;--crtBig:#B8FFC9;--crtDim:#73C48B;--crtLine:#2F6B42}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--crtOn);color:var(--crt)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+.crt :focus-visible{outline-color:var(--crtBig)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+.head{max-width:1000px;margin:0 auto 18px}
+.head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
+.head p{color:#C9BFAA;font-size:14px;max-width:70ch;margin-top:4px}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ctl button{min-height:44px;padding:0 14px;border:1.5px solid var(--rule2);border-radius:3px;font-size:14px;color:#E9E2D2}
+.ctl button[aria-pressed=true]{background:#F3EAD2;color:#2A2118;font-weight:600}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.phone{width:360px;max-width:100%;flex:none;border:6px solid #050505;border-radius:30px;background:var(--ink);padding:18px 16px 26px;color:var(--paper)}
+.cap{font:600 14px Anuphan;color:var(--muted);margin:18px 0 8px}
+.cap:first-child{margin-top:0}
+
+.crt{position:relative;overflow:hidden;background:var(--crt);color:var(--crtOn);border-radius:14px;padding:14px}
+/* ตอนเล่นภาพ ซ่อนเนื้อหาทั้งหมด จอเหลือแค่ภาพกับป้ายใต้ภาพ · visibility คงความสูงการ์ดไว้ */
+.crt.react .body,.crt.react .att,.crt.react .saved{visibility:hidden}
+.crt.react{cursor:pointer}
+.row{display:flex;gap:12px}
+.l{flex:1;min-width:0}
+.r{flex:none;text-align:right}
+.k{display:block;font-size:13px;color:var(--crtDim);text-shadow:0 0 6px rgba(115,196,139,.35)}
+.t{display:block;font-size:19px;line-height:26px;font-weight:600;margin-top:2px;text-shadow:0 0 7px rgba(158,240,180,.45)}
+.big{font:400 36px/36px VT323,monospace;color:var(--crtBig);text-shadow:0 0 9px rgba(184,255,201,.55)}
+.cur{display:inline-block;width:8px;height:14px;margin-left:5px;vertical-align:-2px;background:var(--crtOn);animation:blink 1.1s steps(1) infinite}
+.att{display:flex;gap:8px;margin-top:14px;position:relative;z-index:3}
+.btn{flex:1;min-height:44px;padding:0 8px;border:1px solid var(--crtLine);border-radius:3px;font:600 15px Anuphan;color:var(--crtOn)}
+.btn[aria-pressed=true]{background:var(--crtOn);border-color:var(--crtOn);color:var(--crt)}
+.fx{position:absolute;inset:0;pointer-events:none}
+canvas.fx{bottom:36px;width:100%;height:calc(100% - 36px);image-rendering:pixelated;z-index:1}
+.scan{z-index:2;background:repeating-linear-gradient(0deg,rgba(0,0,0,.24) 0 1px,transparent 1px 3px)}
+.vig{z-index:2;background:radial-gradient(120% 110% at 50% 50%,transparent 58%,rgba(0,0,0,.5) 100%)}
+.say{position:absolute;left:0;right:0;bottom:8px;z-index:3;pointer-events:none;text-align:center;color:var(--crtOn);font:600 15px/22px Anuphan;text-shadow:0 0 7px rgba(158,240,180,.45);opacity:0}
+.say.on{opacity:1}
+.say span{font:500 15px/20px Anuphan;margin-left:8px;color:var(--crtBig)}
+.say span.n{font:400 19px/20px VT323,monospace}
+.saved{min-height:20px;margin-top:10px;font-size:13px;color:var(--crtDim);position:relative;z-index:3}
+@keyframes blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+/* เวลา: ตัวเลขนิ่ง กะพริบติด-ดับเฉพาะโคลอน (เจ้าของเลือก) */
+.col{animation:colon 1s steps(1) infinite}
+@keyframes colon{0%,49%{opacity:1}50%,100%{opacity:0}}
+.still .cur,.still .col{animation:none}
+@media (prefers-reduced-motion:reduce){.cur,.col{animation:none}}
+
+.note{flex:1;min-width:280px;max-width:560px}
+.note h2{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-bottom:18px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #4A4235;vertical-align:top}
+th{color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>จอเขียวตอบสนองตอนกด (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>ตอนปกตินิ่ง มีแค่เรืองแสงกับเคอร์เซอร์ พอกดปุ่ม จอจะเปลี่ยนเป็นภาพพิกเซลของปุ่มนั้นล้วน ๆ สั้น ๆ แล้วกลับมาเหมือนเดิม กดปุ่มในจอเพื่อลองได้เลย</p>
+  <div class="ctl"><button id="still" aria-pressed="false">ลดการเคลื่อนไหว</button></div>
+</div>
+<div class="wrap">
+  <div class="phone" id="phone">
+    <div class="cap">หน้าวันนี้: เช็กชื่อ</div>
+    <div class="crt" id="c1">
+      <canvas class="fx"></canvas>
+      <div class="body">
+        <div class="row">
+          <div class="l">
+            <span class="k">&gt; คาบตอนนี้<span class="cur" aria-hidden="true"></span></span>
+            <span class="t">โครงสร้างข้อมูล</span>
+            <span class="k">13:00–15:00 · SC9-604</span>
+          </div>
+          <div class="r"><span class="k">เหลือ</span><div class="big">40</div><span class="k">นาที</span></div>
+        </div>
+      </div>
+      <div class="att" role="group" aria-label="เช็กชื่อคาบนี้">
+        <button class="btn" data-k="present" aria-pressed="false">มาเรียน</button>
+        <button class="btn" data-k="absent" aria-pressed="false">ขาด</button>
+        <button class="btn" data-k="off" aria-pressed="false">งดสอน</button>
+      </div>
+      <div class="saved" id="saved" aria-live="polite"></div>
+      <div class="say" id="say1"></div>
+      <div class="fx scan"></div><div class="fx vig"></div>
+    </div>
+
+    <div class="cap">แท็บงาน: ส่งงาน</div>
+    <div class="crt" id="c2">
+      <canvas class="fx"></canvas>
+      <div class="body">
+        <div class="row">
+          <div class="l">
+            <span class="k">&gt; ใกล้ส่งสุด<span class="cur" aria-hidden="true"></span></span>
+            <span class="t">แบบฝึกหัด Graph</span>
+            <span class="k">โครงสร้างข้อมูล · วันนี้ 23:59</span>
+          </div>
+          <div class="r"><span class="k">อีก</span><div class="big">1<span class="col">:</span>46</div><span class="k">ชม.</span></div>
+        </div>
+      </div>
+      <div class="att"><button class="btn" data-k="boom" aria-pressed="false">ส่งแล้ว</button></div>
+      <div class="say" id="say2"></div>
+      <div class="fx scan"></div><div class="fx vig"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <h2>แต่ละปุ่มเล่นอะไร</h2>
+    <table>
+      <tr><th>ปุ่ม</th><th>ภาพบนจอ</th><th>เวลา</th></tr>
+      <tr><td>มาเรียน</td><td>ติ๊กถูกวาดขึ้น แล้วประกายกระจาย</td><td>0.9 วิ</td></tr>
+      <tr><td>ขาด</td><td>สัญญาณแตก เหลือเส้นเดียวแล้วดับ</td><td>0.8 วิ</td></tr>
+      <tr><td>งดสอน</td><td>พระจันทร์ กับ Z ลอยขึ้น</td><td>1 วิ</td></tr>
+      <tr><td>ส่งแล้ว</td><td>เมฆรูปเห็ด คลื่นวิ่งตามพื้น</td><td>1.5 วิ</td></tr>
+    </table>
+    <h2>กติกา</h2>
+    <table>
+      <tr><td>บันทึกข้อมูล</td><td>บันทึกทันทีตอนกด ไม่ต้องรอภาพจบ แตะจอเพื่อข้ามภาพได้</td></tr>
+      <tr><td>ตอนเล่นภาพ</td><td>ซ่อนข้อความและปุ่มทั้งหมด จอเหลือแค่ภาพ ป้ายอยู่ใต้ภาพ การ์ดไม่เปลี่ยนขนาด</td></tr>
+      <tr><td>กดซ้ำปุ่มเดิม</td><td>ในแอปจริงไม่เล่นซ้ำ เล่นเมื่อค่าเปลี่ยนเท่านั้น</td></tr>
+      <tr><td>ลดการเคลื่อนไหว</td><td>ไม่มีภาพ ขึ้นแค่ป้ายข้อความ</td></tr>
+      <tr><td>แสงวาบ</td><td>เมฆรูปเห็ดวาบครั้งเดียวแบบไม่เต็มความสว่าง ไม่กะพริบรัว</td></tr>
+    </table>
+  </div>
+</div>
+<script>
+// ภาพทั้งหมดวาดด้วยโค้ดบนกริดพิกเซล · สีเดียวแบบฟอสเฟอร์
+const CELL=3,ON="#9EF0B4",DIM="#2F6B42",HI="#B8FFC9";
+const hash=(x,y)=>{const s=Math.sin(x*127.1+y*311.7)*43758.5453;return s-Math.floor(s)};
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const out=(p)=>1-Math.pow(1-p,3);
+function disc(g,cx,cy,r,fn){for(let y=Math.floor(cy-r);y<=cy+r;y++)for(let x=Math.floor(cx-r);x<=cx+r;x++)if((x-cx)**2+(y-cy)**2<=r*r)fn(g,x,y)}
+const px=(g,x,y,c)=>{g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),1,1)};
+
+const Z=[[1,1,1,1],[0,0,1,0],[0,1,0,0],[1,1,1,1]];
+const DRAW={
+  present(g,W,H,t){
+    const a=[W*.36,H*.46],b=[W*.46,H*.68],c=[W*.66,H*.18];
+    const seg=(A,B,p)=>{const n=40;for(let i=0;i<=n*p;i++){const x=A[0]+(B[0]-A[0])*i/n,y=A[1]+(B[1]-A[1])*i/n;for(let d=-2;d<=2;d++)for(let e=-2;e<=2;e++)if(d*d+e*e<6)px(g,x+d,y+e,ON)}};
+    seg(a,b,clamp(t/.2));if(t>.2)seg(b,c,out(clamp((t-.2)/.28)));
+    if(t>.46){const p=out(clamp((t-.46)/.54));for(let i=0;i<26;i++){const r=(.18+hash(i,1)*.5)*W*p,ang=hash(i,2)*6.283;if(hash(i,3)>p*.9)px(g,W*.5+Math.cos(ang)*r,H*.45+Math.sin(ang)*r*.55,HI)}}
+  },
+  absent(g,W,H,t){
+    if(t<.55){const dens=.5*(1-t/.55)+.08;const half=H*(1-clamp(t/.55))/2+1;for(let y=Math.floor(H/2-half);y<H/2+half;y++){const shift=Math.floor(hash(y,Math.floor(t*30))*8);for(let x=0;x<W;x++)if(hash(x+shift,y+Math.floor(t*40))<dens)px(g,x,y,ON)}}
+    else{const w=W*(1-clamp((t-.55)/.45))/2;for(let x=W/2-w;x<W/2+w;x++)px(g,x,H/2,HI)}
+  },
+  off(g,W,H,t){
+    const mx=W*.5,my=H*.48,r=Math.min(H*.3,11)*out(clamp(t/.3));
+    for(let y=-r;y<=r;y++)for(let x=-r;x<=r;x++)if(x*x+y*y<=r*r&&(x-r*.5)**2+(y+r*.2)**2>r*r*.8)px(g,mx+x,my+y,ON);
+    [0,1,2].forEach(i=>{const st=.28+i*.14,p=clamp((t-st)/.5);if(p<=0||p>=1)return;const s=i+1,ox=mx+r+5+i*6,oy=my-4-p*(H*.4);Z.forEach((row,j)=>row.forEach((v,k)=>{if(v)for(let a=0;a<s;a++)for(let b=0;b<s;b++)px(g,ox+k*s+a,oy+j*s+b,HI)}))});
+  },
+  boom(g,W,H,t){
+    const cx=Math.floor(W*.5),ground=H-3;
+    if(t<.07){g.globalAlpha=.55*(1-t/.07);g.fillStyle=HI;g.fillRect(0,0,W,H);g.globalAlpha=1}
+    const p=out(clamp((t-.05)/.45));
+    const top=ground-p*H*.62,r=3+p*Math.min(H*.3,W*.2);
+    for(let y=Math.floor(top);y<ground;y++){const hw=2+Math.floor(hash(y,Math.floor(t*14))*2)+(ground-y<5?5-(ground-y):0);for(let x=-hw;x<=hw;x++)px(g,cx+x,y,hash(x,y)>.82?DIM:ON)}
+    const tick=Math.floor(t*12);
+    const cap=(g2,x,y)=>{const rel=(y-top)/r,n=hash(x,y+tick);if(n<.1)return;px(g2,x,y,rel>.25&&n<.35?DIM:rel<-.5?HI:ON)};
+    disc(g,cx-r*.62,top,r*.68,cap);disc(g,cx+r*.62,top,r*.68,cap);disc(g,cx,top-r*.4,r*.78,cap);
+    const dw=p*W*.44;for(let x=-dw;x<=dw;x++){const h=1+Math.floor(hash(x|0,tick)*3*(1-Math.abs(x)/(dw+1)));for(let y=0;y<h;y++)px(g,cx+x,ground-y,ON)}
+    if(t<.75){const q=clamp(t/.75),rx=q*W*.62,ry=q*5;for(let a=0;a<70;a++){const an=a/70*3.1416;px(g,cx+Math.cos(an)*rx,ground-Math.sin(an)*ry,HI)}}
+  }
+};
+const META={present:[900,"เข้าเรียนแล้ว","+5 XP"],absent:[800,"บันทึกว่าขาด","ขาดได้อีก 2"],off:[1000,"งดสอน","ไม่นับขาด"],boom:[1500,"ส่งแล้ว!","+20 XP"]};
+const SAVED={present:"บันทึกแล้ว: มาเรียน",absent:"บันทึกแล้ว: ขาด",off:"บันทึกแล้ว: งดสอน"};
+const still=()=>document.getElementById("still").getAttribute("aria-pressed")==="true"||matchMedia("(prefers-reduced-motion:reduce)").matches;
+const raf=new Map();
+
+function play(card,kind,sayEl){
+  cancelAnimationFrame(raf.get(card));
+  const [ms,msg,sub]=META[kind];
+  const cv=card.querySelector("canvas"),g=cv.getContext("2d");
+  clearTimeout(raf.get(card));
+  const W=cv.width=Math.floor(cv.clientWidth/CELL),H=cv.height=Math.floor(cv.clientHeight/CELL);
+  g.clearRect(0,0,W,H);
+  sayEl.innerHTML=`${msg}<span class="${sub.startsWith("+")?"n":""}">${sub}</span>`;
+  const reveal=kind==="boom"?.62:.5;
+  const end=()=>{cancelAnimationFrame(raf.get(card));clearTimeout(raf.get(card));g.clearRect(0,0,W,H);sayEl.classList.remove("on");card.classList.remove("react");card.onclick=null};
+  // ตั้งหลังจบ event นี้ ไม่งั้นคลิกที่เริ่มภาพจะลอยมาปิดภาพทันที
+  setTimeout(()=>{if(card.classList.contains("react"))card.onclick=end});
+  card.classList.add("react");
+  if(still()){sayEl.classList.add("on");raf.set(card,setTimeout(end,1200));return}
+  sayEl.classList.remove("on");
+  const t0=performance.now();
+  const step=(now)=>{
+    const t=clamp((now-t0)/ms);
+    g.clearRect(0,0,W,H);g.globalAlpha=1;
+    DRAW[kind](g,W,H,t);
+    if(t>.86){g.globalCompositeOperation="destination-out";g.fillStyle=`rgba(0,0,0,${(t-.86)/.14})`;g.fillRect(0,0,W,H);g.globalCompositeOperation="source-over"}
+    sayEl.classList.toggle("on",t>=reveal);
+    if(t<1)raf.set(card,requestAnimationFrame(step));
+    else end();
+  };
+  raf.set(card,requestAnimationFrame(step));
+}
+const c1=document.getElementById("c1"),c2=document.getElementById("c2");
+c1.querySelectorAll(".btn").forEach(b=>b.onclick=()=>{
+  c1.querySelectorAll(".btn").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  document.getElementById("saved").textContent=SAVED[b.dataset.k];
+  play(c1,b.dataset.k,document.getElementById("say1"));
+});
+c2.querySelector(".btn").onclick=(e)=>{e.target.setAttribute("aria-pressed","true");play(c2,"boom",document.getElementById("say2"))};
+document.getElementById("still").onclick=(e)=>{const on=e.target.getAttribute("aria-pressed")!=="true";e.target.setAttribute("aria-pressed",on);document.getElementById("phone").classList.toggle("still",on)};
+</script>
+</body>
+</html>

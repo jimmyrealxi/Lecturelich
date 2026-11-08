@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich คาบชดเชย</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* คาบชดเชย + งดสอนทั้งวัน · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#574735;--faint:#64523F;--placeholder:#7A6A55;--pen:#2B4A8A;--red:#A0281D;--on:#F3EAD2;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B;--crtLine:#2F6B42}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--pen);color:var(--on)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+.head{max-width:1200px;margin:0 auto 18px}
+.head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
+.head p{color:#C9BFAA;font-size:14px;max-width:70ch;margin-top:4px}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.col{width:360px;max-width:100%}
+.cap{font:600 15px Anuphan;color:#fff;margin-bottom:10px}
+.cap small{display:block;font:400 13px Anuphan;color:#C9BFAA}
+.phone{position:relative;height:700px;border:6px solid #050505;border-radius:30px;overflow:hidden;background:var(--ink);color:var(--paper)}
+.scroll{height:100%;overflow-y:auto;padding:18px 16px 28px;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
+.back{display:flex;align-items:center;min-height:44px;font:500 14px Anuphan}
+h2{font:400 26px/36px Chonburi,serif}
+.subm{font-size:13px;color:var(--muted);padding-bottom:12px;border-bottom:3px double rgba(42,33,24,.75)}
+h3{font:400 19px/28px Chonburi,serif;margin:24px 0 8px}
+.card{background:var(--deck);border:1px solid var(--rule2);border-radius:3px;padding:12px;margin-bottom:12px}
+.big{font:700 32px "Courier Prime",monospace}
+.muted{font-size:14px;color:var(--muted)}
+.row{display:flex;align-items:center;gap:10px;min-height:56px;border-top:1px solid var(--rule)}
+.row:first-child{border-top:0}
+.row .grow{flex:1;min-width:0}
+.row b{display:block;font-weight:600;font-size:15px}
+.row small{font-size:13px;color:var(--muted)}
+.ty{font:700 1em "Courier Prime",monospace}
+.del{min-height:44px;min-width:44px;padding:0 8px;color:var(--red);font:600 14px Anuphan}
+.add{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border:1.5px dashed var(--rule2);border-radius:3px;font:600 14px Anuphan}
+/* แผ่นล่าง + เทปกาว */
+.dim{position:absolute;inset:0;background:rgba(42,33,24,.45)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--deck);border-top:1px solid var(--rule2);padding:20px 16px 16px}
+.tape{position:absolute;top:-9px;left:50%;width:84px;height:18px;margin-left:-42px;background:rgba(232,221,186,.85);transform:rotate(-2deg)}
+.sheet h4{font:400 19px/28px Chonburi,serif;margin-bottom:8px}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+.in{width:100%;min-height:48px;border:1.5px solid var(--rule2);border-radius:3px;background:var(--field);padding:0 12px;font:16px Anuphan;color:var(--paper)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.err{font-size:13px;color:var(--red);margin-top:4px}
+.pri{display:block;width:100%;min-height:52px;margin-top:14px;background:var(--paper);color:var(--deck);border-radius:3px;font:600 16px Anuphan;box-shadow:2px 2px 0 var(--rule2)}
+/* หน้าวันนี้ */
+.dymo{display:inline-block;background:#1A1A1A;color:#F2F2F2;font:700 12px/1 "Courier Prime",monospace;letter-spacing:2px;padding:5px 9px 4px;border-radius:2px}
+.mast{padding-bottom:12px;border-bottom:3px double rgba(42,33,24,.75)}
+.mast h2{font-size:32px;line-height:44px;margin-top:6px}
+.date{font:700 15px "Courier Prime",monospace}
+.crt{background:var(--crt);color:var(--crtOn);border-radius:14px;padding:14px;margin-top:22px}
+.crt small{font-size:13px;color:var(--crtDim);display:block}
+.crt b{font-size:19px;font-weight:600}
+.tag{display:inline-block;border:1px solid var(--crtLine);color:var(--crtOn);font-size:13px;padding:2px 8px;margin-left:6px;border-radius:2px}
+.att{display:flex;gap:8px;margin-top:14px}
+.att button{flex:1;min-height:44px;border:1px solid var(--crtLine);font:600 15px Anuphan;color:var(--crtOn)}
+.next{font-size:14px;color:var(--muted);margin-top:12px}
+.off{display:block;min-height:44px;font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;margin-top:4px}
+.off[aria-pressed=true]{color:var(--pen);font-weight:600;text-decoration:none}
+.ok{font-size:14px;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #4A4235;vertical-align:top}
+th{color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>คาบชดเชย และงดสอนทั้งวัน (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>เพิ่มคาบครั้งเดียวได้ แล้วเช็กชื่อ จดโน้ต และรับแจ้งเตือนเหมือนคาบปกติ ถ้าอาจารย์เลื่อนคาบ ให้กด "งดสอน" คาบเดิมแล้วเพิ่มคาบชดเชย</p>
+</div>
+<div class="wrap">
+  <div class="col">
+    <div class="cap">หน้าวิชา<small>เพิ่มส่วนนี้ต่อจากการเข้าเรียน</small></div>
+    <div class="phone"><div class="scroll">
+      <div class="back">‹ วิชา</div>
+      <h2>โครงสร้างข้อมูล</h2>
+      <div class="subm">CP352001 · จ. 10:00–12:00 · SC9-604</div>
+      <h3>เข้าเรียน</h3>
+      <div class="card"><div class="big">100% · ขาด 0</div><div class="muted">ขาดได้อีก <span class="ty">3</span> ครั้ง</div></div>
+      <h3>คาบชดเชย</h3>
+      <div class="card" id="list">
+        <div class="row"><div class="grow"><b>ส. 21 พ.ย. <span class="ty">13:00–15:00</span></b><small>SC9-604</small></div><button class="del" id="del" aria-label="ลบคาบชดเชย ส. 21 พ.ย.">ลบ</button></div>
+      </div>
+      <button class="add" id="open">+ เพิ่มคาบชดเชย</button>
+      <h3>โน้ตแต่ละคาบ</h3>
+      <div class="card muted">ยังไม่มีโน้ต</div>
+    </div>
+    <div class="dim" id="dim" hidden></div>
+    <div class="sheet" id="sheet" hidden>
+      <div class="tape"></div>
+      <h4>เพิ่มคาบชดเชย</h4>
+      <label for="d">วันที่</label><input class="in" id="d" value="2026-11-21" inputmode="numeric">
+      <div class="two">
+        <div><label for="s">เริ่ม</label><input class="in" id="s" value="13:00" inputmode="numeric"></div>
+        <div><label for="e">จบ</label><input class="in" id="e" value="15:00" inputmode="numeric"></div>
+      </div>
+      <label for="r">ห้อง</label><input class="in" id="r" value="SC9-604">
+      <div class="err" id="err" role="alert"></div>
+      <button class="pri" id="save">บันทึก</button>
+    </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="cap">หน้าวันนี้<small>คาบชดเชยขึ้นเหมือนคาบปกติ พร้อมป้ายบอก</small></div>
+    <div class="phone"><div class="scroll">
+      <div class="mast">
+        <span class="dymo">LECTURELICH</span>
+        <h2>วันเสาร์</h2>
+        <div class="date">21 พ.ย. 2569</div>
+      </div>
+      <div class="crt">
+        <small>&gt; คาบตอนนี้</small>
+        <b>โครงสร้างข้อมูล</b><span class="tag">ชดเชย</span>
+        <small>13:00–15:00 · SC9-604</small>
+        <div class="att"><button>มาเรียน</button><button>ขาด</button><button>งดสอน</button></div>
+      </div>
+      <div class="next">ถัดไป <span class="ty">15:30</span> ภาษาไทย</div>
+      <button class="off" id="off" aria-pressed="false">วันนี้งดสอนทั้งวัน</button>
+      <h3>ต้องทำ</h3>
+      <div class="ok">ไม่มีอะไรค้าง</div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <div class="cap">สิ่งที่จะเกิดขึ้น</div>
+    <table>
+      <tr><th>เรื่อง</th><th>ผล</th></tr>
+      <tr><td>ฐานข้อมูล</td><td>เพิ่มคอลัมน์วันที่ในตารางคาบเดิม 1 ช่อง คุณต้องรัน migration 1 ไฟล์</td></tr>
+      <tr><td>เช็กชื่อ</td><td>นับเป็นคาบจริง เพิ่มจำนวนคาบทั้งเทอมของวิชานั้น</td></tr>
+      <tr><td>แจ้งเตือน</td><td>เตือนจดหลังเลิกคาบเหมือนคาบปกติ</td></tr>
+      <tr><td>ตรวจตอนเพิ่ม</td><td>วันที่ต้องอยู่ในเทอม เวลาจบต้องหลังเวลาเริ่ม</td></tr>
+      <tr><td>ลบคาบชดเชย</td><td>ถามยืนยันก่อน การเช็กชื่อของคาบนั้นหาย โน้ตยังอยู่</td></tr>
+      <tr><td>งดสอนทั้งวัน</td><td>บันทึกงดสอนทุกคาบของวันนี้ ไม่เตือนจด ไม่นับเป็นขาด ลิงก์ขึ้นเมื่อวันนั้นมีคาบ 2 คาบขึ้นไป</td></tr>
+    </table>
+  </div>
+</div>
+<script>
+const $=(i)=>document.getElementById(i);
+const show=(v)=>{$("dim").hidden=!v;$("sheet").hidden=!v;$("err").textContent=""};
+$("open").onclick=()=>show(true);$("dim").onclick=()=>show(false);
+$("save").onclick=()=>{
+  if($("e").value<=$("s").value){$("err").textContent="เวลาจบต้องหลังเวลาเริ่ม";return}
+  if($("d").value<"2026-11-09"||$("d").value>"2027-03-07"){$("err").textContent="วันที่ต้องอยู่ในเทอมนี้ (9 พ.ย. 2569 – 7 มี.ค. 2570)";return}
+  show(false);
+};
+$("del").onclick=()=>{if(confirm("ลบคาบชดเชย? การเช็กชื่อของคาบนี้จะหาย โน้ตยังอยู่"))$("list").innerHTML='<div class="muted">ยังไม่มีคาบชดเชย</div>'};
+$("off").onclick=(e)=>{const on=e.target.getAttribute("aria-pressed")!=="true";e.target.setAttribute("aria-pressed",on);e.target.textContent=on?"บันทึกแล้ว: งดสอนทั้งวัน":"วันนี้งดสอนทั้งวัน"};
+</script>
+</body>
+</html>
