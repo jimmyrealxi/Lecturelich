@@ -4,6 +4,16 @@ begin;
 create function pg_temp.reset() returns void language sql as $$
   delete from public.notifications where user_id in ('00000000-0000-4000-8000-00000000000a', '00000000-0000-4000-8000-00000000000b');
   delete from public.assignments where created_by in ('00000000-0000-4000-8000-00000000000a', '00000000-0000-4000-8000-00000000000b');
+  delete from public.attendance where user_id = '00000000-0000-4000-8000-00000000000a';
+  delete from public.exams where user_id = '00000000-0000-4000-8000-00000000000a';
+$$;
+create function pg_temp.check_in(p_date date, p_when timestamptz) returns void language sql as $$
+  insert into public.attendance (user_id, subject_id, slot_id, date, status, updated_at)
+  values ('00000000-0000-4000-8000-00000000000a', '00000000-0000-4000-8000-0000000000c1', '00000000-0000-4000-8000-0000000000e1', p_date, 'present', p_when);
+$$;
+create function pg_temp.pile_of(p_ref text) returns text language sql as $$
+  select l.pile from public.notifications n join public.push_lines l on l.id = n.line_id
+  where n.user_id = '00000000-0000-4000-8000-00000000000a' and n.ref = p_ref;
 $$;
 create function pg_temp.work(p_title text, p_due timestamptz, p_created timestamptz default '2026-11-09 00:00+07') returns uuid language sql as $$
   insert into public.assignments (title, due_at, created_by, created_at, subject_id)
@@ -55,6 +65,10 @@ begin
   perform pg_temp.reset();
   w := pg_temp.work('เสร็จ', '2026-11-11 23:59+07');
   insert into public.assignment_status (user_id, assignment_id, done) values (ua, w, true);
+  perform public.send_work_round('evening', eve);
+  assert pg_temp.pile_of('evening:2026-11-10') = 'unchecked', 'งานครบแต่คาบวันนี้ยังไม่เช็กชื่อ ต้องชวนเช็ก';
+  delete from public.notifications where user_id = ua;
+  perform pg_temp.check_in('2026-11-10', eve);
   perform public.send_work_round('evening', eve);
   select * into r from public.notifications where user_id = ua;
   assert r.title = 'วันนี้งานเคลียร์หมดแล้ว', 'ครบแล้วชม: ' || coalesce(r.title, 'ไม่มี');
@@ -131,6 +145,74 @@ begin
     values ('งานห้อง', '2026-11-11 23:59+07', ua, '00000000-0000-4000-8000-0000000000f1', '00000000-0000-4000-8000-0000000000c1');
   select * into r from public._pending_work(ub, eve);
   assert r.work_title = 'งานห้อง' and r.subject_name is null, 'สมาชิกเห็นงาน ไม่เห็นวิชาคนอื่น';
+
+  -- ขั้น 10b: ระดับงอน
+  assert public._miss_pile(1) is null and public._miss_pile(2) = 'miss2' and public._miss_pile(3) = 'miss3' and public._miss_pile(5) = 'miss5'
+     and public._miss_pile(7) = 'miss7' and public._miss_pile(10) = 'giveup' and public._miss_pile(11) is null and public._miss_pile(null) is null, 'ระดับงอน';
+
+  -- หายไป 2 วัน งานยังไกล = งอน · งานด่วน = ดุตามบันได ไม่เอางอนมาทับ
+  perform pg_temp.reset();
+  perform pg_temp.check_in('2026-11-10', '2026-11-10 10:00+07');
+  perform pg_temp.work('ไกล', '2026-11-30 23:59+07');
+  perform public.send_work_round('evening', '2026-11-12 19:10+07');
+  assert pg_temp.pile_of('evening:2026-11-12') = 'miss2', 'หาย 2 วัน: ' || coalesce(pg_temp.pile_of('evening:2026-11-12'), 'ไม่มี');
+  perform pg_temp.work('ด่วน', '2026-11-13 23:59+07');
+  delete from public.notifications where user_id = ua;
+  perform public.send_work_round('evening', '2026-11-12 19:10+07');
+  assert pg_temp.pile_of('evening:2026-11-12') = 'stern', 'งานด่วนไม่โดนทับ';
+
+  -- ยอมแพ้ครั้งเดียว แล้วเงียบถ้าไม่มีงาน · แต่ยังตามงานต่อ
+  perform pg_temp.reset();
+  perform pg_temp.check_in('2026-11-10', '2026-11-10 10:00+07');
+  perform public.send_work_round('evening', '2026-11-17 19:10+07'); -- อังคาร คาบวันนี้ยังไม่เช็ก หาย 7 วัน
+  assert pg_temp.pile_of('evening:2026-11-17') = 'miss7', 'หาย 7 วัน';
+  perform public.send_work_round('evening', '2026-11-20 19:10+07'); -- ศุกร์ ไม่มีคาบ ไม่มีของค้าง = ไม่ชวนลอย ๆ แต่เป็นคำศุกร์
+  assert pg_temp.pile_of('evening:2026-11-20') = 'friday', 'ศุกร์เย็นในเทอม';
+  perform public.send_work_round('evening', '2026-11-24 19:10+07'); -- หาย 14 วัน
+  assert pg_temp.pile_of('evening:2026-11-24') is null, 'เลยยอมแพ้แล้วเงียบ';
+  perform pg_temp.work('ค้าง', '2026-12-30 23:59+07');
+  perform public.send_work_round('evening', '2026-12-01 19:10+07');
+  assert pg_temp.pile_of('evening:2026-12-01') = 'chill', 'เลิกชวนแล้วแต่ยังตามงาน';
+
+  -- กลับมาหลังหายไป
+  perform pg_temp.reset();
+  perform pg_temp.check_in('2026-11-03', '2026-11-03 10:00+07');
+  perform pg_temp.check_in('2026-11-10', eve);
+  perform pg_temp.work('ไกล', '2026-11-30 23:59+07');
+  perform public.send_work_round('evening', eve);
+  assert pg_temp.pile_of('evening:2026-11-10') = 'back', 'กลับมาแล้ว';
+
+  -- ใกล้สอบขึ้นรอบเช้า แม้ไม่มีคาบ
+  perform pg_temp.reset();
+  insert into public.exams (user_id, subject_id, kind, date) values (ua, '00000000-0000-4000-8000-0000000000c1', 'midterm', '2026-11-14');
+  perform pg_temp.work('ไกล', '2026-11-30 23:59+07');
+  perform public.send_work_round('morning', '2026-11-11 07:10+07');
+  select title into t from public.notifications where user_id = ua;
+  assert t = 'ค้าง 1 งาน · สอบ ฟิสิกส์ อีก 3 วัน', 'สอบ: ' || coalesce(t, 'ไม่มี');
+  assert pg_temp.pile_of('morning:2026-11-11') = 'exam', 'กองสอบ';
+
+  -- สัปดาห์ทำครบ: เช็กชื่อครบ + งานจริงครบ · ไม่มีอะไร = null · ขาดก็นับ
+  perform pg_temp.reset();
+  assert public._week_complete(ua, '2026-10-05') is null, 'นอกเทอมไม่นับ';
+  assert not public._week_complete(ua, '2026-11-09'), 'ยังไม่เช็กชื่อ';
+  insert into public.attendance (user_id, subject_id, slot_id, date, status, updated_at)
+    values (ua, '00000000-0000-4000-8000-0000000000c1', '00000000-0000-4000-8000-0000000000e1', '2026-11-10', 'absent', eve);
+  assert public._week_complete(ua, '2026-11-09'), 'ขาดก็นับว่าเช็กแล้ว';
+  w := pg_temp.work('ในสัปดาห์', '2026-11-13 23:59+07');
+  assert not public._week_complete(ua, '2026-11-09'), 'งานจริงยังไม่ติ๊ก';
+  perform pg_temp.work('ไม่มีวันส่งไม่นับ', null);
+  insert into public.assignment_status (user_id, assignment_id, done) values (ua, w, true);
+  assert public._week_complete(ua, '2026-11-09'), 'ติ๊กครบแล้ว และงานเดาวันไม่นับ';
+
+  -- จันทร์เช้าบอกยอดสะสม · สัปดาห์ก่อนหน้าไม่ครบ เลขไม่หาย
+  assert public._week_streak(ua, '2026-11-16') = 1, 'สะสม 1';
+  perform pg_temp.check_in('2026-11-03', '2026-11-03 10:00+07');
+  assert public._week_streak(ua, '2026-11-16') = 2, 'สะสม 2';
+  delete from public.assignments where created_by = ua and due_at is null;
+  perform public.send_work_round('morning', '2026-11-16 07:10+07');
+  select title into t from public.notifications where user_id = ua and ref = 'morning:2026-11-16';
+  assert t = 'ทำครบ 2 สัปดาห์แล้ว', 'จันทร์เช้า: ' || coalesce(t, 'ไม่มี');
+  assert pg_temp.pile_of('morning:2026-11-16') = 'streak', 'กอง streak';
 end $$;
 
 rollback;
