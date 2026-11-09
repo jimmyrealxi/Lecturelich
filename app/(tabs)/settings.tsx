@@ -24,7 +24,6 @@ export default function Settings() {
 
   const pct = profile.data?.min_attendance_pct ?? 80;
   const afterMin = profile.data?.remind_after_class_min ?? 10;
-  const dueHours = profile.data?.remind_due_hours ?? 24;
   // ฟอร์มสร้างใหม่ตาม key → ค่าเริ่มต้นเปลี่ยนตามเทอมที่แก้ โดยไม่ต้อง setState ใน effect
   const formTerm = creating ? null : term.data ?? null;
 
@@ -57,9 +56,6 @@ export default function Settings() {
         <Stepper label="เตือนจดหลังเลิกคาบ" value={`${afterMin} นาที`}
           onMinus={() => update.mutate({ remind_after_class_min: Math.max(0, afterMin - 5) })}
           onPlus={() => update.mutate({ remind_after_class_min: Math.min(180, afterMin + 5) })} />
-        <Stepper label="เตือนก่อนส่งงาน" value={`${dueHours} ชม.`}
-          onMinus={() => update.mutate({ remind_due_hours: Math.max(1, dueHours - (dueHours > 24 ? 24 : 6)) })}
-          onPlus={() => update.mutate({ remind_due_hours: Math.min(168, dueHours + (dueHours >= 24 ? 24 : 6)) })} />
       </Card>
 
       <Section>การเข้าเรียน</Section>
