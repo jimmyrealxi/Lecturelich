@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ประกาศ ไฟล์แนบ เอกสาร</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ประกาศจากอาจารย์ + ไฟล์แนบงาน + เอกสารประกอบการสอน · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#4A3C2C;--faint:#64523F;--pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;--on:#F3EAD2;--crt:#08130C;--crtOn:#9EF0B4;--teal:#1F5A63;--plum:#5B3A78}
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--pen);color:var(--on)}
+html{scrollbar-color:var(--rule2) #1C1915}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:left}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:24px 16px 48px}
+.head{max-width:1200px;margin:0 auto 20px}
+.head h1{font:400 22px/1.5 Chonburi,serif;color:var(--deck)}
+.head p{color:#C9BFAA;max-width:70ch;margin-top:4px}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.col{width:360px;max-width:100%}
+.cap{font:600 16px/1.5 Anuphan;color:#fff;margin-bottom:8px}
+.cap small{display:block;font:400 14px/1.5 Anuphan;color:#C9BFAA}
+.phone{position:relative;height:780px;overflow:hidden auto;color:var(--paper);border-radius:6px;padding:14px 16px 28px 38px;background:
+  radial-gradient(circle at 7px 7px,#3a3128 4.5px,transparent 5.5px) 6px 72px/14px 60px repeat-y,
+  linear-gradient(90deg,transparent 24px,rgba(160,40,29,.42) 24px 26px,transparent 26px),
+  var(--ink)}
+.ty{font:700 1em "Courier Prime",monospace}
+.page{font:400 23px/34px Chonburi,serif}
+.next{font-size:16px;line-height:24px;color:var(--muted)}
+.tag{position:relative;display:flex;align-items:center;gap:10px;margin:24px -16px 4px -6px;padding:7px 16px 7px 20px;color:var(--on);background:repeating-linear-gradient(92deg,rgba(255,255,255,.05) 0 2px,transparent 2px 7px),var(--c);clip-path:polygon(0 8%,2% 0,100% 0,100% 100%,3% 100%,0 88%,1.6% 66%,0 44%,1.8% 24%);transform:rotate(-.5deg)}
+.tag h3{flex:1;font:400 23px/34px Chonburi,serif}
+.tag .w{font-size:15px;font-weight:500}
+.screen{flex:none;min-width:38px;padding:0 8px;text-align:center;background:var(--crt);border:2px solid #15110D;border-radius:5px;color:var(--crtOn);font:24px/30px VT323,monospace;box-shadow:inset 0 0 8px rgba(158,240,180,.3);text-shadow:0 0 6px rgba(158,240,180,.65)}
+
+.news{padding:12px 0;border-bottom:1px solid var(--rule)}
+.news .when{display:flex;justify-content:space-between;gap:8px;font-size:15px;line-height:23px;color:var(--muted)}
+.news p{font-size:16px;line-height:25px}
+.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.u{display:inline-block;min-height:44px;line-height:44px;font-size:15px;font-weight:600;color:var(--pen);text-decoration:underline;text-underline-offset:4px}
+.links{display:flex;gap:18px}
+
+/* แถวไฟล์: ทั้งแถวแตะได้ เปิดนอกแอป */
+.file{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:6px 0;border-bottom:1px solid var(--rule)}
+.kind{flex:none;width:50px;text-align:center;border:1.5px solid var(--paper);border-radius:3px;font:700 15px/24px "Courier Prime",Anuphan,monospace;transform:rotate(-2deg)}
+.kind.th{font:600 15px/24px Anuphan}
+.grow{flex:1;min-width:0}
+.grow b{display:block;font-weight:500;font-size:16px;line-height:23px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grow small{display:block;font-size:15px;line-height:22px;color:var(--muted)}
+.out{flex:none;color:var(--pen)}
+.more{display:block;min-height:48px;font:600 16px/48px Anuphan;color:var(--pen);text-decoration:underline;text-underline-offset:4px}
+
+.row{display:flex;align-items:center;gap:10px;min-height:68px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.box{flex:none;display:block;width:24px;height:24px;margin:0 4px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px;background:rgba(243,234,210,.55)}
+.what{display:block;font-weight:600;font-size:17px;line-height:25px}
+.sub{font-size:15px;line-height:23px;color:var(--muted)}
+.due{flex:none;font:700 16px "Courier Prime",monospace;color:var(--warn)}
+.tap{display:block;width:100%;padding:12px 0;border-bottom:1px solid var(--rule)}
+.tap b{font-weight:600;font-size:16px}
+.tap .t{font:700 15px "Courier Prime",monospace;color:var(--muted);margin-left:6px}
+.tap p{font-size:16px;line-height:25px}
+
+.dim{position:absolute;inset:0;background:rgba(42,33,24,.45)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--deck);border-top:1px solid var(--rule2);padding:24px 16px 18px}
+.strip{position:absolute;top:-11px;left:50%;width:74px;height:22px;margin-left:-37px;background:rgba(232,221,186,.85);transform:rotate(-3deg)}
+.title{font:400 22px/32px Chonburi,serif;padding-right:88px}
+.stamp{position:absolute;right:16px;top:26px;color:var(--red);border:2px solid var(--red);border-radius:4px;padding:1px 9px;font:600 15px Anuphan;transform:rotate(-6deg)}
+dl{margin-top:10px;border-top:3px double rgba(42,33,24,.75)}
+.f{display:flex;gap:12px;min-height:44px;align-items:center;border-bottom:1px solid var(--rule);padding:4px 0}
+dt{width:76px;flex:none;font-size:15px;color:var(--muted)}
+dd{flex:1;font-size:16px;line-height:23px}
+.left{font-size:15px;color:var(--red);font-weight:600}
+h4{font:400 15px/23px Anuphan;color:var(--muted);margin-top:12px}
+.notes{font-size:16px;line-height:30px;background:repeating-linear-gradient(transparent 0 29px,var(--rule) 29px 30px)}
+.link{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin-top:12px;border:2px solid var(--pen);color:var(--pen);font:600 15px Anuphan;border-radius:3px}
+.two{display:grid;grid-template-columns:.6fr 1fr;gap:8px;margin-top:10px}
+.btn{min-height:48px;text-align:center;border:1.5px solid var(--paper);border-radius:3px;font:600 15px Anuphan}
+.pri{background:var(--paper);color:var(--deck);box-shadow:2px 2px 0 var(--rule2)}
+
+.side{flex:1;min-width:280px;max-width:380px}
+.side h2{font:600 16px/1.5 Anuphan;color:#fff;margin-bottom:8px}
+.side ul+h2{margin-top:20px}
+.side ul{padding-left:18px;color:#D8D0BE}
+.side li{margin-bottom:8px}
+@media(max-width:420px){body{padding:16px 8px 40px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="out" viewBox="0 0 20 20"><path d="M8 3H3.5v13.5H17V12M11.5 3H17v5.5M17 3l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+
+<div class="head">
+  <h1>ประกาศ ไฟล์แนบ เอกสารประกอบ จาก Classroom (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>ข้อความทั้งหมดเป็นตัวอย่าง ไฟล์เปิดที่ Google ไม่เก็บไฟล์ในแอป จึงไม่กินพื้นที่ Storage ไฟล์ที่ต้องใช้สิทธิ์ของมหาลัยจะเปิดด้วยบัญชี @udru ในเครื่อง</p>
+</div>
+
+<div class="wrap">
+  <section class="col">
+    <p class="cap">หน้าวิชา<small>ประกาศล่าสุด 3 อัน และเอกสารใหม่สุด 4 ชิ้น อยู่ต่อจากส่วนคะแนนเดิม</small></p>
+    <div class="phone">
+      <p class="page">OOP</p>
+      <div class="tag" style="--c:var(--teal)"><h3>ประกาศ</h3><span class="screen">2</span><span class="w">ใหม่</span></div>
+      <div class="news">
+        <div class="when"><span class="ty">09/11 08:42</span></div>
+        <p class="clamp">สัปดาห์นี้เรียนออนไลน์ทาง Meet ลิงก์อยู่ในหน้าห้องเรียน ให้นักศึกษาเตรียมโปรแกรมให้พร้อมก่อนเข้าเรียน และอ่านบทที่ 6 มาล่วงหน้า จะมีแบบทดสอบย่อยท้ายคาบ คะแนนเก็บ 5 คะแนน</p>
+        <div class="links"><span class="u">อ่านต่อ</span><span class="u">เปิดใน Classroom</span></div>
+      </div>
+      <div class="news">
+        <div class="when"><span class="ty">06/11 17:05</span></div>
+        <p>สไลด์บทที่ 6 อัปโหลดแล้ว</p>
+        <button class="file"><span class="kind">PDF</span><span class="grow"><b>Chapter6-Interface.pdf</b></span><svg class="out" width="20" height="20" aria-hidden="true"><use href="#out"/></svg></button>
+      </div>
+      <div class="tag" style="--c:var(--plum)"><h3>เอกสารประกอบ</h3><span class="screen">14</span></div>
+      <button class="file"><span class="kind">PDF</span><span class="grow"><b>สไลด์บทที่ 6 Interface</b><small><span class="ty">06/11</span></small></span><svg class="out" width="20" height="20" aria-hidden="true"><use href="#out"/></svg></button>
+      <button class="file"><span class="kind th">คลิป</span><span class="grow"><b>ตัวอย่าง Abstract class</b><small><span class="ty">02/11</span></small></span><svg class="out" width="20" height="20" aria-hidden="true"><use href="#out"/></svg></button>
+      <button class="file"><span class="kind th">ลิงก์</span><span class="grow"><b>คู่มือ Java 21</b><small><span class="ty">30/10</span></small></span><svg class="out" width="20" height="20" aria-hidden="true"><use href="#out"/></svg></button>
+      <span class="more">ดูทั้งหมด 14 ชิ้น</span>
+    </div>
+  </section>
+
+  <section class="col">
+    <p class="cap">หน้าวันนี้ (ถ้าเอา)<small>แสดงประกาศ 3 วันล่าสุด ไม่เกิน 2 อัน แตะแล้วไปหน้าวิชา ไม่มีก็ไม่มีหัวข้อนี้</small></p>
+    <div class="phone">
+      <p class="next">ถัดไป <span class="ty">13:00</span> OOP · ตึก 4 ห้อง 402</p>
+      <div class="tag" style="--c:var(--red)"><h3>ต้องทำ</h3><span class="screen">2</span><span class="w">เรื่อง</span></div>
+      <div class="row"><span class="box"></span><div style="flex:1;min-width:0"><span class="what">Lab 6 Interface</span><span class="sub">OOP · Classroom</span></div><span class="due">วันนี้</span></div>
+      <div class="row"><span class="box"></span><div style="flex:1;min-width:0"><span class="what">แบบฝึกหัดบทที่ 3</span><span class="sub">คณิต · ในคาบ</span></div><span class="due">พรุ่งนี้</span></div>
+      <div class="tag" style="--c:var(--teal)"><h3>ประกาศ</h3><span class="screen">2</span></div>
+      <button class="tap"><b>OOP</b><span class="t">09/11</span><p class="clamp">สัปดาห์นี้เรียนออนไลน์ทาง Meet ลิงก์อยู่ในหน้าห้องเรียน ให้นักศึกษาเตรียมโปรแกรมให้พร้อมก่อนเข้าเรียน</p></button>
+      <button class="tap"><b>คณิต</b><span class="t">08/11</span><p class="clamp">งดสอบย่อยวันพฤหัส เลื่อนไปสัปดาห์หน้า</p></button>
+    </div>
+  </section>
+
+  <section class="col">
+    <p class="cap">แผ่นรายละเอียดงาน แบบ A + ไฟล์แนบ<small>ข้อความคำสั่งงานดึงจาก Classroom ลงช่องรายละเอียด ไฟล์แนบเรียงต่อจากนั้น</small></p>
+    <div class="phone">
+      <div class="dim"></div>
+      <div class="sheet"><span class="strip"></span>
+        <p class="title">Lab 6 Interface</p><span class="stamp">เลยกำหนด</span>
+        <dl>
+          <div class="f"><dt>วิชา</dt><dd>OOP</dd></div>
+          <div class="f"><dt>กำหนดส่ง</dt><dd><span class="ty">08/11/2569 23:59</span><br><span class="left">เลยมา 1 วัน</span></dd></div>
+          <div class="f"><dt>มาจาก</dt><dd>Classroom</dd></div>
+        </dl>
+        <h4>รายละเอียด</h4>
+        <p class="notes">ทำข้อ 1–5 จากสไลด์บทที่ 6 ส่งเป็น PDF ตั้งชื่อไฟล์ตามรหัสนักศึกษา</p>
+        <h4>ไฟล์แนบ</h4>
+        <button class="file"><span class="kind">PDF</span><span class="grow"><b>Lab6-โจทย์.pdf</b></span><svg class="out" width="20" height="20" aria-hidden="true"><use href="#out"/></svg></button>
+        <button class="file"><span class="kind th">ไฟล์</span><span class="grow"><b>โค้ดเริ่มต้น Lab6</b></span><svg class="out" width="20" height="20" aria-hidden="true"><use href="#out"/></svg></button>
+        <button class="file"><span class="kind th">ฟอร์ม</span><span class="grow"><b>แบบส่งลิงก์ผลงาน</b></span><svg class="out" width="20" height="20" aria-hidden="true"><use href="#out"/></svg></button>
+        <button class="link">เปิดงานใน Classroom</button>
+        <div class="two"><button class="btn">แก้ไข</button><button class="btn pri">ส่งแล้ว</button></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="side">
+    <h2>ต้องตัดสิน</h2>
+    <ul>
+      <li>เอาหัวข้อประกาศในหน้าวันนี้ไหม ผมเสนอให้เอา เพราะประกาศงดเรียนหรือเปลี่ยนห้องต้องเห็นเร็ว</li>
+      <li>ประกาศใหม่ให้เด้งแจ้งเตือนไหม ผมเสนอให้เด้งรวมข้อความเดียวต่อรอบดึง ไม่เด้งเอกสาร</li>
+      <li>หน้ารวมแจ้งเตือนในแอป ผมเสนอให้รอใช้จริงก่อน</li>
+      <li>ป้าย "ใหม่" ในภาพนับ 3 วันล่าสุด ไม่จำว่าอ่านแล้วหรือยัง ถ้าอยากให้หายเมื่ออ่านต้องเพิ่มตาราง</li>
+    </ul>
+    <h2>ข้อจำกัด</h2>
+    <ul>
+      <li>เพิ่มสิทธิ์ 2 ตัว แล้วต้องเลิกเชื่อมและเชื่อม Classroom ใหม่ 1 ครั้ง</li>
+      <li>เอกสารเรียงตามวันที่ ไม่แยกตามหัวข้อของอาจารย์ เพราะการอ่านชื่อหัวข้อต้องขอสิทธิ์เพิ่มอีกตัว</li>
+      <li>ไม่แสดงชื่ออาจารย์ในประกาศ ด้วยเหตุผลเดียวกัน</li>
+      <li>ช่องรายละเอียดแบบ A ต้องรัน migration เพิ่ม ตามที่เลือกไว้ตอนแรก</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>
