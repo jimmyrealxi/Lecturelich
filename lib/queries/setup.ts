@@ -16,13 +16,13 @@ export function useProfile() {
     queryFn: async () => {
       const id = await currentUserId();
       return check(
-        await supabase.from("profiles").select("min_attendance_pct,remind_after_class_min,remind_due_hours").eq("id", id).maybeSingle(),
+        await supabase.from("profiles").select("min_attendance_pct,remind_after_class_min").eq("id", id).maybeSingle(),
       ) as Profile | null;
     },
   });
 }
 
-export type Profile = { min_attendance_pct: number; remind_after_class_min: number; remind_due_hours: number };
+export type Profile = { min_attendance_pct: number; remind_after_class_min: number };
 
 /** แก้ค่าตั้งในโปรไฟล์ (optimistic — ตัวเลขเปลี่ยนทันทีตอนกด +/−) */
 export function useUpdateProfile() {
