@@ -317,8 +317,8 @@ function TodayReview({ termId, today, nameOf, onToast }: {
         const st = statusOf(t, today);
         return (
           <View key={t.id} style={s.entry}>
-            <Pressable style={s.reviewOpen} onPress={() => router.push(`/subject/${t.subject_id}`)} accessibilityRole="link"
-              accessibilityLabel={`${t.is_starred ? "ออกสอบ " : ""}${t.title} ${st.text} เปิดหน้าวิชา ${nameOf(t.subject_id)}`}>
+            <Pressable style={s.reviewOpen} onPress={() => router.push({ pathname: "/notes/[subjectId]", params: { subjectId: t.subject_id, topic: t.id } })}
+              accessibilityRole="link" accessibilityLabel={`${t.is_starred ? "ออกสอบ " : ""}${t.title} ${st.text} เปิดโน้ตวิชา ${nameOf(t.subject_id)}`}>
               <Text style={s.what}>{t.is_starred && <Text style={s.star}>★ </Text>}{t.title}</Text>
               <Text style={s.sub}>{nameOf(t.subject_id)} · <Text style={st.late && s.late}>{st.text}</Text></Text>
               {t.id === firstLate && <PenScribble />}
