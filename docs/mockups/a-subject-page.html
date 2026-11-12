@@ -28,7 +28,7 @@ h2{font:400 26px/36px Chonburi,serif}
 .links button{flex:1;min-height:44px;border:1.5px solid var(--paper);border-radius:3px;font:600 15px Anuphan;text-align:center}
 /* แถบสรุป */
 .stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
-.stat div{background:var(--crt);border-radius:8px;padding:8px 8px 7px;color:var(--crtOn);text-align:center}
+.stat div{background:var(--crt);border-radius:8px;padding:10px 10px 9px;color:var(--crtOn);text-align:center}
 .stat b{display:block;font:400 26px/1 VT323,monospace}
 .stat span{font-size:13px;color:var(--crtDim)}
 .stat .bad b{color:#FFB4A8}
@@ -55,14 +55,14 @@ h2{font:400 26px/36px Chonburi,serif}
 .now .k{font-size:15px}
 .now .k b{font:700 18px "Courier Prime",monospace}
 .goal{display:flex;align-items:center;gap:6px;font-size:15px}
-.goal select{min-height:40px;border:1.5px solid var(--paper);border-radius:3px;background:var(--field);font:600 16px Anuphan;padding:0 6px}
+.goal select{min-height:40px;border:1.5px solid var(--paper);border-radius:3px;background:var(--field);font:600 16px Anuphan;padding:0 10px}
 .need{font-size:15px;background:var(--deck);border:1px solid var(--rule2);border-radius:3px;padding:10px 12px;margin-bottom:6px}
 .need b{font-family:"Courier Prime",monospace}
 .part{border-top:1px solid var(--rule)}
 .part:last-of-type{border-bottom:1px solid var(--rule)}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:52px}
 .ph .n{font-weight:600}
-.ph .v{font:700 15px "Courier Prime",monospace;color:var(--muted)}
+.ph .v{font:700 15px "Courier Prime",monospace;color:var(--muted);padding:0 4px}
 .ph .chev{width:18px;height:18px;transition:transform .15s;flex:none}
 .ph[aria-expanded=true] .chev{transform:rotate(180deg)}
 .form{padding:2px 0 12px}
@@ -79,7 +79,7 @@ h2{font:400 26px/36px Chonburi,serif}
 .set{margin-top:24px;border:1.5px dashed var(--rule2);border-radius:3px}
 .set>.ph{padding:0 12px}
 .set .in{padding:0 12px 12px}
-.set h4{font:600 16px Anuphan;margin:12px 0 6px}
+.set h3{font:600 16px Anuphan;margin:12px 0 6px}
 .two{display:flex;gap:8px}
 .two label{flex:1;font-size:14px;color:var(--muted)}
 .two .f{width:100%;margin-top:2px}
@@ -136,11 +136,11 @@ h2{font:400 26px/36px Chonburi,serif}
     <div class="set">
       <button class="ph" aria-expanded="false" id="setBtn"><span class="n">ตั้งค่าวิชา</span><span class="v">วันสอบ · ชดเชย · ตัดเกรด</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <div class="in" id="setIn" hidden>
-        <h4>วันสอบ</h4>
+        <h3>วันสอบ</h3>
         <div class="two"><label>กลางภาค<input class="f" placeholder="วว/ดด/ปปปป"></label><label>ปลายภาค<input class="f" value="04/03/2570"></label></div>
-        <h4>คาบชดเชย</h4>
+        <h3>คาบชดเชย</h3>
         <button class="ghost">+ เพิ่มคาบชดเชย</button>
-        <h4>เกณฑ์ตัดเกรด</h4>
+        <h3>เกณฑ์ตัดเกรด</h3>
         <button class="ghost">ใช้เกณฑ์มาตรฐาน (A 80 · B+ 75 …) · แก้</button>
       </div>
     </div>
