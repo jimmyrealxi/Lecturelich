@@ -6,18 +6,18 @@
 <title>Lecturelich หน้าวิชา</title>
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
 <style>
-/* หน้าวิชาเรียงใหม่ + ข้อความสั้น · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
-:root{--ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#4A3C2C;--ph:#7A6A55;--pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;--on:#F3EAD2;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B}
+/* หน้าวิชาแบบ 5 ข้อ (เจ้าของโอเค 13 พ.ย.) · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#4A3C2C;--ph:#7A6A55;--pen:#2B4A8A;--red:#A0281D;--on:#F3EAD2;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B}
 *{box-sizing:border-box;margin:0;padding:0}
 :focus-visible{outline:2px solid var(--pen);outline-offset:2px}
 [hidden]{display:none!important}
-button,input{font:inherit;color:inherit}
+button,input,select{font:inherit;color:inherit}
 button{background:none;border:0;cursor:pointer;text-align:left}
 body{background:#1C1915;color:#E9E2D2;font:16px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
-.head{max-width:1100px;margin:0 auto 18px}
+.head{max-width:1000px;margin:0 auto 18px}
 .head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
 .head p{color:#C9BFAA;font-size:14px;max-width:75ch;margin-top:4px}
-.wrap{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
 .phone{width:360px;max-width:100%;height:780px;border:6px solid #050505;border-radius:30px;overflow:hidden;background:var(--ink);color:var(--paper);flex:none}
 .scroll{height:100%;overflow-y:auto;padding:14px 16px 32px 26px;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
 .top{display:flex;justify-content:space-between;align-items:center;min-height:44px}
@@ -26,22 +26,39 @@ h2{font:400 26px/36px Chonburi,serif}
 .when{font-size:15px;color:var(--muted)}
 .links{display:flex;gap:8px;margin-top:10px}
 .links button{flex:1;min-height:44px;border:1.5px solid var(--paper);border-radius:3px;font:600 15px Anuphan;text-align:center}
-/* แถบสรุป */
-.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
-.stat div{background:var(--crt);border-radius:8px;padding:10px 10px 9px;color:var(--crtOn);text-align:center}
-.stat b{display:block;font:400 26px/1 VT323,monospace}
-.stat span{font-size:13px;color:var(--crtDim)}
-.stat .bad b{color:#FFB4A8}
+/* 1 สรุป 2 ช่อง */
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.stat>*{background:var(--crt);border-radius:8px;padding:10px 10px 9px;color:var(--crtOn);text-align:center;min-height:44px}
+.stat b{display:block;font:400 30px/1 VT323,monospace}
+.stat span{font-size:14px;color:var(--crtDim)}
 .tape{display:inline-block;color:var(--on);font:400 17px/1 Chonburi,serif;padding:8px 14px 7px;margin:24px 0 8px -6px;clip-path:polygon(0 8%,3% 0,97% 4%,100% 0,99% 92%,96% 100%,4% 96%,0 100%)}
-.t1{background:#1F5A63;transform:rotate(-1deg)}.t2{background:#5E3F78;transform:rotate(.8deg)}.t3{background:#7A2E22;transform:rotate(-.6deg)}.t4{background:#4B5A2A;transform:rotate(.7deg)}
-.row{display:flex;align-items:center;gap:10px;min-height:52px;border-top:1px solid var(--rule)}
-.row:last-child{border-bottom:1px solid var(--rule)}
-.box{width:22px;height:22px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px;flex:none}
-.what{font-weight:600}
-.sub{font-size:14px;color:var(--muted)}
-.late{color:var(--red);font-weight:600}
-.empty{font-size:15px;color:var(--muted);padding:6px 0}
-/* ไทม์ไลน์ย่อ */
+.t1{background:#7A2E22;transform:rotate(-.6deg)}.t2{background:#5E3F78;transform:rotate(.8deg)}.t3{background:#1F5A63;transform:rotate(-1deg)}
+/* 2 คะแนน */
+.now{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 0 8px}
+.now .k b{font:700 18px "Courier Prime",monospace}
+.goal{display:flex;align-items:center;gap:6px}
+.goal select{min-height:44px;border:1.5px solid var(--paper);border-radius:3px;background:var(--field);font:600 16px Anuphan;padding:0 10px}
+.need{background:var(--deck);border:1px solid var(--rule2);border-radius:3px;padding:10px 12px;margin-bottom:6px}
+.need b{font-family:"Courier Prime",monospace}
+.part{border-top:1px solid var(--rule)}
+.part:last-child{border-bottom:1px solid var(--rule)}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:52px}
+.ph .n{font-weight:600}
+.ph .w{font-size:14px;color:var(--muted);font-weight:400}
+.ph .v{font:700 16px "Courier Prime",monospace;margin-left:auto}
+.chev{width:18px;height:18px;transition:transform .15s;flex:none}
+.ph[aria-expanded=true] .chev{transform:rotate(180deg)}
+.form{padding:2px 0 12px}
+.scores div{display:flex;justify-content:space-between;min-height:36px;align-items:center;border-bottom:1px dashed var(--rule)}
+.scores span:last-child{font-family:"Courier Prime",monospace;font-weight:700}
+.inrow{display:flex;gap:6px;margin-top:8px}
+.f{min-height:44px;background:var(--field);border:1.5px solid var(--rule2);border-radius:3px;padding:8px 10px;font-size:16px;min-width:0}
+.f::placeholder{color:var(--ph)}
+.f.name{flex:1.4}.f.num{flex:.7;text-align:center}
+.add{min-height:44px;padding:0 16px;background:var(--paper);color:var(--deck);border-radius:3px;font:600 15px Anuphan;box-shadow:2px 2px 0 var(--rule2);flex:none}
+.tip{font-size:14px;color:var(--muted)}
+.ghost{min-height:44px;width:100%;border:1.5px dashed var(--rule2);border-radius:3px;font:600 15px Anuphan;text-align:center;margin-top:8px}
+/* 3 โน้ต */
 .tl{position:relative;padding-left:20px}
 .tl:before{content:"";position:absolute;left:5px;top:10px;bottom:10px;width:2px;background:var(--rule)}
 .tl button{display:block;position:relative;width:100%;min-height:48px;padding:4px 0}
@@ -50,183 +67,114 @@ h2{font:400 26px/36px Chonburi,serif}
 .tl .tp{font-weight:600;display:block}
 .star{color:var(--red)}
 .more{display:block;width:100%;min-height:44px;border:1.5px solid var(--paper);border-radius:3px;font:600 15px Anuphan;text-align:center;margin-top:8px}
-/* คะแนน */
-.now{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 0 8px}
-.now .k{font-size:15px}
-.now .k b{font:700 18px "Courier Prime",monospace}
-.goal{display:flex;align-items:center;gap:6px;font-size:15px}
-.goal select{min-height:40px;border:1.5px solid var(--paper);border-radius:3px;background:var(--field);font:600 16px Anuphan;padding:0 10px}
-.need{font-size:15px;background:var(--deck);border:1px solid var(--rule2);border-radius:3px;padding:10px 12px;margin-bottom:6px}
-.need b{font-family:"Courier Prime",monospace}
-.part{border-top:1px solid var(--rule)}
-.part:last-of-type{border-bottom:1px solid var(--rule)}
-.ph{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:52px}
-.ph .n{font-weight:600}
-.ph .v{font:700 15px "Courier Prime",monospace;color:var(--muted);padding:0 4px}
-.ph .chev{width:18px;height:18px;transition:transform .15s;flex:none}
-.ph[aria-expanded=true] .chev{transform:rotate(180deg)}
-.form{padding:2px 0 12px}
-.scores{font-size:15px;margin-bottom:8px}
-.scores div{display:flex;justify-content:space-between;min-height:32px;align-items:center}
-.scores span:last-child{font-family:"Courier Prime",monospace;font-weight:700}
-.inrow{display:flex;gap:6px}
-.f{min-height:44px;background:var(--field);border:1.5px solid var(--rule2);border-radius:3px;padding:8px 10px;font-size:16px;min-width:0}
-.f::placeholder{color:var(--ph)}
-.f.name{flex:1.4}.f.num{flex:.7;text-align:center}
-.add{min-height:44px;padding:0 14px;background:var(--paper);color:var(--deck);border-radius:3px;font:600 15px Anuphan;box-shadow:2px 2px 0 var(--rule2);flex:none}
-.tip{font-size:14px;color:var(--muted);margin-top:6px}
-/* ตั้งค่าวิชา */
-.set{margin-top:24px;border:1.5px dashed var(--rule2);border-radius:3px}
+/* 4 งาน */
+.row{display:flex;align-items:center;gap:10px;min-height:52px;border-top:1px solid var(--rule)}
+.row:last-child{border-bottom:1px solid var(--rule)}
+.box{width:22px;height:22px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px;flex:none}
+.what{font-weight:600}
+.sub{font-size:14px;color:var(--muted)}
+.late{color:var(--red);font-weight:600}
+.none{padding:8px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+/* 5 ตั้งค่าวิชา */
+.set{margin-top:28px;border:1.5px dashed var(--rule2);border-radius:3px}
 .set>.ph{padding:0 12px}
 .set .in{padding:0 12px 12px}
-.set h3{font:600 16px Anuphan;margin:12px 0 6px}
+.set h3{font:600 16px Anuphan;margin:14px 0 4px}
 .two{display:flex;gap:8px}
 .two label{flex:1;font-size:14px;color:var(--muted)}
 .two .f{width:100%;margin-top:2px}
-.ghost{min-height:44px;width:100%;border:1.5px dashed var(--rule2);border-radius:3px;font:600 15px Anuphan;text-align:center;margin-top:6px}
-.col{display:flex;flex-direction:column;gap:10px;flex:none;max-width:100%}
-.cap{font:600 14px Anuphan;color:#F3EAD2}
-.cap span{display:block;font-weight:400;color:#C9BFAA;font-size:13px}
-.no{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--pen);color:#fff;font:700 11px/1 "Courier Prime",monospace;font-style:normal;margin:0 4px;vertical-align:middle}
-.next{margin-top:10px;padding:10px 12px;background:var(--deck);border:1px solid var(--rule2);border-radius:3px;font-size:15px}
-.next b{display:block}
-.next span{color:var(--muted)}
-.stat button{background:var(--crt);border-radius:8px;padding:10px 10px 9px;color:var(--crtOn);text-align:center;min-height:44px}
-.stat button b{display:block;font:400 26px/1 VT323,monospace}
-.stat button span{font-size:13px;color:var(--crtDim)}
-.due{font:600 12px Anuphan;font-style:normal;color:var(--pen);border:1.5px solid var(--pen);border-radius:3px;padding:0 5px;margin-left:4px;vertical-align:middle}
-.side ol{padding-left:20px;font-size:14px;color:#D8D0BE;margin-bottom:18px}
-.side ol li{margin-bottom:8px}
+.std{padding:4px 0}
+.std b{font-family:"Courier Prime",monospace}
+/* คำอธิบายข้าง */
 .side{flex:1;min-width:280px;max-width:520px}
 .side h3{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
-.side ul{padding-left:18px;font-size:14px;color:#D8D0BE;margin-bottom:18px}
-.side li{margin-bottom:6px}
+.side ol,.side ul{padding-left:20px;font-size:14px;color:#D8D0BE;margin-bottom:18px}
+.side li{margin-bottom:8px}
 .side table{width:100%;border-collapse:collapse;font-size:13px;color:#D8D0BE;margin-bottom:18px}
 .side td{border-top:1px solid #3a342c;padding:6px 6px 6px 0;vertical-align:top}
 .side td:first-child{color:#a99f8c;text-decoration:line-through;width:50%}
+.side .tg{min-height:44px;padding:0 14px;border:1.5px solid #C9BFAA;border-radius:3px;color:#F3EAD2;font:600 14px Anuphan;margin:0 6px 8px 0}
+@media (prefers-reduced-motion:reduce){.chev{transition:none}}
 </style>
 </head>
 <body>
 <div class="head">
-  <h1>หน้าวิชา: ร่างแรก เทียบ แก้ 7 ข้อ (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
-  <p>เรียงตามที่เข้ามาใช้บ่อย: สรุป → งาน → โน้ต → คะแนน · ฟอร์มคะแนนยุบไว้ แตะแถวไหนค่อยกาง · วันสอบ คาบชดเชย เกณฑ์ตัดเกรด ไปอยู่ "ตั้งค่าวิชา" ท้ายหน้า · ข้อความสั้นลงและเข้มขึ้น</p>
+  <h1>หน้าวิชา แบบ 5 ข้อ (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>เข้านาน ๆ ครั้งเพื่อเช็กสถานะ → บนสุดตอบ "มาเรียนพอไหม / อีกกี่วันสอบ" แล้วตามด้วยคะแนน โน้ต งาน · ฟอร์มทุกอันยุบไว้ แตะค่อยกาง · ตั้งค่าทุกอย่างรวมไว้ท้ายหน้าที่เดียว</p>
 </div>
 <div class="wrap">
-  <div class="col"><div class="cap">ก่อน · ร่างแรก<span>ที่เจ้าของดูเมื่อกี้</span></div>
-  <div class="phone"><div class="scroll">
-    <div class="top"><button class="lnk">‹ วิชา</button><button class="lnk">แก้ไข</button></div>
+  <div class="phone"><div class="scroll" id="sc">
+    <div class="top"><button class="lnk">‹ วิชา</button><button class="lnk" data-edit>แก้ไข</button></div>
     <h2>เทคโนโลยีบล็อกเชน</h2>
     <div class="when">IT25309 · พฤ. 13:00–17:00</div>
     <div class="links"><button>Classroom</button><button>กลุ่มไลน์</button></div>
 
     <div class="stat" role="group" aria-label="สรุปวิชา">
       <div><b>100%</b><span>มาเรียน · ขาดได้อีก 2</span></div>
-      <div><b>–</b><span>คะแนนตอนนี้</span></div>
-      <div><b>D-111</b><span>สอบปลายภาค</span></div>
+      <button data-edit><b>D-111</b><span>สอบปลายภาค</span></button>
     </div>
 
-    <span class="tape t1">งานของวิชา</span>
-    <div>
-      <div class="row"><span class="box"></span><div><div class="what">สรุปบทที่ 1 Proof of Work</div><div class="sub">ส่ง พฤ. 19 พ.ย. 13:00</div></div></div>
-      <div class="row"><span class="box"></span><div><div class="what">ติดตั้ง MetaMask</div><div class="sub late">เลยกำหนด 1 วัน</div></div></div>
+    <span class="tape t1">คะแนน</span>
+    <div class="now">
+      <div class="k">เก็บแล้ว <b>18/25</b> (72%)</div>
+      <label class="goal">เป้า <select aria-label="เกรดเป้าหมาย"><option>A</option><option>B+</option><option selected>B</option><option>C+</option><option>C</option><option>D+</option><option>D</option></select></label>
     </div>
+    <div class="need">ปลายภาคต้องได้อย่างน้อย <b>52%</b> ถึงได้ B</div>
+    <div id="parts"></div>
+    <button class="ghost">+ เพิ่มส่วนคะแนน</button>
 
     <span class="tape t2">โน้ต 2 สัปดาห์นี้</span>
     <div class="tl">
-      <button><span class="d">พฤ. 19 พ.ย.</span><span class="tp"><span class="star">★ </span>Proof of Work คืออะไร</span><span class="tp">hash กับ nonce</span></button>
-      <button><span class="d">พฤ. 12 พ.ย.</span><span class="tp">Blockchain week1</span></button>
+      <button><span class="d">พฤ. 12 พ.ย.</span><span class="tp"><span class="star">★ </span>Proof of Work คืออะไร</span><span class="tp">hash กับ nonce</span></button>
+      <button><span class="d">พฤ. 5 พ.ย.</span><span class="tp">Blockchain week1</span></button>
     </div>
-    <button class="more">โน้ตทั้งหมด ›</button>
+    <button class="more">โน้ตทุกคาบ ›</button>
 
-    <span class="tape t3">คะแนน</span>
-    <div class="now">
-      <div class="k">ตอนนี้ <b>18/25</b> · ถ้าจบตอนนี้ได้ <b>B+</b></div>
-      <label class="goal">เป้า <select aria-label="เกรดเป้าหมาย"><option>A</option><option>B+</option><option selected>B</option><option>C+</option></select></label>
-    </div>
-    <div class="need">ปลายภาคต้องได้อย่างน้อย <b>52%</b> ถึงได้ B</div>
-    <div class="parts"></div>
-    <button class="ghost">+ เพิ่มส่วนคะแนน</button>
-
-    <div class="set">
-      <button class="ph" aria-expanded="false" data-set><span class="n">ตั้งค่าวิชา</span><span class="v">วันสอบ · ชดเชย · ตัดเกรด</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
-      <div class="in" hidden>
-        <h3>วันสอบ</h3>
-        <div class="two"><label>กลางภาค<input class="f" placeholder="วว/ดด/ปปปป"></label><label>ปลายภาค<input class="f" value="04/03/2570"></label></div>
-        <h3>คาบชดเชย</h3>
-        <button class="ghost">+ เพิ่มคาบชดเชย</button>
-        <h3>เกณฑ์ตัดเกรด</h3>
-        <button class="ghost">ใช้เกณฑ์มาตรฐาน (A 80 · B+ 75 …) · แก้</button>
-      </div>
-    </div>
-  </div></div>
-
-  </div>
-  <div class="col"><div class="cap">หลัง · แก้ 7 ข้อ<span>เลขวงกลม = ข้อที่แก้</span></div>
-  <div class="phone"><div class="scroll">
-    <div class="top"><button class="lnk">‹ วิชา</button><button class="lnk" data-edit>แก้ไข <i class="no">7</i></button></div>
-    <h2>เทคโนโลยีบล็อกเชน</h2>
-    <div class="when">IT25309 · พฤ. 13:00–17:00</div>
-    <div class="next"><i class="no">1</i><b>คาบหน้า พฤ. 19 พ.ย. 13:00</b><span>blockchain and proof of work</span></div>
-    <div class="links"><button>Classroom</button><button>กลุ่มไลน์</button></div>
-
-    <div class="stat" role="group" aria-label="สรุปวิชา">
-      <button><b>100%</b><span>มาเรียน · ขาดได้อีก 2</span></button>
-      <button data-go="notes"><b>2</b><span>หัวข้อต้องทวน <i class="no">3</i></span></button>
-      <button data-edit><b>D-111</b><span>สอบปลายภาค <i class="no">4</i></span></button>
-    </div>
-
-    <span class="tape t1">งานของวิชา</span>
-    <div>
+    <span class="tape t3">งานของวิชา</span>
+    <div id="tasks">
       <div class="row"><span class="box"></span><div><div class="what">สรุปบทที่ 1 Proof of Work</div><div class="sub">ส่ง พฤ. 19 พ.ย. 13:00</div></div></div>
       <div class="row"><span class="box"></span><div><div class="what">ติดตั้ง MetaMask</div><div class="sub late">เลยกำหนด 1 วัน</div></div></div>
     </div>
-    <button class="ghost">+ เพิ่มงานของวิชานี้ <i class="no">2</i></button>
+    <div id="noTasks" class="none" hidden>ไม่มีงานค้าง</div>
 
-    <span class="tape t2" id="notesB">โน้ต 2 สัปดาห์นี้</span>
-    <div class="tl">
-      <button><span class="d">พฤ. 19 พ.ย.</span><span class="tp"><span class="star">★ </span>Proof of Work คืออะไร <em class="due">ต้องทวน</em></span><span class="tp">hash กับ nonce <em class="due">ต้องทวน</em></span></button>
-      <button><span class="d">พฤ. 12 พ.ย.</span><span class="tp">Blockchain week1</span></button>
-    </div>
-    <button class="more">โน้ตทั้งหมด ›</button>
-
-    <span class="tape t3">คะแนน</span>
-    <div class="now">
-      <div class="k"><i class="no">6</i>เก็บแล้ว <b>18/25</b> (72%)</div>
-      <label class="goal">เป้า <select aria-label="เกรดเป้าหมาย"><option>A</option><option>B+</option><option selected>B</option><option>C+</option></select></label>
-    </div>
-    <div class="need">ปลายภาคต้องได้อย่างน้อย <b>52%</b> ถึงได้ B</div>
-    <div class="parts"></div>
-    <button class="ghost">+ เพิ่มส่วนคะแนน</button>
-
-    <div class="set">
-      <button class="ph" aria-expanded="false" data-set><span class="n">ตั้งค่าวิชา</span><span class="v">ชื่อ ตาราง · วันสอบ · ชดเชย · ตัดเกรด</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="set" id="set">
+      <button class="ph" aria-expanded="false" id="setBtn"><span class="n">ตั้งค่าวิชา</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <div class="in" hidden>
-        <h3>ชื่อ รหัส ตารางเรียน <i class="no">7</i></h3>
-        <button class="ghost">แก้ชื่อวิชา ลิงก์ และตารางเรียน</button>
+        <h3>ชื่อ รหัส ตารางเรียน</h3>
+        <button class="ghost" style="margin-top:0">แก้ชื่อวิชา ลิงก์ และตารางเรียน ›</button>
         <h3>วันสอบ</h3>
         <div class="two"><label>กลางภาค<input class="f" placeholder="วว/ดด/ปปปป"></label><label>ปลายภาค<input class="f" value="04/03/2570"></label></div>
         <h3>คาบชดเชย</h3>
-        <button class="ghost">+ เพิ่มคาบชดเชย</button>
+        <button class="ghost" style="margin-top:0">+ เพิ่มคาบชดเชย</button>
         <h3>เกณฑ์ตัดเกรด</h3>
-        <button class="ghost">ใช้เกณฑ์มาตรฐาน (A 80 · B+ 75 …) · แก้</button>
+        <div class="std">มาตรฐาน · A <b>80</b> · B+ <b>75</b> · B <b>70</b> …</div>
+        <button class="ghost" style="margin-top:0">แก้เกณฑ์</button>
       </div>
     </div>
   </div></div>
 
-  </div>
   <div class="side">
-    <h3>7 ข้อที่แก้ (มองแบบคนใช้)</h3>
+    <h3>เรียงจากบนลงล่าง</h3>
     <ol>
-      <li><b>คาบหน้าเรียนอะไร</b> ใต้ชื่อวิชา ดึงจากช่อง "คาบหน้า" ที่จดไว้ · ไม่ได้กรอก = แสดงแค่วัน-เวลา</li>
-      <li><b>+ เพิ่มงานของวิชานี้</b> ใต้รายการงาน (เลือกวิชาให้แล้ว)</li>
-      <li><b>ต้องทวนกี่หัวข้อ</b> ในช่องสรุปกลาง · แตะ = เลื่อนไปโน้ต · หัวข้อที่ถึงรอบมีป้าย "ต้องทวน"</li>
-      <li><b>ช่องสรุปแตะได้</b> · ช่องสอบแตะ = กางตั้งค่าวิชา (ยังไม่ตั้งวันสอบ ขึ้น "ตั้งวันสอบ")</li>
-      <li><b>เลิกซ้ำ "คะแนนตอนนี้"</b> · ช่องกลางเปลี่ยนเป็นข้อ 3</li>
-      <li><b>"เก็บแล้ว 18/25 (72%)"</b> แทน "ถ้าจบตอนนี้ได้ B+" ที่หลอกตาต้นเทอม · บรรทัด "ปลายภาคต้องได้…" บอกว่าต้องทำอะไร</li>
-      <li><b>ตั้งค่าที่เดียว</b> · "แก้ไข" มุมบนเลื่อนลงไปกาง "ตั้งค่าวิชา" · ชื่อ รหัส ตารางเรียน ย้ายมาอยู่ในนั้นด้วย</li>
+      <li><b>สรุป 2 ช่อง</b> มาเรียน · วันสอบ (แตะช่องสอบ = กางตั้งค่าวิชา · ยังไม่ตั้ง = "ตั้งวันสอบ")</li>
+      <li><b>คะแนน</b> "เก็บแล้ว x/y (%)" · เป้าเป็นช่องเลือกเดียว · ส่วนคะแนนเป็นแถวเดียว แตะค่อยกางรายการ+ฟอร์ม</li>
+      <li><b>โน้ต 2 สัปดาห์</b> ไทม์ไลน์ย่อที่ทำไว้แล้ว</li>
+      <li><b>งานของวิชา</b> ไม่มีงาน = บรรทัดเดียว (ไม่มีภาพใหญ่)</li>
+      <li><b>ตั้งค่าวิชา</b> ยุบท้ายหน้า · "แก้ไข" มุมบนเลื่อนลงมากางที่นี่</li>
     </ol>
-    <h3>ลองกด (จอขวา)</h3>
-    <ul><li>"แก้ไข" หรือช่อง D-111 → กางตั้งค่าวิชา · ช่อง "2" → เลื่อนไปโน้ต · แถวคะแนน → กาง/ยุบ</li></ul>
+    <h3>ลองกด</h3>
+    <div><button class="tg" id="tgTask">ดูตอนไม่มีงาน</button><button class="tg" id="tgExam">ดูตอนยังไม่ตั้งวันสอบ</button></div>
+    <ul><li>แถวคะแนน → กาง/ยุบ · "แก้ไข" หรือช่อง D-111 → กางตั้งค่าวิชา</li></ul>
+    <h3>ข้อความเก่า → ใหม่</h3>
+    <table>
+      <tr><td>ถ้าจบตอนนี้ได้ B+</td><td>เก็บแล้ว 18/25 (72%)</td></tr>
+      <tr><td>ปุ่มเป้า 7 ปุ่ม A–D</td><td>เป้า [B ▾]</td></tr>
+      <tr><td>งานที่ได้ 0 ให้กรอก 0 ด้วย ถ้าเว้นว่างจะไม่นับ…</td><td>ได้ 0 ก็ใส่ 0 (ไม่ใส่ = ไม่นับ) · โผล่ตอนกางเท่านั้น</td></tr>
+      <tr><td>ตั้งแล้วจะเกิดบอส / เว้นว่าง = ยังไม่มีบอส</td><td>(ตัด)</td></tr>
+      <tr><td>คาบหน้า · + เพิ่มงาน · ต้องทวนกี่หัวข้อ</td><td>(ตัด ไม่จำเป็นในหน้านี้)</td></tr>
+    </table>
+    <h3>ตัวหนังสือ</h3>
+    <ul><li>ตัวหลัก 16px สีหมึก · สีจางเฉพาะวันที่/คำประกอบ ≥14px · ปุ่ม/แถวแตะสูง ≥44px</li><li>วิธีคิดคะแนน/เกรดไม่เปลี่ยน</li></ul>
   </div>
 </div>
 <script>
@@ -234,14 +182,17 @@ const P=[["คะแนนเก็บ","30%",[["ควิซ 1","8/10"],["ก�
 const CH='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 let open=-1;
 function draw(){
-  document.querySelectorAll(".parts").forEach(el=>el.innerHTML=P.map((p,i)=>`<div class="part"><button class="ph" aria-expanded="${open===i}" data-i="${i}"><span class="n">${p[0]} <span class="v">${p[1]}</span></span><span class="v">${p[3]}</span>${CH}</button>${open===i?`<div class="form">${p[2].length?`<div class="scores">${p[2].map(s=>`<div><span>${s[0]}</span><span>${s[1]}</span></div>`).join("")}</div>`:""}<div class="inrow"><input class="f name" placeholder="ชื่อ เช่น ควิซ 2" aria-label="ชื่อ"><input class="f num" placeholder="ได้" inputmode="decimal" aria-label="ได้"><input class="f num" placeholder="เต็ม" inputmode="decimal" aria-label="เต็ม"></div><div class="inrow" style="margin-top:8px;justify-content:space-between;align-items:center"><span class="tip">ได้ 0 ก็ใส่ 0 (ไม่ใส่ = ไม่นับ)</span><button class="add">เพิ่ม</button></div></div>`:""}</div>`).join(""));
-  document.querySelectorAll(".parts .ph").forEach(b=>b.onclick=()=>{open=open===+b.dataset.i?-1:+b.dataset.i;draw()});
+  document.getElementById("parts").innerHTML=P.map((p,i)=>`<div class="part"><button class="ph" aria-expanded="${open===i}" data-i="${i}"><span class="n">${p[0]} <span class="w">${p[1]}</span></span><span class="v">${p[3]}</span>${CH}</button>${open===i?`<div class="form">${p[2].length?`<div class="scores">${p[2].map(s=>`<div><span>${s[0]}</span><span>${s[1]}</span></div>`).join("")}</div>`:""}<div class="inrow"><input class="f name" placeholder="ชื่อ เช่น ควิซ 2" aria-label="ชื่อ"><input class="f num" placeholder="ได้" inputmode="decimal" aria-label="ได้"><input class="f num" placeholder="เต็ม" inputmode="decimal" aria-label="เต็ม"></div><div class="inrow" style="justify-content:space-between;align-items:center"><span class="tip">ได้ 0 ก็ใส่ 0 (ไม่ใส่ = ไม่นับ)</span><button class="add">เพิ่ม</button></div></div>`:""}</div>`).join("");
+  document.querySelectorAll("#parts .ph").forEach(b=>b.onclick=()=>{open=open===+b.dataset.i?-1:+b.dataset.i;draw()});
 }
 draw();
-function setOpen(ph,v){ph.setAttribute("aria-expanded",v);ph.nextElementSibling.hidden=!v}
-document.querySelectorAll("[data-set]").forEach(b=>b.onclick=()=>setOpen(b,b.getAttribute("aria-expanded")!=="true"));
-document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{const ph=b.closest(".phone").querySelector("[data-set]");setOpen(ph,true);ph.scrollIntoView({behavior:"smooth",block:"start"})});
-document.querySelectorAll("[data-go=notes]").forEach(b=>b.onclick=()=>document.getElementById("notesB").scrollIntoView({behavior:"smooth",block:"start"}));
+const setBtn=document.getElementById("setBtn");
+function setOpen(v){setBtn.setAttribute("aria-expanded",v);setBtn.nextElementSibling.hidden=!v}
+setBtn.onclick=()=>setOpen(setBtn.getAttribute("aria-expanded")!=="true");
+document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{setOpen(true);document.getElementById("set").scrollIntoView({behavior:"smooth",block:"start"})});
+document.getElementById("tgTask").onclick=()=>{const t=document.getElementById("tasks");t.hidden=!t.hidden;document.getElementById("noTasks").hidden=!t.hidden};
+let noExam=false;const ex=document.querySelector(".stat button");
+document.getElementById("tgExam").onclick=()=>{noExam=!noExam;ex.innerHTML=noExam?'<b>–</b><span>ตั้งวันสอบ</span>':'<b>D-111</b><span>สอบปลายภาค</span>'};
 </script>
 </body>
 </html>
