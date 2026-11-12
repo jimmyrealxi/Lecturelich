@@ -11,8 +11,8 @@ import { useExams } from "@/lib/queries/review";
 import { useAssignments, useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
 import { useProfile } from "@/lib/queries/setup";
 import { attendanceStats, bangkokNow, countSessions } from "@/lib/schedule";
-import { useSubjectNotes } from "@/lib/queries/notes";
-import { hhmm, shortDate } from "@/lib/format";
+import { NotesTimeline } from "@/components/NotesTimeline";
+import { hhmm } from "@/lib/format";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 
 const DAY = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
@@ -38,10 +38,12 @@ export default function SubjectScreen() {
   const exams = useExams(term.data?.id);
   const myExams = (exams.data ?? []).filter((e) => e.subject_id === id);
   const myTasks =(tasks.data ?? []).filter((a) => a.subject_id === id);
-  // โน้ต 2 สัปดาห์ล่าสุดแบบย่อ · ทั้งหมดอยู่หน้า /notes
-  const notes = useSubjectNotes(id);
+  // ไทม์ไลน์โน้ต 2 สัปดาห์ล่าสุด · ทั้งหมดอยู่หน้า /notes
+  const absentKeys = useMemo(
+    () => new Set((attendance.data ?? []).filter((r) => r.status === "absent").map((r) => `${r.slot_id}:${r.date}`)),
+    [attendance.data],
+  );
   const since = new Date(Date.parse(today + "T00:00:00Z") - 14 * 86_400_000).toISOString().slice(0, 10);
-  const recent = (notes.data ?? []).filter((n) => n.date >= since);
 
   const links = [
     { label: "Classroom", url: subject?.classroom_url },
@@ -110,21 +112,7 @@ export default function SubjectScreen() {
         )}
 
         <Section>โน้ตแต่ละคาบ</Section>
-        <Card>
-          {recent.length === 0 ? (
-            <Text style={T.muted}>{notes.isPending ? "กำลังโหลด…" : "2 สัปดาห์นี้ยังไม่ได้จด"}</Text>
-          ) : (
-            recent.map((n, i) => (
-              <Pressable key={n.id} style={[s.noteRow, i > 0 && s.noteRule]} accessibilityRole="link"
-                onPress={() => router.push({ pathname: "/notes/[subjectId]", params: { subjectId: id, note: n.id } })}>
-                <Text style={s.noteDate} numberOfLines={1}>{shortDate(n.date)}</Text>
-                <Text style={[s.noteWhat, !n.topics.length && T.muted]} numberOfLines={1}>
-                  {n.topics.length ? n.topics.map((t) => t.title).join(" · ") : n.text || "มีรูป"}
-                </Text>
-              </Pressable>
-            ))
-          )}
-        </Card>
+        <NotesTimeline subjectId={id} subjectName={subject?.name ?? ""} absentKeys={absentKeys} since={since} />
         <Pressable style={s.notesLink} onPress={() => router.push({ pathname: "/notes/[subjectId]", params: { subjectId: id } })}
           accessibilityRole="link">
           <Text style={s.linkText}>เปิดโน้ตทุกคาบ ›</Text>
@@ -152,10 +140,6 @@ const s = StyleSheet.create({
     alignItems: "center", justifyContent: "center",
   },
   linkText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
-  noteRow: { flexDirection: "row", alignItems: "center", gap: space.md, minHeight: minTouch },
-  noteRule: { borderTopWidth: 1, borderTopColor: color.rule },
-  noteDate: { fontFamily: font.typeBold, fontSize: 14, color: color.muted, flexShrink: 0 },
-  noteWhat: { flex: 1, fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
   notesLink: {
     minHeight: minTouch, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper, alignItems: "center", justifyContent: "center",
     marginBottom: space.md,

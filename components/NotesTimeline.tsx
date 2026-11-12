@@ -14,12 +14,14 @@ import { color, font, radius, space } from "@/lib/theme";
  * ไทม์ไลน์โน้ตทุกคาบของวิชา (ใหม่สุดก่อน) · แตะเพื่อแก้ · absentKeys = "slotId:date" ที่เช็กว่าขาด
  * focusTopic = หัวข้อที่กำลังทวน / focusNote = โน้ตที่แตะมาจากหน้าวิชา → ไฮไลต์คาบนั้น + บอกตำแหน่ง y ผ่าน onFocusY (ให้หน้าเลื่อนไปหา)
  */
-export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, focusNote, onFocusY }: {
+export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, focusNote, onFocusY, since }: {
   subjectId: string; subjectName: string; absentKeys: Set<string>; focusTopic?: string; focusNote?: string; onFocusY?: (y: number) => void;
+  since?: string; // แสดงเฉพาะโน้ตตั้งแต่วันนี้ (หน้าวิชาโชว์ 2 สัปดาห์ล่าสุด)
 }) {
   const notes = useSubjectNotes(subjectId);
+  const list = (notes.data ?? []).filter((n) => !since || n.date >= since);
   const [viewing, setViewing] = useState<{ noteId: string; index: number } | null>(null);
-  const allThumbs = (notes.data ?? []).flatMap((n) => n.photo_paths.map(thumbPath));
+  const allThumbs = list.flatMap((n) => n.photo_paths.map(thumbPath));
   const thumbs = useQuery({
     queryKey: ["thumbs-subject", subjectId, allThumbs.join("|")],
     enabled: allThumbs.length > 0,
@@ -28,14 +30,17 @@ export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, 
   });
 
   if (notes.isPending) return <Skeleton height={120} />;
-  if (!notes.data?.length) return <Card><EmptyScene kind="notes" fact="ยังไม่มีโน้ต · จดได้จากการ์ด “ยังไม่ได้จด” ในหน้าวันนี้หลังเลิกคาบ" /></Card>;
+  if (!list.length) {
+    if (since && notes.data?.length) return <Card><Text style={T.muted}>2 สัปดาห์นี้ยังไม่ได้จด</Text></Card>;
+    return <Card><EmptyScene kind="notes" fact="ยังไม่มีโน้ต · จดได้จากการ์ด “ยังไม่ได้จด” ในหน้าวันนี้หลังเลิกคาบ" /></Card>;
+  }
 
-  const open = viewing && notes.data.find((n) => n.id === viewing.noteId);
+  const open = viewing && list.find((n) => n.id === viewing.noteId);
 
   return (
     <View style={s.tl}>
       <View style={s.line} />
-      {notes.data.map((n) => {
+      {list.map((n) => {
         const absent = n.slot_id ? absentKeys.has(`${n.slot_id}:${n.date}`) : false;
         const focused = n.id === focusNote || (!!focusTopic && n.topics.some((t) => t.id === focusTopic));
         return (
