@@ -52,18 +52,14 @@ export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, 
                   {thaiDate(n.date)}
                   {absent && <Text style={{ color: color.danger, fontFamily: font.bodyBold }}> · ขาด</Text>}
                 </Text>
+                {/* หัวข้อ = หัวการ์ด ตัวหนา · อันที่กำลังทวนเป็นสีปากกาน้ำเงิน */}
+                {n.topics.map((t) => (
+                  <Text key={t.id} style={[s.topicHead, t.id === focusTopic && { color: color.pen }]}>
+                    {t.is_starred && <Text style={{ color: color.red }}>★ </Text>}{t.title}
+                  </Text>
+                ))}
                 {!!n.text && <Text style={[T.body, { marginTop: 4 }]}>{n.text}</Text>}
                 {!!n.next_text && <Text style={[T.muted, { marginTop: 4 }]}>คาบหน้า: {n.next_text}</Text>}
-                {n.topics.length > 0 && (
-                  <View style={s.topics}>
-                    {n.topics.map((t) => (
-                      <View key={t.id} style={[s.topic, t.is_starred && s.topicStar]}>
-                        <Text style={[s.topicText, t.is_starred && { fontFamily: font.bodyBold }]}>{t.is_starred ? "★ " : ""}{t.title}</Text>
-                        {t.id === focusTopic && <Text style={s.mark}>ทวนอันนี้</Text>}
-                      </View>
-                    ))}
-                  </View>
-                )}
               </Pressable>
               {n.photo_paths.length > 0 && (
                 <View style={s.photos}>
@@ -99,12 +95,8 @@ const s = StyleSheet.create({
     position: "absolute", left: -18, top: 10, width: 12, height: 12, borderRadius: 6, backgroundColor: color.pen,
     borderWidth: 2, borderColor: color.ink,
   },
-  topics: { flexDirection: "row", flexWrap: "wrap", gap: 4, marginTop: 6 },
+  topicHead: { fontFamily: font.bodyBold, fontSize: 17, lineHeight: 24, color: color.paper, marginTop: 4 },
   focus: { backgroundColor: "rgba(43,74,138,0.07)", borderColor: color.pen },
-  mark: { fontFamily: font.typeBold, fontSize: 12, color: color.pen, borderWidth: 1.5, borderColor: color.pen, borderRadius: 3, paddingHorizontal: 5, marginLeft: 6 },
-  topic: { flexDirection: "row", alignItems: "center", backgroundColor: color.field, borderWidth: 1, borderColor: color.rule2, borderRadius: 2, paddingHorizontal: 7, paddingVertical: 2 },
-  topicStar: { borderColor: color.red },
-  topicText: { fontFamily: font.body, fontSize: 15, color: color.paper },
   photos: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 6 },
   thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: color.rule },
 });
