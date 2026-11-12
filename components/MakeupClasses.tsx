@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { AddBtn, Btn, Card, confirmAction, DateField, Field, Section, T, Tape, TimeField } from "@/components/ui";
+import { AddBtn, Btn, Card, confirmAction, DateField, Field, T, Tape, TimeField } from "@/components/ui";
 import type { CurrentTerm } from "@/lib/queries/core";
 import { useAddMakeup, useDeleteMakeup } from "@/lib/queries/setup";
 import { hhmm, shortDate, typedDate } from "@/lib/format";
@@ -8,7 +8,7 @@ import { DATE_ERR, fromThaiDate, normTime } from "@/lib/input";
 import { inTerm, type Slot } from "@/lib/schedule";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 
-// คาบชดเชยบนหน้าวิชา (docs/mockups/a-makeup-class.html) · ใช้ตารางคาบเดิม จึงเช็กชื่อ/จด/เตือนได้เหมือนคาบปกติ
+// คาบชดเชยในตั้งค่าวิชา (หัวข้ออยู่ที่หน้าวิชา · docs/mockups/a-makeup-class.html) · ใช้ตารางคาบเดิม จึงเช็กชื่อ/จด/เตือนได้เหมือนคาบปกติ
 
 export function MakeupClasses({ subjectId, term, slots }: { subjectId: string; term: CurrentTerm; slots: Slot[] }) {
   const del = useDeleteMakeup(term.id);
@@ -21,7 +21,6 @@ export function MakeupClasses({ subjectId, term, slots }: { subjectId: string; t
 
   return (
     <>
-      <Section>คาบชดเชย</Section>
       <Card style={{ marginBottom: 0 }}>
         {rows.length === 0 && <Text style={T.muted}>ยังไม่มีคาบชดเชย</Text>}
         {rows.map((x, i) => (

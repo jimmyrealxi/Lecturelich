@@ -1,16 +1,15 @@
-import { useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Btn, Card, Crt, Field, Skeleton, T, confirmAction } from "@/components/ui";
-import { EmptyScene } from "@/components/EmptyScene";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Animated, Easing, Platform, Pressable, StyleSheet, Text, View, type ViewStyle } from "react-native";
+import { AddBtn, Btn, Card, Field, Skeleton, T, confirmAction } from "@/components/ui";
 import { type Subject } from "@/lib/queries/core";
 import {
   useAddScore, useDeleteComponent, useDeleteScore, useGradeComponents, useSaveComponents, useUpdateSubjectGrade,
   type ComponentInput, type GradeComponent,
 } from "@/lib/queries/grades";
-import { DEFAULT_CUTOFFS, cutoffError, gradeFor, needOnFinal, toComponents, weightedTotal, type Cutoffs } from "@/lib/grades";
+import { DEFAULT_CUTOFFS, cutoffError, needOnFinal, toComponents, weightedTotal, type Cutoffs } from "@/lib/grades";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 
-// ส่วน "คะแนนและเกรด" ในหน้าวิชา (mockup docs/mockups/stage3.html)
+// ส่วน "คะแนน" ในหน้าวิชา (docs/mockups/a-subject-page.html) · แต่ละส่วนยุบเป็นแถว แตะค่อยกาง · เป้า = ตรายาง
 
 const fmt = (n: number) => String(Math.round(n * 100) / 100);
 const num = (t: string) => (t.trim() === "" ? NaN : Number(t.trim()));
@@ -24,7 +23,9 @@ export function GradesPanel({ subject, termId }: { subject: Subject; termId: str
   const q = useGradeComponents(subject.id);
   const save = useSaveComponents(subject.id);
   const upd = useUpdateSubjectGrade(termId);
-  const [editing, setEditing] = useState<string | null>(null); // id ส่วนที่แก้ · "new" = เพิ่มใหม่ · "cutoffs"
+  const [open, setOpen] = useState<string | null>(null); // id ส่วนที่กางอยู่ · "new" = ฟอร์มเพิ่มส่วน
+  const [editing, setEditing] = useState(false); // แก้ชื่อ/สัดส่วนของส่วนที่กางอยู่
+  const [picking, setPicking] = useState(false); // ถาดตรายางเลือกเป้า
   const rows = useMemo(() => q.data ?? [], [q.data]);
   const list = useMemo(() => toComponents(rows), [rows]);
   const cutoffs = subject.grade_cutoffs ?? DEFAULT_CUTOFFS;
@@ -37,93 +38,114 @@ export function GradesPanel({ subject, termId }: { subject: Subject; termId: str
   const scoredWeight = list.reduce((t, c) => (c.score == null ? t : t + c.weight), 0);
   const weightSum = list.reduce((t, c) => t + c.weight, 0);
   const need = needOnFinal(list, subject.target_grade, cutoffs);
-  const lower = grades.slice(grades.indexOf(subject.target_grade) + 1, grades.indexOf(subject.target_grade) + 3);
+  const g = subject.target_grade;
+  const toggle = (id: string) => { setOpen(open === id ? null : id); setEditing(false); };
 
   return (
     <View>
-      {rows.length > 0 && (
-        <Card>
-          <Text style={T.muted}>คะแนนตอนนี้ (จากส่วนที่มีคะแนนแล้ว)</Text>
-          <Text style={s.big}>
-            {fmt(total)} <Text style={T.muted}>/ {fmt(scoredWeight)} · ถ้าจบตอนนี้ได้ {gradeFor(total, cutoffs)}</Text>
-          </Text>
-          <View style={s.bar}><View style={[s.barFill, { width: `${scoredWeight ? Math.min(100, (total / scoredWeight) * 100) : 0}%` }]} /></View>
-          {Math.abs(weightSum - 100) > 0.001 && (
-            <Text style={[T.muted, { color: color.danger, marginTop: space.sm }]}>สัดส่วนรวมตอนนี้ {fmt(weightSum)}% (ควรเป็น 100%)</Text>
-          )}
-        </Card>
-      )}
-
-      <Crt style={{ marginTop: space.md, marginBottom: space.md }}>
-        <Text style={s.needSmall}>&gt; เกรดเป้าหมาย</Text>
-        <View style={s.chips}>
-          {grades.map((g) => (
-            <Pressable key={g} onPress={() => upd.mutate({ id: subject.id, target_grade: g })}
-              style={[s.chip, g === subject.target_grade && s.chipOn]} accessibilityRole="radio"
-              accessibilityState={{ selected: g === subject.target_grade }}>
-              <Text style={[s.chipText, g === subject.target_grade && { color: color.crt }]}>{g}</Text>
+      <View style={s.now}>
+        <Text style={[T.body, { flex: 1 }]}>
+          {scoredWeight > 0
+            ? <>เก็บแล้ว <Text style={s.numBig}>{fmt(total)}/{fmt(scoredWeight)}</Text> ({Math.round((total / scoredWeight) * 100)}%)</>
+            : "ยังไม่มีคะแนน"}
+        </Text>
+        <GradeStamp grade={g} open={picking} onPress={() => setPicking(!picking)} />
+      </View>
+      {picking && (
+        <View style={s.tray} accessibilityRole="radiogroup" accessibilityLabel="เลือกเกรดเป้าหมาย">
+          {grades.map((x, i) => (
+            <Pressable key={x} onPress={() => { setPicking(false); if (x !== g) upd.mutate({ id: subject.id, target_grade: x }); }}
+              style={({ pressed }) => [s.mini, { transform: [{ rotate: `${i % 2 ? 3 : -3}deg` }] }, x === g && s.miniOn, pressed && { opacity: 0.6 }]}
+              accessibilityRole="radio" accessibilityState={{ selected: x === g }} accessibilityLabel={`เป้า ${x}`}>
+              <Text style={[s.miniText, x === g && { color: color.red }]}>{x}</Text>
             </Pressable>
           ))}
         </View>
-        {!need ? (
-          <Text style={[s.needSmall, { marginTop: space.md }]}>เพิ่มส่วนคะแนนและตั้งส่วนหนึ่งเป็น &quot;ปลายภาค&quot; เพื่อดูว่าต้องได้เท่าไหร่</Text>
-        ) : (
-          <>
-            <Text style={[s.needSmall, { marginTop: space.md }]}>
-              {need.needed === 0 ? `ได้ ${subject.target_grade} แล้ว แม้ปลายภาคได้ 0` : need.possible ? "ปลายภาคต้องได้อย่างน้อย" : `ปลายภาคเต็มก็ยังไม่ถึง ${subject.target_grade} — ต้องได้`}
-            </Text>
-            {need.needed > 0 && (
-              <Text style={s.needBig}>{fmt(need.needed)} <Text style={s.needSmall}>/ {fmt(need.max)} คะแนน</Text></Text>
-            )}
-            {lower.length > 0 && (
-              <Text style={s.needSmall}>
-                {lower.map((g) => `ได้ ${g} ต้อง ${fmt(needOnFinal(list, g, cutoffs)!.needed)}`).join(" · ")}
+      )}
+
+      {rows.length > 0 && (
+        <View style={s.need}>
+          {!need ? (
+            <Text style={T.body}>ตั้งส่วนหนึ่งเป็น &quot;ปลายภาค&quot; เพื่อดูว่าต้องได้เท่าไหร่</Text>
+          ) : need.needed === 0 ? (
+            <Text style={T.body}>ได้ {g} แล้ว แม้ปลายภาคได้ 0</Text>
+          ) : need.possible ? (
+            <Text style={T.body}>ปลายภาคต้องได้อย่างน้อย <Text style={s.numBold}>{fmt(need.needed)}/{fmt(need.max)}</Text> ถึงได้ {g}</Text>
+          ) : (
+            <Text style={[T.body, { color: color.danger }]}>ปลายภาคเต็มก็ยังไม่ถึง {g} (ต้องได้ <Text style={s.numBold}>{fmt(need.needed)}/{fmt(need.max)}</Text>)</Text>
+          )}
+          {Math.abs(weightSum - 100) > 0.001 && (
+            <Text style={[T.muted, { color: color.danger, marginTop: 4 }]}>สัดส่วนรวมตอนนี้ {fmt(weightSum)}% (ควรเป็น 100%)</Text>
+          )}
+        </View>
+      )}
+
+      {rows.length === 0 && open !== "new" && (
+        <View style={{ marginTop: space.sm }}>
+          <Btn kind="primary" label="ใช้แบบ เก็บ 30 · กลาง 30 · ปลาย 40"
+            onPress={() => !save.isPending && save.mutate(TEMPLATE.map((c, i) => ({ ...c, sort: i })))} />
+        </View>
+      )}
+
+      {rows.map((c, i) => {
+        const isOpen = open === c.id;
+        const sum = list[i].score;
+        return (
+          <View key={c.id} style={[s.part, i === 0 && s.partFirst]}>
+            <Pressable style={s.ph} onPress={() => toggle(c.id)} accessibilityRole="button" accessibilityState={{ expanded: isOpen }}>
+              <Text style={s.pn} numberOfLines={1}>
+                {c.name} <Text style={s.pw}>{fmt(Number(c.weight))}%{c.is_final && !c.name.includes("ปลายภาค") ? " · ปลายภาค" : ""}</Text>
               </Text>
-            )}
-            {need.unscoredOthers > 0 && (
-              <Text style={s.needSmall}>ยังมี {need.unscoredOthers} ส่วนที่ไม่มีคะแนน (นับเป็น 0)</Text>
-            )}
-          </>
-        )}
-      </Crt>
-
-      {rows.length === 0 && editing !== "new" && (
-        <Card>
-          <EmptyScene kind="grades" fact="ยังไม่มีส่วนคะแนน" />
-          <View style={[s.row, { marginTop: space.sm }]}>
-            <Btn kind="primary" label="ใช้แบบ เก็บ 30 · กลาง 30 · ปลาย 40"
-              onPress={() => !save.isPending && save.mutate(TEMPLATE.map((c, i) => ({ ...c, sort: i })))} />
+              <Text style={s.pv}>{sum == null ? "–" : `${fmt(sum)}/${fmt(Number(c.max_score))}`}</Text>
+              <Text style={[s.chev, isOpen && s.chevOn]} aria-hidden>▾</Text>
+            </Pressable>
+            {isOpen && (editing
+              ? <ComponentForm subjectId={subject.id} existing={c} sort={c.sort} onDone={() => setEditing(false)} />
+              : <PartBody subjectId={subject.id} comp={c} onEdit={() => setEditing(true)} />)}
           </View>
-        </Card>
-      )}
-
-      {rows.map((c, i) =>
-        editing === c.id ? (
-          <ComponentForm key={c.id} subjectId={subject.id} existing={c} onDone={() => setEditing(null)} sort={c.sort} />
-        ) : (
-          <ComponentCard key={c.id} subjectId={subject.id} comp={c} sum={list[i].score} onEdit={() => setEditing(c.id)} />
-        ),
-      )}
-      {editing === "new" && (
-        <ComponentForm key="new" subjectId={subject.id} onDone={() => setEditing(null)}
+        );
+      })}
+      {open === "new" && (
+        <ComponentForm key="new" subjectId={subject.id} onDone={() => setOpen(null)}
           sort={rows.reduce((m, c) => Math.max(m, c.sort + 1), 0)} />
       )}
-      {editing === "cutoffs" && (
-        <CutoffForm key={JSON.stringify(cutoffs)} cutoffs={cutoffs} onDone={() => setEditing(null)}
-          onSave={(grade_cutoffs) => upd.mutate({ id: subject.id, grade_cutoffs })} />
-      )}
-
-      <View style={s.row}>
-        <Btn label="+ เพิ่มส่วนคะแนน" onPress={() => setEditing("new")} />
-        <Btn label="เกณฑ์ตัดเกรด" onPress={() => setEditing("cutoffs")} />
-      </View>
+      {open !== "new" && <AddBtn label="+ เพิ่มส่วนคะแนน" onPress={() => { setOpen("new"); setEditing(false); }} />}
     </View>
   );
 }
 
-function ComponentCard({ subjectId, comp, sum, onEdit }: {
-  subjectId: string; comp: GradeComponent; sum: number | null; onEdit: () => void;
-}) {
+/** ตรายางเป้าเกรด · เปลี่ยนเกรดแล้วกระแทกลงกระดาษ (scale+opacity · ลดการเคลื่อนไหว = ไม่ขยับ) */
+function GradeStamp({ grade, open, onPress }: { grade: string; open: boolean; onPress: () => void }) {
+  const hit = useRef(new Animated.Value(1)).current;
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) { first.current = false; return; }
+    if (Platform.OS === "web" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    hit.setValue(0);
+    Animated.timing(hit, { toValue: 1, duration: 170, easing: Easing.out(Easing.quad), useNativeDriver: Platform.OS !== "web" }).start();
+  }, [grade, hit]);
+  const scale = hit.interpolate({ inputRange: [0, 1], outputRange: [1.45, 1] });
+  const opacity = hit.interpolate({ inputRange: [0, 1], outputRange: [0.2, 0.92] });
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityState={{ expanded: open }}
+      accessibilityLabel={`เกรดเป้าหมาย ${grade} แตะเพื่อเปลี่ยน`} style={({ pressed }) => [s.stampHit, pressed && { opacity: 0.7 }]}>
+      <Animated.View style={[s.stamp, INK_WORN, { opacity, transform: [{ rotate: "-8deg" }, { scale }] }]}>
+        <View style={s.stampIn}>
+          <Text style={s.stampK}>เป้า</Text>
+          <Text style={s.stampG}>{grade}</Text>
+        </View>
+      </Animated.View>
+    </Pressable>
+  );
+}
+
+// หมึกตรายางกินไม่เต็ม: จุดโปร่งเล็ก ๆ ทั่วตรา (เว็บเท่านั้น)
+const INK_WORN = (Platform.OS === "web" ? {
+  maskImage: "radial-gradient(circle at 30% 40%, transparent 0.9px, #000 1.5px), radial-gradient(circle at 70% 70%, transparent 0.7px, #000 1.3px)",
+  maskSize: "9px 11px, 13px 7px", maskComposite: "intersect", WebkitMaskComposite: "source-in",
+} : {}) as ViewStyle;
+
+function PartBody({ subjectId, comp, onEdit }: { subjectId: string; comp: GradeComponent; onEdit: () => void }) {
   const add = useAddScore(subjectId);
   const del = useDeleteScore(subjectId);
   const [title, setTitle] = useState("");
@@ -141,19 +163,11 @@ function ComponentCard({ subjectId, comp, sum, onEdit }: {
   };
 
   return (
-    <Card>
-      <View style={s.between}>
-        <Text style={T.h3}>{comp.name}{comp.is_final && !comp.name.includes("ปลายภาค") ? "  · ปลายภาค" : ""}</Text>
-        <Text style={T.muted}>
-          {fmt(Number(comp.weight))}% · {sum == null ? "ยังไม่มีคะแนน"
-            : `${fmt(comp.scores.reduce((t, x) => t + Number(x.score), 0))}/${fmt(comp.scores.reduce((t, x) => t + Number(x.max_score), 0))}`
-              + ` → ${fmt(sum)}/${fmt(Number(comp.max_score))}`}
-        </Text>
-      </View>
+    <View style={s.body}>
       {comp.scores.map((x) => (
         <View key={x.id} style={s.item}>
           <Text style={[T.body, { flex: 1 }]}>{x.title || "คะแนน"}</Text>
-          <Text style={[T.body, { fontFamily: font.bodyBold }]}>{fmt(Number(x.score))}/{fmt(Number(x.max_score))}</Text>
+          <Text style={[T.body, { fontFamily: font.typeBold }]}>{fmt(Number(x.score))}/{fmt(Number(x.max_score))}</Text>
           <Pressable style={s.x} accessibilityRole="button" accessibilityLabel={`ลบ ${x.title || "คะแนน"}`}
             onPress={() => confirmAction(`ลบคะแนน "${x.title || "คะแนน"}"?`, () => del.mutate(x.id))}>
             <Text style={T.muted}>✕</Text>
@@ -165,12 +179,33 @@ function ComponentCard({ subjectId, comp, sum, onEdit }: {
         <Field label="ได้" value={score} onChangeText={setScore} keyboardType="decimal-pad" maxLength={6} error={tried ? errScore : null} />
         <Field label="เต็ม" value={max} onChangeText={setMax} keyboardType="decimal-pad" maxLength={6} error={tried ? errMax : null} />
       </View>
-      <Text style={[T.muted, { marginTop: 4 }]}>งานที่ได้ 0 ให้กรอก 0 ด้วย ไม่งั้นแอปจะไม่นับงานนั้น</Text>
+      <Text style={[T.muted, { marginTop: 4 }]}>ได้ 0 ก็ใส่ 0 (ไม่ใส่ = ไม่นับ)</Text>
       <View style={[s.row, { marginTop: space.sm }]}>
         <Btn label="แก้ส่วนนี้" onPress={onEdit} />
         <Btn kind="primary" label="+ เพิ่มคะแนน" onPress={onAdd} />
       </View>
-    </Card>
+    </View>
+  );
+}
+
+/** เกณฑ์ตัดเกรดในตั้งค่าวิชา */
+export function CutoffSettings({ subject, termId }: { subject: Subject; termId: string }) {
+  const upd = useUpdateSubjectGrade(termId);
+  const [editing, setEditing] = useState(false);
+  const cutoffs = subject.grade_cutoffs ?? DEFAULT_CUTOFFS;
+  if (editing) {
+    return <CutoffForm key={JSON.stringify(cutoffs)} cutoffs={cutoffs} onDone={() => setEditing(false)}
+      onSave={(grade_cutoffs) => upd.mutate({ id: subject.id, grade_cutoffs })} />;
+  }
+  const order = Object.keys(cutoffs).sort((a, b) => cutoffs[b] - cutoffs[a]);
+  return (
+    <View>
+      <Text style={T.body}>
+        {subject.grade_cutoffs ? "" : "มาตรฐาน · "}
+        {order.map((x, i) => <Text key={x}>{i ? " · " : ""}{x} <Text style={s.numBold}>{cutoffs[x]}</Text></Text>)}
+      </Text>
+      <AddBtn label="แก้เกณฑ์" onPress={() => setEditing(true)} />
+    </View>
   );
 }
 
@@ -260,22 +295,31 @@ function CutoffForm({ cutoffs, onSave, onDone }: { cutoffs: Cutoffs; onSave: (c:
 }
 
 const s = StyleSheet.create({
-  big: { fontFamily: font.typeBold, fontSize: 28, color: color.paper },
-  bar: { height: 8, backgroundColor: "rgba(42,33,24,0.12)", borderRadius: 2, overflow: "hidden", marginTop: space.sm },
-  barFill: { height: "100%", backgroundColor: color.pen },
-  // บนจอเขียว: ตัวเลขใหญ่ VT323 · ข้อความไทย Anuphan
-  needSmall: { fontFamily: font.body, fontSize: 15, color: color.crtDim },
-  needBig: { fontFamily: font.num, fontSize: 40, lineHeight: 42, color: "#B8FFC9" },
-  chips: { flexDirection: "row", gap: 4, marginTop: space.sm }, // 7 เกรดแถวเดียวตาม mockup (360px: ช่องละ ~38 กว้าง สูง 44)
-  chip: {
-    flex: 1, minHeight: minTouch, borderRadius: radius.sm, borderWidth: 1, borderColor: "#2F6B42",
-    alignItems: "center", justifyContent: "center",
-  },
-  chipOn: { backgroundColor: color.crtOn, borderColor: color.crtOn },
-  chipText: { fontFamily: font.bodyBold, fontSize: 16, color: color.crtOn },
+  now: { flexDirection: "row", alignItems: "center", gap: space.md, paddingTop: 4, paddingBottom: space.sm },
+  numBig: { fontFamily: font.typeBold, fontSize: 19, color: color.paper },
+  numBold: { fontFamily: font.typeBold, color: color.paper },
+  // ตรายางแดง ขอบคู่ เอียง
+  stampHit: { minWidth: 76, minHeight: 72, alignItems: "center", justifyContent: "center" },
+  stamp: { borderWidth: 3, borderColor: color.red, borderRadius: 7, padding: 3 },
+  stampIn: { borderWidth: 1, borderColor: color.red, borderRadius: 4, paddingHorizontal: 10, paddingTop: 2, paddingBottom: 4, alignItems: "center" },
+  stampK: { fontFamily: font.bodyBold, fontSize: 12, lineHeight: 16, letterSpacing: 2, color: color.red },
+  stampG: { fontFamily: font.title, fontSize: 30, lineHeight: 38, color: color.red },
+  tray: { flexDirection: "row", gap: 4, paddingVertical: space.sm, marginBottom: space.sm, borderTopWidth: 1, borderBottomWidth: 1, borderColor: color.rule },
+  mini: { flex: 1, minHeight: minTouch, borderWidth: 2, borderColor: color.muted, borderRadius: 4, alignItems: "center", justifyContent: "center" },
+  miniOn: { borderColor: color.red, backgroundColor: "rgba(160,40,29,0.08)" },
+  miniText: { fontFamily: font.title, fontSize: 16, lineHeight: 24, color: color.muted },
+  need: { backgroundColor: color.deck, borderWidth: 1, borderColor: color.rule2, borderRadius: radius.md, paddingVertical: 10, paddingHorizontal: 12, marginBottom: space.sm },
+  part: { borderBottomWidth: 1, borderBottomColor: color.rule },
+  partFirst: { borderTopWidth: 1, borderTopColor: color.rule },
+  ph: { flexDirection: "row", alignItems: "center", gap: space.sm, minHeight: 52 },
+  pn: { flex: 1, fontFamily: font.bodyBold, fontSize: 16, color: color.paper },
+  pw: { fontFamily: font.body, fontSize: 14, color: color.muted },
+  pv: { fontFamily: font.typeBold, fontSize: 16, color: color.paper },
+  chev: { fontSize: 16, color: color.paper, width: 18, textAlign: "center" },
+  chevOn: { transform: [{ rotate: "180deg" }] },
+  body: { paddingBottom: space.md },
   row: { flexDirection: "row", gap: space.sm },
-  between: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: space.sm },
-  item: { flexDirection: "row", alignItems: "center", minHeight: minTouch, borderTopWidth: 1, borderTopColor: color.rule, gap: space.sm },
+  item: { flexDirection: "row", alignItems: "center", minHeight: minTouch, borderBottomWidth: 1, borderBottomColor: color.rule, borderStyle: "dashed", gap: space.sm },
   x: { width: minTouch, height: minTouch, alignItems: "center", justifyContent: "center" },
   label: { fontFamily: font.body, fontSize: 15, color: color.muted, marginTop: space.md, marginBottom: 6 },
   err: { fontFamily: font.body, fontSize: 15, color: color.danger, marginTop: space.sm },
