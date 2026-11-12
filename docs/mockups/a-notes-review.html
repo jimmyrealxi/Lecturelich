@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich โน้ตของวิชา</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ผลใช้จริงข้อ 1+4+5 (docs/UX_FEEDBACK.md) · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#4A3C2C;--faint:#64523F;--ph:#7A6A55;--pen:#2B4A8A;--red:#A0281D;--warn:#8A3F08;--on:#F3EAD2;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B;--subj:#2E6B3F}
+*{box-sizing:border-box;margin:0;padding:0}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+[hidden]{display:none!important}
+button,input,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+body{background:#1C1915;color:#E9E2D2;font:15px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+.head{max-width:1180px;margin:0 auto 18px}
+.head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
+.head p{color:#C9BFAA;font-size:14px;max-width:75ch;margin-top:4px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:10px;flex:none;max-width:100%}
+.cap{font:600 14px Anuphan;color:#F3EAD2}
+.cap span{display:block;font-weight:400;color:#C9BFAA;font-size:13px}
+.phone{position:relative;width:360px;max-width:100%;height:760px;border:6px solid #050505;border-radius:30px;overflow:hidden;background:var(--ink);color:var(--paper)}
+.scroll{height:100%;overflow-y:auto;padding:14px 16px 96px 26px;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
+.top{display:flex;justify-content:space-between;align-items:center;min-height:44px}
+.back{min-height:44px;font:600 16px Anuphan;color:var(--pen);padding-right:8px}
+.link{min-height:44px;font:600 14px Anuphan;color:var(--pen);text-decoration:underline;text-underline-offset:3px}
+h2{font:400 26px/36px Chonburi,serif;margin-top:2px}
+.code{font:700 13px "Courier Prime",monospace;color:var(--muted)}
+.ty{font:700 1em "Courier Prime",monospace}
+.tape{display:inline-block;background:var(--subj);color:var(--on);font:400 16px/1 Chonburi,serif;padding:8px 14px 7px;margin:22px 0 6px -6px;transform:rotate(-1.2deg);clip-path:polygon(0 8%,3% 0,97% 4%,100% 0,99% 92%,96% 100%,4% 96%,0 100%)}
+.tape.b{background:#2B4A8A;transform:rotate(.8deg)}
+.tape.c{background:#6B4A2E;transform:rotate(-.6deg)}
+.crt{background:var(--crt);color:var(--crtOn);border-radius:14px;padding:12px 14px;margin-top:14px}
+.crt small{font-size:13px;color:var(--crtDim);display:block}
+.crt b{font-size:17px;font-weight:600;display:block;line-height:1.35}
+.read{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--rule);font-size:15px}
+.read svg{flex:none;width:20px;height:20px;margin-top:2px;color:var(--muted)}
+.read .sub{font-size:13px;color:var(--muted)}
+.day{padding:12px 0 14px;border-top:1px solid var(--rule)}
+.day.hl{background:rgba(43,74,138,.07);margin:0 -10px;padding:12px 10px 14px;border-left:3px solid var(--pen);border-top-color:transparent}
+.date{font:700 14px "Courier Prime",monospace;color:var(--muted)}
+.day p{margin-top:4px;white-space:pre-line}
+.pics{display:flex;gap:6px;margin-top:8px}
+.pics i{width:72px;height:54px;border-radius:3px;background:repeating-linear-gradient(135deg,#d8ccb0 0 6px,#cfc2a4 6px 12px);border:1px solid var(--rule2)}
+.topics{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.tp{display:flex;align-items:center;gap:8px;font-weight:600}
+.tp .mark{font:700 12px "Courier Prime",monospace;color:var(--pen);border:1.5px solid var(--pen);border-radius:3px;padding:1px 5px}
+.star{color:var(--red)}
+.bar{position:absolute;left:0;right:0;bottom:0;background:var(--deck);border-top:1.5px solid var(--rule2);padding:10px 16px 12px 26px;display:flex;align-items:center;gap:10px}
+.bar .grow{flex:1;min-width:0;font-size:13px;color:var(--muted);line-height:1.35}
+.bar .grow b{display:block;color:var(--paper);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.primary{min-height:44px;padding:0 16px;background:var(--paper);color:var(--deck);border-radius:3px;font:600 15px Anuphan;box-shadow:2px 2px 0 var(--rule2);white-space:nowrap}
+.primary:active{transform:translate(2px,2px);box-shadow:none}
+.done{font:600 14px Anuphan;color:var(--pen);display:flex;align-items:center;gap:6px;min-height:44px}
+.toast{position:absolute;left:12px;right:12px;bottom:84px;background:var(--paper);color:var(--on);border-radius:3px;display:flex;justify-content:space-between;align-items:center;padding:6px 6px 6px 14px;font-size:14px}
+.toast button{min-height:40px;padding:0 12px;color:#F2C94C;font-weight:600}
+/* จอจด */
+label.k{display:block;font:600 15px Anuphan;margin:18px 0 6px}
+label.k span{font-weight:400;font-size:13px;color:var(--muted)}
+.f{width:100%;min-height:44px;background:var(--field);border:1.5px solid var(--rule2);border-radius:3px;padding:10px 12px;font-size:16px;line-height:1.45}
+textarea.f{min-height:88px;resize:vertical}
+.f::placeholder{color:var(--ph)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:36px;padding:0 10px;border:1.5px dashed var(--rule2);border-radius:3px;font-size:14px;color:var(--muted)}
+.chip[aria-pressed=true]{border-style:solid;border-color:var(--pen);color:var(--pen);font-weight:600}
+.row{display:flex;gap:8px}
+.row .f{flex:1}
+.add{min-height:44px;padding:0 14px;border:1.5px solid var(--paper);border-radius:3px;font:600 14px Anuphan}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.warnbox{margin-top:8px;border:1.5px solid var(--warn);border-radius:3px;padding:10px 12px;font-size:14px;color:#5E2A05;background:rgba(138,63,8,.07)}
+.warnbox b{color:var(--warn)}
+.warnbox .acts{display:flex;gap:14px;margin-top:6px}
+.warnbox button{min-height:44px;font-weight:600;color:var(--pen);text-decoration:underline;text-underline-offset:3px}
+.tlist{margin-top:8px}
+.tlist div{display:flex;align-items:center;gap:8px;min-height:44px;border-top:1px solid var(--rule);font-weight:600}
+.tlist .x{margin-left:auto;min-width:44px;min-height:44px;color:var(--muted)}
+.side{flex:1;min-width:280px;max-width:420px}
+.side h4{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
+.side h4+ul{margin-bottom:18px}
+.side ul{padding-left:18px;font-size:14px;color:#D8D0BE}
+.side li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>โน้ตของวิชา + จดแยกประเภท (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>จากที่ลองใช้จริงคาบ Blockchain: แตะหัวข้อใน "ทวนวันนี้" แล้วต้องเลื่อนผ่านคะแนนทั้งหน้า · หัวข้อเป็นชื่อคาบ ทวนไม่ได้ · ประกาศ หนังสือ เนื้อหา ปนกันในช่องเดียว</p>
+</div>
+<div class="wrap">
+
+  <!-- จอ 1: โน้ตของวิชา (เปิดจากทวนวันนี้) -->
+  <div class="col">
+    <div class="cap">1 · แตะหัวข้อใน "ทวนวันนี้"<span>เปิดหน้านี้แทนหน้าวิชา เลื่อนไปที่คาบที่จดหัวข้อนั้น</span></div>
+    <div class="phone"><div class="scroll" id="s1">
+      <div class="top"><button class="back">‹ วันนี้</button><button class="link">หน้าวิชา</button></div>
+      <h2>เทคโนโลยีบล็อกเชน</h2>
+      <div class="code">IT25309 · พฤ. 13:00–17:00</div>
+
+      <div class="crt"><small>&gt; คาบหน้า พฤ. 19 พ.ย.</small><b>blockchain and proof of work</b><small>จากโน้ต 12 พ.ย. · เตือนคืนวันพุธ</small></div>
+
+      <span class="tape c">อ่านเพิ่ม</span>
+      <div class="read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h6a3 3 0 013 3v12a2 2 0 00-2-2H4zM20 5h-6a3 3 0 00-3 3v12a2 2 0 012-2h7z"/></svg><div>The Bitcoin Standard<div class="sub">หนังสือ · อาจารย์แนะนำ 12 พ.ย.</div></div></div>
+
+      <span class="tape">โน้ตแต่ละคาบ</span>
+      <div class="day">
+        <div class="date">พฤ. 19 พ.ย.</div>
+        <p>block = header + รายการธุรกรรม · เปลี่ยนอันเก่าแล้ว hash ต่อ ๆ ไปพังหมด</p>
+        <div class="pics"><i></i><i></i></div>
+        <div class="topics">
+          <div class="tp"><span class="star">★</span>Proof of Work คืออะไร</div>
+          <div class="tp">hash กับ nonce ทำงานยังไง</div>
+        </div>
+      </div>
+      <div class="day hl" id="hl">
+        <div class="date">พฤ. 12 พ.ย.</div>
+        <p>คาบแรก แนะนำวิชา</p>
+        <div class="topics">
+          <div class="tp">ภาพรวมวิชา Blockchain <span class="mark">ทวนอันนี้</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast" hidden><span>ทวน “ภาพรวมวิชา…” แล้ว</span><button id="undo">ยกเลิก</button></div>
+    <div class="bar">
+      <div class="grow">กำลังทวน<b>ภาพรวมวิชา Blockchain</b></div>
+      <button class="primary" id="rev">ทวนแล้ว</button>
+      <span class="done" id="revd" hidden>✓ ทวนแล้ว</span>
+    </div>
+    </div>
+  </div>
+
+  <!-- จอ 2: จดหลังคาบ -->
+  <div class="col">
+    <div class="cap">2 · จดหลังคาบ<span>ช่องเดิม + 2 ช่องใหม่ (ไม่บังคับ) + เตือนหัวข้อที่เป็นชื่อคาบ</span></div>
+    <div class="phone"><div class="scroll">
+      <div class="top"><button class="back">‹ ปิด</button></div>
+      <h2>จดหลังคาบ</h2>
+      <div class="code">เทคโนโลยีบล็อกเชน · พฤ. 12 พ.ย.</div>
+
+      <label class="k" for="t1">วันนี้เรียนอะไร</label>
+      <textarea class="f" id="t1" placeholder="จดสั้น ๆ ที่อาจารย์สอน">คาบแรก แนะนำวิชา</textarea>
+
+      <label class="k" for="t2">คาบหน้าเรียนอะไร / ประกาศ <span>· ไม่ใส่ก็ได้</span></label>
+      <input class="f" id="t2" value="blockchain and proof of work" placeholder="เช่น บทที่ 2 · สอบย่อย · เอาโน้ตบุ๊กมา">
+      <div class="hint">จะขึ้นในหน้าวิชา และเตือนคืนก่อนเรียน</div>
+
+      <label class="k" for="t3">อ่านเพิ่ม <span>· หนังสือ ลิงก์ ไม่ใส่ก็ได้</span></label>
+      <input class="f" id="t3" value="The Bitcoin Standard" placeholder="ชื่อหนังสือหรือวางลิงก์">
+
+      <label class="k" for="t4">หัวข้อที่ต้องทวน <span>· เขียนเป็นเรื่องที่ต้องจำ</span></label>
+      <div class="row"><input class="f" id="t4" value="Blockchain week1" placeholder="เช่น Proof of Work คืออะไร"><button class="add" id="addT">เพิ่ม</button></div>
+      <div class="warnbox" id="warn" hidden>
+        <b>ตั้งชื่อเหมือนชื่อคาบ</b> พอถึงวันทวนจะไม่รู้ว่าต้องทวนอะไร ลองเขียนเป็นเรื่องที่เรียน เช่น “Proof of Work คืออะไร”
+        <div class="acts"><button id="keep">ใช้ชื่อนี้</button><button id="fix">แก้ชื่อ</button></div>
+      </div>
+      <div class="hint">คาบนี้ไม่มีเนื้อหาให้ทวน ข้ามช่องนี้ได้</div>
+      <div class="tlist" id="tlist"></div>
+
+      <label class="k">รูป</label>
+      <div class="chips"><button class="chip">+ ถ่ายรูป</button><button class="chip">+ เลือกรูป</button></div>
+
+      <div style="margin-top:22px"><button class="primary" style="width:100%">บันทึก</button></div>
+    </div></div>
+  </div>
+
+  <div class="side">
+    <h4>จอ 1 · โน้ตของวิชา</h4>
+    <ul>
+      <li>มีแค่โน้ต ไม่มีคะแนน วันสอบ หรือเช็กชื่อ · ปุ่ม "หน้าวิชา" มุมขวาสำหรับคนที่อยากไปต่อ</li>
+      <li>เรียงใหม่ → เก่า · เปิดมาเลื่อนไปคาบที่จดหัวข้อนั้น มีขีดน้ำเงินกับป้าย "ทวนอันนี้"</li>
+      <li>แถบล่างมีปุ่ม "ทวนแล้ว" อ่านจบกดได้เลย ไม่ต้องย้อนกลับไปหน้าวันนี้ (กดแล้วมีแถบยกเลิก 3 วิ เหมือนเดิม)</li>
+      <li>จอเขียวบอก "คาบหน้า" จากช่องใหม่ของคาบล่าสุด · หมดวันนั้นแล้วซ่อน</li>
+      <li>"อ่านเพิ่ม" รวมของทุกคาบไว้ที่เดียว</li>
+      <li>เปิดจากหน้าวิชาได้ด้วย (แทนส่วน "โน้ตแต่ละคาบ" ที่อยู่ล่างสุดตอนนี้)</li>
+    </ul>
+    <h4>จอ 2 · จดหลังคาบ</h4>
+    <ul>
+      <li>ช่อง "คาบหน้า/ประกาศ" กับ "อ่านเพิ่ม" ไม่บังคับ · ช่องเดิมยังจดอิสระได้เหมือนเดิม</li>
+      <li>หัวข้อที่มีคำว่า week, สัปดาห์, บทที่, คาบ, ครั้งที่ หรือชื่อวิชา ขึ้นคำเตือน แต่ไม่บล็อก กด "ใช้ชื่อนี้" ก็เพิ่มได้</li>
+      <li>ต้องเพิ่ม 2 คอลัมน์ใน <code>class_notes</code> (ข้อความคาบหน้า, อ่านเพิ่ม) · ไม่มีตารางใหม่</li>
+      <li>ลองกด "เพิ่ม" ในจอ 2 และ "ทวนแล้ว" ในจอ 1</li>
+    </ul>
+    <h4>ยังไม่ได้ทำในร่างนี้</h4>
+    <ul>
+      <li>ข้อความเตือนคืนก่อนเรียน (เป็นงาน mockup ถัดไป ใช้ช่อง "คาบหน้า" นี้)</li>
+      <li>PDF จาก Classroom + AI สรุป (พักไว้)</li>
+    </ul>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+$("s1").scrollTop=$("hl").offsetTop-120;
+let tid;
+$("rev").onclick=()=>{$("rev").hidden=true;$("revd").hidden=false;$("toast").hidden=false;clearTimeout(tid);tid=setTimeout(()=>$("toast").hidden=true,3000)};
+$("undo").onclick=()=>{$("rev").hidden=false;$("revd").hidden=true;$("toast").hidden=true};
+const BAD=/week|wk\s?\d|สัปดาห์|บทที่|คาบ|ครั้งที่|blockchain\s*\d|blockchain$/i;
+const T=[];
+function draw(){$("tlist").innerHTML=T.map((t,i)=>`<div>${t}<button class="x" data-i="${i}" aria-label="ลบ ${t}">✕</button></div>`).join("");$("tlist").querySelectorAll(".x").forEach(b=>b.onclick=()=>{T.splice(+b.dataset.i,1);draw()})}
+function add(force){const v=$("t4").value.trim();if(!v)return;if(!force&&BAD.test(v)){$("warn").hidden=false;return}T.push(v);$("t4").value="";$("warn").hidden=true;draw()}
+$("addT").onclick=()=>add(false);
+$("keep").onclick=()=>add(true);
+$("fix").onclick=()=>{$("warn").hidden=true;$("t4").value="";$("t4").placeholder="เช่น Proof of Work คืออะไร";$("t4").focus()};
+</script>
+</body>
+</html>
