@@ -11,6 +11,7 @@ import { pickPhoto, signedUrls, thumbPath } from "@/lib/photos";
 import { bangkokNow, type Slot } from "@/lib/schedule";
 import { hhmm, thaiDate } from "@/lib/format";
 import { isDate } from "@/lib/input";
+import { looksLikeClassName } from "@/lib/review";
 import { color, font, minTouch, radius, space } from "@/lib/theme";
 
 const MAX_PHOTOS = 6;
@@ -51,6 +52,9 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
 }) {
   const save = useSaveNote();
   const [text, setText] = useState(existing?.text ?? "");
+  const [nextText, setNextText] = useState(existing?.next_text ?? "");
+  const [readMore, setReadMore] = useState(existing?.read_more ?? "");
+  const [nameWarn, setNameWarn] = useState(false);
   const [kept, setKept] = useState<string[]>(existing?.photo_paths ?? []);
   const [removedPhotos, setRemovedPhotos] = useState<string[]>([]);
   const [newUris, setNewUris] = useState<string[]>([]);
@@ -81,11 +85,14 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
       setNewUris((n) => n.filter((_, j) => j !== i - kept.length));
     }
   });
-  const addTopic = () => {
+  /** force = กด "ใช้ชื่อนี้" หลังขึ้นเตือนชื่อเหมือนชื่อคาบ */
+  const addTopic = (force = false) => {
     const title = topicDraft.trim();
     if (!title) return;
+    if (!force && looksLikeClassName(title, subject.name)) return setNameWarn(true);
     setTopics((t) => [...t, { title, is_starred: false, exam: "midterm" }]);
     setTopicDraft("");
+    setNameWarn(false);
   };
   const patchTopic = (i: number, p: Partial<TopicRow>) => setTopics((t) => t.map((x, j) => (j === i ? { ...x, ...p } : x)));
   const removeTopic = (i: number) => {
@@ -99,13 +106,13 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
     else go();
   };
 
-  const empty = !text.trim() && photoCount === 0 && topics.length === 0;
+  const empty = !text.trim() && !nextText.trim() && !readMore.trim() && photoCount === 0 && topics.length === 0;
   const onSave = () => {
     if (empty || save.isPending) return;
     // รอบันทึกเสร็จก่อนออก (มีรูปต้องอัปโหลด และถ้าล้มเหลวข้อความที่พิมพ์ต้องไม่หาย) · การ์ด "ยังไม่ได้จด" หายทันที
     save.mutate(
       {
-        subject_id: subject.id, slot_id: slot.id, date, text, keptPhotos: kept, removedPhotos, newPhotoUris: newUris,
+        subject_id: subject.id, slot_id: slot.id, date, text, next_text: nextText, read_more: readMore, keptPhotos: kept, removedPhotos, newPhotoUris: newUris,
         topics, removedTopicIds,
       },
       { onSuccess: () => (router.canGoBack() ? router.back() : router.replace("/today")) },
@@ -126,6 +133,15 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
         <Text style={s.label}>วันนี้เรียนอะไร (สั้น ๆ)</Text>
         <TextInput value={text} onChangeText={setText} multiline maxLength={2000} style={s.textarea}
           placeholder="เช่น Graph เบื้องต้น, degree อาจารย์บอกออกสอบ" placeholderTextColor={color.placeholder} accessibilityLabel="วันนี้เรียนอะไร" />
+
+        <Text style={s.label}>คาบหน้าเรียนอะไร / ประกาศ <Text style={s.opt}>· ไม่ใส่ก็ได้</Text></Text>
+        <TextInput value={nextText} onChangeText={setNextText} maxLength={300} style={s.input}
+          placeholder="เช่น บทที่ 2 · สอบย่อย · เอาโน้ตบุ๊กมา" placeholderTextColor={color.placeholder} accessibilityLabel="คาบหน้าเรียนอะไร หรือประกาศ" />
+        <Text style={s.hint}>ขึ้นในหน้าโน้ตของวิชาจนกว่าคาบหน้าจะผ่านไป</Text>
+
+        <Text style={s.label}>อ่านเพิ่ม <Text style={s.opt}>· หนังสือ ลิงก์ ไม่ใส่ก็ได้</Text></Text>
+        <TextInput value={readMore} onChangeText={setReadMore} maxLength={500} style={s.input}
+          placeholder="ชื่อหนังสือหรือวางลิงก์" placeholderTextColor={color.placeholder} accessibilityLabel="อ่านเพิ่ม" />
 
         <Text style={s.label}>รูปกระดาน (ย่อรูปให้อัตโนมัติ · สูงสุด {MAX_PHOTOS} รูป)</Text>
         <View style={s.photos}>
@@ -171,10 +187,24 @@ function NoteForm({ slot, subject, date, existing, subjects }: {
           </View>
         ))}
         <View style={s.trow}>
-          <TextInput value={topicDraft} onChangeText={setTopicDraft} onSubmitEditing={addTopic} placeholder="+ เพิ่มหัวข้อ"
+          <TextInput value={topicDraft} onChangeText={(v) => { setTopicDraft(v); setNameWarn(false); }} onSubmitEditing={() => addTopic()}
+            placeholder="+ เรื่องที่ต้องจำ เช่น Proof of Work คืออะไร"
             placeholderTextColor={color.placeholder} maxLength={120} style={[T.body, s.topicInput]} returnKeyType="done" accessibilityLabel="เพิ่มหัวข้อ" />
-          {!!topicDraft.trim() && <Btn label="เพิ่ม" onPress={addTopic} style={{ flexGrow: 0, flexShrink: 0, flexBasis: "auto" }} />}
+          {!!topicDraft.trim() && <Btn label="เพิ่ม" onPress={() => addTopic()} style={{ flexGrow: 0, flexShrink: 0, flexBasis: "auto" }} />}
         </View>
+        {nameWarn && (
+          <View style={s.warn} accessibilityLiveRegion="polite" role="alert">
+            <Text style={s.warnText}>
+              <Text style={{ fontFamily: font.bodyBold, color: color.warn }}>ตั้งชื่อเหมือนชื่อคาบ </Text>
+              พอถึงวันทวนจะไม่รู้ว่าต้องทวนอะไร ลองเขียนเป็นเรื่องที่เรียน เช่น “Proof of Work คืออะไร”
+            </Text>
+            <View style={{ flexDirection: "row", gap: space.lg }}>
+              <Pressable onPress={() => addTopic(true)} style={s.warnBtn} accessibilityRole="button"><Text style={s.warnLink}>ใช้ชื่อนี้</Text></Pressable>
+              <Pressable onPress={() => { setNameWarn(false); setTopicDraft(""); }} style={s.warnBtn} accessibilityRole="button"><Text style={s.warnLink}>แก้ชื่อ</Text></Pressable>
+            </View>
+          </View>
+        )}
+        {topics.length === 0 && !nameWarn && <Text style={s.hint}>คาบที่ไม่มีเนื้อหา (เช่น แนะนำวิชา) ข้ามช่องนี้ได้</Text>}
 
         <Section>มีงานสั่งไหม</Section>
         <AddBtn label="+ เพิ่มงานของวิชานี้" onPress={() => setAddingTask(true)} />
@@ -216,6 +246,16 @@ const s = StyleSheet.create({
     minHeight: 96, borderWidth: 1.5, borderColor: color.rule2, borderRadius: radius.md, padding: space.md, backgroundColor: color.field,
     fontFamily: font.body, fontSize: 16, color: color.paper, textAlignVertical: "top",
   },
+  opt: { fontSize: 14, color: color.faint },
+  hint: { fontFamily: font.body, fontSize: 14, color: color.muted, marginTop: 4 },
+  input: {
+    minHeight: minTouch, borderWidth: 1.5, borderColor: color.rule2, borderRadius: radius.md, paddingHorizontal: space.md, paddingVertical: 10,
+    backgroundColor: color.field, fontFamily: font.body, fontSize: 16, color: color.paper,
+  },
+  warn: { borderWidth: 1.5, borderColor: color.warn, borderRadius: radius.sm, padding: space.md, paddingBottom: 0, marginBottom: 6, backgroundColor: "rgba(138,63,8,0.07)" },
+  warnText: { fontFamily: font.body, fontSize: 15, lineHeight: 22, color: color.paper },
+  warnBtn: { minHeight: minTouch, justifyContent: "center" },
+  warnLink: { fontFamily: font.bodyBold, fontSize: 15, color: color.pen, textDecorationLine: "underline" },
   photos: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
   thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: "rgba(42,33,24,0.12)", borderWidth: 1, borderColor: color.rule2 },
   thumbTape: { position: "absolute", top: -8, left: 18, width: 36, height: 14, backgroundColor: "rgba(232,221,186,0.85)", transform: [{ rotate: "-6deg" }] },

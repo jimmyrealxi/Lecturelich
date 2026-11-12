@@ -4,7 +4,6 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Card, head, Section, Skeleton, T } from "@/components/ui";
 import { TaskRow } from "@/components/TaskRow";
 import { EmptyScene } from "@/components/EmptyScene";
-import { NotesTimeline } from "@/components/NotesTimeline";
 import { GradesPanel } from "@/components/GradesPanel";
 import { ExamDatesCard } from "@/components/ExamDatesCard";
 import { MakeupClasses } from "@/components/MakeupClasses";
@@ -38,10 +37,6 @@ export default function SubjectScreen() {
   const exams = useExams(term.data?.id);
   const myExams = (exams.data ?? []).filter((e) => e.subject_id === id);
   const myTasks =(tasks.data ?? []).filter((a) => a.subject_id === id);
-  const absentKeys = useMemo(
-    () => new Set((attendance.data ?? []).filter((r) => r.status === "absent").map((r) => `${r.slot_id}:${r.date}`)),
-    [attendance.data],
-  );
 
   const links = [
     { label: "Classroom", url: subject?.classroom_url },
@@ -110,7 +105,10 @@ export default function SubjectScreen() {
         )}
 
         <Section>โน้ตแต่ละคาบ</Section>
-        <NotesTimeline subjectId={id} subjectName={subject?.name ?? ""} absentKeys={absentKeys} />
+        <Pressable style={s.notesLink} onPress={() => router.push({ pathname: "/notes/[subjectId]", params: { subjectId: id } })}
+          accessibilityRole="link">
+          <Text style={s.linkText}>เปิดโน้ตทุกคาบ ›</Text>
+        </Pressable>
 
         <Section>งานของวิชา</Section>
         <Card>
@@ -134,6 +132,10 @@ const s = StyleSheet.create({
     alignItems: "center", justifyContent: "center",
   },
   linkText: { fontFamily: font.bodyBold, fontSize: 15, color: color.paper },
+  notesLink: {
+    minHeight: minTouch, borderRadius: radius.md, borderWidth: 1.5, borderColor: color.paper, alignItems: "center", justifyContent: "center",
+    marginBottom: space.md,
+  },
   page: { padding: space.lg, paddingBottom: space.xl, width: "100%", maxWidth: 560, alignSelf: "center" },
   big: { fontFamily: font.typeBold, fontSize: 32, color: color.paper },
   bigSmall: { fontFamily: font.body, fontSize: 16, color: color.muted },

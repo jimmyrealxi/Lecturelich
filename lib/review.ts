@@ -1,6 +1,14 @@
 // ทวนแบบเว้นระยะ + เลือดบอส + สถานะโหนด passive tree (ขั้น 5) — ไม่ผูกกับ UI
 
 export const REVIEW_DAYS = [1, 3, 7, 14] as const; // รอบทวน
+
+/** หัวข้อที่ตั้งชื่อเหมือนชื่อคาบ ("Blockchain week1", "บทที่ 2") → ทวนไม่ได้ เตือนแต่ไม่บล็อก */
+export function looksLikeClassName(title: string, subjectName = ""): boolean {
+  const t = title.trim().toLowerCase();
+  if (/\b(week|wk|lec|lecture|chapter|ch|class)\s*\.?\s*\d+|สัปดาห์|บทที่|คาบ|ครั้งที่|^บท\s*\d/.test(t)) return true;
+  const name = subjectName.trim().toLowerCase();
+  return !!name && t.replace(/\s*\d+$/, "") === name; // ชื่อวิชาเฉย ๆ หรือชื่อวิชา + เลข
+}
 export const STAR_WEIGHT = 2; // หัวข้อ ⭐ นับเลือดบอสกี่เท่า
 
 export type Topic = {

@@ -48,6 +48,16 @@ export function slotsOn(date: string, slots: Slot[], term: Term | null): Slot[] 
     .sort((a, b) => toMinutes(a.start_time) - toMinutes(b.start_time));
 }
 
+/** วันคาบถัดไปของวิชาหลังวันที่ after (ไม่นับวันนั้น · หาไม่เกิน 3 สัปดาห์ · ไม่เจอ = null) */
+export function nextClassDate(after: string, subjectId: string, slots: Slot[], term: Term | null): string | null {
+  const mine = slots.filter((s) => s.subject_id === subjectId);
+  for (let i = 1; i <= 21; i++) {
+    const d = new Date(Date.parse(after + "T00:00:00Z") + i * 86_400_000).toISOString().slice(0, 10);
+    if (slotsOn(d, mine, term).length) return d;
+  }
+  return null;
+}
+
 export function classState(slot: Slot, minutes: number): ClassState {
   if (minutes < toMinutes(slot.start_time)) return "upcoming";
   if (minutes < toMinutes(slot.end_time)) return "live";

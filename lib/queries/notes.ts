@@ -12,11 +12,13 @@ export type Note = {
   slot_id: string | null;
   date: string;
   text: string | null;
+  next_text: string | null;
+  read_more: string | null;
   photo_paths: string[];
   topics: Required<TopicRow>[];
 };
 
-const NOTE_COLS = "id,subject_id,slot_id,date,text,photo_paths,topics(id,title,is_starred,exam)";
+const NOTE_COLS = "id,subject_id,slot_id,date,text,next_text,read_more,photo_paths,topics(id,title,is_starred,exam)";
 const must = <T,>(r: { data: T | null; error: unknown }): T => {
   if (r.error) throw r.error;
   return r.data as T;
@@ -60,6 +62,8 @@ export type SaveNoteInput = {
   slot_id: string;
   date: string;
   text: string;
+  next_text: string;
+  read_more: string;
   keptPhotos: string[]; // path เดิมที่ยังเก็บไว้
   removedPhotos: string[];
   newPhotoUris: string[];
@@ -82,6 +86,7 @@ export function useSaveNote() {
           .upsert(
             {
               subject_id: n.subject_id, slot_id: n.slot_id, date: n.date, text: n.text.trim() || null,
+              next_text: n.next_text.trim() || null, read_more: n.read_more.trim() || null,
               photo_paths: [...n.keptPhotos, ...uploaded], updated_at: new Date().toISOString(),
             },
             { onConflict: "user_id,slot_id,date" },

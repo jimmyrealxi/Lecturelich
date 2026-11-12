@@ -9,6 +9,7 @@ import {
   countSessions,
   currentOrNext,
   endedWithoutNote,
+  nextClassDate,
   slotsOn,
   urgentTask,
   type Slot,
@@ -96,4 +97,13 @@ test("attendanceStats: ไม่มีเรียนไม่นับ, เต�
   assert.equal(st.warn, false);
   assert.equal(attendanceStats(["absent", "absent"], 16).warn, true);
   assert.equal(attendanceStats([], 16).pct, 100);
+});
+
+test("nextClassDate: คาบถัดไปของวิชาหลังวันนั้น ไม่นับวันเดียวกัน · คาบชดเชยนับด้วย · ไม่มีคาบ = null", () => {
+  assert.equal(nextClassDate("2026-11-09", "s-oop", slots, term), "2026-11-16");
+  assert.equal(nextClassDate("2026-11-09", "s-net", slots, term), "2026-11-11");
+  const mk = { ...slot("mk", 6, "13:00", "15:00"), subject_id: "s-oop", makeup_date: "2026-11-14" };
+  assert.equal(nextClassDate("2026-11-09", "s-oop", [...slots, mk], term), "2026-11-14");
+  assert.equal(nextClassDate("2026-11-09", "s-none", slots, term), null);
+  assert.equal(nextClassDate("2027-03-06", "s-oop", slots, term), null); // หมดเทอม
 });
