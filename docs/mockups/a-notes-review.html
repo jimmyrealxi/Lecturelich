@@ -39,7 +39,7 @@ h2{font:400 26px/36px Chonburi,serif;margin-top:2px}
 .read svg{flex:none;width:20px;height:20px;margin-top:2px;color:var(--muted)}
 .read .sub{font-size:13px;color:var(--muted)}
 .day{padding:12px 0 14px;border-top:1px solid var(--rule)}
-.day.hl{background:rgba(43,74,138,.07);margin:0 -10px;padding:12px 10px 14px;border-left:3px solid var(--pen);border-top-color:transparent}
+.day.hl{background:rgba(43,74,138,.07);margin:0 -10px;padding:12px 10px 14px;border-radius:3px}
 .date{font:700 14px "Courier Prime",monospace;color:var(--muted)}
 .day p{margin-top:4px;white-space:pre-line}
 .pics{display:flex;gap:6px;margin-top:8px}
@@ -77,8 +77,8 @@ textarea.f{min-height:88px;resize:vertical}
 .tlist div{display:flex;align-items:center;gap:8px;min-height:44px;border-top:1px solid var(--rule);font-weight:600}
 .tlist .x{margin-left:auto;min-width:44px;min-height:44px;color:var(--muted)}
 .side{flex:1;min-width:280px;max-width:420px}
-.side h4{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
-.side h4+ul{margin-bottom:18px}
+.side h3{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
+.side h3+ul{margin-bottom:18px}
 .side ul{padding-left:18px;font-size:14px;color:#D8D0BE}
 .side li{margin-bottom:8px}
 </style>
@@ -165,23 +165,23 @@ textarea.f{min-height:88px;resize:vertical}
   </div>
 
   <div class="side">
-    <h4>จอ 1 · โน้ตของวิชา</h4>
+    <h3>จอ 1 · โน้ตของวิชา</h3>
     <ul>
       <li>มีแค่โน้ต ไม่มีคะแนน วันสอบ หรือเช็กชื่อ · ปุ่ม "หน้าวิชา" มุมขวาสำหรับคนที่อยากไปต่อ</li>
-      <li>เรียงใหม่ → เก่า · เปิดมาเลื่อนไปคาบที่จดหัวข้อนั้น มีขีดน้ำเงินกับป้าย "ทวนอันนี้"</li>
+      <li>เรียงใหม่ → เก่า · เปิดมาเลื่อนไปคาบที่จดหัวข้อนั้น มีพื้นน้ำเงินจางกับป้าย "ทวนอันนี้"</li>
       <li>แถบล่างมีปุ่ม "ทวนแล้ว" อ่านจบกดได้เลย ไม่ต้องย้อนกลับไปหน้าวันนี้ (กดแล้วมีแถบยกเลิก 3 วิ เหมือนเดิม)</li>
       <li>จอเขียวบอก "คาบหน้า" จากช่องใหม่ของคาบล่าสุด · หมดวันนั้นแล้วซ่อน</li>
       <li>"อ่านเพิ่ม" รวมของทุกคาบไว้ที่เดียว</li>
       <li>เปิดจากหน้าวิชาได้ด้วย (แทนส่วน "โน้ตแต่ละคาบ" ที่อยู่ล่างสุดตอนนี้)</li>
     </ul>
-    <h4>จอ 2 · จดหลังคาบ</h4>
+    <h3>จอ 2 · จดหลังคาบ</h3>
     <ul>
       <li>ช่อง "คาบหน้า/ประกาศ" กับ "อ่านเพิ่ม" ไม่บังคับ · ช่องเดิมยังจดอิสระได้เหมือนเดิม</li>
       <li>หัวข้อที่มีคำว่า week, สัปดาห์, บทที่, คาบ, ครั้งที่ หรือชื่อวิชา ขึ้นคำเตือน แต่ไม่บล็อก กด "ใช้ชื่อนี้" ก็เพิ่มได้</li>
       <li>ต้องเพิ่ม 2 คอลัมน์ใน <code>class_notes</code> (ข้อความคาบหน้า, อ่านเพิ่ม) · ไม่มีตารางใหม่</li>
       <li>ลองกด "เพิ่ม" ในจอ 2 และ "ทวนแล้ว" ในจอ 1</li>
     </ul>
-    <h4>ยังไม่ได้ทำในร่างนี้</h4>
+    <h3>ยังไม่ได้ทำในร่างนี้</h3>
     <ul>
       <li>ข้อความเตือนคืนก่อนเรียน (เป็นงาน mockup ถัดไป ใช้ช่อง "คาบหน้า" นี้)</li>
       <li>PDF จาก Classroom + AI สรุป (พักไว้)</li>
