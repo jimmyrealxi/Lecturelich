@@ -96,7 +96,8 @@ const s = StyleSheet.create({
     borderWidth: 2, borderColor: color.ink,
   },
   topicHead: { fontFamily: font.bodyBold, fontSize: 17, lineHeight: 24, color: color.paper, marginTop: 4 },
-  focus: { backgroundColor: "rgba(43,74,138,0.07)", borderColor: color.pen },
+  // พื้นคงทึบ (deck) ให้อ่านง่าย · บอกคาบที่ทวนด้วยขอบปากกาน้ำเงินอย่างเดียว
+  focus: { borderColor: color.pen, borderWidth: 2 },
   photos: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 6 },
   thumb: { width: 72, height: 56, borderRadius: radius.sm, backgroundColor: color.rule },
 });
