@@ -12,10 +12,10 @@ import { color, font, radius, space } from "@/lib/theme";
 
 /**
  * ไทม์ไลน์โน้ตทุกคาบของวิชา (ใหม่สุดก่อน) · แตะเพื่อแก้ · absentKeys = "slotId:date" ที่เช็กว่าขาด
- * focusTopic = หัวข้อที่กำลังทวน → ไฮไลต์คาบนั้น + บอกตำแหน่ง y ผ่าน onFocusY (ให้หน้าเลื่อนไปหา)
+ * focusTopic = หัวข้อที่กำลังทวน / focusNote = โน้ตที่แตะมาจากหน้าวิชา → ไฮไลต์คาบนั้น + บอกตำแหน่ง y ผ่าน onFocusY (ให้หน้าเลื่อนไปหา)
  */
-export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, onFocusY }: {
-  subjectId: string; subjectName: string; absentKeys: Set<string>; focusTopic?: string; onFocusY?: (y: number) => void;
+export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, focusNote, onFocusY }: {
+  subjectId: string; subjectName: string; absentKeys: Set<string>; focusTopic?: string; focusNote?: string; onFocusY?: (y: number) => void;
 }) {
   const notes = useSubjectNotes(subjectId);
   const [viewing, setViewing] = useState<{ noteId: string; index: number } | null>(null);
@@ -37,7 +37,7 @@ export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, 
       <View style={s.line} />
       {notes.data.map((n) => {
         const absent = n.slot_id ? absentKeys.has(`${n.slot_id}:${n.date}`) : false;
-        const focused = !!focusTopic && n.topics.some((t) => t.id === focusTopic);
+        const focused = n.id === focusNote || (!!focusTopic && n.topics.some((t) => t.id === focusTopic));
         return (
           <View key={n.id} style={s.item} onLayout={focused && onFocusY ? (e) => onFocusY(e.nativeEvent.layout.y) : undefined}>
             <View style={[s.dot, absent && { backgroundColor: color.danger }]} />

@@ -15,9 +15,10 @@ const DAY = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
 /**
  * โน้ตของวิชา (docs/mockups/a-notes-review.html): มีแค่โน้ต คาบหน้า อ่านเพิ่ม
  * /notes/<subjectId>?topic=<topicId> = เปิดจาก "ทวนวันนี้" → เลื่อนไปคาบนั้น + ปุ่มทวนแล้วด้านล่าง
+ * /notes/<subjectId>?note=<noteId> = แตะจากรายการ 2 สัปดาห์ในหน้าวิชา → เลื่อนไปคาบนั้นเฉย ๆ
  */
 export default function SubjectNotesScreen() {
-  const { subjectId, topic: topicId } = useLocalSearchParams<{ subjectId: string; topic?: string }>();
+  const { subjectId, topic: topicId, note: noteId } = useLocalSearchParams<{ subjectId: string; topic?: string; note?: string }>();
   const term = useCurrentTerm();
   const subjects = useSubjects(term.data?.id);
   const slots = useSlots(term.data?.id);
@@ -101,7 +102,7 @@ export default function SubjectNotesScreen() {
         <Section>โน้ตแต่ละคาบ</Section>
         <View onLayout={(e) => setTlY(e.nativeEvent.layout.y)}>
           <NotesTimeline subjectId={subjectId} subjectName={subject?.name ?? ""} absentKeys={absentKeys}
-            focusTopic={topicId} onFocusY={setFocusY} />
+            focusTopic={topicId} focusNote={noteId} onFocusY={setFocusY} />
         </View>
       </ScrollView>
 
