@@ -9,6 +9,7 @@ export type TopicFull = Topic & {
   title: string;
   exam: ExamKind | null;
   note_date: string | null;
+  last_reviewed_at: string | null;
 };
 
 const must = <T,>(r: { data: T | null; error: unknown }): T => {
@@ -31,7 +32,7 @@ export function useTopics(termId: string | undefined) {
       const rows = must<unknown>(
         await supabase
           .from("topics")
-          .select("id,subject_id,title,is_starred,exam,review_stage,next_review_at,created_at,class_notes(date),subjects!inner(term_id)")
+          .select("id,subject_id,title,is_starred,exam,review_stage,last_reviewed_at,next_review_at,created_at,class_notes(date),subjects!inner(term_id)")
           .eq("subjects.term_id", termId!)
           .order("created_at"),
       ) as (Omit<TopicFull, "note_date"> & { class_notes: { date: string } | null; subjects: unknown })[];
@@ -66,6 +67,20 @@ export function useReviewTopic(termId: string) {
     },
     onError: (_e, _v, ctx) => qc.setQueryData(key, ctx?.prev),
     onSettled: () => qc.invalidateQueries({ queryKey: key }),
+  });
+}
+
+/** ย้อน "ทวนแล้ว" · t = ค่าก่อนกด (stage/วันที่เดิม) */
+export function useUnreviewTopic(termId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (t: TopicFull) =>
+      must(await supabase.rpc("unreview_topic", { p_topic: t.id, p_last: t.last_reviewed_at, p_next: t.next_review_at })),
+    onMutate: (t) => qc.setQueryData<TopicFull[]>(reviewKeys.topics(termId), (old = []) => old.map((x) => (x.id === t.id ? t : x))),
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: reviewKeys.topics(termId) });
+      qc.invalidateQueries({ queryKey: ["xp"] });
+    },
   });
 }
 

@@ -14,7 +14,7 @@ import {
 } from "@/lib/queries/core";
 import { useLoot } from "@/lib/queries/loot";
 import { useNotedSlots } from "@/lib/queries/notes";
-import { useExams, useReviewTopic, useTopics, type TopicFull } from "@/lib/queries/review";
+import { useExams, useReviewTopic, useTopics, useUnreviewTopic, type TopicFull } from "@/lib/queries/review";
 import { useProfile } from "@/lib/queries/setup";
 import { useXpToday } from "@/lib/queries/xp";
 import { daysUntil, examReady, nearExam, reviewQueue } from "@/lib/review";
@@ -26,6 +26,9 @@ import { countdown, dueInfo, hhmm, typedDate, weekdayName } from "@/lib/format";
 import { DEFAULT_LOOK, type Pose } from "@/lib/papboy";
 import { color, crtGlow, font, minTouch, radius, space } from "@/lib/theme";
 import { XP_CONFIG } from "@/lib/xp";
+
+/** แถบยกเลิก 3 วิ ใช้ร่วมกันระหว่างติ๊กงานกับปุ่มทวน */
+type Toast = { key: string; text: string; undo: () => void };
 
 // หน้าวันนี้ ธีม A (docs/mockups/a-today.html) · จอเขียวแปะเทปเฉพาะคาบตอนนี้/ถัดไป · ตรายางแดงอันเดียว (งานด่วนสุด)
 // ป้ายนูนอันเดียว (LECTURELICH) · XP วันนี้เป็นบรรทัดลิงก์ไปหน้าเกม · มุมขวาบน Pap-Boy เปลี่ยนท่าตามสิ่งที่ทำ (docs/mockups/inspire-anim.html)
@@ -65,7 +68,7 @@ export default function Today() {
   };
   // งานที่เพิ่งติ๊กในหน้านี้ ยังโชว์ไว้ (ไม่หายวับ) · toast = ยกเลิกได้ 3 วิ
   const [ticked, setTicked] = useState<string[]>([]);
-  const [toast, setToast] = useState<Assignment | null>(null);
+  const [toast, setToast] = useState<Toast | null>(null);
 
   const subjectById = useMemo(() => new Map((subjects.data ?? []).map((s) => [s.id, s])), [subjects.data]);
   const today = useMemo(() => slotsOn(now.date, slots.data ?? [], term.data ?? null), [now.date, slots.data, term.data]);
@@ -106,13 +109,12 @@ export default function Today() {
     toggle.mutate({ id: a.id, done: !a.done });
     if (!a.done) {
       setTicked((t) => [...t, a.id]);
-      setToast(a);
+      setToast({ key: a.id, text: `ส่ง “${a.title}” แล้ว`, undo: () => toggle.mutate({ id: a.id, done: false }) });
       act("cheer", "ส่งแล้ว!");
     } else setToast(null);
   };
   const undo = () => {
-    if (!toast) return;
-    toggle.mutate({ id: toast.id, done: false });
+    toast?.undo();
     setToast(null);
   };
 
@@ -234,7 +236,7 @@ export default function Today() {
             )}
             <View style={s.rule} />
 
-            <TodayReview termId={term.data.id} today={now.date} nameOf={subjName} />
+            <TodayReview termId={term.data.id} today={now.date} nameOf={subjName} onToast={setToast} />
 
             <View style={s.qa} role="group" aria-label="ทางลัด">
               {noteSlot && (
@@ -257,16 +259,19 @@ export default function Today() {
         )}
       </ScrollView>
 
-      {toast && <UndoBar key={toast.id} text={`ส่ง “${toast.title}” แล้ว`} onUndo={undo} onClose={setToast} />}
+      {toast && <UndoBar key={toast.key} text={toast.text} onUndo={undo} onClose={setToast} />}
     </View>
   );
 }
 
 /** ทวนวันนี้ (docs/mockups/a-today-review.html) · ไม่มีหัวข้อต้องทวน = ซ่อนทั้งส่วน */
-function TodayReview({ termId, today, nameOf }: { termId: string; today: string; nameOf: (id: string) => string }) {
+function TodayReview({ termId, today, nameOf, onToast }: {
+  termId: string; today: string; nameOf: (id: string) => string; onToast: (t: Toast) => void;
+}) {
   const topics = useTopics(termId).data ?? [];
   const exams = useExams(termId).data ?? [];
   const review = useReviewTopic(termId);
+  const unreview = useUnreviewTopic(termId);
   const [open, setOpen] = useState(false);
   // เก็บค่าก่อนกด: แถวที่เพิ่งทวนอยู่ที่เดิมจนออกจากหน้า ไม่หายวับ
   const [pressed, setPressed] = useState<TopicFull[]>([]);
@@ -274,7 +279,16 @@ function TodayReview({ termId, today, nameOf }: { termId: string; today: string;
   const press = (t: TopicFull) => {
     setPressed((p) => [...p, t]);
     // mutateAsync: กดหลายแถวติดกัน แต่ละแถวต้องย้อนเองได้ถ้าบันทึกไม่สำเร็จ
-    review.mutateAsync(t.id).catch(() => setPressed((p) => p.filter((x) => x.id !== t.id)));
+    const done = review.mutateAsync(t.id);
+    done.catch(() => setPressed((p) => p.filter((x) => x.id !== t.id)));
+    onToast({
+      key: `review-${t.id}`, text: `ทวน “${t.title}” แล้ว`,
+      // รอทวนบันทึกเสร็จก่อนค่อยย้อน (กดยกเลิกเร็วกว่า RPC ได้)
+      undo: () => {
+        setPressed((p) => p.filter((x) => x.id !== t.id));
+        done.then(() => unreview.mutate(t), () => {});
+      },
+    });
   };
 
   const queue = reviewQueue(topics.map((t) => pressed.find((p) => p.id === t.id) ?? t), exams, today);
