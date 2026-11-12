@@ -84,6 +84,19 @@ h2{font:400 26px/36px Chonburi,serif}
 .two label{flex:1;font-size:14px;color:var(--muted)}
 .two .f{width:100%;margin-top:2px}
 .ghost{min-height:44px;width:100%;border:1.5px dashed var(--rule2);border-radius:3px;font:600 15px Anuphan;text-align:center;margin-top:6px}
+.col{display:flex;flex-direction:column;gap:10px;flex:none;max-width:100%}
+.cap{font:600 14px Anuphan;color:#F3EAD2}
+.cap span{display:block;font-weight:400;color:#C9BFAA;font-size:13px}
+.no{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--pen);color:#fff;font:700 11px/1 "Courier Prime",monospace;font-style:normal;margin:0 4px;vertical-align:middle}
+.next{margin-top:10px;padding:10px 12px;background:var(--deck);border:1px solid var(--rule2);border-radius:3px;font-size:15px}
+.next b{display:block}
+.next span{color:var(--muted)}
+.stat button{background:var(--crt);border-radius:8px;padding:10px 10px 9px;color:var(--crtOn);text-align:center;min-height:44px}
+.stat button b{display:block;font:400 26px/1 VT323,monospace}
+.stat button span{font-size:13px;color:var(--crtDim)}
+.due{font:600 12px Anuphan;font-style:normal;color:var(--pen);border:1.5px solid var(--pen);border-radius:3px;padding:0 5px;margin-left:4px;vertical-align:middle}
+.side ol{padding-left:20px;font-size:14px;color:#D8D0BE;margin-bottom:18px}
+.side ol li{margin-bottom:8px}
 .side{flex:1;min-width:280px;max-width:520px}
 .side h3{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
 .side ul{padding-left:18px;font-size:14px;color:#D8D0BE;margin-bottom:18px}
@@ -95,10 +108,11 @@ h2{font:400 26px/36px Chonburi,serif}
 </head>
 <body>
 <div class="head">
-  <h1>หน้าวิชาเรียงใหม่ (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <h1>หน้าวิชา: ร่างแรก เทียบ แก้ 7 ข้อ (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
   <p>เรียงตามที่เข้ามาใช้บ่อย: สรุป → งาน → โน้ต → คะแนน · ฟอร์มคะแนนยุบไว้ แตะแถวไหนค่อยกาง · วันสอบ คาบชดเชย เกณฑ์ตัดเกรด ไปอยู่ "ตั้งค่าวิชา" ท้ายหน้า · ข้อความสั้นลงและเข้มขึ้น</p>
 </div>
 <div class="wrap">
+  <div class="col"><div class="cap">ก่อน · ร่างแรก<span>ที่เจ้าของดูเมื่อกี้</span></div>
   <div class="phone"><div class="scroll">
     <div class="top"><button class="lnk">‹ วิชา</button><button class="lnk">แก้ไข</button></div>
     <h2>เทคโนโลยีบล็อกเชน</h2>
@@ -130,12 +144,12 @@ h2{font:400 26px/36px Chonburi,serif}
       <label class="goal">เป้า <select aria-label="เกรดเป้าหมาย"><option>A</option><option>B+</option><option selected>B</option><option>C+</option></select></label>
     </div>
     <div class="need">ปลายภาคต้องได้อย่างน้อย <b>52%</b> ถึงได้ B</div>
-    <div id="parts"></div>
+    <div class="parts"></div>
     <button class="ghost">+ เพิ่มส่วนคะแนน</button>
 
     <div class="set">
-      <button class="ph" aria-expanded="false" id="setBtn"><span class="n">ตั้งค่าวิชา</span><span class="v">วันสอบ · ชดเชย · ตัดเกรด</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
-      <div class="in" id="setIn" hidden>
+      <button class="ph" aria-expanded="false" data-set><span class="n">ตั้งค่าวิชา</span><span class="v">วันสอบ · ชดเชย · ตัดเกรด</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="in" hidden>
         <h3>วันสอบ</h3>
         <div class="two"><label>กลางภาค<input class="f" placeholder="วว/ดด/ปปปป"></label><label>ปลายภาค<input class="f" value="04/03/2570"></label></div>
         <h3>คาบชดเชย</h3>
@@ -146,33 +160,73 @@ h2{font:400 26px/36px Chonburi,serif}
     </div>
   </div></div>
 
+  </div>
+  <div class="col"><div class="cap">หลัง · แก้ 7 ข้อ<span>เลขวงกลม = ข้อที่แก้</span></div>
+  <div class="phone"><div class="scroll">
+    <div class="top"><button class="lnk">‹ วิชา</button><button class="lnk" data-edit>แก้ไข <i class="no">7</i></button></div>
+    <h2>เทคโนโลยีบล็อกเชน</h2>
+    <div class="when">IT25309 · พฤ. 13:00–17:00</div>
+    <div class="next"><i class="no">1</i><b>คาบหน้า พฤ. 19 พ.ย. 13:00</b><span>blockchain and proof of work</span></div>
+    <div class="links"><button>Classroom</button><button>กลุ่มไลน์</button></div>
+
+    <div class="stat" role="group" aria-label="สรุปวิชา">
+      <button><b>100%</b><span>มาเรียน · ขาดได้อีก 2</span></button>
+      <button data-go="notes"><b>2</b><span>หัวข้อต้องทวน <i class="no">3</i></span></button>
+      <button data-edit><b>D-111</b><span>สอบปลายภาค <i class="no">4</i></span></button>
+    </div>
+
+    <span class="tape t1">งานของวิชา</span>
+    <div>
+      <div class="row"><span class="box"></span><div><div class="what">สรุปบทที่ 1 Proof of Work</div><div class="sub">ส่ง พฤ. 19 พ.ย. 13:00</div></div></div>
+      <div class="row"><span class="box"></span><div><div class="what">ติดตั้ง MetaMask</div><div class="sub late">เลยกำหนด 1 วัน</div></div></div>
+    </div>
+    <button class="ghost">+ เพิ่มงานของวิชานี้ <i class="no">2</i></button>
+
+    <span class="tape t2" id="notesB">โน้ต 2 สัปดาห์นี้</span>
+    <div class="tl">
+      <button><span class="d">พฤ. 19 พ.ย.</span><span class="tp"><span class="star">★ </span>Proof of Work คืออะไร <em class="due">ต้องทวน</em></span><span class="tp">hash กับ nonce <em class="due">ต้องทวน</em></span></button>
+      <button><span class="d">พฤ. 12 พ.ย.</span><span class="tp">Blockchain week1</span></button>
+    </div>
+    <button class="more">โน้ตทั้งหมด ›</button>
+
+    <span class="tape t3">คะแนน</span>
+    <div class="now">
+      <div class="k"><i class="no">6</i>เก็บแล้ว <b>18/25</b> (72%)</div>
+      <label class="goal">เป้า <select aria-label="เกรดเป้าหมาย"><option>A</option><option>B+</option><option selected>B</option><option>C+</option></select></label>
+    </div>
+    <div class="need">ปลายภาคต้องได้อย่างน้อย <b>52%</b> ถึงได้ B</div>
+    <div class="parts"></div>
+    <button class="ghost">+ เพิ่มส่วนคะแนน</button>
+
+    <div class="set">
+      <button class="ph" aria-expanded="false" data-set><span class="n">ตั้งค่าวิชา</span><span class="v">ชื่อ ตาราง · วันสอบ · ชดเชย · ตัดเกรด</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="in" hidden>
+        <h3>ชื่อ รหัส ตารางเรียน <i class="no">7</i></h3>
+        <button class="ghost">แก้ชื่อวิชา ลิงก์ และตารางเรียน</button>
+        <h3>วันสอบ</h3>
+        <div class="two"><label>กลางภาค<input class="f" placeholder="วว/ดด/ปปปป"></label><label>ปลายภาค<input class="f" value="04/03/2570"></label></div>
+        <h3>คาบชดเชย</h3>
+        <button class="ghost">+ เพิ่มคาบชดเชย</button>
+        <h3>เกณฑ์ตัดเกรด</h3>
+        <button class="ghost">ใช้เกณฑ์มาตรฐาน (A 80 · B+ 75 …) · แก้</button>
+      </div>
+    </div>
+  </div></div>
+
+  </div>
   <div class="side">
-    <h3>ลำดับใหม่</h3>
-    <ul>
-      <li><b>สรุป 3 ช่อง</b> (จอเขียวจิ๋ว ตัวเลขใหญ่): มาเรียน · คะแนนตอนนี้ · วันสอบที่ใกล้สุด แทนการ์ด "เข้าเรียน" ทั้งก้อน</li>
-      <li><b>งานของวิชา</b> ขึ้นมาบนสุด ไม่มีงาน = บรรทัดเดียว "ยังไม่มีงาน" (ไม่มีภาพใหญ่)</li>
-      <li><b>โน้ต 2 สัปดาห์</b> ไทม์ไลน์ย่อ + "โน้ตทั้งหมด ›"</li>
-      <li><b>คะแนน</b>: บรรทัดสรุป + เป้า + ต้องได้เท่าไหร่ · แต่ละส่วนเป็นแถวเดียว <b>แตะค่อยกาง</b> (กางได้ทีละส่วน)</li>
-      <li><b>ตั้งค่าวิชา</b> ยุบไว้ท้ายหน้า: วันสอบ คาบชดเชย เกณฑ์ตัดเกรด (ตั้งครั้งเดียวต่อเทอม)</li>
-    </ul>
-    <h3>อ่านง่ายขึ้น</h3>
-    <ul>
-      <li>ตัวหนังสือหลัก 16px สีหมึกดำ · สีจางใช้แค่วันที่/ข้อมูลรอง และไม่เล็กกว่า 14px</li>
-      <li>คำอธิบายที่อ่านแล้วงง ตัดออกหรือย้ายไปโผล่ตอนกางฟอร์มเท่านั้น</li>
-    </ul>
-    <h3>ข้อความที่เปลี่ยน</h3>
-    <table>
-      <tr><td>คะแนนตอนนี้ (จากส่วนที่มีคะแนนแล้ว) 0 / 0 · ถ้าจบตอนนี้ได้ F</td><td>ตอนนี้ 18/25 · ถ้าจบตอนนี้ได้ B+ (ยังไม่มีคะแนน = "–")</td></tr>
-      <tr><td>&gt; เกรดเป้าหมาย + ปุ่ม 7 ปุ่ม</td><td>เป้า [B ▾] ช่องเลือกช่องเดียว</td></tr>
-      <tr><td>เพิ่มส่วนคะแนนและตั้งส่วนหนึ่งเป็น "ปลายภาค" เพื่อดูว่าต้องได้เท่าไหร่</td><td>ปลายภาคต้องได้อย่างน้อย 52% ถึงได้ B (ขึ้นเมื่อคำนวณได้เท่านั้น)</td></tr>
-      <tr><td>ชื่อ (ไม่ใส่ก็ได้) · ได้ · เต็ม (ทุกส่วน เปิดค้าง)</td><td>ช่องเดียวกันแต่โผล่ตอนกางส่วนนั้น</td></tr>
-      <tr><td>งานที่ได้ 0 ให้กรอก 0 ด้วย ไม่งั้นแอปจะไม่นับงานนั้น</td><td>ได้ 0 ก็ใส่ 0 (ไม่ใส่ = ไม่นับ)</td></tr>
-      <tr><td>30% · ยังไม่มีคะแนน</td><td>30% · –</td></tr>
-      <tr><td>ตั้งแล้วจะเกิดบอส · เว้นว่าง = ยังไม่มีบอส</td><td>(ตัดออก)</td></tr>
-      <tr><td>ขาดได้อีก 2 ครั้ง (การ์ดแยก)</td><td>มาเรียน 100% · ขาดได้อีก 2 (ในแถบสรุป)</td></tr>
-    </table>
-    <h3>ไม่เปลี่ยน</h3>
-    <ul><li>วิธีคิดคะแนน/เกรด ข้อมูลในฐานข้อมูล · แค่จัดหน้าและข้อความ</li></ul>
+    <h3>7 ข้อที่แก้ (มองแบบคนใช้)</h3>
+    <ol>
+      <li><b>คาบหน้าเรียนอะไร</b> ใต้ชื่อวิชา ดึงจากช่อง "คาบหน้า" ที่จดไว้ · ไม่ได้กรอก = แสดงแค่วัน-เวลา</li>
+      <li><b>+ เพิ่มงานของวิชานี้</b> ใต้รายการงาน (เลือกวิชาให้แล้ว)</li>
+      <li><b>ต้องทวนกี่หัวข้อ</b> ในช่องสรุปกลาง · แตะ = เลื่อนไปโน้ต · หัวข้อที่ถึงรอบมีป้าย "ต้องทวน"</li>
+      <li><b>ช่องสรุปแตะได้</b> · ช่องสอบแตะ = กางตั้งค่าวิชา (ยังไม่ตั้งวันสอบ ขึ้น "ตั้งวันสอบ")</li>
+      <li><b>เลิกซ้ำ "คะแนนตอนนี้"</b> · ช่องกลางเปลี่ยนเป็นข้อ 3</li>
+      <li><b>"เก็บแล้ว 18/25 (72%)"</b> แทน "ถ้าจบตอนนี้ได้ B+" ที่หลอกตาต้นเทอม · บรรทัด "ปลายภาคต้องได้…" บอกว่าต้องทำอะไร</li>
+      <li><b>ตั้งค่าที่เดียว</b> · "แก้ไข" มุมบนเลื่อนลงไปกาง "ตั้งค่าวิชา" · ชื่อ รหัส ตารางเรียน ย้ายมาอยู่ในนั้นด้วย</li>
+    </ol>
+    <h3>ลองกด (จอขวา)</h3>
+    <ul><li>"แก้ไข" หรือช่อง D-111 → กางตั้งค่าวิชา · ช่อง "2" → เลื่อนไปโน้ต · แถวคะแนน → กาง/ยุบ</li></ul>
   </div>
 </div>
 <script>
@@ -180,11 +234,14 @@ const P=[["คะแนนเก็บ","30%",[["ควิซ 1","8/10"],["ก�
 const CH='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 let open=-1;
 function draw(){
-  document.getElementById("parts").innerHTML=P.map((p,i)=>`<div class="part"><button class="ph" aria-expanded="${open===i}" data-i="${i}"><span class="n">${p[0]} <span class="v">${p[1]}</span></span><span class="v">${p[3]}</span>${CH}</button>${open===i?`<div class="form">${p[2].length?`<div class="scores">${p[2].map(s=>`<div><span>${s[0]}</span><span>${s[1]}</span></div>`).join("")}</div>`:""}<div class="inrow"><input class="f name" placeholder="ชื่อ เช่น ควิซ 2" aria-label="ชื่อ"><input class="f num" placeholder="ได้" inputmode="decimal" aria-label="ได้"><input class="f num" placeholder="เต็ม" inputmode="decimal" aria-label="เต็ม"></div><div class="inrow" style="margin-top:8px;justify-content:space-between;align-items:center"><span class="tip">ได้ 0 ก็ใส่ 0 (ไม่ใส่ = ไม่นับ)</span><button class="add">เพิ่ม</button></div></div>`:""}</div>`).join("");
-  document.querySelectorAll("#parts .ph").forEach(b=>b.onclick=()=>{open=open===+b.dataset.i?-1:+b.dataset.i;draw()});
+  document.querySelectorAll(".parts").forEach(el=>el.innerHTML=P.map((p,i)=>`<div class="part"><button class="ph" aria-expanded="${open===i}" data-i="${i}"><span class="n">${p[0]} <span class="v">${p[1]}</span></span><span class="v">${p[3]}</span>${CH}</button>${open===i?`<div class="form">${p[2].length?`<div class="scores">${p[2].map(s=>`<div><span>${s[0]}</span><span>${s[1]}</span></div>`).join("")}</div>`:""}<div class="inrow"><input class="f name" placeholder="ชื่อ เช่น ควิซ 2" aria-label="ชื่อ"><input class="f num" placeholder="ได้" inputmode="decimal" aria-label="ได้"><input class="f num" placeholder="เต็ม" inputmode="decimal" aria-label="เต็ม"></div><div class="inrow" style="margin-top:8px;justify-content:space-between;align-items:center"><span class="tip">ได้ 0 ก็ใส่ 0 (ไม่ใส่ = ไม่นับ)</span><button class="add">เพิ่ม</button></div></div>`:""}</div>`).join(""));
+  document.querySelectorAll(".parts .ph").forEach(b=>b.onclick=()=>{open=open===+b.dataset.i?-1:+b.dataset.i;draw()});
 }
 draw();
-document.getElementById("setBtn").onclick=e=>{const b=e.currentTarget,x=b.getAttribute("aria-expanded")==="true";b.setAttribute("aria-expanded",!x);document.getElementById("setIn").hidden=x};
+function setOpen(ph,v){ph.setAttribute("aria-expanded",v);ph.nextElementSibling.hidden=!v}
+document.querySelectorAll("[data-set]").forEach(b=>b.onclick=()=>setOpen(b,b.getAttribute("aria-expanded")!=="true"));
+document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{const ph=b.closest(".phone").querySelector("[data-set]");setOpen(ph,true);ph.scrollIntoView({behavior:"smooth",block:"start"})});
+document.querySelectorAll("[data-go=notes]").forEach(b=>b.onclick=()=>document.getElementById("notesB").scrollIntoView({behavior:"smooth",block:"start"}));
 </script>
 </body>
 </html>
