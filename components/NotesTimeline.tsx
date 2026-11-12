@@ -8,15 +8,16 @@ import { EmptyScene } from "@/components/EmptyScene";
 import { useSubjectNotes } from "@/lib/queries/notes";
 import { signedUrls, thumbPath } from "@/lib/photos";
 import { thaiDate } from "@/lib/format";
-import { color, font, radius, space } from "@/lib/theme";
+import { color, font, minTouch, radius, space } from "@/lib/theme";
 
 /**
  * ไทม์ไลน์โน้ตทุกคาบของวิชา (ใหม่สุดก่อน) · แตะเพื่อแก้ · absentKeys = "slotId:date" ที่เช็กว่าขาด
  * focusTopic = หัวข้อที่กำลังทวน / focusNote = โน้ตที่แตะมาจากหน้าวิชา → ไฮไลต์คาบนั้น + บอกตำแหน่ง y ผ่าน onFocusY (ให้หน้าเลื่อนไปหา)
  */
-export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, focusNote, onFocusY, since }: {
+export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, focusNote, onFocusY, since, compact }: {
   subjectId: string; subjectName: string; absentKeys: Set<string>; focusTopic?: string; focusNote?: string; onFocusY?: (y: number) => void;
   since?: string; // แสดงเฉพาะโน้ตตั้งแต่วันนี้ (หน้าวิชาโชว์ 2 สัปดาห์ล่าสุด)
+  compact?: boolean; // แบบย่อ: วันที่ + หัวข้อ ไม่มีข้อความ/รูป · แตะ = เปิดหน้าโน้ตของวิชาที่คาบนั้น
 }) {
   const notes = useSubjectNotes(subjectId);
   const list = (notes.data ?? []).filter((n) => !since || n.date >= since);
@@ -24,7 +25,7 @@ export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, 
   const allThumbs = list.flatMap((n) => n.photo_paths.map(thumbPath));
   const thumbs = useQuery({
     queryKey: ["thumbs-subject", subjectId, allThumbs.join("|")],
-    enabled: allThumbs.length > 0,
+    enabled: !compact && allThumbs.length > 0,
     queryFn: () => signedUrls(allThumbs),
     staleTime: 50 * 60_000,
   });
@@ -43,6 +44,25 @@ export function NotesTimeline({ subjectId, subjectName, absentKeys, focusTopic, 
       {list.map((n) => {
         const absent = n.slot_id ? absentKeys.has(`${n.slot_id}:${n.date}`) : false;
         const focused = n.id === focusNote || (!!focusTopic && n.topics.some((t) => t.id === focusTopic));
+        if (compact) {
+          return (
+            <Pressable key={n.id} style={[s.item, s.compact]} accessibilityRole="link"
+              onPress={() => router.push({ pathname: "/notes/[subjectId]", params: { subjectId, note: n.id } })}>
+              <View style={[s.dot, absent && { backgroundColor: color.danger }]} />
+              <Text style={T.muted}>
+                {thaiDate(n.date)}
+                {absent && <Text style={{ color: color.danger, fontFamily: font.bodyBold }}> · ขาด</Text>}
+              </Text>
+              {n.topics.length ? n.topics.map((t) => (
+                <Text key={t.id} style={s.topicHead} numberOfLines={1}>
+                  {t.is_starred && <Text style={{ color: color.red }}>★ </Text>}{t.title}
+                </Text>
+              )) : (
+                <Text style={[T.body, { marginTop: 2 }]} numberOfLines={1}>{n.text?.split("\n")[0] || "มีรูป"}</Text>
+              )}
+            </Pressable>
+          );
+        }
         return (
           <View key={n.id} style={s.item} onLayout={focused && onFocusY ? (e) => onFocusY(e.nativeEvent.layout.y) : undefined}>
             <View style={[s.dot, absent && { backgroundColor: color.danger }]} />
@@ -100,6 +120,7 @@ const s = StyleSheet.create({
     position: "absolute", left: -18, top: 10, width: 12, height: 12, borderRadius: 6, backgroundColor: color.pen,
     borderWidth: 2, borderColor: color.ink,
   },
+  compact: { minHeight: minTouch, paddingVertical: 2 },
   topicHead: { fontFamily: font.bodyBold, fontSize: 17, lineHeight: 24, color: color.paper, marginTop: 4 },
   // พื้นคงทึบ (deck) ให้อ่านง่าย · บอกคาบที่ทวนด้วยขอบปากกาน้ำเงินอย่างเดียว
   focus: { borderColor: color.pen, borderWidth: 2 },

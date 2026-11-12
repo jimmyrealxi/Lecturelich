@@ -112,7 +112,7 @@ export default function SubjectScreen() {
         )}
 
         <Section>โน้ตแต่ละคาบ</Section>
-        <NotesTimeline subjectId={id} subjectName={subject?.name ?? ""} absentKeys={absentKeys} since={since} />
+        <NotesTimeline subjectId={id} subjectName={subject?.name ?? ""} absentKeys={absentKeys} since={since} compact />
         <Pressable style={s.notesLink} onPress={() => router.push({ pathname: "/notes/[subjectId]", params: { subjectId: id } })}
           accessibilityRole="link">
           <Text style={s.linkText}>เปิดโน้ตทุกคาบ ›</Text>
