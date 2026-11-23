@@ -164,8 +164,11 @@ function NoteForm({ slot, subject, date, existing, subjects, nextDate }: {
           </View>
         )}
         {showLong ? (
+          <>
+          <Text style={s.fieldLabel}>จดเพิ่ม</Text>
           <TextInput value={text} onChangeText={setText} multiline maxLength={2000} style={[s.input, s.textarea]} autoFocus={!text}
             placeholder="จดยาว ๆ ตรงนี้ ถ้ามี" placeholderTextColor={color.placeholder} accessibilityLabel="จดเพิ่ม" />
+          </>
         ) : (
           <Pressable onPress={() => setShowLong(true)} style={s.more} accessibilityRole="button">
             <Text style={s.moreText}>+ จดเพิ่ม (ไม่ใส่ก็ได้)</Text>
@@ -219,8 +222,11 @@ function NoteForm({ slot, subject, date, existing, subjects, nextDate }: {
           )}
         </View>
         {showRead && (
-          <TextInput value={readMore} onChangeText={setReadMore} maxLength={500} style={[s.input, { marginTop: space.sm }]} autoFocus={!readMore}
+          <>
+          <Text style={s.fieldLabel}>อ่านเพิ่ม</Text>
+          <TextInput value={readMore} onChangeText={setReadMore} maxLength={500} style={s.input} autoFocus={!readMore}
             placeholder="อ่านเพิ่ม: ชื่อหนังสือหรือวางลิงก์" placeholderTextColor={color.placeholder} accessibilityLabel="อ่านเพิ่ม" />
+          </>
         )}
         {save.error && <Text style={s.error}>บันทึกไม่สำเร็จ: {save.error.message}</Text>}
       </ScrollView>
@@ -279,7 +285,8 @@ const s = StyleSheet.create({
     minHeight: minTouch, borderWidth: 1.5, borderColor: color.rule2, borderRadius: radius.md, paddingHorizontal: space.md, paddingVertical: 10,
     backgroundColor: color.field, fontFamily: font.body, fontSize: 16, color: color.paper, // iPhone ซูมจอเองถ้าช่องกรอกเล็กกว่า 16
   },
-  textarea: { minHeight: 96, textAlignVertical: "top", marginTop: space.sm },
+  textarea: { minHeight: 96, textAlignVertical: "top" },
+  fieldLabel: { fontFamily: font.bodyBold, fontSize: 14, color: color.muted, marginTop: space.md, marginBottom: 4 },
   // หัวข้อ = บรรทัดสมุด ตัวหนา
   trow: { flexDirection: "row", alignItems: "center", gap: 2, minHeight: 48, borderBottomWidth: 1, borderBottomColor: color.rule },
   trowFirst: { borderTopWidth: 1, borderTopColor: color.rule },
