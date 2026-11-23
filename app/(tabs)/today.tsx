@@ -188,10 +188,11 @@ export default function Today() {
               </Pressable>
             )}
 
-            {notices.map(({ note, on }, i) => (
+            {/* ใบประกาศ · ดึงเทป "ต้องทำ" ขึ้นมาชิด (Section เว้นบน 34 ไว้ให้รอย) */}
+            {notices.length > 0 && <View style={{ marginBottom: -16 }}>{notices.map(({ note, on }, i) => (
               <AnnounceSlip key={note.id} noteId={note.id} subjectId={note.subject_id} text={note.next_text!} from={note.date} on={on} today={now.date}
                 subjectName={subjName(note.subject_id)} subjectColor={subjectById.get(note.subject_id)?.color} tilt={i % 2 ? 0.7 : -0.8} />
-            ))}
+            ))}</View>}
 
             <Section count={{ n: unnoted.length + (tasks.data ?? []).filter((a) => !a.done).length, unit: "เรื่อง" }}>ต้องทำ</Section>
 
