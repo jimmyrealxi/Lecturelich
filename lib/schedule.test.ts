@@ -10,6 +10,7 @@ import {
   currentOrNext,
   endedWithoutNote,
   nextClassDate,
+  announcements,
   slotsOn,
   urgentTask,
   type Slot,
@@ -106,4 +107,20 @@ test("nextClassDate: คาบถัดไปของวิชาหลัง�
   assert.equal(nextClassDate("2026-11-09", "s-oop", [...slots, mk], term), "2026-11-14");
   assert.equal(nextClassDate("2026-11-09", "s-none", slots, term), null);
   assert.equal(nextClassDate("2027-03-06", "s-oop", slots, term), null); // หมดเทอม
+});
+
+test("announcements: โน้ตล่าสุดที่มีประกาศต่อวิชา · หายหลังวันคาบถัดไป · เรียงใกล้สุดก่อน", () => {
+  const n = (subject_id: string, date: string, next_text: string | null) => ({ subject_id, date, next_text });
+  const notes = [
+    n("s-oop", "2026-11-09", "สอบย่อย บท 1-3"),
+    n("s-oop", "2026-11-02", "อันเก่า"),
+    n("s-net", "2026-11-11", "ส่งแบบฝึกหัด"),
+    n("s-dis", "2026-11-09", "  "),
+  ];
+  // 11 พ.ย.: oop คาบหน้า 16 · net คาบหน้า 18 · dis ว่าง = ไม่โชว์
+  assert.deepEqual(announcements(notes, slots, term, "2026-11-11").map((a) => [a.note.next_text, a.on]),
+    [["สอบย่อย บท 1-3", "2026-11-16"], ["ส่งแบบฝึกหัด", "2026-11-18"]]);
+  // วันคาบยังโชว์ · พ้นวันแล้วหาย (ไม่ย้อนไปใช้อันเก่า)
+  assert.equal(announcements(notes, slots, term, "2026-11-16")[0].on, "2026-11-16");
+  assert.deepEqual(announcements(notes, slots, term, "2026-11-17").map((a) => a.note.subject_id), ["s-net"]);
 });

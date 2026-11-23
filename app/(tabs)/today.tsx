@@ -13,14 +13,15 @@ import {
   type AttendanceRow, type Assignment,
 } from "@/lib/queries/core";
 import { useLoot } from "@/lib/queries/loot";
-import { useNotedSlots } from "@/lib/queries/notes";
+import { useAnnounceNotes, useNotedSlots } from "@/lib/queries/notes";
+import { AnnounceSlip } from "@/components/AnnounceSlip";
 import { useExams, useReviewTopic, useTopics, useUnreviewTopic, type TopicFull } from "@/lib/queries/review";
 import { useProfile } from "@/lib/queries/setup";
 import { useXpToday } from "@/lib/queries/xp";
 import { daysUntil, examReady, nearExam, reviewQueue } from "@/lib/review";
 import { useNow } from "@/lib/useNow";
 import {
-  attendanceStats, countSessions, currentOrNext, endedWithoutNote, slotsOn, toMinutes, type AttendanceStatus, type Slot,
+  announcements, attendanceStats, countSessions, currentOrNext, endedWithoutNote, slotsOn, toMinutes, type AttendanceStatus, type Slot,
 } from "@/lib/schedule";
 import { countdown, dueInfo, hhmm, typedDate, weekdayName } from "@/lib/format";
 import { DEFAULT_LOOK, type Pose } from "@/lib/papboy";
@@ -77,6 +78,11 @@ export default function Today() {
     [attendance.data, now.date],
   );
   const noted = useNotedSlots(now.date);
+  const announceNotes = useAnnounceNotes(now.date);
+  const notices = useMemo(
+    () => announcements(announceNotes.data ?? [], slots.data ?? [], term.data ?? null, now.date).filter((a) => subjectById.has(a.note.subject_id)),
+    [announceNotes.data, slots.data, term.data, now.date, subjectById],
+  );
   const dayOff = today.length >= 2 && today.every((x) => statusToday.get(x.id) === "no_class");
   const focus = dayOff ? null : currentOrNext(today, now.minutes);
   const notedSet = useMemo(() => new Set(noted.data ?? []), [noted.data]);
@@ -181,6 +187,11 @@ export default function Today() {
                 <Text style={[s.dayOffText, dayOff && s.miniOn]}>{dayOff ? "บันทึกแล้ว: งดสอนทั้งวัน" : "วันนี้งดสอนทั้งวัน"}</Text>
               </Pressable>
             )}
+
+            {notices.map(({ note, on }, i) => (
+              <AnnounceSlip key={note.id} noteId={note.id} subjectId={note.subject_id} text={note.next_text!} from={note.date} on={on} today={now.date}
+                subjectName={subjName(note.subject_id)} subjectColor={subjectById.get(note.subject_id)?.color} tilt={i % 2 ? 0.7 : -0.8} />
+            ))}
 
             <Section count={{ n: unnoted.length + (tasks.data ?? []).filter((a) => !a.done).length, unit: "เรื่อง" }}>ต้องทำ</Section>
 

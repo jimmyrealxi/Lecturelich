@@ -6,7 +6,7 @@ import { NotesTimeline } from "@/components/NotesTimeline";
 import { useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
 import { useSubjectNotes } from "@/lib/queries/notes";
 import { useReviewTopic, useTopics, useUnreviewTopic, type TopicFull } from "@/lib/queries/review";
-import { bangkokNow, nextClassDate } from "@/lib/schedule";
+import { announcements, bangkokNow } from "@/lib/schedule";
 import { hhmm, thaiDate } from "@/lib/format";
 import { color, crtGlow, font, minTouch, radius, space } from "@/lib/theme";
 
@@ -35,11 +35,9 @@ export default function SubjectNotesScreen() {
 
   // คาบหน้า = ช่อง next_text ของโน้ตล่าสุดที่กรอก · ซ่อนเมื่อคาบนั้นผ่านไปแล้ว
   const next = useMemo(() => {
-    const n = notes.data?.find((x) => x.next_text);
-    if (!n || !term.data) return null;
-    const on = nextClassDate(n.date, subjectId, slots.data ?? [], term.data);
-    return on && on >= today ? { on, text: n.next_text!, from: n.date } : null;
-  }, [notes.data, term.data, slots.data, subjectId, today]);
+    const a = announcements(notes.data ?? [], slots.data ?? [], term.data ?? null, today)[0];
+    return a ? { on: a.on, text: a.note.next_text!, from: a.note.date } : null;
+  }, [notes.data, term.data, slots.data, today]);
   const reads = (notes.data ?? []).filter((n) => n.read_more);
 
   // เลื่อนไปคาบที่จดหัวข้อนั้นครั้งเดียว (รอทั้งตำแหน่งไทม์ไลน์และตำแหน่งการ์ด)

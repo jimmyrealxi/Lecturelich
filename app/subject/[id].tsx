@@ -10,7 +10,9 @@ import { useExams } from "@/lib/queries/review";
 import { daysUntil } from "@/lib/review";
 import { useAssignments, useAttendance, useCurrentTerm, useSlots, useSubjects } from "@/lib/queries/core";
 import { useProfile } from "@/lib/queries/setup";
-import { attendanceStats, bangkokNow, countSessions } from "@/lib/schedule";
+import { announcements, attendanceStats, bangkokNow, countSessions } from "@/lib/schedule";
+import { useSubjectNotes } from "@/lib/queries/notes";
+import { AnnounceSlip } from "@/components/AnnounceSlip";
 import { NotesTimeline } from "@/components/NotesTimeline";
 import { hhmm } from "@/lib/format";
 import { color, crtGlow, font, minTouch, radius, space } from "@/lib/theme";
@@ -41,6 +43,8 @@ export default function SubjectScreen() {
   const exams = useExams(term.data?.id);
   const myExams = (exams.data ?? []).filter((e) => e.subject_id === id);
   const nextExam = myExams.filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date))[0];
+  const notes = useSubjectNotes(id);
+  const notice = announcements(notes.data ?? [], slots.data ?? [], term.data ?? null, today)[0];
   const myTasks = (tasks.data ?? []).filter((a) => a.subject_id === id);
   // ไทม์ไลน์โน้ต 2 สัปดาห์ล่าสุด · ทั้งหมดอยู่หน้า /notes
   const absentKeys = useMemo(
@@ -100,6 +104,10 @@ export default function SubjectScreen() {
               <Text style={s.tileK}>{nextExam ? (nextExam.kind === "final" ? "สอบปลายภาค" : "สอบกลางภาค") : "ตั้งวันสอบ"}</Text>
             </Pressable>
           </View>
+        )}
+
+        {notice && (
+          <AnnounceSlip noteId={notice.note.id} subjectId={id} text={notice.note.next_text!} from={notice.note.date} on={notice.on} today={today} />
         )}
 
         {subject && term.data && (

@@ -28,7 +28,19 @@ export const noteKeys = {
   day: (date: string) => ["notes-day", date] as const,
   subject: (subjectId: string) => ["notes-subject", subjectId] as const,
   one: (slotId: string, date: string) => ["note", slotId, date] as const,
+  announce: ["notes-announce"] as const,
 };
+
+/** ประกาศจากคาบของทุกวิชา (โน้ต 3 สัปดาห์ล่าสุดที่กรอกช่องคาบหน้า) · คัด/เรียงด้วย announcements() ใน lib/schedule */
+export function useAnnounceNotes(today: string) {
+  const since = new Date(Date.parse(today + "T00:00:00Z") - 21 * 86_400_000).toISOString().slice(0, 10);
+  return useQuery({
+    queryKey: noteKeys.announce,
+    queryFn: async () =>
+      must(await supabase.from("class_notes").select("id,subject_id,date,next_text").not("next_text", "is", null).gte("date", since)
+        .order("date", { ascending: false })) as Pick<Note, "id" | "subject_id" | "date" | "next_text">[],
+  });
+}
 
 /** slot ที่จดแล้วของวันหนึ่ง (ใช้กับการ์ด "ยังไม่ได้จด") */
 export function useNotedSlots(date: string) {
@@ -122,6 +134,7 @@ export function useSaveNote() {
       qc.invalidateQueries({ queryKey: noteKeys.day(n.date) });
       qc.invalidateQueries({ queryKey: noteKeys.subject(n.subject_id) });
       qc.invalidateQueries({ queryKey: noteKeys.one(n.slot_id, n.date) });
+      qc.invalidateQueries({ queryKey: noteKeys.announce });
       qc.invalidateQueries({ queryKey: ["topics"] }); // หัวข้อใช้กับบอส/ทวน (ขั้น 5)
     },
   });

@@ -58,6 +58,24 @@ export function nextClassDate(after: string, subjectId: string, slots: Slot[], t
   return null;
 }
 
+/**
+ * ประกาศจากคาบ (ช่อง next_text): ต่อวิชาใช้โน้ตล่าสุดที่กรอกช่องนี้ · โชว์ถึงวันคาบถัดไปของวิชานั้น
+ * เรียงคาบที่ใกล้สุดก่อน · on = วันคาบที่ประกาศพูดถึง
+ */
+export function announcements<N extends { subject_id: string; date: string; next_text: string | null }>(
+  notes: N[], slots: Slot[], term: Term | null, today: string,
+): { note: N; on: string }[] {
+  const seen = new Set<string>();
+  const out: { note: N; on: string }[] = [];
+  for (const n of [...notes].sort((a, b) => b.date.localeCompare(a.date))) {
+    if (seen.has(n.subject_id) || !n.next_text?.trim()) continue;
+    seen.add(n.subject_id);
+    const on = nextClassDate(n.date, n.subject_id, slots, term);
+    if (on && on >= today) out.push({ note: n, on });
+  }
+  return out.sort((a, b) => a.on.localeCompare(b.on));
+}
+
 export function classState(slot: Slot, minutes: number): ClassState {
   if (minutes < toMinutes(slot.start_time)) return "upcoming";
   if (minutes < toMinutes(slot.end_time)) return "live";
