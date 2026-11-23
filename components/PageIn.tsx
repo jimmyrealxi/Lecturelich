@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactElement } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
-// เอฟเฟกต์เปลี่ยนหน้า: หน้าที่เข้ามาค่อยโผล่ + ลอยขึ้น 8px (หน้าเก่าหายทันที เพราะพื้นหน้าโปร่ง ถ้าเฟดซ้อนกันตัวหนังสือจะทับกัน)
+// เอฟเฟกต์เปลี่ยนหน้า: หน้าที่เข้ามาค่อยโผล่ + ลอยขึ้น 20px (หน้าเก่าหายทันที เพราะพื้นหน้าโปร่ง ถ้าเฟดซ้อนกันตัวหนังสือจะทับกัน)
 // ใช้ CSS keyframes ของเว็บ → เบราว์เซอร์เล่นเองบน GPU ไม่ผ่าน JS ทุกเฟรม · ลดการเคลื่อนไหว = ไม่เล่น · native = ไม่มีเอฟเฟกต์
 // สลับ 2 คลาสที่ keyframes ต่างกันนิดเดียว (ชื่อ animation เปลี่ยน → เล่นใหม่) โดยไม่ remount หน้า (state ในหน้าไม่หาย)
 // react-native-web รับ animationKeyframes เฉพาะใน StyleSheet.create (inline ไม่รองรับ)
@@ -9,8 +9,8 @@ import { Platform, StyleSheet, View } from "react-native";
 const reduced = Platform.OS === "web" && typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 const anim = (startOpacity: number) => ({
   flex: 1,
-  animationKeyframes: [{ from: { opacity: startOpacity, transform: "translateY(8px)" }, to: { opacity: 1, transform: "translateY(0px)" } }],
-  animationDuration: "220ms",
+  animationKeyframes: [{ from: { opacity: startOpacity, transform: "translateY(20px)" }, to: { opacity: 1, transform: "translateY(0px)" } }],
+  animationDuration: "320ms",
   animationTimingFunction: "cubic-bezier(0.2, 0.7, 0.2, 1)",
   animationFillMode: "backwards", // จบแล้วไม่ค้าง transform (ไม่งั้น position: fixed ข้างในเพี้ยน)
 });
