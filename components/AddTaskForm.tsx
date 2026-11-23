@@ -13,23 +13,25 @@ const SOURCES: { value: Assignment["source"]; label: string }[] = [
 ];
 
 /** ฟอร์มเพิ่มงาน (แผ่นล่างของแท็บงาน / หน้าจดหลังคาบ) · ส่ง task มา = โหมดแก้ไข + ปุ่มลบ */
-export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, defaultSource = "classroom", task }: {
+export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, defaultSource = "classroom", task, defaultTitle, defaultDue }: {
   subjects: { id: string; name: string }[];
   today: string;
   onDone: () => void;
   defaultSubjectId?: string;
   defaultSource?: Assignment["source"];
   task?: Assignment;
+  defaultTitle?: string; // จากหน้าจด "ทำเป็นงาน"
+  defaultDue?: { date: string; time: string }; // ISO date · ค่าเริ่มต้นตอนเพิ่มใหม่ (เช่น คาบหน้า)
 }) {
   const add = useAddAssignment();
   const rooms = useRooms().data ?? [];
   const update = useUpdateAssignment();
   const del = useDeleteAssignment();
-  const initDue = task?.due_at ? bangkokParts(task.due_at) : null;
+  const initDue = task?.due_at ? bangkokParts(task.due_at) : (task ? null : defaultDue ?? null);
   const locked = !!task?.classroom_work_id; // ชื่อกับวันส่งตาม Classroom รอบดึงถัดไปจะเขียนทับอยู่ดี
   const [confirming, setConfirming] = useState(false);
   const [roomId, setRoomId] = useState<string | null>(null);
-  const [title, setTitle] = useState(task?.title ?? "");
+  const [title, setTitle] = useState(task?.title ?? defaultTitle ?? "");
   const [subjectId, setSubjectId] = useState<string | null>(task ? task.subject_id : (defaultSubjectId ?? null));
   const [date, setDate] = useState(initDue ? toThaiDate(initDue.date) : "");
   const [time, setTime] = useState(initDue?.time ?? "23:59");
@@ -39,7 +41,7 @@ export function AddTaskForm({ subjects, today, onDone, defaultSubjectId, default
 
   const errTitle = !title.trim() ? "ใส่ชื่องาน" : null;
   const iso = fromThaiDate(date);
-  const errDate = date && !iso ? DATE_ERR : iso && iso < today && iso !== initDue?.date ? "วันนี้หรือหลังจากนี้" : null;
+  const errDate = date && !iso ? DATE_ERR : iso && iso < today && !(task && iso === initDue?.date) ? "วันนี้หรือหลังจากนี้" : null;
   const errTime = date && !normTime(time) ? "เช่น 23:59" : null;
   const url = normUrl(link);
 
