@@ -12,6 +12,7 @@ import { CourierPrime_400Regular, CourierPrime_700Bold } from "@expo-google-font
 import { Silkscreen_400Regular } from "@expo-google-fonts/silkscreen";
 import { registerServiceWorker } from "@/lib/web/webPush";
 import { XpPop } from "@/components/game/XpPop";
+import { PageIn } from "@/components/PageIn";
 import { CACHE_BUSTER, persister, queryClient } from "@/lib/queryClient";
 import { PAPER_INSET } from "@/lib/theme";
 
@@ -40,7 +41,7 @@ export default function RootLayout() {
     <ThemeProvider value={navTheme}>
       <StatusBar style="dark" />
       {/* โปร่งให้เห็นกระดาษที่ body · แท็บเว้นซ้ายเองใน (tabs)/_layout (แถบแท็บต้องเต็มกว้าง) */}
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "transparent", paddingLeft: inset } }}>
+      <Stack screenLayout={(p) => <PageIn navigation={p.navigation} route={p.route}>{p.children}</PageIn>} screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "transparent", paddingLeft: inset } }}>
         <Stack.Screen name="(tabs)" options={{ contentStyle: { backgroundColor: "transparent" } }} />
         {/* โลกมืดเต็มจอ ไม่มีขอบสมุด (เหมือนแท็บเกม) */}
         <Stack.Screen name="lootbox" options={{ contentStyle: { backgroundColor: "transparent" } }} />

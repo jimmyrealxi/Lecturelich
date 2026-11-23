@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "@/lib/auth";
 import { useAssignments } from "@/lib/queries/core";
 import { TabIcon } from "@/components/TabIcon";
+import { PageIn } from "@/components/PageIn";
 import { setIconBadge } from "@/lib/web/appBadge";
 import { Platform } from "react-native";
 import { color, font, PAPER_INSET } from "@/lib/theme";
@@ -23,6 +24,7 @@ export default function TabsLayout() {
 
   return (
     <Tabs
+      screenLayout={(p) => <PageIn navigation={p.navigation} route={p.route}>{p.children}</PageIn>}
       screenOptions={{
         // หัวแบบสมุด: โปร่งบนกระดาษ หัว Chonburi เส้นคู่ใต้หัว
         headerStyle: { backgroundColor: "transparent", borderBottomWidth: 3, borderBottomColor: "rgba(42,33,24,0.75)", borderStyle: "double" as "solid" },
