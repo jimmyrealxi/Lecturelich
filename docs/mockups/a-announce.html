@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich ประกาศจากคาบ</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ประกาศจากคาบ (ช่อง "คาบหน้าเรียนอะไร / ประกาศ" = next_text) เด้งมาหาเอง 3 ที่ · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#4A3C2C;--pen:#2B4A8A;--red:#A0281D;--on:#F3EAD2;--crt:#08130C;--crtOn:#9EF0B4;--crtDim:#73C48B;--glue:#BFA36C}
+*{box-sizing:border-box;margin:0;padding:0}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:left}
+body{background:#1C1915;color:#E9E2D2;font:16px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+.head{max-width:1180px;margin:0 auto 18px}
+.head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
+.head p{color:#C9BFAA;font-size:14px;max-width:80ch;margin-top:4px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:10px;flex:none;max-width:100%}
+.cap{font:600 14px Anuphan;color:#F3EAD2}
+.cap span{display:block;font-weight:400;color:#C9BFAA;font-size:13px}
+.phone{width:360px;max-width:100%;height:740px;border:6px solid #050505;border-radius:30px;overflow:hidden;background:var(--ink);color:var(--paper)}
+.scroll{height:100%;overflow-y:auto;padding:14px 16px 32px 26px}
+h2{font:400 26px/36px Chonburi,serif}
+.when{font-size:15px;color:var(--muted)}
+.lnk{min-height:44px;font:600 16px Anuphan;color:var(--pen);display:inline-flex;align-items:center}
+.top{display:flex;justify-content:space-between;align-items:center;min-height:44px}
+/* จอเขียวคาบตอนนี้ (ของเดิมหน้าวันนี้) */
+.crt{background:var(--crt);color:var(--crtOn);border-radius:14px;padding:14px;margin:12px 0 4px}
+.crt small{display:block;font-size:13px;color:var(--crtDim)}
+.crt b{display:block;font-size:19px;line-height:26px;font-weight:600}
+.crt .row{display:flex;gap:12px;align-items:flex-start}
+.crt .big{font:400 36px/36px VT323,monospace;color:#B8FFC9}
+/* ★ ใบประกาศ: กระดาษแผ่นเล็กแปะเทปกาว เอียงนิด ๆ */
+.slip{position:relative;display:block;width:100%;background:var(--deck);border:1px solid var(--rule2);border-radius:3px;padding:16px 14px 12px;margin:22px 0 6px;transform:rotate(-.8deg)}
+.slip+.slip{transform:rotate(.7deg);margin-top:20px}
+.slip:before{content:"";position:absolute;top:-9px;left:50%;width:74px;height:18px;margin-left:-37px;background:var(--glue);opacity:.85;transform:rotate(-3deg);clip-path:polygon(0 10%,4% 0,96% 8%,100% 0,98% 90%,95% 100%,3% 92%,0 100%)}
+.slip .k{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted)}
+.slip .k em{font-style:normal;font-weight:600;color:var(--red)}
+.slip .t{font:600 18px/1.45 Anuphan;margin:4px 0 6px}
+.slip .s{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.tape{display:inline-block;color:var(--on);font:400 17px/1 Chonburi,serif;padding:8px 14px 7px;margin:26px 0 8px -6px;background:#A0281D;transform:rotate(-.7deg);clip-path:polygon(0 8%,3% 0,97% 4%,100% 0,99% 92%,96% 100%,4% 96%,0 100%)}
+.row2{display:flex;align-items:center;gap:10px;min-height:52px;border-top:1px solid var(--rule)}
+.row2:last-child{border-bottom:1px solid var(--rule)}
+.box{width:22px;height:22px;border:2px solid var(--paper);border-radius:2px 4px 3px 2px;flex:none}
+.sub{font-size:14px;color:var(--muted)}
+.ghosted{opacity:.45}
+/* สรุป 2 ช่องหน้าวิชา */
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.stat div{background:var(--crt);border-radius:8px;padding:10px 10px 9px;color:var(--crtOn);text-align:center}
+.stat b{display:block;font:400 30px/1 VT323,monospace}
+.stat span{font-size:14px;color:var(--crtDim)}
+/* จอล็อก */
+.lock{background:linear-gradient(#1d2733,#0d1218);color:#fff;height:100%;padding:60px 14px 20px;text-align:center}
+.lock .time{font:300 64px/1 Anuphan;letter-spacing:-1px}
+.lock .date{font-size:15px;opacity:.8;margin-bottom:40px}
+.noti{display:flex;gap:10px;text-align:left;background:rgba(240,240,240,.82);color:#111;border-radius:18px;padding:12px}
+.noti+.noti{margin-top:8px}
+.noti img,.noti .ic{width:38px;height:38px;border-radius:9px;background:#2A2118;flex:none;display:flex;align-items:center;justify-content:center;color:#9EF0B4;font:400 18px VT323,monospace}
+.noti b{display:block;font-size:15px}
+.noti p{font-size:14px;line-height:1.4}
+.noti small{float:right;font-size:12px;opacity:.6}
+/* คำอธิบาย */
+.side{flex:1;min-width:280px;max-width:420px}
+.side h3{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
+.side ul{padding-left:18px;font-size:14px;color:#D8D0BE;margin-bottom:18px}
+.side li{margin-bottom:7px}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>ประกาศจากคาบ เด้งมาหาเอง (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>จดในช่อง "คาบหน้าเรียนอะไร / ประกาศ" ตามเดิม → แอปแปะเป็นใบประกาศให้เห็นเองในหน้าวันนี้ หน้าวิชา และแจ้งเตือนคืนก่อนเรียน จนกว่าคาบนั้นจะผ่านไป · ไม่ต้องแก้ฐานข้อมูล</p>
+</div>
+<div class="wrap">
+  <div class="col"><div class="cap">1 · หน้าวันนี้<span>ใต้จอเขียว · เรียงคาบที่ใกล้สุดก่อน</span></div>
+  <div class="phone"><div class="scroll">
+    <h2>วันนี้</h2>
+    <div class="when">พฤ. 26 พ.ย. 2569</div>
+    <div class="crt"><div class="row"><div style="flex:1"><small>&gt; คาบถัดไป</small><b>เทคโนโลยีบล็อกเชน</b><small>SC9-604 · 13:00–17:00</small></div><div class="big">2:15</div></div></div>
+
+    <button class="slip" aria-label="ประกาศ เทคโนโลยีบล็อกเชน วันนี้: สอบย่อย บท 1-3 เปิดโน้ต">
+      <div class="k"><span>คาบที่แล้วบอกไว้ · พฤ. 19 พ.ย.</span><em>วันนี้</em></div>
+      <div class="t">สอบย่อย บท 1–3 เอาเครื่องคิดเลขมา</div>
+      <div class="s"><span class="dot" style="background:#2B4A8A"></span>เทคโนโลยีบล็อกเชน</div>
+    </button>
+    <button class="slip" aria-label="ประกาศ คณิตศาสตร์ดิสครีต คาบหน้า จ. 30 พ.ย.: ส่งแบบฝึกหัดบท 4 เปิดโน้ต">
+      <div class="k"><span>คาบที่แล้วบอกไว้ · จ. 23 พ.ย.</span><span>จ. 30 พ.ย.</span></div>
+      <div class="t">ส่งแบบฝึกหัดบท 4 ต้นคาบ</div>
+      <div class="s"><span class="dot" style="background:#2E6B3F"></span>คณิตศาสตร์ดิสครีต</div>
+    </button>
+
+    <span class="tape">ต้องทำ</span>
+    <div class="ghosted">
+      <div class="row2"><span class="box"></span><div><div>สรุปบทที่ 1 Proof of Work</div><div class="sub">ส่ง พฤ. 26 พ.ย. 13:00</div></div></div>
+      <div class="row2"><span class="box"></span><div><div>รายงานกลุ่ม</div><div class="sub">ส่ง ศ. 27 พ.ย.</div></div></div>
+    </div>
+  </div></div></div>
+
+  <div class="col"><div class="cap">2 · หน้าวิชา<span>ใต้สรุป 2 ช่อง (แบบที่เพิ่งขึ้นเว็บ)</span></div>
+  <div class="phone"><div class="scroll">
+    <div class="top"><button class="lnk">‹ วิชา</button><button class="lnk">แก้ไข</button></div>
+    <h2>เทคโนโลยีบล็อกเชน</h2>
+    <div class="when">IT25309 · พฤ. 13:00–17:00</div>
+    <div class="stat"><div><b>100%</b><span>มาเรียน · ขาดได้อีก 2</span></div><div><b>D-101</b><span>สอบปลายภาค</span></div></div>
+
+    <button class="slip" aria-label="ประกาศ คาบหน้า พฤ. 26 พ.ย.: สอบย่อย บท 1-3 เปิดโน้ต">
+      <div class="k"><span>คาบที่แล้วบอกไว้ · พฤ. 19 พ.ย.</span><em>คาบหน้า พฤ. 26</em></div>
+      <div class="t">สอบย่อย บท 1–3 เอาเครื่องคิดเลขมา</div>
+    </button>
+
+    <span class="tape" style="background:#94461A">คะแนน</span>
+    <div class="ghosted"><div class="row2"><div style="flex:1">เก็บแล้ว <b style="font-family:'Courier Prime'">18/25</b> (72%)</div></div></div>
+  </div></div></div>
+
+  <div class="col"><div class="cap">3 · แจ้งเตือนคืนก่อนเรียน<span>รวมกับรอบ 21:10 ที่มีอยู่ ไม่เพิ่มรอบใหม่</span></div>
+  <div class="phone"><div class="lock">
+    <div class="time">21:10</div>
+    <div class="date">วันพุธ 25 พฤศจิกายน</div>
+    <div class="noti"><div class="ic">LL</div><div style="flex:1"><small>ตอนนี้</small><b>พรุ่งนี้ เทคโนโลยีบล็อกเชน 13:00</b><p>คาบที่แล้วบอกไว้: สอบย่อย บท 1–3 เอาเครื่องคิดเลขมา</p></div></div>
+  </div></div></div>
+
+  <div class="side">
+    <h3>กติกา</h3>
+    <ul>
+      <li>ใช้ประกาศจาก<b>โน้ตล่าสุดของวิชา</b>ที่กรอกช่องนี้ (กติกาเดียวกับหน้าโน้ตตอนนี้)</li>
+      <li>โชว์ตั้งแต่บันทึก จน<b>คาบถัดไปของวิชานั้นจบ</b> แล้วหายเอง · วันที่มีคาบ ป้ายขวาเป็นสีแดง "วันนี้"</li>
+      <li>หลายวิชา = หลายใบ เรียงคาบที่ใกล้สุดก่อน · ไม่มีประกาศ = ไม่มีอะไรโผล่</li>
+      <li>แตะใบ = เปิดโน้ตของวิชานั้นที่คาบที่จด</li>
+      <li>แจ้งเตือน: คืนก่อนวันที่มีคาบ แปะท้ายรอบ 21:10 (ถ้าคืนนั้นไม่มีงานค้างก็ส่งเฉพาะประกาศ)</li>
+    </ul>
+    <h3>ไม่ได้ทำในรอบนี้</h3>
+    <ul><li>ปุ่ม "ทำเป็นงาน" (ข้อ 2 ที่เคยเสนอ) · ปุ่มซ่อนประกาศ</li></ul>
+  </div>
+</div>
+</body>
+</html>
