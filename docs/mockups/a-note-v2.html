@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecturelich หน้าจด 3 คำถาม</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Chonburi&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* หน้าจดหลังคาบ: เดิม vs แบบ 3 คำถาม · ธีม A ตาม docs/DESIGN.md · ร่างให้อนุมัติ ยังไม่ลงโค้ด · ฐานข้อมูลเหมือนเดิม */
+:root{--ink:#E9DDBF;--deck:#F3EAD2;--field:#FBF5E6;--rule:rgba(60,90,140,.30);--rule2:#8C7B60;--paper:#2A2118;--muted:#4A3C2C;--ph:#7A6A55;--pen:#2B4A8A;--red:#A0281D;--on:#F3EAD2;--glue:#BFA36C}
+*{box-sizing:border-box;margin:0;padding:0}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+[hidden]{display:none!important}
+button,input,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;text-align:left}
+body{background:#1C1915;color:#E9E2D2;font:16px/1.5 Anuphan,sans-serif;padding:24px 16px 40px}
+.head{max-width:1100px;margin:0 auto 18px}
+.head h1{font:400 22px/1.4 Chonburi,serif;color:#F3EAD2}
+.head p{color:#C9BFAA;font-size:14px;max-width:80ch;margin-top:4px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:10px;flex:none;max-width:100%}
+.cap{font:600 14px Anuphan;color:#F3EAD2}
+.cap span{display:block;font-weight:400;color:#C9BFAA;font-size:13px}
+.phone{position:relative;width:360px;max-width:100%;height:760px;border:6px solid #050505;border-radius:30px;overflow:hidden;background:var(--ink);color:var(--paper);display:flex;flex-direction:column}
+.top{padding:12px 16px 10px 26px;border-bottom:3px double rgba(42,33,24,.75)}
+.back{min-height:44px;font:600 18px Anuphan;display:inline-flex;align-items:center}
+h2{font:400 26px/34px Chonburi,serif}
+.sub{font-size:15px;color:var(--muted)}
+.scroll{flex:1;overflow-y:auto;padding:4px 16px 24px 26px}
+.foot{padding:10px 16px 14px 26px;border-top:1px solid var(--rule2);background:var(--ink)}
+.save{width:100%;min-height:48px;background:var(--paper);color:var(--deck);border-radius:3px;font:600 17px Anuphan;text-align:center;box-shadow:2px 2px 0 var(--rule2)}
+.f{width:100%;min-height:44px;background:var(--field);border:1.5px solid var(--rule2);border-radius:3px;padding:9px 12px;font-size:16px}
+.f::placeholder{color:var(--ph)}
+textarea.f{min-height:84px;resize:none}
+/* แบบเดิม (ย่อ) */
+.old .lab{font-size:14px;color:var(--muted);margin:14px 0 4px}
+.old .lab i{font-style:normal;opacity:.8}
+.old .hint{font-size:13px;color:var(--muted);margin-top:3px}
+.old .dup{background:rgba(160,40,29,.10);border-color:var(--red)}
+.old .pics{display:flex;gap:8px}
+.old .pic{width:72px;height:56px;border:1.5px dashed var(--rule2);border-radius:3px;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:center}
+/* ★ แบบใหม่ */
+.q{display:flex;align-items:baseline;gap:10px;margin:24px 0 8px}
+.q .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--paper);color:var(--deck);font:700 15px/28px "Courier Prime",monospace;text-align:center}
+.q h3{font:400 20px/1.4 Chonburi,serif}
+.q small{display:block;font:400 14px Anuphan;color:var(--muted)}
+.topics{border-top:1px solid var(--rule)}
+.t{display:flex;align-items:center;gap:4px;min-height:48px;border-bottom:1px solid var(--rule)}
+.t span{flex:1;font-weight:600}
+.ic{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--muted)}
+.ic.on{color:var(--red)}
+.ic.x{font-size:16px;color:var(--red)}
+.addrow{display:flex;gap:6px;margin-top:8px}
+.addrow .f{flex:1}
+.addbtn{min-height:44px;padding:0 14px;border:1.5px solid var(--paper);border-radius:3px;font:600 15px Anuphan}
+.more{min-height:44px;font:600 15px Anuphan;color:var(--pen);display:inline-flex;align-items:center}
+.cam{display:flex;gap:8px}
+.cam .big{flex:1;min-height:56px;border:2px dashed var(--paper);border-radius:3px;font:600 16px Anuphan;text-align:center}
+.cam .small{min-height:56px;padding:0 12px;border:1.5px dashed var(--rule2);border-radius:3px;font:600 14px Anuphan;color:var(--muted)}
+.pics2{display:flex;gap:8px;margin-top:8px}
+.pics2 div{width:72px;height:56px;border-radius:3px;background:repeating-linear-gradient(135deg,#3a4a3a 0 6px,#334233 6px 12px);border:1px solid var(--rule2)}
+.slipnote{font-size:14px;color:var(--muted);margin-top:4px}
+.chips{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.chip{min-height:44px;padding:0 14px;border:1.5px dashed var(--rule2);border-radius:3px;font:600 15px Anuphan}
+.chip.done{border-style:solid;border-color:var(--pen);color:var(--pen)}
+.toast{position:absolute;left:12px;right:12px;bottom:80px;background:var(--paper);color:var(--on);border-radius:3px;padding:10px 14px;font-size:15px}
+/* คำอธิบาย */
+.side{flex:1;min-width:280px;max-width:400px}
+.side h3{font:600 15px Anuphan;color:#fff;margin:0 0 8px}
+.side ul,.side ol{padding-left:20px;font-size:14px;color:#D8D0BE;margin-bottom:18px}
+.side li{margin-bottom:7px}
+.side table{width:100%;border-collapse:collapse;font-size:13px;color:#D8D0BE;margin-bottom:18px}
+.side td{border-top:1px solid #3a342c;padding:6px 6px 6px 0;vertical-align:top}
+.side td:first-child{color:#a99f8c;width:46%}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>หน้าจดหลังคาบ: เดิม เทียบ แบบ 3 คำถาม (ร่างให้อนุมัติ · ยังไม่ลงโค้ด)</h1>
+  <p>ของจริงจากคาบ 23 พ.ย.: เรื่องเดียวพิมพ์ซ้ำ 3 ช่อง (สีแดง) แต่หัวข้อที่เรียนซึ่งใช้ทำรอบทวนกลับว่าง → แบบใหม่ถามแค่ 3 ข้อตามลำดับที่คิดหลังเลิกเรียน · ช่องอื่นยุบไว้ แตะค่อยโผล่</p>
+</div>
+<div class="wrap">
+  <div class="col"><div class="cap">เดิม<span>6 ช่อง · ช่องสีแดง = พิมพ์เรื่องเดียวกันซ้ำ</span></div>
+  <div class="phone old">
+    <div class="top"><button class="back">‹ ปิด</button><h2>แก้โน้ต</h2><div class="sub">ความมั่นคงสารสนเทศฯ · จ. 23 พ.ย. 13:00–17:00</div></div>
+    <div class="scroll">
+      <div class="lab">วันนี้เรียนอะไร (สั้น ๆ)</div>
+      <textarea class="f dup">อาทิตย์หน้าสอบบท 1-3 20 คะแนน</textarea>
+      <div class="lab">คาบหน้าเรียนอะไร / ประกาศ <i>· ไม่ใส่ก็ได้</i></div>
+      <input class="f dup" value="สอบบท 1-3">
+      <div class="hint">ขึ้นในหน้าโน้ตของวิชาจนกว่าคาบหน้าจะผ่านไป</div>
+      <div class="lab">อ่านเพิ่ม <i>· หนังสือ ลิงก์ ไม่ใส่ก็ได้</i></div>
+      <input class="f dup" value="อ่านบท 1-3">
+      <div class="lab">รูปกระดาน (ย่อรูปให้อัตโนมัติ · สูงสุด 6 รูป)</div>
+      <div class="pics"><div class="pic">+ ถ่ายรูป</div><div class="pic">+ เลือกรูป</div></div>
+      <div class="lab" style="margin-top:22px">หัวข้อที่เรียน · กด ★ = อาจารย์บอกออกสอบ</div>
+      <input class="f" placeholder="+ เรื่องที่ต้องจำ เช่น Proof of Work คืออะไร">
+      <div class="hint">คาบที่ไม่มีเนื้อหา (เช่น แนะนำวิชา) ข้ามช่องนี้ได้</div>
+      <div class="lab" style="margin-top:22px">มีงานสั่งไหม</div>
+      <div class="pic" style="width:100%">+ เพิ่มงานของวิชานี้</div>
+    </div>
+    <div class="foot"><button class="save">บันทึก</button></div>
+  </div></div>
+
+  <div class="col"><div class="cap">ใหม่ · 3 คำถาม<span>ลองกด: พิมพ์หัวข้อแล้ว Enter · ★ · จดเพิ่ม · ทำเป็นงาน · อ่านเพิ่ม</span></div>
+  <div class="phone" id="nw">
+    <div class="top"><button class="back">‹ ปิด</button><h2>จดหลังคาบ</h2><div class="sub">ความมั่นคงสารสนเทศฯ · จ. 23 พ.ย. 13:00–17:00</div></div>
+    <div class="scroll">
+      <div class="q"><span class="n">1</span><div><h3>วันนี้เรียนเรื่องอะไร</h3><small>บรรทัดละเรื่อง · ★ = อาจารย์บอกออกสอบ</small></div></div>
+      <div class="topics" id="topics"></div>
+      <div class="addrow"><input class="f" id="draft" placeholder="เช่น CIA triad คืออะไร" aria-label="เพิ่มเรื่องที่เรียน" enterkeyhint="done"><button class="addbtn" id="addT">เพิ่ม</button></div>
+      <button class="more" id="moreT">+ จดเพิ่ม (ไม่ใส่ก็ได้)</button>
+      <textarea class="f" id="longT" hidden placeholder="จดยาว ๆ ตรงนี้ ถ้ามี"></textarea>
+
+      <div class="q"><span class="n">2</span><div><h3>รูปกระดาน</h3><small>ไม่มีก็ข้ามได้</small></div></div>
+      <div class="cam"><button class="big" id="cam">ถ่ายรูปกระดาน</button><button class="small">เลือกจากเครื่อง</button></div>
+      <div class="pics2" id="pics" hidden></div>
+
+      <div class="q"><span class="n">3</span><div><h3>อาจารย์บอกอะไรไว้</h3><small>สอบ ประกาศ ของที่ต้องเอามา</small></div></div>
+      <input class="f" id="ann" value="อาทิตย์หน้าสอบบท 1-3 20 คะแนน" aria-label="อาจารย์บอกอะไรไว้">
+      <div class="slipnote">ขึ้นเป็นใบประกาศในหน้าวันนี้ จนถึงคาบหน้า</div>
+      <div class="chips"><button class="chip" id="toTask">+ ทำเป็นงาน</button><button class="chip" id="moreR">+ อ่านเพิ่ม</button></div>
+      <input class="f" id="read" hidden placeholder="ชื่อหนังสือหรือวางลิงก์" style="margin-top:8px">
+    </div>
+    <div class="foot"><button class="save">บันทึก</button></div>
+    <div class="toast" id="toast" hidden></div>
+  </div></div>
+
+  <div class="side">
+    <h3>เปลี่ยนอะไร</h3>
+    <ol>
+      <li><b>หัวข้อขึ้นก่อน</b> (เดิมอยู่ใต้รูป) · พิมพ์แล้ว Enter ต่อเรื่องถัดไปได้เลย</li>
+      <li><b>ช่องจดยาว ยุบเป็น "จดเพิ่ม"</b> · ไม่ต้องคิดว่าต่างจากหัวข้อยังไง</li>
+      <li><b>รูป: ปุ่มถ่ายใหญ่ปุ่มเดียว</b> · เลือกจากเครื่องเป็นปุ่มรอง</li>
+      <li><b>ประกาศ + งาน + อ่านเพิ่ม รวมเป็นข้อ 3</b> · ช่องเดียว แล้วกด "ทำเป็นงาน" ถ้าต้องส่ง (เปิดฟอร์มเพิ่มงานเดิม ใส่ชื่อให้แล้ว กำหนดส่ง = คาบหน้า) · "อ่านเพิ่ม" แตะค่อยโผล่</li>
+      <li><b>หัวข้อใหญ่เป็นคำถาม + เลขข้อ</b> ตัวเข้ม 20px แทนป้ายเล็กจาง</li>
+    </ol>
+    <h3>ช่องเดิม → ที่ใหม่ (ฐานข้อมูลไม่เปลี่ยน)</h3>
+    <table>
+      <tr><td>หัวข้อที่เรียน (topics)</td><td>ข้อ 1</td></tr>
+      <tr><td>วันนี้เรียนอะไร (text)</td><td>ข้อ 1 "จดเพิ่ม" (มีข้อความอยู่แล้ว = กางไว้)</td></tr>
+      <tr><td>รูปกระดาน</td><td>ข้อ 2</td></tr>
+      <tr><td>คาบหน้า / ประกาศ (next_text)</td><td>ข้อ 3</td></tr>
+      <tr><td>อ่านเพิ่ม (read_more)</td><td>ข้อ 3 แตะ "+ อ่านเพิ่ม" (มีอยู่แล้ว = กางไว้)</td></tr>
+      <tr><td>มีงานสั่งไหม</td><td>ข้อ 3 "+ ทำเป็นงาน"</td></tr>
+    </table>
+    <h3>ถามเจ้าของ</h3>
+    <ul><li>ปุ่ม "กลาง/ปลาย" ข้างหัวข้อ: แบบใหม่ซ่อนไว้ (แอปเดาจากวันสอบอยู่แล้ว) · ยังอยากให้มีในหน้านี้ไหม</li></ul>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const T=[{t:"CIA triad คืออะไร",s:true},{t:"ขั้นตอนทำ Threat Modeling",s:false}];
+function draw(){$("topics").innerHTML=T.map((x,i)=>`<div class="t"><span>${x.t}</span><button class="ic${x.s?" on":""}" data-s="${i}" aria-label="ออกสอบ: ${x.t}" aria-pressed="${x.s}">${x.s?"★":"☆"}</button><button class="ic x" data-x="${i}" aria-label="ลบ ${x.t}">✕</button></div>`).join("");
+  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{T[b.dataset.s].s=!T[b.dataset.s].s;draw()});
+  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{T.splice(b.dataset.x,1);draw()});}
+draw();
+function add(){const v=$("draft").value.trim();if(!v)return;T.push({t:v,s:false});$("draft").value="";draw();$("draft").focus()}
+$("addT").onclick=add;$("draft").onkeydown=e=>{if(e.key==="Enter")add()};
+$("moreT").onclick=()=>{$("longT").hidden=false;$("moreT").hidden=true;$("longT").focus()};
+$("moreR").onclick=()=>{$("read").hidden=false;$("moreR").hidden=true;$("read").focus()};
+$("cam").onclick=()=>{const p=$("pics");p.hidden=false;p.insertAdjacentHTML("beforeend","<div></div>")};
+let tt;$("toTask").onclick=()=>{$("toTask").classList.add("done");$("toTask").textContent="✓ เป็นงานแล้ว · ส่ง จ. 30 พ.ย.";const t=$("toast");t.textContent="เพิ่มงาน “"+$("ann").value+"” ส่งคาบหน้า (ในแอปจริงจะเปิดฟอร์มให้แก้ก่อน)";t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2600)};
+</script>
+</body>
+</html>
